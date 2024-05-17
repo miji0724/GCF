@@ -44,6 +44,8 @@ src/main/frontend/gcf/node_modules/
 src/main/frontend/build/
 src/main/frontend/dist/
 
+package-lock.json
+
 # Miscellaneous
 .DS_Store
 .env
