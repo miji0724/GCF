@@ -10,7 +10,18 @@ const SignUpForm = () => {
     const [zonecode, setZonecode] = useState('');
     const [address, setAddress] = useState('');
     const [detailedAddress, setDetailedAddress] = useState('');
-
+    
+    const [formData, setFormData] = useState({
+		name: '',
+		id: '',
+		password: '',
+		confirmPassword: '',
+		gender: '',
+		birth: '',
+		email: '',
+		
+	})
+    
     const autoHypenPhone = (str) => {
         str = str.replace(/[^0-9]/g, '');
         let tmp = '';
@@ -113,19 +124,6 @@ const SignUpForm = () => {
                                     <input id="password" />
                                 </li>
                                 <li><input id="password_check" /></li>
-                                <li>
-                                    <input type="radio" className="radio" name="sex" id="male" />
-                                    <label for="male">남자</label>
-                                    <input type="radio" className="radio" name="sex" id="femail" />
-                                    <label for="female">여자</label>
-                                </li>
-                                <li>
-                                    <input type="date" id="birth" />&nbsp;&nbsp;&nbsp;
-                                    <input type="radio" className="radio" name="birth" id="solar" />
-                                    <label for="solar">양력</label>
-                                    <input type="radio" className="radio" name="birth" id="lunar" />
-                                    <label for="lunar">음력</label>
-                                </li>
                                 <li>
                                     <input type="text" name="cellPhone" id="cellPhone" maxlength="13" value={phoneNumber} onChange={handlePhoneNumberChange} />
                                 </li>
