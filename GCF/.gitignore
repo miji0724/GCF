@@ -35,3 +35,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Dependency directories
+node_modules/
+src/main/frontend/node_modules/
+
+# Production build directories
+src/main/frontend/build/
+src/main/frontend/dist/
+
+# Miscellaneous
+.DS_Store
+.env
