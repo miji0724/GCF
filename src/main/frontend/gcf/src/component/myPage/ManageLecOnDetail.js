@@ -164,8 +164,8 @@ function ManageLecOnDetail() {
                                     <div className='trainList_area'>
                                         {items.map(item => (
                                             <div key={item.id} className="education-item-wrapper">
-                                                <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>- 강의 삭제</button>
-                                                <button type="button" onClick={handleAddItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+ 강의 추가</button>
+                                                <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>-</button>
+                                                <button type="button" onClick={handleAddItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+</button>
                                                 
                                                 <EducationItem
                                                     id={item.id}
