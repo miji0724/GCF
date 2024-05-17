@@ -1,0 +1,80 @@
+.map_form {
+    height: 1000px;
+}
+
+.map_body {
+    padding-left: 10%;
+    padding-right: 10%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 5%;
+}
+
+.map_sidebar {
+    background-color: white;;
+    width:18%;
+    height:fit-content;
+    font-size: 20px;
+    font-weight: 500;
+    color: rgb(88, 88, 88);
+    text-align: center;
+}
+
+.map_sidebar > ul {
+    margin: 0;
+    padding: 0;
+}
+
+.map_sidebar > ul > li {
+    margin-top: 35px;
+    margin-bottom: 35px;
+    cursor: pointer;
+}
+
+.map_body_center {
+    margin-left: 5%;
+}
+
+.map_info > div {
+    background-color: #E8F8FF;
+}
+
+.map_title {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.map_tel, .map_address {
+    font-weight: 600;
+}
+
+#map {
+    margin-top: 20px;
+    width: 750px;
+    height: 500px;
+    border-radius: 20px;
+}
+
+.map_traffic {
+    margin-left: 5%;
+}
+
+#map_traffic_title {
+    border-bottom: 1px solid black;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#traffic_contents {
+    background-color: white;
+    width: 350px;
+    height: 160px;
+    font-size: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.selected {
+    font-weight:900;
+    color: #364475;
+}

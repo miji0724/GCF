@@ -1,0 +1,62 @@
+/* Body css 회원인증 폼 */
+.authentication-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 600px;
+}
+
+.authentication-form {
+  width: 600px; /* 폼의 너비 */
+  padding: 30px; /* 내부 여백 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  background-color: white;
+  margin-top: 50px;
+}
+
+.authentication-form h2 {
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  margin-bottom: 10px; /* 제목 아래 여백 */
+}
+
+.authentication-form h6 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.authentication-form label {
+  display: flex; /* 라벨을 블록 요소로 표시하여 줄 바꿈 */
+  flex-direction: column;
+  margin: 0;
+  margin-bottom: 10px; /* 라벨 아래 여백 */
+  margin-left: 17%;
+}
+
+.authentication-form input {
+  width: 80%; 
+  padding: 5px; /* 내부 여백 */
+  margin: 0;
+  margin-bottom: 15px; /* 입력 요소 아래 여백 */
+}
+
+.authentication-form button {
+  width: 50%; /* 버튼 너비 100% */
+  padding: 10px; /* 내부 여백 */
+  margin-left: 25%;
+  background-color: #7193D2; /* 배경색 */
+  color: #fff; /* 텍스트 색상 */
+  border-radius: 5px; /* 모서리를 둥글게 */
+  cursor: pointer; /* 커서 스타일 변경 */
+  border : none;
+}
+
+.authentication-header {
+  background-color: #fff; /* 흰색 배경색 */
+  width: 100%;
+  padding: 20px 0; /* 내부 여백 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  margin-bottom: 20px; /* 아래쪽 여백 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  font-weight: bold; /* 글꼴 굵게 설정 */
+  font-size: 24px; /* 글꼴 크기 증가 */
+}
