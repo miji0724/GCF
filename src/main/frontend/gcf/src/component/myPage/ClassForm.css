@@ -1,0 +1,193 @@
+.rdrDateRangePickerWrapper {
+  padding: 0 20px;
+}
+
+.ClassFormContainer .whiteBox {
+  background-color: #fff;
+  border: 1px solid #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.ClassFormContainer h1 {
+  font-size: 8px;
+  color: #F1F3F5;
+  margin-top: 5px;
+}
+
+.OnlineLec {
+  max-width: 950px; 
+  height: 400px; 
+  overflow-y: auto;
+  margin: 0 auto; 
+}
+
+.ClassFormContainer label{
+  display: block;
+  margin-bottom: 5px;
+}
+
+.ClassName,
+.ClassEmail,
+.ClassNumber,
+.ClassHNumber {
+margin-bottom: 20px;
+}
+
+.ClassFormContainer input[type='text'],
+.ClassFormContainer input[type='email'],
+.ClassFormContainer input[type='tel'] {
+width: 25%;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+.ClassFormContainer h1 {
+font-size: 9px;
+margin-top: 5px;
+color: black;
+}
+
+.All > div {
+  margin-bottom: 20px;
+}
+
+.ClassFormContainer h3 {
+  margin-bottom: 10px;
+}
+
+.handleDropdownChange select {
+  width: 15%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.ClassFormContainer label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ClassFormContainer input[type='checkbox'] {
+  margin-right: 5px;
+}
+
+.InfoGroup {
+  margin-top: 20px;
+}
+
+.certificationField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.certificationField input[type='text'] {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.certificationField input[type='file'] {
+  margin-left: 10px;
+}
+
+
+.certificationField button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #EDEDED;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.teachingSubjectField button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #EDEDED;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.BannerInfoGroup button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #EDEDED;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.ClassHNumber {
+  border-bottom: 1px solid black;
+}
+
+.BannerInfoGroup {
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  padding-bottom: 40px;
+  position: relative;
+}
+
+.OnlineLec {
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
+}
+
+.age {
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
+}
+
+.programFee {
+  border-bottom: 1px solid black;
+  padding-bottom: 30px;
+}
+
+.ClassFContainer {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.ClassFState {
+background-color: white;
+display: flex;
+width: 100%; /* 가로폭 100% 설정 */
+padding: 10px;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+margin-bottom: 20px;
+font-size: 28px; /* 글씨 크기 */
+font-weight: bold; /* 글씨 두껍게 */
+margin-left: 0%; /* 왼쪽 여백 추가 */
+text-align: center; /* 가운데 정렬 */
+justify-content: center; /* 가로 방향 가운데 정렬 */
+align-items: center; /* 세로 방향 가운데 정렬 */
+}
+
+
+.All .rdrCalendarWrapper {
+border: 1px solid #000; /* 검은색 테두리 추가 */
+padding: 10px; /* 테두리 주변에 적절한 여백 추가 */
+}
+
+.rdrDefinedRangesWrapper {
+border: 1px solid #000;
+padding: 10px;
+}
+
+.whiteBox {
+border-radius: 10px;
+margin-top: 27px;
+}

@@ -1,0 +1,124 @@
+.memDetail_container
+{
+    display: flex;
+    height:100%;
+}
+
+.memDetail
+{
+    flex:0.8;
+    background-color: #ffffff;
+    text-align: center;
+    font-family: "Noto Sans KR", sans_serif;  
+}
+
+.memDetail > p{
+    margin-top:30px;
+    font-size: 30px;
+    font-weight:800;
+}
+
+.memDetail_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.memDetail_left > ul,
+.memDetail_right > ul{
+    list-style-type: none;
+}
+
+.memDetail_area > .memDetail_right > ul > li,
+.memDetail_area > .memDetail_left > ul > li{
+    line-height: 45px;
+}
+
+.memDetail_left > ul > li{
+    text-align: right;
+}
+
+.memDetail_right > ul > li{
+    text-align: left;
+}
+
+.memDetail input,
+.memDetail select
+{
+    border-style: none;
+    background-color: #ededed;
+    height: 30px;
+    text-align: center;
+}
+
+.memDetail button{
+    border-style: none;
+    background-color: #ededed;
+    border-radius: 30px;
+}
+
+.memDetail_gender_radio_container,
+.memDetail_birth_radio_container{
+    display: flex;
+    align-items: center;
+}
+
+#memDetail_birth_detail{
+    width:172px;
+}
+
+.memDetail_zipArea{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin:8px 0;
+}
+
+#memDetail_zipCheck{
+    margin-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+#memDetail_emailId{
+    width:120px;
+}
+
+#memDetail_email_dropdown{
+    margin-left : 10px;
+}
+
+#memDetail_emailAddr{
+    width:180px;
+}
+
+#memDetail_zip{
+    width:70px;
+}
+
+#memDetail_addr,
+#memDetail_addrD{
+    width:500px;
+}
+
+#memDetail_confirm{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #AECCF2;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+
+#memDetail_delete{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    background-color: #FF8585;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}

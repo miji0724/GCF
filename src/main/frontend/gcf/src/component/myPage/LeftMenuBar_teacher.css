@@ -1,0 +1,80 @@
+.MyPage_body {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.MyPageTitle {
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.MenuList {
+  padding: 0;
+}
+
+.MenuList button{
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+.MenuList li {
+  margin-bottom: 10px;
+}
+
+.MenuList li a {
+  text-decoration: none;
+  color: rgb(180, 132, 132);
+  font-size: 16px;
+}
+
+.MenuList li:first-child::after {
+  content: "――――――――――――";
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  margin-top: -15px;
+  margin-bottom: 20px;
+}
+
+#MyPage_title {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-left: 120px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.MenuList > li:first-child {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.MyPage_right {
+  width: 100%;
+  margin:0;
+  padding-left:5%;
+  padding-top:50px
+  
+}
+
+.hinfo {
+ border-bottom: 1px solid black;
+ color: black;
+  font-size: 20px;
+  font-weight: bold;
+ margin-bottom: 10px;
+ display: block;
+}
+
+.MyPage_left {
+  min-width: 350px;
+  display: block;
+}
+
+  

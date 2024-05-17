@@ -1,0 +1,25 @@
+.page-indicators {
+    margin-top: 10px;
+}
+
+.carousel {
+    margin-top: 100px;
+}
+
+.carousel > a > img {
+    border-radius: 30px;
+}
+
+.page-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.page-indicator.active {
+    background-color: #333;
+}
