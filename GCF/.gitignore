@@ -38,7 +38,7 @@ out/
 
 # Dependency directories
 node_modules/
-src/main/frontend/node_modules/
+src/main/frontend/gcf/node_modules/
 
 # Production build directories
 src/main/frontend/build/

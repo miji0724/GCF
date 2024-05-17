@@ -1,0 +1,190 @@
+.teachDetail_container
+{
+    display: flex;
+    height:100%;
+}
+
+.teachDetail_container ul{
+    list-style-type: none;
+}
+
+.teachDetail
+{
+    flex:0.8;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.teachDetail > p{
+    margin-top:30px;
+    font-size: 30px;
+    font-weight:800;
+}
+
+.teachDetail_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.teachDetail input,
+.teachDetail select
+{
+    border-style: none;
+    background-color: #ededed;
+    height: 30px;
+    text-align: center;
+}
+
+.teachDetail_area li{
+    line-height: 45px;
+}
+
+.teachDetail_left{
+    text-align: right;
+}
+
+.teachDetail_right,
+#teachDetail_lecField{
+    text-align: left;
+}
+
+.teachDetail_birth_container,
+.teachDetail_radio_area{
+    display: flex;
+    align-items: center;
+}
+
+.teachDetail_radio_area{
+    margin-left: 10px;
+}
+
+#teachDetail_birth_detail{
+    width:185px;
+}
+
+#teachDetail_email_dropdown{
+    margin-left : 10px;
+}
+
+#teachDetail_emailId{
+    width:120px;
+}
+
+#teachDetail_emailAddr{
+    width:180px;
+}
+
+.teachDetail_zipArea{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin:8px 0;
+}
+
+#teachDetail_zipCheck{
+    padding: 0px;
+    margin-left: 10px;
+    border:none;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 30px;
+}
+
+#teachDetail_zip{
+    width:70px;
+}
+
+#teachDetail_addr,
+#teachDetail_addrD{
+    width:500px;
+}
+
+#teachDetail_lecField{
+    width:173px;
+    text-align: center;
+}
+
+.mainCareer_detail{
+    width:200px;
+    margin-right: 20px;
+}
+
+.mainCareer_flexArea input[type='number'] {
+    width:100px;
+}
+
+.mainCareer_buttonAlign button,
+.sCertifi_buttonAlign button,
+.teachAble_buttonAlign button{
+    width:30px;
+    height:30px;
+    margin-left: 10px;
+    border:none;
+}
+
+.teachDetail .mainCareer_area,
+.teachDetail .sCertifi_area,
+.teachDetail .teachAble_area{
+    max-height: 130px;
+    min-height: 130px;  /* 최대 높이 설정 */
+    width:500px;
+    overflow-y: auto;
+    margin: 10px 0;
+    background-color: #fafafa;
+}
+
+.teachDetail .mainCareer_buttonAlign,
+.teachDetail .sCertifi_buttonAlign,
+.teachDetail .teachAble_buttonAlign {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.teachDetail .mainCareer_flexArea,
+.teachDetail .sCertifi_flexArea,
+.teachDetail .teachAble_flexArea{
+    height: 45px;
+}
+
+#teachDetail_sCertifi1_attachment,
+#teachDetail_sCertifi2_attachment,
+#teachDetail_sCertifi3_attachment{
+    width:180px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.sCertifi_flexArea input[type='text']{
+    width:400px;
+}
+
+.teachAble_flexArea input[type='text']{
+    width:400px;
+}
+
+.teachDetail_button_area button{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    border : none;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+
+#teachDetail_confirm{
+    background-color: #AECCF2;
+}
+
+#teachDetail_delete{
+    background-color: #FF8585;
+}
+
+.sCertifi_attachment_button{
+    height:30px;
+    line-height: 30px;
+    border: none;
+    margin-right: 10px;
+}

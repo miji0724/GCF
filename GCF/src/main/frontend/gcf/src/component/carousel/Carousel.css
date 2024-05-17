@@ -1,0 +1,22 @@
+.carousel button {
+    border: none;
+    background-color: transparent;
+}
+
+.page-indicators {
+    margin-top: 10px;
+}
+
+.page-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.page-indicator.active {
+    background-color: #333;
+}

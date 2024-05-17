@@ -1,0 +1,101 @@
+.noticewrite_container {
+    display: flex;
+    height:100%;
+}
+
+.noticewrite{
+    flex:0.8;
+    background-color: #ffffff;
+    text-align: center;
+    flex-direction: row;
+}
+
+.noticewrite button{
+    border: none;
+    
+}
+.noticewrite span{
+    color:#000;
+}
+
+.noticewrite > p{
+    margin-top:30px;
+    font-size: 30px;
+    font-weight:800;
+}
+
+.back_button{
+    cursor:pointer;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 3%;
+    color: #000;
+    text-decoration: none;
+}
+
+.noticewrite_area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.noticewrite_title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size:18px;
+}
+
+.noticewrite_title > input{
+    height: 25px;
+    width:800px;
+    margin-left: 20px;
+}
+
+.noticewrite_detail{
+    width:860px;
+    box-sizing: border-box;
+    height: 600px;
+    border: 1px solid #000;
+}
+
+.noticewrite_detail div{
+    margin:0;
+}
+
+.noticewrite_attachment{
+    display:flex;
+    flex-direction: row;
+}
+
+.noticewrite_attachment_detail{
+    display:flex;
+    flex-direction: column;
+}
+
+.noticeWrite_attachArea{
+    display: flex;
+    flex-direction: row;
+}
+
+.noticeWrite_attachArea p{
+    margin-right: 100px;
+}
+
+.attachment{
+    width:500px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.noticewrite_confirm{
+    margin-top:50px;
+    background-color: #AECCF2;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+

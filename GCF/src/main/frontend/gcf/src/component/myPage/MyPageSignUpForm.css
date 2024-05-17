@@ -1,0 +1,208 @@
+.MysignUp_form {
+    height: 1400px;
+}
+
+.Mytitle {
+    background-color: white;
+    display: flex;
+    width: 100%; /* 가로폭 100% 설정 */
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    font-size: 28px; /* 글씨 크기 */
+    font-weight: bold; /* 글씨 두껍게 */
+    margin-left: 0%; /* 왼쪽 여백 추가 */
+    text-align: center; /* 가운데 정렬 */
+    justify-content: center; /* 가로 방향 가운데 정렬 */
+    align-items: center; /* 세로 방향 가운데 정렬 */
+}
+
+.MysignUp_center {
+ background-color: white;
+  display: flex;
+  width: 100%; /* 가로폭 100% 설정 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  margin-top: 50px;
+  flex-direction: column;
+}
+
+.Mysubtitle {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 23px;
+    font-weight: 600;
+    margin-top: 30px; /* 위 여백 */
+    margin-bottom: 20px; /* 아래 여백 */
+}
+
+.Mysubtitle > div:first-child {
+    height: 50px;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: row;
+}
+
+.Mysubtitle > div > text {
+    font-size: 15px;
+    color: rgb(121, 121, 121);
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.Mybase_info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+ul {
+    list-style: none;
+}
+
+.Mybase_info > div > ul:first-child {
+    height: 80%;
+}
+
+.Mybase_left > ul > li {
+    text-align: right;
+    height: 40px;
+}
+
+.Mybase_right > ul > li {
+    height: 40px;
+}
+
+.Mybase_right button{
+    border:none;
+}
+
+input {
+    margin-right: 5px;
+}
+
+label {
+    margin-right: 25px;
+}
+
+.check_btn {
+    border-radius: 15px;
+    background-color: rgb(214, 214, 214);
+    height: 30px;
+    font-weight: 500;
+}
+
+#email1 {
+    width: 30%;
+}
+
+#zipCode {
+    width: 20%;
+}
+
+#address, #detail_address {
+    width: 100%;
+}
+
+.Myadded_info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.Myadded_left > ul {
+    width: 100px;
+    margin-left: 28px;
+}
+
+.Myadded_left > ul > li {
+    padding-top: 1px;
+    text-align: right;
+    height: 40px;
+}
+
+#interest_etc {
+    width: 30%;
+}
+
+.Myadded_right > ul > li {
+    height: 40px;
+}
+
+.agreement {
+    width: 90%;
+    height: auto;
+    margin-left: 5%;
+    margin-top: 40px;
+    font-size: 15px;
+    text-align: center;
+}
+
+#agreement1, #agreement2 {
+    margin-bottom: 30px;
+}
+
+.agreement_title {
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.agreement_content1, .agreement_content2 {
+    font-size: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 90%;
+    height: 200px;
+    margin-left: 5%;
+    margin-bottom: 20px;
+}
+
+#signUp_btn {
+    font-size: 30px;
+    border-radius: 10px;
+    width: 50%;
+    height: 60px;
+    background-color: #7193D2;
+    color: white;
+}
+
+#signUp_btn > a {
+    text-decoration: none;
+    color: white;
+}
+
+.MySibutton_container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.MySibutton {
+    background-color: #007bff;
+    border: 20px;
+    border-radius: 10px; 
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.MySibutton:hover {
+    background-color: #0056b3;
+}

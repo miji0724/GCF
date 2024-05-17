@@ -1,0 +1,46 @@
+/* May 컴포넌트에 대한 CSS */
+.May {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  /* MainClassForm 컴포넌트에 대한 CSS */
+  .MainClassForm {
+    flex: 1; /* MainClassForm 컴포넌트가 남은 공간을 균등하게 차지하도록 설정 */
+  }
+  
+  /* ClassFormContainer 컴포넌트에 대한 CSS */
+  .ClassFormContainer {
+    flex: 1; /* ClassFormContainer 컴포넌트가 남은 공간을 균등하게 차지하도록 설정 */
+    margin-left: 150px; /* 좌측 여백 추가 */
+  }
+
+  /* ClassListButton.css */
+.WhiteButton {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.WhiteButton:hover {
+  background-color: #f0f0f0;
+}
+
+.ClassListButtonContainer {
+  position: relative; /* 버튼 컨테이너를 relative로 지정 */
+  margin-top: 50px; /* 버튼과 상위 요소 사이의 간격을 조정 */
+  margin-right: 20px; /* 버튼과 우측 요소 사이의 간격을 조정 */
+}
+
+  
+ 
+  
+
+  

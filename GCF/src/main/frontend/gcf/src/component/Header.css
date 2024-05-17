@@ -1,0 +1,151 @@
+header {
+  display: flex;
+  flex-direction: column;
+  /* 세로 방향으로 배치 */
+  height: 5%;
+  margin: 0;
+  /* 페이지의 기본 마진 제거 */
+  padding: 0;
+  /* 페이지의 기본 패딩 제거 */
+  font-optical-sizing: auto;
+}
+
+.top_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.member_btns {
+  margin-right: 240px;
+  font-size: 13px;
+  color: rgb(97, 97, 97);
+  white-space: nowrap;
+}
+
+.member_btns a {
+  color: rgb(97, 97, 97);
+  text-decoration: none;
+  margin: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 150px;
+  /* 로고 이미지의 크기 조절 */
+  margin-left: 240px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+  background-color: none;
+}
+
+nav {
+  width: 100%;
+  /* 네비게이션 바의 너비를 화면 너비의 100%로 설정 */
+  background-color: #ffffff;
+  /* 배경색 지정 */
+  padding-left: 110px;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+  /* 기본 목록 마커 제거 */
+  padding: 0;
+  /* 목록의 패딩 제거 */
+  background-color: #fff;
+  width: 100%;
+  /* 네비게이션 바의 너비를 화면 너비의 100%로 설정 */
+  height: 50px;
+}
+
+nav>ul>li {
+  margin-right: 50px;
+  margin-left: 50px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding-top: 20px;
+}
+
+nav>ul>li:first-child {
+  margin-left: 130px;
+}
+
+nav>ul>li>a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  /* 링크의 밑줄 제거 */
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.dropdown {
+  position: absolute;
+  background-color: #fff;
+  flex-direction: column;
+  padding-bottom: 10px;
+  border-bottom-left-radius: 10%;
+  border-bottom-right-radius: 10%;
+  width: inherit;
+  height: auto;
+}
+
+.dropdown li {
+  text-align: center;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.dropdown a {
+  display: block;
+  padding: 15px 25px;
+  color: black;
+  text-decoration: none;
+  text-align: left;
+}
+
+nav>ul>li:last-child {
+  height: 70px;
+  padding-top: 13px;
+  margin: none;
+}
+
+.search_bar {
+  border: 2px solid rgb(161, 161, 161);
+  border-radius: 20px;
+  margin-left: 300px;
+  width: 300px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+}
+
+.search_bar>input {
+  border: none;
+  background-color: transparent;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: inherit;
+  margin-left: 13px;
+}
+
+.search_bar>input:focus {
+  outline: none;
+}
+
+.search_bar>.submit>img {
+  width: 27px;
+  margin-right: 5px;
+  margin-bottom: 1px;
+  color: #7193D2;
+  opacity: 0.7;
+}
+
+.submit {
+  background-color: rgb(0, 0, 0, 0);
+  border: none;
+}
