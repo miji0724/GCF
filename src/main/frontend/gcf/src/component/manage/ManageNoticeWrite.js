@@ -4,6 +4,7 @@ import { EditorState } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './ManageNoticeWrite.css';
 import SideMenu from './ManageSideMenu';
+import axios from 'axios'; // Axios 추가
 
 function backToList() {
     window.location.href = '/manage/notice';
@@ -54,6 +55,16 @@ function ManageNoticeWrite() {
         newAttachments[index] = { file: event.target.files[0] };
         setAttachments(newAttachments);
     };
+
+    // axios.post('http://localhost:8090/notices', formData)
+    // .then(response => {
+    //     console.log('Notice submitted successfully:', response.data);
+    //     // 등록 후 필요한 작업 수행 (예: 페이지 이동)
+    //     // ...
+    // })
+    // .catch(error => {
+    //     console.error('Error submitting notice:', error);
+    // });
 
     return (
         <body>
