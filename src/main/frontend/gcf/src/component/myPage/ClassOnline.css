@@ -1,7 +1,5 @@
-.classOnline_container_
+.classOnline_container
 {
-    display: flex;
-    height:300px;
     width: 100%;
 }
 
@@ -15,11 +13,6 @@
     font-family: "Noto Sans KR", sans-serif;  
 }
 
-.classOnline > p{
-    font-size: 30px;
-    font-weight:800;
-}
-
 .classOnline_area{
     display: flex;
     flex-direction: row;
@@ -28,53 +21,9 @@
     height: 400px;
 }
 
-.classOnline_area > .classOnline_right > ul > li,
-.classOnline_area > .classOnline_left > ul > li{
-    line-height: 45px;
-}
-
-.classOnline_left > ul > li{
-    text-align: right;
-}
-
-.classOnline_right > ul > li{
-    text-align: left;
-}
-
-
-
-#classOnline_poster_attachment,
-.introduceEdu_attachment,
-.introduceTeach_attachment{
-    width:180px;
-    background-color: rgba(0, 0, 0, 0);
-}
-
-#classOnline_emailId{
-    width:120px;
-}
-
-#classOnline_email_dropdown{
-    margin-left : 10px;
-}
-
-#classOnline_emailAddr{
-    width:180px;
-}
-
 #classOnline_lecField{
     width:173px;
     text-align: center;
-}
-
-#classOnline_introduceEdu_detail,
-#classOnline_introduceTeach_detail{
-    width:300px;
-    height:55px;
-    margin-top: 12px;
-    /* background-color: #ededed; */
-    border:none;
-    resize:none;
 }
 
 .outer_button{
@@ -98,7 +47,7 @@
     border:none;
 }
 
-.education-item-wrapper{
+.myPage_education_item_wrapper{
     background-color: white;
     padding:10px 20px;
     flex-direction: column;
@@ -106,41 +55,3 @@
     height: 100px;
     overflow-y: auto;
 }
-
-.sub-education-item-wrapper{
-    background-color: #ccc;
-    padding:3px 5px;
-    margin:0px;
-}
-
-.trainList_right{
-    display: flex;
-    flex-direction: row;
-}
-
-
-#classOnline_confirm{
-    margin-right: 20px;
-    margin-bottom: 30px;
-    background-color: #AECCF2;
-    border-radius: 10px;
-    width:100px;
-    height: 50px;
-    font-size: 25px;
-    font-weight:600;
-}
-
-#classOnline_delete{
-    margin-left: 20px;
-    margin-bottom: 30px;
-    background-color: #FF8585;
-    border-radius: 10px;
-    width:100px;
-    height: 50px;
-    font-size: 25px;
-    font-weight:600;
-}
-
-
-
-

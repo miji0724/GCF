@@ -33,7 +33,7 @@ function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent }) {
 }
 
 function ClassOnline() {
-    const [phoneNumber, setPhoneNumber] = useState('');
+    // const [phoneNumber, setPhoneNumber] = useState('');
     const [items, setItems] = useState([]);
     const [parentCounter, setParentCounter] = useState(1);
     const [subCounters, setSubCounters] = useState({});
@@ -54,16 +54,16 @@ function ClassOnline() {
         setParentCounter(parentCounter + 1);
     };
 
-    const handleAddCustomItem = (customName) => {
-        const newItemId = parentCounter;
-        const newItem = {
-            id: newItemId,
-            name: customName,
-            subItems: [],
-        };
-        setItems([...items, newItem]);
-        setParentCounter(parentCounter + 1);
-    };
+    // const handleAddCustomItem = (customName) => {
+    //     const newItemId = parentCounter;
+    //     const newItem = {
+    //         id: newItemId,
+    //         name: customName,
+    //         subItems: [],
+    //     };
+    //     setItems([...items, newItem]);
+    //     setParentCounter(parentCounter + 1);
+    // };
 
     const handleAddSubItem = (parentId) => {
         const newSubItemId = (subCounters[parentId] || 0) + 1;
@@ -117,35 +117,35 @@ function ClassOnline() {
         setItems(updatedItems);
     };
 
-    const handlePhoneNumberChange = (event) => {
-        const value = event.target.value;
-        setPhoneNumber(autoHypenPhone(value));
-    };
+    // const handlePhoneNumberChange = (event) => {
+    //     const value = event.target.value;
+    //     setPhoneNumber(autoHypenPhone(value));
+    // };
 
-    const autoHypenPhone = (str) => {
-        str = str.replace(/[^0-9]/g, '');
-        let tmp = '';
-        if (str.length < 4) {
-            return str;
-        } else if (str.length < 7) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3);
-            return tmp;
-        } else if (str.length < 11) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 4) + '-';
-            tmp += str.substr(7);
-            return tmp;
-        } else {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 4) + '-';
-            tmp += str.substr(7);
-            return tmp;
-        }
-    };
+    // const autoHypenPhone = (str) => {
+    //     str = str.replace(/[^0-9]/g, '');
+    //     let tmp = '';
+    //     if (str.length < 4) {
+    //         return str;
+    //     } else if (str.length < 7) {
+    //         tmp += str.substr(0, 3) + '-';
+    //         tmp += str.substr(3);
+    //         return tmp;
+    //     } else if (str.length < 11) {
+    //         tmp += str.substr(0, 3) + '-';
+    //         tmp += str.substr(3, 4) + '-';
+    //         tmp += str.substr(7);
+    //         return tmp;
+    //     } else {
+    //         tmp += str.substr(0, 3) + '-';
+    //         tmp += str.substr(3, 4) + '-';
+    //         tmp += str.substr(7);
+    //         return tmp;
+    //     }
+    // };
 
     return (
-        <div className='classOnline_container_'>
+        <div className='classOnline_container'>
             <div className='classOnline'>
                 <h3>강의 상세정보(온라인)</h3>
                 <div className='classOnline_area'>
@@ -163,7 +163,7 @@ function ClassOnline() {
                                 <div className='trainList'>
                                     <div className='trainList_area'>
                                         {items.map(item => (
-                                            <div key={item.id} className="education-item-wrapper">
+                                            <div key={item.id} className="myPage_education_item_wrapper">
                                                 <button type="button" onClick={() => handleDeleteParentItem(item.id)} className='outer_button'>-</button>
                                                 <button type="button" onClick={handleAddItem} className='outer_button'>+</button>            
                                                 
