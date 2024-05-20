@@ -5,7 +5,7 @@ import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import 'react-time-picker/dist/TimePicker.css';
-import ManageLecOnDetail from "./ManageLecOnDetail";
+import ClassOnline from "./ClassOnline";
 
 
 
@@ -266,7 +266,7 @@ function ClassForm() {
                             
                             <div className="OnlineLec">
                             <h4>온라인 강의</h4>
-                            <div><ManageLecOnDetail /></div>
+                            <div><ClassOnline /></div>
                             </div>
                         
                             <div style={{ display: "flex" }}>

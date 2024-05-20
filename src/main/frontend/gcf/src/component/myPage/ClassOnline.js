@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './ManageLecOnDetail.css';
+import './ClassOnline.css';
 
 function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent }) {
     const [text, setText] = useState('');
@@ -32,7 +32,7 @@ function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent }) {
     );
 }
 
-function ManageLecOnDetail() {
+function ClassOnline() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [items, setItems] = useState([]);
     const [parentCounter, setParentCounter] = useState(1);
@@ -145,12 +145,12 @@ function ManageLecOnDetail() {
     };
 
     return (
-        <div className='lecOnDetail_container_'>
-            <div className='lecOnDetail'>
+        <div className='classOnline_container_'>
+            <div className='classOnline'>
                 <h3>강의 상세정보(온라인)</h3>
-                <div className='lecOnDetail_area'>
-                    <div className='lecOnDetail_center'>
-                        <select id='lecOnDetail_lecField'>
+                <div className='classOnline_area'>
+                    <div className='classOnline_center'>
+                        <select id='classOnline_lecField'>
                             <option value='art'>미술</option>
                             <option value='science'>과학</option>
                             <option value='music'>음악</option>
@@ -164,8 +164,8 @@ function ManageLecOnDetail() {
                                     <div className='trainList_area'>
                                         {items.map(item => (
                                             <div key={item.id} className="education-item-wrapper">
-                                                <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>-</button>
-                                                <button type="button" onClick={handleAddItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+</button>
+                                                <button type="button" onClick={() => handleDeleteParentItem(item.id)} className='outer_button'>-</button>
+                                                <button type="button" onClick={handleAddItem} className='outer_button'>+</button>            
                                                 
                                                 <EducationItem
                                                     id={item.id}
@@ -197,4 +197,4 @@ function ManageLecOnDetail() {
     );
 }
 
-export default ManageLecOnDetail;
+export default ClassOnline;
