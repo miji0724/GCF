@@ -92,12 +92,20 @@ label {
     width: 30%;
 }
 
-#zipCode {
-    width: 20%;
+.zonecode {
+	display: flex;
+	flex-direction: row;
 }
 
-#address, #detail_address {
-    width: 100%;
+.zonecode_view {
+	border: 1px solid black;
+	width: 55px;
+	height: 30px;
+	padding: 3px;
+}
+
+.address {
+	margin-bottom: 10px;
 }
 
 .added_info {

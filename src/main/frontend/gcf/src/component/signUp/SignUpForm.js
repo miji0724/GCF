@@ -1,16 +1,90 @@
 import './SignUpForm.css'
 import React, { useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
+import axios from 'axios';
 
 const SignUpForm = () => {
 
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [idAvailable, setIdAvailable] = useState(false);
+    const [address, setAddress] = useState('');
 
     const [isOpen, setIsOpen] = useState(false); // isOpen 상태 추가
     const [zonecode, setZonecode] = useState('');
-    const [address, setAddress] = useState('');
-    const [detailedAddress, setDetailedAddress] = useState('');
+    
+    const [agreement4Checked, setAgreement4Checked] = useState(false);
+    const [agreement5Checked, setAgreement5Checked] = useState(false);
+    
+    
+    const [formData, setFormData] = useState({
+        name: '',
+        id: '',
+        password: '',
+        confirm_password: '',
+        birth: '',
+        phone_number: '',
+        tel_number: '',
+        address: '',
+        detail_address: '',
+        email1: '',
+        email2: '',
+        email: '',
+        email_agreement: false, 
+        message_agreement: false,
+        mail_agreement: false,
+        interests: [],
+	    married: false, 
+	    hasChildren: false 
+	})
 
+    const handleCheckId = () => {
+        axios.get("/checkId?id=" + formData.id)
+            .then(response => {
+                alert(response.data);
+                if (response.status === 200) {
+                    setIdAvailable(true);
+                }
+            })
+            .catch(error => {
+                alert(error.response.data);
+                console.error(error);
+            });
+    };
+
+    const handleAgreement4Change = () => {
+        setAgreement4Checked(!agreement4Checked);
+    };
+
+    const handleAgreement5Change = () => {
+        setAgreement5Checked(!agreement5Checked);
+    };
+    
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (!agreement4Checked || !agreement5Checked) {
+            alert("이용약관에 모두 동의해야 회원가입이 가능합니다.");
+            return;
+        }
+
+        try {
+            const response = await fetch('/signUp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                alert('회원가입이 완료되었습니다!');
+            } else {
+                throw new Error('회원가입에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원가입 중 오류 발생:', error);
+            alert('회원가입 중 오류가 발생했습니다.');
+        }
+    };
+    
     const autoHypenPhone = (str) => {
         str = str.replace(/[^0-9]/g, '');
         let tmp = '';
@@ -35,7 +109,21 @@ const SignUpForm = () => {
 
     const handlePhoneNumberChange = (event) => {
         const value = event.target.value;
-        setPhoneNumber(autoHypenPhone(value));
+        const hyphenatedPhoneNumber = autoHypenPhone(value);
+        setFormData({ ...formData, phone_number: hyphenatedPhoneNumber });
+    };
+
+    const handleInterestChange = (value) => {
+        // formData.interest가 undefined인 경우 빈 배열로 초기화
+        const interests = formData.interests || [];
+        
+        if (interests.includes(value)) {
+            // 이미 선택된 관심사인 경우, 해당 관심사를 배열에서 제거
+            setFormData({ ...formData, interest: interests.filter(item => item !== value) });
+        } else {
+            // 선택되지 않은 관심사인 경우, 배열에 추가
+            setFormData({ ...formData, interest: [...interests, value] });
+        }
     };
 
     const themeObj = {
@@ -49,11 +137,24 @@ const SignUpForm = () => {
         width: '360px',
         height: '480px',
     };
+    
 
+    const handleEmailChange = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            email: `${prevFormData.email1}@${prevFormData.email2}`,
+        }));
+    };
+    
     const completeHandler = (data) => {
         const { address, zonecode } = data;
         setZonecode(zonecode);
         setAddress(address);
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            address: address,
+            zonecode: zonecode
+        }));
     };
 
     const closeHandler = (state) => {
@@ -66,205 +167,198 @@ const SignUpForm = () => {
         setIsOpen((prevOpenState) => !prevOpenState); // isOpen 상태를 토글
     };
 
-    const inputChangeHandler = (event) => {
-        setDetailedAddress(event.target.value);
-    };
-
 
     return (
         <div className="signUp_form">
             <div className="title">회원가입</div>
             <div className="line"></div>
-            <div className="signUp_center">
-                <div className="subtitle">
-                    <div id="subtitle1">
-                        <div>기본 정보 입력</div>
-                        <text>*은 필수 입력 사항입니다.</text>
-                    </div>
-                    <div className="base_info">
-                        <div className="base_left">
-                            <ul className="base_left1">
-                                <li>* 이름</li>
-                                <li>* 아이디</li>
-                                <li>* 비밀번호</li>
-                                <li>* 비밀번호 확인</li>
-                                <li>* 성별</li>
-                                <li>* 생년월일</li>
-                                <li>* 휴대폰 번호</li>
-                                <li>전화번호</li>
-                                <li>* 이메일</li>
-                                <li>* 주소</li>
-                                <li></li>
-                            </ul>
-                            <ul className="base_left2">
-                                <li>* 메일수신동의</li>
-                                <li>* 문자수신동의</li>
-                                <li>* 우편수신동의</li>
-                            </ul>
-                        </div>
-                        <div className="base_right">
-                            <ul className="base_right1">
-                                <li><input id="name" /></li>
-                                <li>
-                                    <input id="id" />
-                                    <button className="check_btn" id="id_check"> 중복확인</button>
-                                </li>
-                                <li>
-                                    <input id="password" />
-                                </li>
-                                <li><input id="password_check" /></li>
-                                <li>
-                                    <input type="radio" className="radio" name="sex" id="male" />
-                                    <label for="male">남자</label>
-                                    <input type="radio" className="radio" name="sex" id="femail" />
-                                    <label for="female">여자</label>
-                                </li>
-                                <li>
-                                    <input type="date" id="birth" />&nbsp;&nbsp;&nbsp;
-                                    <input type="radio" className="radio" name="birth" id="solar" />
-                                    <label for="solar">양력</label>
-                                    <input type="radio" className="radio" name="birth" id="lunar" />
-                                    <label for="lunar">음력</label>
-                                </li>
-                                <li>
-                                    <input type="text" name="cellPhone" id="cellPhone" maxlength="13" value={phoneNumber} onChange={handlePhoneNumberChange} />
-                                </li>
-                                <li>
-                                    <input type="text" name="tel" id="tel" maxlength="13" />
-                                </li>
-                                <li>
-                                    <input id="email1" />@&nbsp;<input id="email2" />
-                                </li>
-                                <li>
-                                    <div>
-                                        <div>
-                                            <div className='dis_add'>
-
-                                                <div className='zonecode'>
-                                                    {zonecode}
-                                                    <button className='address_btn'
-                                                type="button"
-                                                onClick={toggleHandler}>
-                                                우편번호 조회
-                                            </button>
-                                                </div>
-
-                                                
-                                            </div>
-                                        </div>
-                                        {isOpen && (
-                                            <div>
-                                                <DaumPostcode
-                                                    theme={themeObj}
-                                                    style={postCodeStyle}
-                                                    onComplete={completeHandler}
-                                                    onClose={closeHandler}
-                                                />
-                                            </div>
-                                        )}
-                                        <div>{address}</div>
-                                        <input className='add_input'
-                                            value={detailedAddress}
-                                            onChange={inputChangeHandler}
-                                            placeholder="상세주소 입력"
-                                        />
-                                    </div>
-                                </li>
-
-                            </ul>
-                            <ul className="base_right2">
-                                <li>
-                                    <input type="radio" className="radio" name="agreement1" id="email_reception" />
-                                    <label for="email_reception">동의</label>
-                                    <input type="radio" className="radio" name="agreement1" id="email_Not_reception" />
-                                    <label for="email_Not_reception">비동의</label>
-                                </li>
-                                <li>
-                                    <input type="radio" className="radio" name="agreement2" id="message_reception" />
-                                    <label for="message_reception">동의</label>
-                                    <input type="radio" className="radio" name="agreement2" id="message_Not_reception" />
-                                    <label for="message_Not_reception">비동의</label>
-                                </li>
-                                <li>
-                                    <input type="radio" className="radio" name="agreement3" id="mail_reception" />
-                                    <label for="mail_reception">동의</label>
-                                    <input type="radio" className="radio" name="agreement3" id="mail_Not_reception" />
-                                    <label for="mail_Not_reception">비동의</label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="subtitle">
-                    <div id="subtitle2">
-                        <div>부가 정보 입력</div>
-                    </div>
-                    <div className="added_info">
-                        <div className="added_left">
-                            <ul className="added_left1">
-                                <li>관심사</li>
-                                <li>결혼여부</li>
-                                <li>자녀유무</li>
-                            </ul>
-                        </div>
-                        <div className="added_right">
-                            <ul className="added_right1">
-                                <li>
-                                    <input type="checkbox" className="checkbox" name="interest" id="music" />
-                                    <label for="music">음악</label>
-                                    <input type="checkbox" className="checkbox" name="interest" id="education" />
-                                    <label for="education">교육</label>
-                                    <input type="checkbox" className="checkbox" name="interest" id="art" />
-                                    <label for="art">미술</label>
-                                    <input type="checkbox" className="checkbox" name="interest" id="science" />
-                                    <label for="science">과학</label>
-                                    <input type="checkbox" className="checkbox" name="interest" id="design" />
-                                    <label for="design">디자인</label>
-                                    기타&nbsp; <input name="interest" id="interest_etc" />
-                                </li>
-                                <li>
-                                    <input type="radio" className="radio" name="marital" id="children_y" />
-                                    <label for="children_y">기혼</label>
-                                    <input type="radio" className="radio" name="marital" id="children_n" />
-                                    <label for="children_n">미혼</label>
-                                </li>
-                                <li>
-                                    <input type="radio" className="radio" name="children" id="married" />
-                                    <label for="married">있음</label>
-                                    <input type="radio" className="radio" name="children" id="single" />
-                                    <label for="single">없음</label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="subtitle">
-                    <div id="subtitle3">
-                        <div>이용약관 및 동의</div>
-                        <text>*은 필수 입력 사항입니다.</text>
-                    </div>
-                    <div className="agreement">
-                        <div id="agreement1">
-                            <div className="agreement_title">* 이용약관</div>
-                            <div className="agreement_content1">이용약관 내용</div>
-                            이용약관에 동의하시겠습니까?&nbsp;&nbsp;
-                            <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                            <label for="agreement1"></label>
-                        </div>
-                        <div id="agreement2">
-                            <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
-                            <div className="agreement_content2">이용약관 내용</div>
-                            개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
-                            <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                            <label for="agreement1"></label>
-                        </div>
-                        <button type="submit" id="signUp_btn"><a href="/login">회원가입하기</a></button>
-                    </div>
-                </div>
-
-            </div>
+            <form onSubmit={handleSubmit}>
+	            <div className="signUp_center">
+	                <div className="subtitle">
+	                    <div id="subtitle1">
+	                        <div>기본 정보 입력</div>
+	                        <text>*은 필수 입력 사항입니다.</text>
+	                    </div>
+	                    <div className="base_info">
+	                        <div className="base_left">
+	                            <ul className="base_left1">
+	                                <li>* 이름</li>
+	                                <li>* 아이디</li>
+	                                <li>* 비밀번호</li>
+	                                <li>* 비밀번호 확인</li>
+	                                <li>* 생년월일</li>
+	                                <li>* 휴대폰 번호</li>
+	                                <li>전화번호</li>
+	                                <li>* 이메일</li>
+	                                <li>* 주소</li>
+	                                <li></li>
+	                            </ul>
+	                            <ul className="base_left2">
+	                                <li>* 메일수신동의</li>
+	                                <li>* 문자수신동의</li>
+	                                <li>* 우편수신동의</li>
+	                            </ul>
+	                        </div>
+	                        <div className="base_right">
+	                            <ul className="base_right1">
+	                                <li><input name="name" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} /></li>
+	                                <li>
+	                                    <input name="id" id="id" value={formData.id} onChange={(e) => {setFormData({ ...formData, id: e.target.value }); setIdAvailable(false);}}/>
+	                                    <button type="button" className="check_btn" id="id_check" onClick={handleCheckId}> 중복확인</button>
+                                        {idAvailable && <span className="complete"> 중복 확인 완료</span>}
+	                                </li>
+	                                <li>
+	                                    <input name="password" id="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+	                                </li>
+	                                <li>
+	                                	<input id="confirm_password" name="confirm_password" value={formData.confirm_password} onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })} />
+	                                </li>
+									<li>
+										<input type="date" name="birth" id="birth" value={formData.birth} onChange={(e) => setFormData({ ...formData, birth: e.target.value })} />
+									</li>
+	                                <li>
+	                                    <input type="text" name="phone_number" id="phone_number" maxlength="13" value={formData.phone_number} onChange={handlePhoneNumberChange} />
+	                                </li>
+	                                <li>
+	                                    <input type="text" name="tel_number" id="tel_number" maxlength="13" value={formData.tel_number} onChange={(e) => setFormData({ ...formData, tel_number: e.target.value })} />
+	                                </li>
+	                                <li>
+	                                    <input id="email1" name="email1" value={formData.email1} onChange={(e) => {setFormData({ ...formData, email1: e.target.value }); handleEmailChange();}} />@&nbsp;
+	                                    <input id="email2" name="email2" value={formData.email2} onChange={(e) => {setFormData({ ...formData, email2: e.target.value }); handleEmailChange();}} />
+	                                </li>
+	                                <li>
+	                                    <div>
+	                                        <div>
+	                                            <div className='dis_add'>
+	                                                <div className='zonecode'>
+	                                                	<div className="zonecode_view">
+	                                                    	{zonecode}
+	                                                    </div>
+	                                                    <button className='address_btn'
+			                                                type="button"
+			                                                onClick={toggleHandler}>
+			                                                우편번호 조회
+	                                            		</button>
+	                                                </div>
+	                                            </div>
+	                                        </div>
+	                                        {isOpen && (
+	                                            <div>
+	                                                <DaumPostcode
+	                                                    theme={themeObj}
+	                                                    style={postCodeStyle}
+	                                                    onComplete={completeHandler}
+	                                                    onClose={closeHandler}
+	                                                    value={formData.address}
+	                                                />
+	                                            </div>
+	                                        )}
+	                                        <div className='address' name="address" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })}>
+	                                        	{address}
+	                                        </div>
+	                                        <input className='add_input'
+	                                        	name="detail_address"
+	                                            value={formData.detail_address}
+	                                            onChange={(e) => setFormData({ ...formData, detail_address: e.target.value })}
+	                                            placeholder="상세주소 입력"
+	                                        />
+	                                    </div>
+	                                </li>
+	
+	                            </ul>
+	                            <ul className="base_right2">
+	                                <li>
+	                                    <input type="radio" className="radio" name="email_agreement" id="email_agreement" value={true} onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
+	                                    <label for="email_agreement">동의</label>
+	                                    <input type="radio" className="radio" name="email_disagreement" id="email_disagreement" value={false}  onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
+	                                    <label for="email_disagreement">비동의</label>
+	                                </li>
+	                                <li>
+	                                    <input type="radio" className="radio" name="message_areement" id="message_areement" value={true} onChange={(e) => setFormData({ ...formData, agreement2: e.target.value })} />
+	                                    <label for="message_areement">동의</label>
+	                                    <input type="radio" className="radio" name="message_areement" id="message_disareement" value={false} onChange={(e) => setFormData({ ...formData, agreement2: e.target.value })} />
+	                                    <label for="message_disareement">비동의</label>
+	                                </li>
+	                                <li>
+	                                    <input type="radio" className="radio" name="mail_agreement" id="mail_agreement" value={true} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
+	                                    <label for="mail_reception">동의</label>
+	                                    <input type="radio" className="radio" name="mail_disagreement" id="mail_disagreement" value={false} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
+	                                    <label for="mail_disagreement">비동의</label>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div className="subtitle">
+	                    <div id="subtitle2">
+	                        <div>부가 정보 입력</div>
+	                    </div>
+	                    <div className="added_info">
+	                        <div className="added_left">
+	                            <ul className="added_left1">
+	                                <li>관심사</li>
+	                                <li>결혼여부</li>
+	                                <li>자녀유무</li>
+	                            </ul>
+	                        </div>
+	                        <div className="added_right">
+	                            <ul className="added_right1">
+	                                <li>
+	                                    <input type="checkbox" className="checkbox" name="interest" id="music" value="음악" onChange={(e) => handleInterestChange(e.target.value)}  />
+	                                    <label for="music">음악</label>
+	                                    <input type="checkbox" className="checkbox" name="interest" id="education" value="교육" onChange={(e) => handleInterestChange(e.target.value)}  />
+	                                    <label for="education">교육</label>
+	                                    <input type="checkbox" className="checkbox" name="interest" id="art" value="미술" onChange={(e) => handleInterestChange(e.target.value)}  />
+	                                    <label for="art">미술</label>
+	                                    <input type="checkbox" className="checkbox" name="interest" id="science" value="과학" onChange={(e) => handleInterestChange(e.target.value)}  />
+	                                    <label for="science">과학</label>
+	                                    <input type="checkbox" className="checkbox" name="interest" id="design" value="디자인" onChange={(e) => handleInterestChange(e.target.value)}  />
+	                                    <label for="design">디자인</label>
+	                                </li>
+	                                <li>
+	                                    <input type="radio" className="radio" name="married" id="married_y" value="기혼" onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
+	                                    <label for="married_y">기혼</label>
+	                                    <input type="radio" className="radio" name="married" id="married_n" value="미혼" onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
+	                                    <label for="married_n">미혼</label>
+	                                </li>
+	                                <li>
+	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_y" value="아이있음" onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
+	                                    <label for="hasChildren_y">있음</label>
+	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_n" value="아이없음" onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
+	                                    <label for="hasChildren_n">없음</label>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div className="subtitle">
+	                    <div id="subtitle3">
+	                        <div>이용약관 및 동의</div>
+	                        <text>*은 필수 입력 사항입니다.</text>
+	                    </div>
+	                    <div className="agreement">
+	                        <div id="agreement1">
+	                            <div className="agreement_title">* 이용약관</div>
+	                            <div className="agreement_content1">이용약관 내용</div>
+	                            이용약관에 동의하시겠습니까?&nbsp;&nbsp;
+	                            <input type="checkbox" className="checkbox" name="agreement" checked={agreement4Checked} onChange={handleAgreement4Change} />
+	                            <label for="agreement1"></label>
+	                        </div>
+	                        <div id="agreement2">
+	                            <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
+	                            <div className="agreement_content2">이용약관 내용</div>
+	                            개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
+	                            <input type="checkbox" className="checkbox" name="agreement" checked={agreement5Checked} onChange={handleAgreement5Change} />
+	                            <label for="agreement1"></label>
+	                        </div>
+	                        <button type="submit" id="signUp_btn" >회원가입하기</button>
+	                    </div>
+	                </div>
+	
+	            </div>
+	         </form>
         </div>
 
     );

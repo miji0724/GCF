@@ -1,11 +1,9 @@
 package com.gcf.spring.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
-
-import com.gcf.spring.entity.Member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,11 +34,8 @@ public class MemberDto {
 	@NotBlank(message="비밀번호 확인은 필수 입력 값입니다.")
 	private String confirm_password;
 	
-	@NotBlank(message = "성별은 필수 입력 값입니다.")
-    private String sex;
-	
 	@NotNull(message = "생년월일은 필수 입력 값입니다.")
-	private Date birth;
+	private LocalDate birth;
 	
 	@NotBlank(message = "휴대폰 번호는 필수 입력 값입니다.")
 	private String phone_number;
@@ -50,25 +45,23 @@ public class MemberDto {
 	@NotBlank(message="이메일은 필수 입력 값입니다.")
 	@Email(message = "올바른 이메일 주소를 입력해주세요.")
 	private String email;
-
-	private String zipCode;
 	
 	@NotBlank(message = "주소는 필수 입력 값입니다.")
     private String address;
 	
-	private String detailAddress;
+	private String detail_address;
 	
 	@NotEmpty(message = "관심사는 최소한 하나 이상 선택해야 합니다.")
-	private List<String> interest;
+	private List<String> interests;
 	
     @NotNull(message = "이메일 수신 동의는 필수 입력 값입니다.")
-    private Boolean emailAgreement;
+    private Boolean email_agreement;
 
     @NotNull(message = "문자 수신 동의는 필수 입력 값입니다.")
-    private Boolean smsAgreement;
+    private Boolean message_agreement;
 
     @NotNull(message = "우편 수신 동의는 필수 입력 값입니다.")
-    private Boolean postalAgreement;
+    private Boolean mail_agreement;
 
 	@NotNull(message = "결혼 여부는 필수 입력 값입니다.")
     private Boolean married;
