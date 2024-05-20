@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 public class MainController {
-    @GetMapping("/home")
-    public ResponseEntity<String> home() {
-        return ResponseEntity.ok("home");
-    }
+//    @GetMapping("/home")
+//    public ResponseEntity<String> home() {
+//        return ResponseEntity.ok("home");
+//    }
 }

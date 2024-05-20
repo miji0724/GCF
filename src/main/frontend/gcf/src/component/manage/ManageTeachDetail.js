@@ -96,14 +96,13 @@ function ManageTeachDetail() {
                                 <li>소속기관</li>
                                 <li>* 강의분야</li>
                                 <li>SNS주소</li>
-                                <li>&nbsp;</li>
                                 <li>* 주요이력</li>
                                 <li>&nbsp;</li>
+                                <li className='marginTop10'>&nbsp;</li>
+                                <li className='marginTop10'>자격증</li>
                                 <li>&nbsp;</li>
-                                <li>자격증</li>
                                 <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li>강의가능분야</li>
+                                <li className='marginTop10'>강의가능분야</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                             </ul>

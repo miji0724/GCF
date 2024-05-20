@@ -107,7 +107,6 @@ const handleRemoveTeachInput = (id) => {
                                 <li className="marginTop25">강사 소개</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
-                                <li>&nbsp;</li>
                                 <li>* 강의 분야</li>
                                 <li>* 운영 장소</li>
                                 <li>* 운영 목록</li>
@@ -124,8 +123,7 @@ const handleRemoveTeachInput = (id) => {
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
-                                <li className="marginTop25">* 모집기간</li>
-                                <li>&nbsp;</li>
+                                <li>* 모집기간</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
@@ -239,8 +237,7 @@ const handleRemoveTeachInput = (id) => {
                                         <li>&nbsp;</li>
                                         <li>&nbsp;</li>
                                         <li>&nbsp;</li>
-                                        <li>&nbsp;</li>
-                                        <li className="marginTop25">*운영요일</li>
+                                        <li className="marginTop10">*운영요일</li>
                                         <li>*운영시간</li>
                                         <li>*신청가능인원</li>
                                         <li>*대상</li>

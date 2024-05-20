@@ -74,6 +74,7 @@
 .lecOffDetail select{
     border-style: none;
     background-color: #ededed;
+    text-align:center;
 }
 
 .lecOffDetail .introduceEdu_area,
@@ -125,6 +126,18 @@
     resize:none;
 }
 
+.introduceEdu_attachment,
+.introduceTeach_attachment{
+    width:200px;
+}
+
+.introduceEdu_flexArea,
+.introduceTeach_flexArea{
+    display:flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 .lecOffDetail_program{
     background-color: #AECCF2;
     display:flex;
@@ -170,6 +183,10 @@
     width:380px;
 }
 
+.lecOffDetail .rdrMonth{
+    width:360px;
+}
+
 /* 달력 원본 코드 수정 */
 
 .oCalendar{
@@ -192,13 +209,13 @@
 }
 
 .lecOffDetail_costWrapper{
-    height:30px;
+    height:40px;
     margin-bottom:5px;
 }
 
 .lecOffDetail_costWrapper > p{
     font-size: 10px;
-    margin-left: 20px;
+    margin:0 0 0 20px;
 }
 
 
@@ -222,8 +239,4 @@
     height: 50px;
     font-size: 25px;
     font-weight:600;
-}
-
-.marginTop25{
-    margin-top: 25px;
 }
