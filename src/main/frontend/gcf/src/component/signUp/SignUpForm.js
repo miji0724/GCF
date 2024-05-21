@@ -77,7 +77,8 @@ const SignUpForm = () => {
             if (!formData.confirm_password) errorMessage += '- 비밀번호 확인\n';
             if (!formData.birth) errorMessage += '- 생년월일\n';
             if (!formData.phone_number) errorMessage += '- 휴대폰 번호\n';
-            if (!formData.email) errorMessage += '- 이메일\n';
+            if (!formData.email1) errorMessage += '- 이메일\n';
+			if (!formData.email2) errorMessage += '- 이메일\n';
             if (!formData.address) errorMessage += '- 주소\n';
             if (!formData.email_agreement) errorMessage += '- 이메일 수신 동의\n';
             if (!formData.message_agreement) errorMessage += '- 문자 수신 동의\n';
@@ -282,20 +283,20 @@ const SignUpForm = () => {
 	                                <li>
 	                                    <input type="radio" className="radio" name="email_agreement" id="email_agreement" value={true} onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
 	                                    <label htmlFor="email_agreement">동의</label>
-	                                    <input type="radio" className="radio" name="email_disagreement" id="email_disagreement" value={false}  onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
-	                                    <label htmlFor="email_disagreement">비동의</label>
+	                                    <input type="radio" className="radio" name="email_agreement" id="email_disagreement" value={false}  onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
+	                                    <label htmlFor="email_agreement">비동의</label>
 	                                </li>
 	                                <li>
 	                                    <input type="radio" className="radio" name="message_agreement" id="message_agreement" value={true} onChange={(e) => setFormData({ ...formData, message_agreement: e.target.value })} />
 	                                    <label htmlFor="message_agreement">동의</label>
-	                                    <input type="radio" className="radio" name="message_disagreement" id="message_disagreement" value={false} onChange={(e) => setFormData({ ...formData, message_agreement: e.target.value })} />
-	                                    <label htmlFor="message_disagreement">비동의</label>
+	                                    <input type="radio" className="radio" name="message_agreement" id="message_disagreement" value={false} onChange={(e) => setFormData({ ...formData, message_agreement: e.target.value })} />
+	                                    <label htmlFor="message_agreement">비동의</label>
 	                                </li>
 	                                <li>
 	                                    <input type="radio" className="radio" name="mail_agreement" id="mail_agreement" value={true} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
 	                                    <label htmlFor="mail_reception">동의</label>
-	                                    <input type="radio" className="radio" name="mail_disagreement" id="mail_disagreement" value={false} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
-	                                    <label htmlFor="mail_disagreement">비동의</label>
+	                                    <input type="radio" className="radio" name="mail_agreement" id="mail_disagreement" value={false} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
+	                                    <label htmlFor="mail_agreement">비동의</label>
 	                                </li>
 	                            </ul>
 	                        </div>
