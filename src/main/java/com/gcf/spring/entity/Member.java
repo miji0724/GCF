@@ -50,7 +50,7 @@ public class Member {
 	
 	private String detail_address;
 	
-	private List<String> interest;
+	private List<String> interests;
 	
 	@Column(nullable = false)
 	private Boolean email_agreement;
@@ -73,8 +73,7 @@ public class Member {
 		Member member = new Member();
 		member.setId(memberDto.getId());
 		member.setName(memberDto.getName());
-		String password = passwordEncoder.encode(memberDto.getPassword());
-		member.setPassword(password);
+        member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
 		member.setBirth(memberDto.getBirth());
 		member.setPhone_number(memberDto.getPhone_number());
 		member.setTel_number(memberDto.getTel_number());
@@ -84,7 +83,7 @@ public class Member {
 		member.setEmail_agreement(memberDto.getEmail_agreement());
 		member.setMessage_agreement(memberDto.getMessage_agreement());
 		member.setMail_agreement(memberDto.getMail_agreement());
-		member.setInterest(memberDto.getInterests());
+		member.setInterests(memberDto.getInterests());
 		member.setMarried(memberDto.getMarried());
 		member.setHasChildren(memberDto.getHasChildren());
 		member.setRole(Role.USER);
