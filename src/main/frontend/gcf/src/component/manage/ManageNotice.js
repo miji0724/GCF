@@ -9,7 +9,7 @@ function noticeWrite() {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    
+
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -19,16 +19,16 @@ function formatDate(dateString) {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
-
 function ManageNotice() {
     const [notices, setNotices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/notices')
+        axios.get('http://localhost:8090/notice')
             .then(response => {
-                setNotices(response.data);
+                const sortedNotices = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                setNotices(sortedNotices);
             })
             .catch(error => {
                 console.error('Error fetching notices:', error);

@@ -18,7 +18,7 @@ import com.gcf.spring.entity.Notice;
 import com.gcf.spring.service.NoticeService;
 
 @RestController
-@RequestMapping("/notices")
+@RequestMapping("/notice")
 public class NoticeController {
 
     @Autowired
@@ -36,11 +36,6 @@ public class NoticeController {
         return new ResponseEntity<>(notices, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}") 
-    public ResponseEntity<Notice> getNoticeById(@PathVariable Integer id) {
-        Notice notice = noticeService.getNoticeById(id);
-        return new ResponseEntity<>(notice, HttpStatus.OK);
-    }
 
     @PutMapping("/{id}") 
     public ResponseEntity<Notice> updateNotice(@PathVariable Integer id, @RequestBody Notice updatedNotice) {
