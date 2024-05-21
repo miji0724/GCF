@@ -11,6 +11,20 @@ const SignUpForm = () => {
     const [address, setAddress] = useState('');
     const [detailedAddress, setDetailedAddress] = useState('');
 
+    const [formData, setFormData] = useState({
+        name: '',
+        id: '',
+        password: '',
+        confirmPassword: '',
+        gender: '',
+        birthDate: '',
+        email: '',
+        cellPhone: '',
+        tel: '',
+        detailedAddress: '',
+        agreement: false
+    });
+    
     const autoHypenPhone = (str) => {
         str = str.replace(/[^0-9]/g, '');
         let tmp = '';
@@ -133,7 +147,7 @@ const SignUpForm = () => {
                                     <input type="text" name="tel" id="tel" maxlength="13" />
                                 </li>
                                 <li>
-                                    <input id="email1" />@&nbsp;<input id="email2" />
+                                    <input id="email" />
                                 </li>
                                 <li>
                                     <div>

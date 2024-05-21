@@ -16,7 +16,6 @@ import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
-import com.gcf.spring.dto.MyPageAuthenticationRequest; // 추가
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    
 
     // 회원가입
     public ResponseEntity<String> signUp(MemberDto memberDto, PasswordEncoder passwordEncoder) {
@@ -44,7 +43,7 @@ public class MemberService implements UserDetailsService {
 
             return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다");
         }
     }
     
@@ -84,17 +83,5 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
     
-    // 추가: 회원 인증 메서드
-    public boolean authenticateUser(MyPageAuthenticationRequest authenticationRequest) {
-        String id = authenticationRequest.getId();
-        String password = authenticationRequest.getPassword();
-
-        Member member = memberRepository.findById(id).orElse(null);
-        if (member == null) {
-            return false;
-        }
-
-        String encodedPassword = member.getPassword();
-        return passwordEncoder.matches(password, encodedPassword);
-    }
+    
 }

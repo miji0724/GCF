@@ -1,6 +1,6 @@
 package com.gcf.spring.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,6 @@ import lombok.Setter;
 public class Member {
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
 	
 	@Column(nullable = false)
@@ -36,10 +35,7 @@ public class Member {
 	private String password;
 	
 	@Column(nullable = false)
-	private String sex;
-	
-	@Column(nullable = false)
-	private Date birth;
+	private LocalDate birth;
 	
 	@Column(nullable = false)
 	private String phone_number;
@@ -49,24 +45,21 @@ public class Member {
 	@Column(unique = true)
 	private String email;
 	
-	private String zipCode;
-	
 	@Column(nullable = false)
 	private String address;
 	
-	private String detailAddress;
+	private String detail_address;
 	
-	@Column(nullable = false)
 	private List<String> interest;
 	
 	@Column(nullable = false)
-	private Boolean emailAgreement;
+	private Boolean email_agreement;
 	
 	@Column(nullable = false)
-	private Boolean smsAgreement;
+	private Boolean message_agreement;
 	
 	@Column(nullable = false)
-	private Boolean postalAgreement;
+	private Boolean mail_agreement;
 	
 	private Boolean married;
 	
@@ -82,18 +75,16 @@ public class Member {
 		member.setName(memberDto.getName());
 		String password = passwordEncoder.encode(memberDto.getPassword());
 		member.setPassword(password);
-		member.setSex(memberDto.getSex());
 		member.setBirth(memberDto.getBirth());
 		member.setPhone_number(memberDto.getPhone_number());
 		member.setTel_number(memberDto.getTel_number());
 		member.setEmail(memberDto.getEmail());
-		member.setZipCode(memberDto.getZipCode());
 		member.setAddress(memberDto.getAddress());
-		member.setDetailAddress(memberDto.getDetailAddress());
-		member.setInterest(memberDto.getInterest());
-		member.setEmailAgreement(memberDto.getEmailAgreement());
-		member.setSmsAgreement(memberDto.getSmsAgreement());
-		member.setPostalAgreement(memberDto.getPostalAgreement());
+		member.setDetail_address(memberDto.getDetail_address());
+		member.setEmail_agreement(memberDto.getEmail_agreement());
+		member.setMessage_agreement(memberDto.getMessage_agreement());
+		member.setMail_agreement(memberDto.getMail_agreement());
+		member.setInterest(memberDto.getInterests());
 		member.setMarried(memberDto.getMarried());
 		member.setHasChildren(memberDto.getHasChildren());
 		member.setRole(Role.USER);
