@@ -36,16 +36,19 @@ public class NoticeController {
         return new ResponseEntity<>(notices, HttpStatus.OK);
     }
 
-
-    @PutMapping("/{id}") 
-    public ResponseEntity<Notice> updateNotice(@PathVariable Integer id, @RequestBody Notice updatedNotice) {
+    @PutMapping("/noticewrite/{id}") 
+    public ResponseEntity<Notice> updateNotice(@PathVariable("id") Integer id, @RequestBody Notice updatedNotice) {
         Notice updated = noticeService.updateNotice(id, updatedNotice);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}") 
-    public ResponseEntity<Void> deleteNotice(@PathVariable Integer id) {
-        noticeService.deleteNotice(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteNotice(@PathVariable("id") Integer id) {
+        try {
+            noticeService.deleteNotice(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

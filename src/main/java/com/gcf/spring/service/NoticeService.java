@@ -29,15 +29,15 @@ public class NoticeService {
 
     // 3. 특정 공지사항 조회(Read)
     @Transactional(readOnly = true)
-    public Notice getNoticeById(Integer noticeId) {
-        return noticeRepository.findById(noticeId)
+    public Notice getNoticeById(Integer id) {
+        return noticeRepository.findById(id)
                                .orElseThrow(() -> new RuntimeException("해당 ID의 공지사항을 찾을 수 없습니다."));
     }
 
     // 4. 공지사항 수정(Update)
     @Transactional
-    public Notice updateNotice(Integer noticeId, Notice updatedNotice) {
-        Notice existingNotice = getNoticeById(noticeId);
+    public Notice updateNotice(Integer id, Notice updatedNotice) {
+        Notice existingNotice = getNoticeById(id);
         if (updatedNotice.getAuthor() != null) {
             existingNotice.setAuthor(updatedNotice.getAuthor());
         }
@@ -50,8 +50,8 @@ public class NoticeService {
 
     // 5. 공지사항 삭제(Delete)
     @Transactional
-    public void deleteNotice(Integer noticeId) {
-        Notice existingNotice = getNoticeById(noticeId);
+    public void deleteNotice(Integer id) {
+        Notice existingNotice = getNoticeById(id);
         noticeRepository.delete(existingNotice);
     }
 }

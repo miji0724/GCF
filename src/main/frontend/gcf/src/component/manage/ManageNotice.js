@@ -9,7 +9,7 @@ function noticeWrite() {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-
+    
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -39,13 +39,24 @@ function ManageNotice() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = notices.slice(indexOfFirstItem, indexOfLastItem);
 
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(notices.length / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
+    const handleDelete = (id) => {
+        if (window.confirm("정말로 삭제하시겠습니까?")) {
+            axios.delete(`http://localhost:8090/notice/${id}`)
+                .then(response => {
+                    // 삭제 성공시에는 해당 공지사항을 제외한 새로운 목록으로 업데이트
+                    const updatedNotices = notices.filter(item => item.id !== id);
+                    setNotices(updatedNotices);
+                })
+                .catch(error => {
+                    console.error('Error deleting notice:', error);
+                });
+        }
+    };
 
-    const isFirstGroup = currentPage <= 5;
-    const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
+    const handleEdit = (id) => {
+        // 편집할 공지의 ID를 사용하여 해당 공지를 수정하는 페이지로 이동
+        window.location.href = `/manage/noticewrite/${id}`;
+    };
 
     return (
         <div className='manageNotice_container'>
@@ -74,49 +85,12 @@ function ManageNotice() {
                                     <td>{item.author}</td>
                                     <td>{formatDate(item.created_at)}</td>
                                     <td>{item.views}</td>
-                                    <td><button onClick={noticeWrite} className='modify_button'>수정</button></td>
-                                    <td><button className='delete_button'>삭제</button></td>
+                                    <td><button onClick={() => handleEdit(item.id)} className='modify_button'>수정</button></td>
+                                    <td><button onClick={() => handleDelete(item.id)} className='delete_button'>삭제</button></td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <ul className='pagination'>
-                        {!isFirstGroup && (
-                            <>
-                                <li className='page-item'>
-                                    <button onClick={() => setCurrentPage(1)} className='page-link'>
-                                        {'<<'}
-                                    </button>
-                                </li>
-                                <li className='page-item'>
-                                    <button onClick={() => setCurrentPage(currentPage - 5)} className='page-link'>
-                                        {'<'}
-                                    </button>
-                                </li>
-                            </>
-                        )}
-                        {pageNumbers.filter(number => Math.ceil(number / 5) === Math.ceil(currentPage / 5)).map(number => (
-                            <li key={number} className='page-item'>
-                                <button onClick={() => setCurrentPage(number)} className='page-link'>
-                                    {number}
-                                </button>
-                            </li>
-                        ))}
-                        {!isLastGroup && (
-                            <>
-                                <li className='page-item'>
-                                    <button onClick={() => setCurrentPage(currentPage + 5)} className='page-link'>
-                                        {'>'}
-                                    </button>
-                                </li>
-                                <li className='page-item'>
-                                    <button onClick={() => setCurrentPage(pageNumbers[pageNumbers.length - 1])} className='page-link'>
-                                        {'>>'}
-                                    </button>
-                                </li>
-                            </>
-                        )}
-                    </ul>
                 </div>
             </div>
         </div>
