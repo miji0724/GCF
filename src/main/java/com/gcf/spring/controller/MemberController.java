@@ -10,9 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
+import com.gcf.spring.entity.Member;
 import com.gcf.spring.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,12 +26,19 @@ public class MemberController {
 		
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
-
+	
+    @GetMapping("/checkId")
+    public ResponseEntity<String> checkId(@RequestParam("id") String id) {
+    	System.out.println("아이디 중복확인");
+        return memberService.checkId(id);
+    }
+    
     @PostMapping("/signUp/ok")
     public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
         try {
-            memberService.signUp(memberDto, passwordEncoder);
-            return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
+            // 서비스의 회원가입 메서드를 호출
+            ResponseEntity<String> response = memberService.signUp(memberDto, passwordEncoder);
+            return response;
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

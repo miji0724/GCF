@@ -2,9 +2,11 @@ import './SignUpForm.css'
 import React, { useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
 
+	const navigate = useNavigate();
     const [idAvailable, setIdAvailable] = useState(false);
     const [address, setAddress] = useState('');
 
@@ -68,7 +70,7 @@ const SignUpForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!formData.name || !formData.id || !formData.password || !formData.confirm_password || !formData.birth || !formData.phone_number || !formData.email || !formData.address || !formData.email_agreement || !formData.message_agreement || !formData.mail_agreement) {
+        if (!formData.name || !formData.id || !formData.password || !formData.confirm_password || !formData.birth || !formData.phone_number || !formData.email1 || !formData.email2 || !formData.address || !formData.email_agreement || !formData.message_agreement || !formData.mail_agreement) {
             let errorMessage = '다음 필수 입력 값을 입력해주세요:\n';
         
             if (!formData.name) errorMessage += '- 이름\n';
@@ -98,7 +100,7 @@ const SignUpForm = () => {
 		.then(response => {
 			alert(response.data);
 			console.log(response.data); // 회원가입 성공 시 처리
-			window.location.reload();
+			navigate("/login");
 		})
 		.catch(error => {
 			alert(error.response.data);
@@ -218,7 +220,7 @@ const SignUpForm = () => {
 	                                <li>
 	                                    <input name="id" id="id" value={formData.id} onChange={(e) => {setFormData({ ...formData, id: e.target.value }); setIdAvailable(false);}}/>
 	                                    <button type="button" className="check_btn" id="id_check" onClick={handleCheckId}> 중복확인</button>
-                                        {idAvailable && <span className="complete"> 중복 확인 완료</span>}
+                                        {/* {idAvailable && <span className="complete"> 중복 확인 완료</span>} */}
 	                                </li>
 	                                <li>
 	                                    <input name="password" id="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />

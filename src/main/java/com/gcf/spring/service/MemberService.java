@@ -26,7 +26,15 @@ public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
     
-    // 비밀번호 일치 확인
+    public ResponseEntity<String> checkId(String id) {
+        if (existsById(id)) {
+            return ResponseEntity.ok("이미 사용 중인 아이디입니다. 아이디를 변경해주세요.");
+        } else {
+            return ResponseEntity.ok("사용 가능한 아이디입니다.");
+        }
+    }
+    
+    
     public boolean isPasswordMatch(String password, String confirm_password) {
         return password.equals(confirm_password);
     }
@@ -35,12 +43,12 @@ public class MemberService implements UserDetailsService {
     public ResponseEntity<String> signUp(MemberDto memberDto, PasswordEncoder passwordEncoder) {
         // 비밀번호 일치 여부 확인
         if (!isPasswordMatch(memberDto.getPassword(), memberDto.getConfirm_password())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
         }
-        
+
         // 아이디 중복 체크
         if (existsById(memberDto.getId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 사용 중인 아이디입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 사용 중인 아이디입니다. 아이디를 변경해주세요.");
         }
 
         Member member = Member.createMember(memberDto, passwordEncoder);
