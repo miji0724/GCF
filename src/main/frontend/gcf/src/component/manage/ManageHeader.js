@@ -13,7 +13,7 @@ const gotoHome = () => {
 function ManageHeader() {
     return (
         <header>
-            <div class="header_content">
+            <div className="header_content">
                 <div className="logo">
                     <img src={logo} alt="Logo" onClick={gotoManageHome} />
                 </div>
