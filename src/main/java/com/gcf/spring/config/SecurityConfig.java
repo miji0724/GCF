@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/"))
 
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/signUp")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**/**/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()

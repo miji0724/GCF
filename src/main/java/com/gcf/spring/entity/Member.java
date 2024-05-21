@@ -50,7 +50,6 @@ public class Member {
 	
 	private String detail_address;
 	
-	@Column(nullable = false)
 	private List<String> interest;
 	
 	@Column(nullable = false)

@@ -28,16 +28,16 @@ const SignUpForm = () => {
         email1: '',
         email2: '',
         email: '',
-        email_agreement: false, 
-        message_agreement: false,
-        mail_agreement: false,
+        email_agreement: '', 
+        message_agreement: '',
+        mail_agreement: '',
         interests: [],
-	    married: false, 
-	    hasChildren: false 
+	    married: '', 
+	    hasChildren: '', 
 	})
 
     const handleCheckId = () => {
-        axios.get("/checkId?id=" + formData.id)
+        axios.get(`/checkId?id=${formData.id}`)
             .then(response => {
                 alert(response.data);
                 if (response.status === 200) {
@@ -57,32 +57,52 @@ const SignUpForm = () => {
     const handleAgreement5Change = () => {
         setAgreement5Checked(!agreement5Checked);
     };
+
+	const handleEmailChange = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            email: `${prevFormData.email1}@${prevFormData.email2}`,
+        }));
+    };
     
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!formData.name || !formData.id || !formData.password || !formData.confirm_password || !formData.birth || !formData.phone_number || !formData.email || !formData.address || !formData.email_agreement || !formData.message_agreement || !formData.mail_agreement) {
+            let errorMessage = '다음 필수 입력 값을 입력해주세요:\n';
+        
+            if (!formData.name) errorMessage += '- 이름\n';
+            if (!formData.id) errorMessage += '- 아이디\n';
+            if (!formData.password) errorMessage += '- 비밀번호\n';
+            if (!formData.confirm_password) errorMessage += '- 비밀번호 확인\n';
+            if (!formData.birth) errorMessage += '- 생년월일\n';
+            if (!formData.phone_number) errorMessage += '- 휴대폰 번호\n';
+            if (!formData.email) errorMessage += '- 이메일\n';
+            if (!formData.address) errorMessage += '- 주소\n';
+            if (!formData.email_agreement) errorMessage += '- 이메일 수신 동의\n';
+            if (!formData.message_agreement) errorMessage += '- 문자 수신 동의\n';
+            if (!formData.mail_agreement) errorMessage += '- 우편 수신 동의\n';
+        
+            alert(errorMessage);
+            return;
+        }
 
         if (!agreement4Checked || !agreement5Checked) {
             alert("이용약관에 모두 동의해야 회원가입이 가능합니다.");
             return;
         }
 
-        try {
-            const response = await fetch('/signUp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            if (response.ok) {
-                alert('회원가입이 완료되었습니다!');
-            } else {
-                throw new Error('회원가입에 실패했습니다.');
-            }
-        } catch (error) {
-            console.error('회원가입 중 오류 발생:', error);
-            alert('회원가입 중 오류가 발생했습니다.');
-        }
+		
+		axios.post("/signUp/ok", formData)
+		.then(response => {
+			alert(response.data);
+			console.log(response.data); // 회원가입 성공 시 처리
+			window.location.reload();
+		})
+		.catch(error => {
+			alert(error.response.data);
+			console.error(error); // 오류 발생 시 처리
+		});
     };
     
     const autoHypenPhone = (str) => {
@@ -119,10 +139,10 @@ const SignUpForm = () => {
         
         if (interests.includes(value)) {
             // 이미 선택된 관심사인 경우, 해당 관심사를 배열에서 제거
-            setFormData({ ...formData, interest: interests.filter(item => item !== value) });
+            setFormData({ ...formData, interests: interests.filter(item => item !== value) });
         } else {
             // 선택되지 않은 관심사인 경우, 배열에 추가
-            setFormData({ ...formData, interest: [...interests, value] });
+            setFormData({ ...formData, interests: [...interests, value] });
         }
     };
 
@@ -136,14 +156,6 @@ const SignUpForm = () => {
     const postCodeStyle = {
         width: '360px',
         height: '480px',
-    };
-    
-
-    const handleEmailChange = () => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            email: `${prevFormData.email1}@${prevFormData.email2}`,
-        }));
     };
     
     const completeHandler = (data) => {
@@ -217,10 +229,10 @@ const SignUpForm = () => {
 										<input type="date" name="birth" id="birth" value={formData.birth} onChange={(e) => setFormData({ ...formData, birth: e.target.value })} />
 									</li>
 	                                <li>
-	                                    <input type="text" name="phone_number" id="phone_number" maxlength="13" value={formData.phone_number} onChange={handlePhoneNumberChange} />
+	                                    <input type="text" name="phone_number" id="phone_number" maxLength="13" value={formData.phone_number} onChange={handlePhoneNumberChange} />
 	                                </li>
 	                                <li>
-	                                    <input type="text" name="tel_number" id="tel_number" maxlength="13" value={formData.tel_number} onChange={(e) => setFormData({ ...formData, tel_number: e.target.value })} />
+	                                    <input type="text" name="tel_number" id="tel_number" maxLength="13" value={formData.tel_number} onChange={(e) => setFormData({ ...formData, tel_number: e.target.value })} />
 	                                </li>
 	                                <li>
 	                                    <input id="email1" name="email1" value={formData.email1} onChange={(e) => {setFormData({ ...formData, email1: e.target.value }); handleEmailChange();}} />@&nbsp;
@@ -269,21 +281,21 @@ const SignUpForm = () => {
 	                            <ul className="base_right2">
 	                                <li>
 	                                    <input type="radio" className="radio" name="email_agreement" id="email_agreement" value={true} onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
-	                                    <label for="email_agreement">동의</label>
+	                                    <label htmlFor="email_agreement">동의</label>
 	                                    <input type="radio" className="radio" name="email_disagreement" id="email_disagreement" value={false}  onChange={(e) => setFormData({ ...formData, email_agreement: e.target.value })} />
-	                                    <label for="email_disagreement">비동의</label>
+	                                    <label htmlFor="email_disagreement">비동의</label>
 	                                </li>
 	                                <li>
-	                                    <input type="radio" className="radio" name="message_areement" id="message_areement" value={true} onChange={(e) => setFormData({ ...formData, agreement2: e.target.value })} />
-	                                    <label for="message_areement">동의</label>
-	                                    <input type="radio" className="radio" name="message_areement" id="message_disareement" value={false} onChange={(e) => setFormData({ ...formData, agreement2: e.target.value })} />
-	                                    <label for="message_disareement">비동의</label>
+	                                    <input type="radio" className="radio" name="message_agreement" id="message_agreement" value={true} onChange={(e) => setFormData({ ...formData, message_agreement: e.target.value })} />
+	                                    <label htmlFor="message_agreement">동의</label>
+	                                    <input type="radio" className="radio" name="message_disagreement" id="message_disagreement" value={false} onChange={(e) => setFormData({ ...formData, message_agreement: e.target.value })} />
+	                                    <label htmlFor="message_disagreement">비동의</label>
 	                                </li>
 	                                <li>
 	                                    <input type="radio" className="radio" name="mail_agreement" id="mail_agreement" value={true} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
-	                                    <label for="mail_reception">동의</label>
+	                                    <label htmlFor="mail_reception">동의</label>
 	                                    <input type="radio" className="radio" name="mail_disagreement" id="mail_disagreement" value={false} onChange={(e) => setFormData({ ...formData, mail_agreement: e.target.value })} />
-	                                    <label for="mail_disagreement">비동의</label>
+	                                    <label htmlFor="mail_disagreement">비동의</label>
 	                                </li>
 	                            </ul>
 	                        </div>
@@ -306,27 +318,27 @@ const SignUpForm = () => {
 	                            <ul className="added_right1">
 	                                <li>
 	                                    <input type="checkbox" className="checkbox" name="interest" id="music" value="음악" onChange={(e) => handleInterestChange(e.target.value)}  />
-	                                    <label for="music">음악</label>
+	                                    <label htmlFor="music">음악</label>
 	                                    <input type="checkbox" className="checkbox" name="interest" id="education" value="교육" onChange={(e) => handleInterestChange(e.target.value)}  />
-	                                    <label for="education">교육</label>
+	                                    <label htmlFor="education">교육</label>
 	                                    <input type="checkbox" className="checkbox" name="interest" id="art" value="미술" onChange={(e) => handleInterestChange(e.target.value)}  />
-	                                    <label for="art">미술</label>
+	                                    <label htmlFor="art">미술</label>
 	                                    <input type="checkbox" className="checkbox" name="interest" id="science" value="과학" onChange={(e) => handleInterestChange(e.target.value)}  />
-	                                    <label for="science">과학</label>
+	                                    <label htmlFor="science">과학</label>
 	                                    <input type="checkbox" className="checkbox" name="interest" id="design" value="디자인" onChange={(e) => handleInterestChange(e.target.value)}  />
-	                                    <label for="design">디자인</label>
+	                                    <label htmlFor="design">디자인</label>
 	                                </li>
 	                                <li>
-	                                    <input type="radio" className="radio" name="married" id="married_y" value="기혼" onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
-	                                    <label for="married_y">기혼</label>
-	                                    <input type="radio" className="radio" name="married" id="married_n" value="미혼" onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
-	                                    <label for="married_n">미혼</label>
+	                                    <input type="radio" className="radio" name="married" id="married_y" value={true} onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
+	                                    <label htmlFor="married_y">기혼</label>
+	                                    <input type="radio" className="radio" name="married" id="married_n" value={false} onChange={(e) => setFormData({ ...formData, married: e.target.value })} />
+	                                    <label htmlFor="married_n">미혼</label>
 	                                </li>
 	                                <li>
-	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_y" value="아이있음" onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
-	                                    <label for="hasChildren_y">있음</label>
-	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_n" value="아이없음" onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
-	                                    <label for="hasChildren_n">없음</label>
+	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_y" value={true} onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
+	                                    <label htmlFor="hasChildren_y">있음</label>
+	                                    <input type="radio" className="radio" name="hasChildren" id="hasChildren_n" value={false} onChange={(e) => setFormData({ ...formData, hasChildren: e.target.value })} />
+	                                    <label htmlFor="hasChildren_n">없음</label>
 	                                </li>
 	                            </ul>
 	                        </div>
@@ -344,14 +356,14 @@ const SignUpForm = () => {
 	                            <div className="agreement_content1">이용약관 내용</div>
 	                            이용약관에 동의하시겠습니까?&nbsp;&nbsp;
 	                            <input type="checkbox" className="checkbox" name="agreement" checked={agreement4Checked} onChange={handleAgreement4Change} />
-	                            <label for="agreement1"></label>
+	                            <label htmlFor="agreement1"></label>
 	                        </div>
 	                        <div id="agreement2">
 	                            <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
 	                            <div className="agreement_content2">이용약관 내용</div>
 	                            개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
 	                            <input type="checkbox" className="checkbox" name="agreement" checked={agreement5Checked} onChange={handleAgreement5Change} />
-	                            <label for="agreement1"></label>
+	                            <label htmlFor="agreement1"></label>
 	                        </div>
 	                        <button type="submit" id="signUp_btn" >회원가입하기</button>
 	                    </div>

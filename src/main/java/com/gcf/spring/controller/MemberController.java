@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gcf.spring.constant.Role;
-import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
-import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,13 +28,22 @@ public class MemberController {
 	
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
+    	System.out.println("아이디 중복확인");
         return memberService.checkId(id);
     }
-    
-    @PostMapping("/signUp")
-    public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
-        return memberService.signUp(memberDto, passwordEncoder);
+
+    @PostMapping("/signUp/ok")
+    public ResponseEntity<String> signUp(@RequestBody Member member) {
+        try {
+            memberService.signUp(member);
+            return new ResponseEntity<>("회원가입이 완료되었습니다!", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("회원가입 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+    
     
     @GetMapping("/create")
     public ResponseEntity<String> test() {
