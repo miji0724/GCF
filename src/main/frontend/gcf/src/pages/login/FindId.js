@@ -1,7 +1,5 @@
 import './FindId.css';
 import React, { useState } from 'react';
-import Header from '../../component/Header';
-import Footer from '../../component/Footer';
 import FindId_input from '../../component/login/FindId_input';
 import FindId_show from '../../component/login/FindId_show';
 import FindId_notExist from '../../component/login/FindId_notExist';
@@ -25,9 +23,7 @@ const FindId = () => {
 
     return (
         <div className="findId">
-            <Header />
             {componentToShow}
-            <Footer />
         </div>
     );
 }
