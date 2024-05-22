@@ -1,10 +1,10 @@
 import './Footer.css';
 import logo from '../img/logo.png';
-import kakaotalk from '../img/sns_icon/kakaotalk.png';
-import blog from '../img/sns_icon/blog.png'
-import youtube from '../img/sns_icon/youtube.png'
-import instagram from '../img/sns_icon/instagram.png'
-import facebook from '../img/sns_icon/facebook.png'
+import kakaotalk from '../img/kakaotalk.png';
+import blog from '../img/blog.png'
+import youtube from '../img/youtube.png'
+import instagram from '../img/instagram.png'
+import facebook from '../img/facebook.png'
 
 
 function Footer() {
