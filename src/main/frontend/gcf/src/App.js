@@ -65,7 +65,7 @@ function App() {
                         <Route path="/findId" element={<FindId />} />
                         <Route path="/findPw" element={<FindPw />} />
                         <Route path="/notice" element={<Notice />} />
-                        <Route path="/map" element={<Map />} />
+                        <Route path="/map/:locationName" element={<Map />} />
                         <Route path="/schedule" element={<Schedule />} />
                     </Routes>
                     <Routes className="myPage">

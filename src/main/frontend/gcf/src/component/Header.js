@@ -2,6 +2,7 @@ import './Header.css';
 import logo from '../img/logo.png';
 import search from '../img/search.png';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = ({ isLoggedIn, onLogout }) =>  {
   const [isActive, setIsActive] = useState(false);
@@ -44,40 +45,40 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
           </li>
           <li onMouseEnter={() => setIsActive2(true)} 
               onMouseLeave={() => setIsActive2(false)}>
-            <a href="#">
+            <Link>
               온라인 교육
               {isActive2 && (
                 <ul className="dropdown">
-                  <li><a href="#">음악</a></li>
-                  <li><a href="#">미술</a></li>
-                  <li><a href="#">과학</a></li>
-                  <li><a href="#">디자인</a></li>
-                  <li><a href="#">교육</a></li>
-                  <li><a href="#">기타</a></li>
+                  <li><Link to="#">음악</Link></li>
+                  <li><Link to="#">미술</Link></li>
+                  <li><Link to="#">과학</Link></li>
+                  <li><Link to="#">디자인</Link></li>
+                  <li><Link to="#">교육</Link></li>
+                  <li><Link to="#">기타</Link></li>
                 </ul>
               )}
-            </a>
+            </Link>
           </li>
           <li><a href="/notice">공지사항</a></li>
           <li onMouseEnter={() => setIsActive3(true)} 
               onMouseLeave={() => setIsActive3(false)}
           >
-            <a href="/map">
+            <Link to="/map/김포아트홀">
               찾아오시는 길
               {isActive3 && (
                 <ul className="dropdown">
-                  <li><a>김포 아트홀</a></li>
-                  <li><a>김포 아트빌리지 한옥마을</a></li>
-                  <li><a>김포아트빌리지</a></li>
-                  <li><a>통진두레 문화센터</a></li>
-                  <li><a>김포국제조각공원</a></li>
-                  <li><a>월곶생활문화센터</a></li>
-                  <li><a>김포평화문화관</a></li>
-                  <li><a>작은미술관 보구곶</a></li>
-                  <li><a>애기봉평화생태공원</a></li>
+                  <li><Link to="/map/김포아트홀">김포아트홀</Link></li>
+                  <li><Link to="/map/김포아트빌리지%20한옥마을">김포아트빌리지 한옥마을</Link></li>
+                  <li><Link to="/map/김포아트빌리지">김포아트빌리지</Link></li>
+                  <li><Link to="/map/통진두레%20문화센터">통진두레 문화센터</Link></li>
+                  <li><Link to="/map/김포국제조각공원">김포국제조각공원</Link></li>
+                  <li><Link to="/map/월곶생활문화센터">월곶생활문화센터</Link></li>
+                  <li><Link to="/map/김포평화문화관">김포평화문화관</Link></li>
+                  <li><Link to="/map/작은미술관%20보구곶">작은미술관 보구곶</Link></li>
+                  <li><Link to="/map/애기봉평화생태공원">애기봉평화생태공원</Link></li>
                 </ul>
               )}
-            </a>
+            </Link>
           </li>
           <li>
             <div className='search_bar'>
