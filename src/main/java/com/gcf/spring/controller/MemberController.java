@@ -57,6 +57,8 @@ public class MemberController {
         }
     }
     
+    
+    
     @PostMapping("/member/findId")
     public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
         try {
@@ -71,32 +73,28 @@ public class MemberController {
         }
     }
     
-//    @GetMapping("/create")
-//    public ResponseEntity<String> test() {
-//        Member member = new Member();
-//        List<String> interests = new ArrayList<>();
-//        interests.add("음악");
-//        interests.add("미술");
-//        
-//        member.setId("test");
-//        member.setName("홍길동");
-//        member.setPassword(passwordEncoder.encode("1234"));
-//        member.setBirth(LocalDate.of(2000, 01, 01));
-//        member.setPhone_number("010-1234-1234");
-//        member.setTel_number("042-123-1234");
-//        member.setEmail("test@test.com");
-//        member.setAddress("대전시 중구");
-//        member.setDetail_address("산성동");
-//        member.setInterests(interests);
-//        member.setEmail_agreement(true);
-//        member.setMessage_agreement(true);
-//        member.setMail_agreement(true);
-//        member.setMarried(true);
-//        member.setHasChildren(true);
-//        member.setRole(Role.USER);
-//
-//        memberService.signUp(member);
-//        return ResponseEntity.ok("테스트 유저");
-//    }
-        
+    @PostMapping("/member/Authentication")
+    public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String input_password = request.get("password");
+
+        Member authenticatedMember = memberService.authenticateByPassword(input_password);
+        if (authenticatedMember != null) {
+            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
+        }
+    }
+    
+    @PostMapping("/api/mypage/login")
+    public ResponseEntity<Member> myPageLogin(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String input_password = request.get("password");
+
+        Member authenticatedMember = memberService.authenticateByPassword(input_password);
+        if (authenticatedMember != null) {
+            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
+        }
+    }
+
 }

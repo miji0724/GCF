@@ -113,6 +113,29 @@ public class MemberService implements UserDetailsService {
         }
     }
     
+    public Member authenticateByPassword(String password) {
+        try {
+            // 사용자를 아이디로 조회하여 Optional로 반환
+            Optional<Member> memberOptional = memberRepository.findById(password);
+
+            if (memberOptional.isPresent()) {
+                Member member = memberOptional.get();
+                // 조회된 회원의 비밀번호를 비교하여 일치하는 경우 회원 정보 반환
+                boolean matches = passwordEncoder.matches(password, member.getPassword());
+                if (matches) {
+                    return member;
+                } else {
+                    return null; // 비밀번호가 일치하지 않는 경우 null 반환
+                }
+            } else {
+                return null; // 조회된 회원이 없는 경우 null 반환
+            }
+        } catch (Exception e) {
+            System.out.println("예외: " + e.getMessage());
+            return null; // 예외 발생 시 null 반환
+        }
+    }
+    
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findById(id);
