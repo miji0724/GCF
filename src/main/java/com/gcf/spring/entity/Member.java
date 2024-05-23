@@ -1,6 +1,6 @@
 package com.gcf.spring.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,15 +18,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name="member")
 @Getter
 @Setter
+@ToString
 public class Member {
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
 	
 	@Column(nullable = false)
@@ -36,37 +37,30 @@ public class Member {
 	private String password;
 	
 	@Column(nullable = false)
-	private String sex;
+	private LocalDate birth;
 	
-	@Column(nullable = false)
-	private Date birth;
+	private String phone_Number;
 	
-	@Column(nullable = false)
-	private String phone_number;
-	
-	private String tel_number;
+	private String telNumber;
 	
 	@Column(unique = true)
 	private String email;
 	
-	private String zipCode;
-	
 	@Column(nullable = false)
 	private String address;
 	
-	private String detailAddress;
+	private String detail_address;
+	
+	private List<String> interests;
 	
 	@Column(nullable = false)
-	private List<String> interest;
+	private Boolean email_agreement;
 	
 	@Column(nullable = false)
-	private Boolean emailAgreement;
+	private Boolean message_agreement;
 	
 	@Column(nullable = false)
-	private Boolean smsAgreement;
-	
-	@Column(nullable = false)
-	private Boolean postalAgreement;
+	private Boolean mail_agreement;
 	
 	private Boolean married;
 	
@@ -80,20 +74,17 @@ public class Member {
 		Member member = new Member();
 		member.setId(memberDto.getId());
 		member.setName(memberDto.getName());
-		String password = passwordEncoder.encode(memberDto.getPassword());
-		member.setPassword(password);
-		member.setSex(memberDto.getSex());
+        member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
 		member.setBirth(memberDto.getBirth());
-		member.setPhone_number(memberDto.getPhone_number());
-		member.setTel_number(memberDto.getTel_number());
+		member.setPhone_Number(memberDto.getPhoneNumber());
+		member.setTelNumber(memberDto.getTelNumber());
 		member.setEmail(memberDto.getEmail());
-		member.setZipCode(memberDto.getZipCode());
 		member.setAddress(memberDto.getAddress());
-		member.setDetailAddress(memberDto.getDetailAddress());
-		member.setInterest(memberDto.getInterest());
-		member.setEmailAgreement(memberDto.getEmailAgreement());
-		member.setSmsAgreement(memberDto.getSmsAgreement());
-		member.setPostalAgreement(memberDto.getPostalAgreement());
+		member.setDetail_address(memberDto.getDetail_address());
+		member.setEmail_agreement(memberDto.getEmail_agreement());
+		member.setMessage_agreement(memberDto.getMessage_agreement());
+		member.setMail_agreement(memberDto.getMail_agreement());
+		member.setInterests(memberDto.getInterests());
 		member.setMarried(memberDto.getMarried());
 		member.setHasChildren(memberDto.getHasChildren());
 		member.setRole(Role.USER);

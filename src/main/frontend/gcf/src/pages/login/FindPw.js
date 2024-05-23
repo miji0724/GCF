@@ -1,7 +1,5 @@
 import './FindPw.css';
 import React, { useState } from 'react';
-import Header from '../../component/Header';
-import Footer from '../../component/Footer';
 import FindPw_input from '../../component/login/FindPw_input';
 import FindPw_show from '../../component/login/FindPw_show';
 import FindPw_notExist from '../../component/login/FindPw_notExist';
@@ -25,9 +23,7 @@ const FindId = () => {
 
     return (
         <div className="findPw">
-            <Header />
             {componentToShow}
-            <Footer />
         </div>
     );
 }
