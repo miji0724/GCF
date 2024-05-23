@@ -34,6 +34,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage'
 }
 
 tasks.named('test') {

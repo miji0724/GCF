@@ -49,3 +49,6 @@ package-lock.json
 # Miscellaneous
 .DS_Store
 .env
+
+# Ignore Google Cloud service account credentials
+src/main/resources/project-gcf-424105-5602c7bf0242.json

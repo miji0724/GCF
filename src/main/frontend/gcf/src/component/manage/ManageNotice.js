@@ -25,7 +25,7 @@ function ManageNotice() {
     const [itemsPerPage] = useState(15);
 
     useEffect(() => {
-        axios.get('http://localhost:8090/notice')
+        axios.get('http://localhost:8090/notices')
             .then(response => {
                 const sortedNotices = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                 setNotices(sortedNotices);
@@ -41,7 +41,7 @@ function ManageNotice() {
 
     const handleDelete = (id) => {
         if (window.confirm("정말로 삭제하시겠습니까?")) {
-            axios.delete(`http://localhost:8090/notice/${id}`)
+            axios.delete(`http://localhost:8090/notices/${id}`)
                 .then(response => {
                     // 삭제 성공시에는 해당 공지사항을 제외한 새로운 목록으로 업데이트
                     const updatedNotices = notices.filter(item => item.id !== id);
@@ -83,7 +83,7 @@ function ManageNotice() {
                                     <td>{item.id}</td>
                                     <td>{item.title}</td>
                                     <td>{item.author}</td>
-                                    <td>{formatDate(item.created_at)}</td>
+                                    <td>{formatDate(item.createdAt)}</td>
                                     <td>{item.views}</td>
                                     <td><button onClick={() => handleEdit(item.id)} className='modify_button'>수정</button></td>
                                     <td><button onClick={() => handleDelete(item.id)} className='delete_button'>삭제</button></td>

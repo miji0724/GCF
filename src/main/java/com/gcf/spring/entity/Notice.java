@@ -1,48 +1,52 @@
 package com.gcf.spring.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="notice")
+@Table(name = "notice")
 @Getter
 @Setter
 public class Notice {
-    
+
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    
-    @Column(name="author")
+
+    @Column(nullable = false)
     private String author = "작성자";
-    
-    @Column(name="title")
+
+    @Column(nullable = false)
     private String title = "제목";
-    
-    @Column(name="content")
+
+    @Column(nullable = false)
     private String content = "내용";
-    
-    @Column(name = "created_at")
-    private Date created_at;
-    
-    @Column(name="views")
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private int views;
-    
-    // PrePersist를 사용하여 created_at 필드 설정
+
+    // 생성 시간 자동 설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = new Date(); // 현재 시간으로 설정
+        this.createdAt = LocalDateTime.now();
     }
-    
-    //첨부파일 엔티티 추후 삽입 예정
+
+    @OneToMany(mappedBy = "parentId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments;
 }

@@ -48,6 +48,7 @@ function App() {
                     <Route path="/manage/banner" element={<ManageBannerPage />} />
                     <Route path="/manage/notice" element={<ManageNoticePage />} />
                     <Route path="/manage/noticewrite" element={<ManageNoticeWritePage />} />
+                    <Route path="/manage/noticewrite/:id" element={<ManageNoticeWritePage />} />
                     <Route path="/manage/member" element={<ManageMemberPage />} />
                     <Route path="/manage/memdetail" element={<ManageMemDetailPage />} />
                     <Route path="/manage/teacher" element={<ManageTeacherPage />} />
