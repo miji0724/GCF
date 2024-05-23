@@ -126,4 +126,19 @@ public class MemberService implements UserDetailsService {
                    .roles(member.getRole().toString())
                    .build();
     }
+    
+    public String findId(MemberDto memberDto) {
+        Optional<Member> foundMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
+        if (foundMember.isPresent()) {
+            Member member = foundMember.get();
+            System.out.println(member);
+            
+            String findId = member.getId();
+            System.out.println(findId);
+            
+            return findId;
+        } else {
+            return null;
+        }
+    }
 }

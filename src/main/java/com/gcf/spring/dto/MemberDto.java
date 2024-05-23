@@ -32,9 +32,9 @@ public class MemberDto {
 	
 	private LocalDate birth;
 	
-	private String phone_number;
+	private String phoneNumber;
 	
-	private String tel_number;
+	private String telNumber;
 	
     private String address;
 	

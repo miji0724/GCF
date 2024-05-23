@@ -57,6 +57,19 @@ public class MemberController {
         }
     }
     
+    @PostMapping("/member/findId")
+    public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
+        try {
+            String foundId = memberService.findId(memberDto);
+            if (foundId != null) {
+                return ResponseEntity.ok(foundId);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
+    }
     
 //    @GetMapping("/create")
 //    public ResponseEntity<String> test() {
