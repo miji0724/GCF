@@ -2,7 +2,7 @@ package com.gcf.spring.constant;
 
 public enum Place {
 	김포아트홀,
-	감포아트빌리지한옥마을,
+	김포아트빌리지한옥마을,
 	김포아트빌리지,
 	통진두레문화센터,
 	김포국제조각공원,
