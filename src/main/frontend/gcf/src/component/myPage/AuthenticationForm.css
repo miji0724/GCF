@@ -28,7 +28,7 @@
   display: flex; /* 라벨을 블록 요소로 표시하여 줄 바꿈 */
   flex-direction: column;
   margin: 0;
-  margin-bottom: 10px; /* 라벨 아래 여백 */
+  margin-bottom: -5px; /* 라벨 아래 여백 */
   margin-left: 17%;
 }
 
@@ -36,7 +36,7 @@
   width: 80%; 
   padding: 5px; /* 내부 여백 */
   margin: 0;
-  margin-bottom: 15px; /* 입력 요소 아래 여백 */
+  margin-bottom: 0px; /* 입력 요소 아래 여백 */
 }
 
 .authentication-form button {
