@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Offline_Post_List.css';
-import { usePosters } from '../Posters/Offline_posters';
 
 function Offline_poster_list() {
-    const { posters, setPosters } = usePosters();
+    const [posters, setPosters] = useState([]);
     const navigate = useNavigate();
     const [activeStatus, setActiveStatus] = useState('전체');
     const [activeSpace, setActiveSpace] = useState('전체');
     const [activeCategory, setActiveCategory] = useState('전체');
     const [activePage, setActivePage] = useState(1);
     const [selectedDate, setSelectedDate] = useState('');
-    const postersPerPage = 4; //한 페이지 당 포스터가 몇 개 들어갈 것인지
+    const postersPerPage = 4;
     const totalPages = Math.ceil(posters.length / postersPerPage);
 
-    //필터 기능
+    useEffect(() => {
+        fetchPosters();
+    }, []);
+
+    const fetchPosters = async () => {
+        try {
+            const response = await axios.get('/api/off_programs'); // 백엔드 API 경로
+            setPosters(response.data);
+        } catch (error) {
+            console.error("There was an error fetching the posters!", error);
+        }
+    };
+
     const filteredPosters = posters.filter(poster =>
         (activeStatus === '전체' || poster.posterStatus === activeStatus) &&
         (activeSpace === '전체' || poster.location === activeSpace) &&
@@ -22,7 +34,6 @@ function Offline_poster_list() {
         (selectedDate === '' || new Date(poster.dates.split(' ~ ')[0]) >= new Date(selectedDate))
     );
 
-    //포스터 클릭 시 상세 페이지로
     const goToDetails = (id) => {
         navigate(`/OfflineList/details/${id}`);
     };

@@ -9,6 +9,7 @@ import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.constant.Target;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,8 @@ import lombok.Setter;
 @Setter
 public class Off_programDto {
 
+    
+    @NotNull
     private int off_programNumber; //프로그램 번호
     
     @NotBlank(message="프로그램 이름은 필수 입력 값입니다.")
