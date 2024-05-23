@@ -1,12 +1,14 @@
-import Header from '../../component/Header';
-import Footer from '../../component/Footer';
 import MapForm from '../../component/map/MapForm';
 import './Map.css';
+import { useParams } from 'react-router-dom';
 
 const Map = () => {
+
+    const { locationName } = useParams();
+
     return (
         <div className="map">
-            <MapForm />
+            <MapForm locationName={locationName} />
         </div>
     );
 }
