@@ -1,5 +1,6 @@
 .map_form {
     height: 1000px;
+    white-space: pre-line
 }
 
 .map_body {
@@ -32,7 +33,7 @@
 }
 
 .map_body_center {
-    margin-left: 5%;
+    margin-left: 3%;
 }
 
 .map_info > div {
@@ -50,13 +51,13 @@
 
 #map {
     margin-top: 20px;
-    width: 750px;
+    width: 700px;
     height: 500px;
     border-radius: 20px;
 }
 
 .map_traffic {
-    margin-left: 5%;
+    margin-left: 3%;
 }
 
 #map_traffic_title {
@@ -67,11 +68,14 @@
 
 #traffic_contents {
     background-color: white;
-    width: 350px;
-    height: 160px;
-    font-size: 10px;
+    width: 460px;
+    height: auto;
+    font-size: 15px;
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 6%;
+    overflow-y: auto;
+    max-height: 200px;
+    padding: 5px;
 }
 
 .selected {
