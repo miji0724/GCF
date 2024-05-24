@@ -25,12 +25,14 @@ public class MemberController {
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
 	
+	// 회원가입 할 때 아이디 중복체크
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
     	System.out.println("아이디 중복확인");
         return memberService.checkId(id);
     }
     
+    // 회원가입
     @PostMapping("/signUp/ok")
     public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
         try {
@@ -44,6 +46,7 @@ public class MemberController {
         }
     }
     
+    // 로그인
     @PostMapping("/member/login")
     public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
         String input_id = request.get("id");
@@ -57,6 +60,7 @@ public class MemberController {
         }
     }
     
+    // 아이디 찾기
     @PostMapping("/member/findId")
     public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
         try {
@@ -71,6 +75,24 @@ public class MemberController {
         }
     }
     
+    // 비밀번호 찾기
+    @PostMapping("/member/findPw")
+    public ResponseEntity<String> findPw(@RequestBody MemberDto memberDto) {
+        try {
+            String foundPw = memberService.findPw(memberDto);
+            if (foundPw != null) {
+                return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 회원이거나 잘못 입력된 정보입니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
+    }
+    
+    
+
+    // 임시 회원 만들기
 //    @GetMapping("/create")
 //    public ResponseEntity<String> test() {
 //        Member member = new Member();

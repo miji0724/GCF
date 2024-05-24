@@ -1,10 +1,13 @@
 package com.gcf.spring.service;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +30,7 @@ public class MemberService implements UserDetailsService {
     
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder; 
+	private final JavaMailSender mailSender;
     
     private boolean isValidId(String id) {
         String regex = "^[a-zA-Z0-9]{5,20}$";
@@ -113,6 +117,60 @@ public class MemberService implements UserDetailsService {
         }
     }
     
+    public String findId(MemberDto memberDto) {
+        Optional<Member> foundIdMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
+        if (foundIdMember.isPresent()) {
+            Member member = foundIdMember.get();
+            System.out.println(member);
+            
+            String findId = member.getId();
+            System.out.println(findId);
+            
+            return findId;
+        } else {
+            return null;
+        }
+    }
+    
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int PASSWORD_LENGTH = 10;
+    
+    public String generateTempPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return password.toString();
+    }
+
+    public void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+    
+    public String findPw(MemberDto memberDto) {
+        Optional<Member> foundPwMember = memberRepository.findIdByIdAndEmail(memberDto.getId(), memberDto.getEmail());
+        if (foundPwMember.isPresent()) {
+            Member member = foundPwMember.get();
+
+            String tempPassword = generateTempPassword();
+            sendEmail(member.getEmail(), "[GCF] 임시 비밀번호\n", "안녕하세요, 임시 비밀번호는 다음과 같습니다: " + tempPassword + "\n다시 로그인 해주세요.");
+
+            // 여기서 임시 비밀번호를 데이터베이스에 저장하는 로직을 추가합니다.
+            String encodedPassword = passwordEncoder.encode(tempPassword);
+            member.setPassword(encodedPassword);
+            memberRepository.save(member);
+
+            return member.getEmail();
+        } else {
+            return null;
+        }
+    }
+    
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findById(id);
@@ -125,20 +183,5 @@ public class MemberService implements UserDetailsService {
                    .password(member.getPassword())
                    .roles(member.getRole().toString())
                    .build();
-    }
-    
-    public String findId(MemberDto memberDto) {
-        Optional<Member> foundMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
-        if (foundMember.isPresent()) {
-            Member member = foundMember.get();
-            System.out.println(member);
-            
-            String findId = member.getId();
-            System.out.println(findId);
-            
-            return findId;
-        } else {
-            return null;
-        }
     }
 }

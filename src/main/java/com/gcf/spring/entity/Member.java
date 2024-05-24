@@ -40,9 +40,9 @@ public class Member {
 	private LocalDate birth;
 	
 	@Column(nullable = false)
-	private String phoneNumber;
+	private String phone_number;
 	
-	private String telNumber;
+	private String tel_number;
 	
 	@Column(unique = true)
 	private String email;
@@ -77,8 +77,8 @@ public class Member {
 		member.setName(memberDto.getName());
         member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
 		member.setBirth(memberDto.getBirth());
-		member.setPhoneNumber(memberDto.getPhoneNumber());
-		member.setTelNumber(memberDto.getTelNumber());
+		member.setPhone_number(memberDto.getPhone_number());
+		member.setTel_number(memberDto.getTel_number());
 		member.setEmail(memberDto.getEmail());
 		member.setAddress(memberDto.getAddress());
 		member.setDetail_address(memberDto.getDetail_address());
