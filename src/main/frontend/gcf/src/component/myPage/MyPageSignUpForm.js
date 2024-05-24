@@ -68,10 +68,7 @@ const MyPageSignUpForm = () => {
                             <div className="Mybase_right">
                                 <ul className="Mybase_right1">
                                     <li><input id="name" /></li>
-                                    <li>
-                                        <input id="id" />
-                                        <button className="check_btn" id="id_check"> 중복확인</button>
-                                    </li>
+                                    
                                     <li>
                                         <input id="password" />
                                     </li>
