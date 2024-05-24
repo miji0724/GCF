@@ -53,6 +53,7 @@ nav {
   background-color: #ffffff;
   /* 배경색 지정 */
   padding-left: 110px;
+  cursor: auto;
 }
 
 nav ul {
