@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.gcf.spring.entity.Notice;
-import com.gcf.spring.repository.NoticeRepository;
+import com.gcf.spring.repository.AdminNoticeRepository;
 
 @SpringBootTest
 public class NoticeDataTest {
 
     @Autowired
-    private NoticeRepository noticeRepository;
+    private AdminNoticeRepository noticeRepository;
 
     @BeforeEach
     public void setUp() {

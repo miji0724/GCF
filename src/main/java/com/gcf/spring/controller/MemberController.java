@@ -44,7 +44,7 @@ public class MemberController {
         interests.add("음악");
         interests.add("미술");
         
-        member.setId("test");
+        member.setId("admin");
         member.setName("홍길동");
         member.setPassword(passwordEncoder.encode("1234"));
         member.setBirth(LocalDate.of(2000, 01, 01));
@@ -59,10 +59,10 @@ public class MemberController {
         member.setMail_agreement(true);
         member.setMarried(true);
         member.setHasChildren(true);
-        member.setRole(Role.USER);
+        member.setRole(Role.ADMIN);
 
         memberService.signUp(member);
-        return ResponseEntity.ok("테스트 유저");
+        return ResponseEntity.ok("어드민 계정");
     }
         
 }

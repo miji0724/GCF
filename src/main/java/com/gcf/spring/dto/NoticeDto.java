@@ -1,9 +1,7 @@
 package com.gcf.spring.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-
-import com.gcf.spring.entity.Attachment;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +30,7 @@ public class NoticeDto {
     private String author;
     
     @NotNull
-    private Date created_at;
+    private LocalDateTime created_at;
     
-    private List<Attachment> attachment;
+    private List<AttachmentDto> attachment;
 }

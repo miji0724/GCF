@@ -32,17 +32,6 @@ function ManageLecApp() {
         return false;
     });
 
-    // 현재 페이지의 게시글 범위 계산
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-
-    // 페이지 번호 계산
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
-
     // 검색어 업데이트 함수
     const handleSearchChange = event => {
         setSearchTerm(event.target.value);
@@ -63,6 +52,17 @@ function ManageLecApp() {
             lecOffDetailGo();
         }
     };
+
+    // 현재 페이지의 게시글 범위 계산
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
+    // 페이지 번호 계산
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
 
     // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
     const isFirstGroup = currentPage <= 5;

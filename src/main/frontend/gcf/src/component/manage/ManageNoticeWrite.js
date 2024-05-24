@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './ManageNoticeWrite.css';
 import SideMenu from './ManageSideMenu';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 
 function ManageNoticeWrite() {
@@ -15,25 +15,118 @@ function ManageNoticeWrite() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { id } = useParams(); // URL에서 공지사항 ID 가져오기
+    const location = useLocation();
+    const { getNotice } = location.state || {};
 
     const editorRef = useRef(null);
 
-    useEffect(() => {
-        // 공지사항 ID가 있으면 해당 공지사항 정보 불러오기
-        if (id) {
-            axios.get(`http://localhost:8090/notices/${id}`)
-                .then(response => {
-                    const notice = response.data;
-                    setTitle(notice.title);
-                    setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(notice.content))));
-                    // 첨부 파일 설정
-                    setAttachments(notice.attachments);
-                })
-                .catch(error => {
-                    console.error('Error fetching notice:', error);
-                });
+    const prepareNoticeData = () => {
+        const noticeData = {
+            title: title,
+            content: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+            views: 0,
+            author: ''
+        };
+
+        return noticeData;
+    };
+
+    const handleNoticeAction = async () => {
+        try {
+            const noticeData = prepareNoticeData();
+
+            // console.log(prepareNoticeData); //디버깅용
+
+            // title 또는 content가 null인 경우 경고 메시지 표시
+            if (!noticeData.title || !noticeData.content) {
+                setError('제목과 내용을 입력해주세요.');
+                return;
+            }
+
+            // 공지사항 데이터 전송
+            const createdNotice = await sendNoticeData(noticeData);
+
+            // 생성된 공지사항 ID를 사용하여 첨부파일 업로드
+            await sendAttachments(attachments);
+
+
+            if (id) {
+                console.log('Notice updated successfully:', createdNotice);
+            } else {
+                console.log('Notice created successfully:', createdNotice);
+            }
+
+            // 리다이렉션 로직 추가
+            navigate('/manage/notice');
+
+        } catch (error) {
+            console.error('Error handling notice action:', error);
+            setError(error.message);
         }
-    }, [id]);
+    };
+
+    const sendNoticeData = async (noticeData) => {
+        try {
+            // console.log('noticeData : ');
+            // console.log(noticeData);
+
+            let url = 'http://localhost:8090/notices'
+            let method = 'POST'
+
+        // id가 존재하면 수정 요청을 보내도록 설정
+        if (id) {
+            url += `/${id}`;
+            method = 'PUT'; // 또는 'PATCH'를 사용할 수도 있습니다.
+        }
+
+            const response = await axios({
+                method: method, // 새 공지사항을 생성하는 경우 항상 POST 요청을 사용
+                url: url,
+                data: noticeData,
+                headers: {
+                    'Content-Type': 'application/json', // JSON 형식으로 데이터를 전송
+                },
+            });
+
+            console.log('Notice created successfully:', response.data);
+            return response.data; // 생성된 공지사항 데이터 반환
+
+        } catch (error) {
+            console.error('Error creating notice:', error);
+            throw new Error('Notice creation failed. Please try again later.');
+        }
+    };
+
+    const sendAttachments = async (attachments) => {
+        try {
+            const formData = new FormData();
+    
+            console.log('formdata : ');
+            console.log(formData); // 디버깅 용
+    
+            if (attachments.length > 0) {
+                attachments.forEach((file) => {
+                    formData.append('files', file); // 서버에서 `files`로 받도록 되어있음
+                });
+            } else {
+                // 파일이 없는 경우에도 빈 formData 전송
+                formData.append('files', new Blob([]), 'empty.txt');
+            }
+    
+            const response = await axios.post(`http://localhost:8090/attachments`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // 파일 업로드를 위해 multipart/form-data 형식 사용
+                }
+            });
+    
+            console.log('Attachments uploaded successfully:', response.data);
+    
+        } catch (error) {
+            console.error('Error uploading attachments:', error);
+            throw new Error('Attachment upload failed. Please try again later.');
+        }
+    };
+    
 
     const handleEditorChange = (editorState) => {
         setEditorState(editorState);
@@ -58,98 +151,6 @@ function ManageNoticeWrite() {
         setAttachments(newAttachments);
     };
 
-    const prepareNoticeData = () => {
-        const noticeData = {
-            title: title,
-            content: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-            views: 0,
-            author: '관리자',
-            attachments: []
-        };
-
-        return noticeData;
-    };
-
-    const sendNoticeData = async (noticeData) => {
-        try {
-            console.log('noticeData : ');
-            console.log(noticeData);
-
-            const response = await axios({
-                method: 'POST', // 새 공지사항을 생성하는 경우 항상 POST 요청을 사용
-                url: 'http://localhost:8090/notices',
-                data: noticeData,
-                headers: {
-                    'Content-Type': 'application/json', // JSON 형식으로 데이터를 전송
-                },
-            });
-
-            console.log('Notice created successfully:', response.data);
-            return response.data; // 생성된 공지사항 데이터 반환
-    
-        } catch (error) {
-            console.error('Error creating notice:', error);
-            throw new Error('Notice creation failed. Please try again later.');
-        }
-    };
-    
-    const sendAttachments = async (noticeId, attachments) => {
-        try {
-            const formData = new FormData();
-    
-            console.log('formdata : ');
-            console.log(formData);
-    
-            attachments.forEach((file, index) => {
-                formData.append(`attachments`, file); // 수정된 부분
-            });
-    
-            const response = await axios.post(`http://localhost:8090/attachments/${noticeId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // 파일 업로드를 위해 multipart/form-data 형식 사용
-                },
-            });
-    
-            console.log('Attachments uploaded successfully:', response.data);
-    
-        } catch (error) {
-            console.error('Error uploading attachments:', error);
-            throw new Error('Attachment upload failed. Please try again later.');
-        }
-    };
-    
-    const handleNoticeAction = async () => {
-        try {
-            const noticeData = prepareNoticeData();
-    
-            // title 또는 content가 null인 경우 경고 메시지 표시
-            if (!noticeData.title || !noticeData.content) {
-                setError('제목과 내용을 입력해주세요.');
-                return;
-            }
-    
-            // 공지사항 데이터 전송
-            const createdNotice = await sendNoticeData(noticeData);
-    
-            // 생성된 공지사항 ID를 사용하여 첨부파일 업로드
-            await sendAttachments(createdNotice.id, attachments);
-    
-            if (id) {
-                console.log('Notice updated successfully:', createdNotice);
-            } else {
-                console.log('Notice created successfully:', createdNotice);
-            }
-    
-            // 리다이렉션 로직 추가
-            navigate('/manage/notice');
-    
-        } catch (error) {
-            console.error('Error handling notice action:', error);
-            setError(error.message);
-        }
-    };
-    
-
     return (
         <div className='noticewrite_container'>
             <SideMenu />
@@ -160,11 +161,11 @@ function ManageNoticeWrite() {
                     {error && <div className="error">{error}</div>}
                     <div className='noticewrite_title'>
                         <p>제목</p>
-                        <input type='text' value={title} onChange={handleTitleChange} />
+                        <input type='text' value={getNotice ? getNotice.title : title} onChange={handleTitleChange} />
                     </div>
                     <div className='noticewrite_detail'>
                         <Editor
-                            editorState={editorState}
+                            editorState={getNotice ? EditorState.createWithContent(convertFromRaw(JSON.parse(getNotice.content))) : editorState}
                             onEditorStateChange={handleEditorChange}
                             ref={editorRef}
                         />
