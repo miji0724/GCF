@@ -46,6 +46,9 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/**/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")  // 관리자 페이지 접근 권한 설정
+                        .requestMatchers(new AntPathRequestMatcher("/member/Authentication")).permitAll() // 비밀번호만을 입력하여 인증이 가능한 URL
+                        .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()  // 회원 관련 모든 URL 허용
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")  // 관리자 페이지 접근 권한 설정
                         .anyRequest().authenticated())
 
                 .exceptionHandling(handling -> handling

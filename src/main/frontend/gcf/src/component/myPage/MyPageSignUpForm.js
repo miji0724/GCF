@@ -68,7 +68,10 @@ const MyPageSignUpForm = () => {
                             <div className="Mybase_right">
                                 <ul className="Mybase_right1">
                                     <li><input id="name" /></li>
-                                    
+                                    <li>
+                                        <input id="id" />
+                                        
+                                    </li>
                                     <li>
                                         <input id="password" />
                                     </li>

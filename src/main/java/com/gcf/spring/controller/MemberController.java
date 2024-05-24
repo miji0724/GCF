@@ -74,9 +74,7 @@ public class MemberController {
     }
     
     @PostMapping("/member/Authentication")
-    public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String input_password = request.get("password");
-
+    public ResponseEntity<Member> authentication(@RequestBody String input_password) {
         Member authenticatedMember = memberService.authenticateByPassword(input_password);
         if (authenticatedMember != null) {
             return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
@@ -85,16 +83,5 @@ public class MemberController {
         }
     }
     
-    @PostMapping("/api/mypage/login")
-    public ResponseEntity<Member> myPageLogin(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String input_password = request.get("password");
-
-        Member authenticatedMember = memberService.authenticateByPassword(input_password);
-        if (authenticatedMember != null) {
-            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
-        }
-    }
 
 }

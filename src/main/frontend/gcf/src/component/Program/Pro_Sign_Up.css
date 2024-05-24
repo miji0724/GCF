@@ -1,0 +1,114 @@
+
+.inner {
+    width: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 40px;
+    transition: width 0.2s, padding 0.2s;
+}
+
+.off_title_name{
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+.off_app_box{
+    margin-top:40px;
+    margin-bottom: 40px;
+}
+
+.off_table_info{
+    border-collapse : separate;
+}
+
+.off_table_info th{
+    height: 65px;
+    padding: 10px 15px;
+    text-align: center;
+    color: #222;
+    font-weight: 500;
+    background-color: skyblue;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.off_table_info td{
+    height: 65px;
+    padding: 10px 15px;
+    text-align: center;
+    color: #444;
+    line-height: 1.5;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.info-box{
+    display: block;
+    padding: 35px 40px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    width: 100%;
+    margin-bottom: 20px; /* 여백 추가 */    
+}
+
+.info-title{
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px; /* 타이틀과 목록 사이의 여백 추가 */
+}
+
+.info-content{
+    margin-top: 20px;
+}
+
+
+.cm_agree .textarea_box {
+    margin-bottom: 20px;
+    padding: 35px 40px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    box-shadow: 10px 10px 15px 0 rgba(0, 0, 0, 0.06);
+    width: 100%; /* 너비를 100%로 설정하여 부모 요소의 가용 너비를 모두 차지하게 함 */
+    width: 800px;
+}
+
+
+.cm_agree .textarea_box textarea {
+    padding: 0;
+    line-height: 1.6;
+    word-break: keep-all;
+    border: 0;
+    resize: none;
+}
+
+.form_check input , .form_label {
+    display: flex;
+    align-items: flex-start;
+    height: auto;
+    margin: 0;
+    line-height: 1.3;
+    color: #222;
+    font-weight: 400;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cm_agree .textarea_box textarea.form_control {
+    width: 100%;
+    padding: 0;
+    line-height: 1.6;
+    word-break: break-word; /* 긴 단어가 있을 경우 줄바꿈 */
+    border: 0;
+    resize: none;
+    height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap; /* 공백과 줄바꿈을 사용자가 입력한 대로 유지 */
+}
+
+.Sing_button_area{
+    display: flex;
+    justify-content: center; /* 버튼을 오른쪽에 정렬 */
+    margin-top: 20px; /* 상단 여백 추가 */
+}
