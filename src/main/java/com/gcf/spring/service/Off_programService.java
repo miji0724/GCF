@@ -32,7 +32,7 @@ public class Off_programService {
     public List<Off_ProgramDTO> getAllPrograms() {
     List<Off_program> programs = offProgramRepository.findAll();
     return programs.stream()
-    .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
+    .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
     .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
     .collect(Collectors.toList());
     }
@@ -57,14 +57,14 @@ public class Off_programService {
         // 장소로 필터링
         if (placeName != null) {
             filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getPlaceName() == placeName)
+                                               .filter(program -> program.getPlace_name() == placeName)
                                                .collect(Collectors.toList());
         }
 
         // 카테고리로 필터링
         if (category != null) {
             filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getOfflineCategory() == category)
+                                               .filter(program -> program.getOffline_category() == category)
                                                .collect(Collectors.toList());
         }
 
@@ -78,14 +78,14 @@ public class Off_programService {
         // 날짜로 필터링
         if (date != null) {
             filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> !program.getOperatingStartDay().after(date) && !program.getOperatingEndDay().before(date))
+                                               .filter(program -> !program.getOperating_start_day().after(date) && !program.getOperating_end_day().before(date))
                                                .collect(Collectors.toList());
         }
 
         
         //운영 일자 기준 최신순으로 정렬되게 함
         return filteredPrograms.stream()
-                .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
+                .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
                 .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
                 .collect(Collectors.toList());
     }

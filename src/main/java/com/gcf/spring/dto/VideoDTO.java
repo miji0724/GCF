@@ -8,10 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class VideoDTO {
-    private int videoId; // 동영상 파일 ID
-    private String videoUrl; // 동영상 파일 URL
-    private Time videoDuration; // 동영상 파일 시간
-    private double progressRate; // 진도율
-    private String episodeNumber; // 회차
-    private String episodeTitle; // 회차 제목
+    private int video_id; // 동영상 파일 ID
+    private String video_url; // 동영상 파일 URL
+    private Time video_duration; // 동영상 파일 시간
+    private double progress_rate; // 진도율
+    private String episode_number; // 회차
+    private String episode_title; // 회차 제목
 }
