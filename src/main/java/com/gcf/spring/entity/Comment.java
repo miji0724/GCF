@@ -1,10 +1,7 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDateTime;
-
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +14,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "comments")
 public class Comment {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +28,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member user;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
