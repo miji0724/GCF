@@ -68,7 +68,7 @@ function ManageNotice() {
         axios.get(`http://localhost:8090/notices/${id}`)
         .then(response => {
             const getNotice = response.data;
-            console.log(response.data); // 디버깅 용
+            console.log(" response.data : ",response.data); // 디버깅 용
             navigate(`/manage/noticewrite/${id}`, { state: { getNotice } }); // useNavigate 사용
         })
         .catch(error => {

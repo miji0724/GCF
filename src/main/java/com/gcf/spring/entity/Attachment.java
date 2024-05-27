@@ -1,5 +1,7 @@
 package com.gcf.spring.entity;
 
+import com.gcf.spring.dto.AttachmentDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,10 +24,10 @@ public class Attachment {
     private Integer id;
     
     @Column
-    private String fileName;
+    private String file_name;
     
     @Column
-    private String filePath;
+    private String file_path;
     
     @ManyToOne
     @JoinColumn(name = "notice_id")
@@ -37,11 +39,19 @@ public class Attachment {
     @Override
     public String toString() {
         return "Attachment{" +
-                "fileName='" + this.fileName + '\'' +
-                ", filePath='" + this.filePath + '\'' +
+                "fileName='" + this.file_name + '\'' +
+                ", filePath='" + this.file_path + '\'' +
                 ",notice_id='" + (this. notice_id!= null ? this.notice_id.getId() : null) + '\'' +
                 ", Type='" + this.Type + '\'' +
                 '}';
+    }
+    
+    public static Attachment createAttachment(AttachmentDto attachmentDto) {
+    	Attachment attachment = new Attachment();
+    	attachment.setFile_path(attachmentDto.getFile_path());
+    	attachment.setFile_name(attachmentDto.getFile_name());
+    	attachment.setType(attachmentDto.getType());
+    	return attachment;
     }
    
 }

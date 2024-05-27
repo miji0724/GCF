@@ -1,82 +1,87 @@
 package com.gcf.spring.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gcf.spring.dto.NoticeDto;
-import com.gcf.spring.entity.Attachment;
-import com.gcf.spring.entity.Notice;
-import com.gcf.spring.util.GcsUtil;
+import com.google.cloud.WriteChannel;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 
 @Service
 public class AttachmentService {
 
-    private static final String STORAGE_LOCATION = "uploads/"; // 파일이 저장될 경로
+	@Autowired
+	private Storage storage;
 
-    @Autowired
-    private GcsUtil gcsUtil;
-    
-    @Autowired
-    private AdminNoticeService adminNoticeService;
+	private final String BUCKET_NAME = "gcf_attachment_storage_bucket";
 
-    @Transactional
-    public List<Attachment> getAttachmentToNoticeList(List<MultipartFile> files) {
-        Notice notice = new Notice(); // 새로운 Notice 객체 생성
+	public String uploadFile(MultipartFile file) {
+	    try {
+	        String fileName = file.getOriginalFilename();
+	        byte[] fileBytes = file.getBytes();
 
-        // Attachment를 담을 리스트 생성
-        List<Attachment> attachments = new ArrayList<>();
+	        // 바이트 배열을 InputStream으로 변환합니다.
+	        InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
 
-        // MultipartFile 목록을 반복하여 Attachment 생성
-        for(MultipartFile file : files) {
-            // 각 파일에 대한 Attachment 생성
-            String uniqueFileName = gcsUtil.generateUniqueFileName(file);
-            Attachment attachment = new Attachment();
-            attachment.setFileName(uniqueFileName);
-            attachment.setFilePath(STORAGE_LOCATION + uniqueFileName); // 파일 경로 설정
-            attachment.setType("notice");
-            // 생성된 Attachment를 리스트에 추가
-            attachments.add(attachment);
-        }
-        
-        return attachments;
-    }
+	        // GCS에 파일을 업로드합니다.
+	        BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+	        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 
-    @Transactional
-    public void uploadAttachment(List<MultipartFile> files) throws IOException {
-        // 파일 업로드 코드를 구현해야 합니다.
-    }
+	        String fileUrl = null; // 파일의 URL을 저장할 변수 선언
 
-    // 파일 크기 제한 확인 메서드
-    public boolean checkFileSize(MultipartFile file, long maxSize) {
-        return file.getSize() <= maxSize;
-    }
+	        try (WriteChannel writer = storage.writer(blobInfo)) {
+	            writer.write(ByteBuffer.wrap(fileBytes));
+	        } catch (Exception ex) {
+	            // 예외 처리 코드
+	            ex.printStackTrace();
+	        }
 
-    // 파일 유형 유효성 검사 메서드
-    public boolean checkFileType(MultipartFile file, List<String> allowedTypes) {
-        String contentType = file.getContentType();
-        return contentType != null && allowedTypes.contains(contentType);
-    }
+	        // 파일 업로드 후 처리할 작업을 추가할 수 있습니다.
 
-    // 보안 검사 메서드 (선택적으로 추가)
-    public boolean performSecurityCheck(MultipartFile file) {
-        // 보안 검사 로직을 여기에 추가합니다.
-        return true; // 보안 검사 통과 시 true 반환
-    } 
-//    public static NoticeDto NoticeEntitytoDto(Notice notice) {
-//        NoticeDto dto = new NoticeDto();
-//        dto.setId(notice.getId());
-//        dto.setTitle(notice.getTitle());
-//        dto.setContent(notice.getContent());
-//        dto.setViews(notice.getViews());
-//        dto.setAuthor(notice.getAuthor());
-//        dto.setCreated_at(notice.getCreated_at());
-//        // Attachment 관련 정보는 필요에 따라 추가할 수 있습니다.
-//        return dto;
-//    }
+	        // GCS에 업로드된 파일의 URL을 가져옵니다.
+	        Blob blob = storage.get(blobId);
+	        if (blob != null) {
+	            fileUrl = blob.getMediaLink(); // 파일의 URL 가져오기
+	        }
+
+	        // InputStream을 닫습니다.
+	        fileInputStream.close();
+
+	        // 파일의 URL을 반환합니다.
+	        return fileUrl;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        // 필요에 따라 예외 처리를 수행할 수 있습니다.
+	        return null;
+	    }
+	}
+
+
+	public byte[] downloadFile(String fileName) {
+		// GCS에서 파일을 다운로드합니다.
+		BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+		Blob blob = storage.get(blobId);
+		if (blob != null) {
+			return blob.getContent();
+		} else {
+			return null;
+		}
+	}
+
+	public void deleteFile(String fileName) {
+		// GCS에서 파일을 삭제합니다.
+		BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+		boolean deleted = storage.delete(blobId);
+		if (deleted) {
+			// 파일이 성공적으로 삭제되었을 때 처리할 작업을 추가할 수 있습니다.
+		}
+	}
 }

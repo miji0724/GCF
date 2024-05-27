@@ -3,7 +3,7 @@ package com.gcf.spring.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gcf.spring.dto.NoticeDto;
 import com.gcf.spring.entity.Notice;
 import com.gcf.spring.service.AdminNoticeService;
@@ -22,18 +26,24 @@ import com.gcf.spring.service.AdminNoticeService;
 @RequestMapping("/notices")
 public class AdminNoticeController {
 
-    private final AdminNoticeService adminNoticeService;
-
     @Autowired
-    public AdminNoticeController(AdminNoticeService adminNoticeService) {
-        this.adminNoticeService = adminNoticeService;
-    }
+    private AdminNoticeService adminNoticeService;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Notice> getNotice(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> getNotice(@PathVariable("id") Integer id) {
         Notice notice = adminNoticeService.getNotice(id);
         if (notice != null) {
-            return ResponseEntity.ok(notice);
+            try {
+                // 객체를 JSON 문자열로 변환
+                String jsonNotice = objectMapper.writeValueAsString(notice);
+                return ResponseEntity.ok(jsonNotice);
+            } catch (JsonProcessingException e) {
+                // JSON 변환 중 에러가 발생하면 500 에러를 반환
+                return ResponseEntity.status(500).body("Error converting notice to JSON");
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -44,12 +54,16 @@ public class AdminNoticeController {
         return adminNoticeService.getAllNotices();
     }
 
-    @PostMapping
-    public ResponseEntity<Notice> createNotice(@RequestBody NoticeDto noticeDto) {
-        Notice createdNotice = adminNoticeService.createNotice(noticeDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNotice);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Notice> createNotice(@RequestPart("noticeDto") NoticeDto noticeDto,
+                                                @RequestPart(value = "files", required = false) List<MultipartFile> attachments) {
+        // NoticeDto와 첨부 파일을 함께 받아서 처리
+        Notice createdNotice = adminNoticeService.createNoticeWithAttachments(noticeDto, attachments);
+        return ResponseEntity.ok(createdNotice);
     }
 
+
+    
     @PutMapping("/{id}")
     public ResponseEntity<Notice> updateNotice(@PathVariable("id") Integer id, @RequestBody NoticeDto noticeDto) {
         Notice updatedNotice = adminNoticeService.updateNotice(id, noticeDto);

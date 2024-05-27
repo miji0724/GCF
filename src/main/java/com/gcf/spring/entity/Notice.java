@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.gcf.spring.dto.NoticeDto;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,29 +31,20 @@ public class Notice {
 
     public Notice() {
     }
-    
-    @Builder
-    public Notice(String title, String content, Integer views, String author,LocalDateTime created_at) {
-        this.title = title;
-        this.content = content;
-        this.views = views = 0;
-        this.author = author = "관리자";
-        this.created_at=created_at;
-    }
 	
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private String author = "작성자";
+    private String author = "관리자";
 
     @Column(nullable = false)
-    private String title = "제목";
+    private String title;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(3000)")
-    private String content = "내용";
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime created_at;
@@ -66,5 +59,15 @@ public class Notice {
     @PrePersist
     protected void onCreate() {
         this.created_at = LocalDateTime.now();
+    }
+    
+    public static Notice createNotice(NoticeDto noticeDto) {
+       Notice notice = new Notice();
+       notice.setTitle(noticeDto.getTitle());
+       notice.setContent(noticeDto.getContent());
+       notice.setAuthor("관리자");
+       notice.setCreated_at(noticeDto.getCreated_at());
+       notice.setTitle(noticeDto.getTitle());
+       return notice;
     }
 }
