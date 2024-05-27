@@ -15,7 +15,7 @@ public interface Off_program_Repository extends JpaRepository<Off_program, Integ
 
     List<Off_program> findByOff_program_name(String off_program_name); // 이름 검색
 
-    List<Off_program> findByStateAndPlaceNameAndOfflineCategory( //필터 기능
+    List<Off_program> findByStateAndPlaceNameAndOfflineCategory( // 필터 기능
         ProgramState state, Place placeName, Off_Category category
     );
 }
