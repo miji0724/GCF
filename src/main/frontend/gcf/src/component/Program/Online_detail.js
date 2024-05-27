@@ -20,6 +20,8 @@ function Online_Deatil() {
     const [newComment, setNewComment] = useState(''); // 새로운 댓글 내용
     const [replyVisible, setReplyVisible] = useState({}); // 답글 입력창 가시성 관리
     const [replyText, setReplyText] = useState({}); // 각 댓글의 답글 내용
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editedCommentText, setEditedCommentText] = useState('');
 
     if (!poster) {
         return <div>포스터 정보를 찾을 수 없습니다.</div>;
@@ -135,23 +137,23 @@ function Online_Deatil() {
         }
     }); // 송수신처리 
 
-    // 댓글 작성 로직
+    // 댓글 작성 및 관련 기능
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}.${month}.${day}`;
+    };
+
     const handleCommentChange = (event) => {
         setNewComment(event.target.value);
     };
 
     const handleCommentSubmit = () => {
-        const formatDate = (date) => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}.${month}.${day}`;
-        };
-
         const newCommentObj = {
             id: comments.length + 1,
             text: newComment,
-            author: '닉네임', // 백엔드 시 구현
+            author: '닉네임',
             date: formatDate(new Date()),
             replies: []
         };
@@ -159,7 +161,6 @@ function Online_Deatil() {
         setNewComment('');
     };
 
-    // 답글 입력창 토글
     const toggleReply = (commentId) => {
         setReplyVisible((prev) => ({
             ...prev,
@@ -167,7 +168,6 @@ function Online_Deatil() {
         }));
     };
 
-    // 답글 내용 변경
     const handleReplyChange = (event, commentId) => {
         setReplyText({
             ...replyText,
@@ -175,13 +175,12 @@ function Online_Deatil() {
         });
     };
 
-    // 답글 작성
     const handleReplySubmit = (commentId) => {
         const reply = {
             id: comments.find(comment => comment.id === commentId).replies.length + 1,
             text: replyText[commentId] || '',
-            author: '닉네임', // 백엔드 시 구현
-            date: new Date().toLocaleDateString()
+            author: '닉네임',
+            date: formatDate(new Date())
         };
 
         setComments(comments.map(comment => {
@@ -198,11 +197,19 @@ function Online_Deatil() {
             ...replyText,
             [commentId]: ''
         });
+    };
 
-        setReplyVisible({
-            ...replyVisible,
-            [commentId]: false
-        });
+    const handleEditComment = (commentId, initialText) => {
+        setEditingCommentId(commentId);
+        setEditedCommentText(initialText);
+    };
+
+    const handleSaveEdit = (commentId) => {
+        setEditingCommentId(null);
+    };
+
+    const handleDeleteComment = (commentId) => {
+        setComments(comments.filter(comment => comment.id !== commentId));
     };
 
     return (
@@ -289,7 +296,8 @@ function Online_Deatil() {
                 <strong>프로그램 소개</strong>
             </div>
 
-            <div className="Online_Pro_Info" ref={Online_info_Ref}>
+            <div className="Online_Pro_Info" ref
+                ={Online_info_Ref}>
                 <strong><span>[온라인 강의]</span></strong>
                 <p>&nbsp;</p>
                 <p>
@@ -351,49 +359,65 @@ function Online_Deatil() {
                 <strong>SNS 주소: </strong>
                 http://www.oz-film.com
             </div>
+            <div className='Online_Comment_Title'>
+                <strong>댓글 게시판</strong>
+            </div>
+            <div className='Online_Comment_box'>
+                <textarea className="Online_input_comment" placeholder="댓글을 작성해주세요. 욕설, 상업적인 내용, 특정인이나 특정사안을 비방하는 내용 등은 예고 없이 삭제될 수 있습니다." value={newComment}
+                    onChange={handleCommentChange}></textarea>
 
-            <div className='Online_Comment' ref={Online_comment_Ref}>
-                <div className='Online_Comment_Title'>
-                    <strong>댓글 게시판</strong>
+                <div className='Write_Online_Comment'>
+                    <button className='Write_Online_Comment_Button' onClick={handleCommentSubmit}><span>작성하기</span></button>
                 </div>
-                <div className='Online_Comment_box'>
-                    <textarea className="Online_input_comment" placeholder="댓글을 작성해주세요. 욕설, 상업적인 내용, 특정인이나 특정사안을 비방하는 내용 등은 예고 없이 삭제될 수 있습니다." value={newComment}
-                        onChange={handleCommentChange}></textarea>
+            </div>
 
-                    <div className='Write_Online_Comment'>
-                        <button className='Write_Online_Comment_Button' onClick={handleCommentSubmit}><span>작성하기</span></button>
-                    </div>
-                </div>
-
-                <div className='Online_Comment_List'>
-                    {comments.map((comment) => (
-                        <div key={comment.id} className="Online_Comment_User_Info">
-
-                            <div className="Online_Comment_User_Profile">
-                                <img src={userProfile} alt="UserProfile" />
-
-                            </div>
-                            <div className='Online_Comment_User_Name_Date'>
-                                <p className='Online_Comment_User_Name'><strong>{comment.author}</strong></p>
-                                <p className='Online_Comment_Write_Date'>{comment.date}</p>
-
-                            </div>
-
-                            <div className='Online_Comment_Context'>
+            <div className='Online_Comment_List'>
+                {comments.map((comment) => (
+                    <div key={comment.id} className="Online_Comment_User_Info">
+                        <div className="Online_Comment_User_Profile">
+                            <img src={userProfile} alt="UserProfile" />
+                        </div>
+                        <div className='Online_Comment_User_Name_Date'>
+                            <p className='Online_Comment_User_Name'><strong>{comment.author}</strong></p>
+                            <p className='Online_Comment_Write_Date'>{comment.date}</p>
+                        </div>
+                        <div className='Online_Comment_Context'>
+                            {editingCommentId === comment.id ? (
+                                <textarea
+                                    value={editedCommentText}
+                                    onChange={(e) => setEditedCommentText(e.target.value)}
+                                />
+                            ) : (
                                 <p>{comment.text}</p>
-                            </div>
-
+                            )}
+                            {editingCommentId === comment.id ? (
+                                <>
+                                    <button onClick={() => handleSaveEdit(comment.id)}>저장</button>
+                                    <button onClick={() => setEditingCommentId(null)}>취소</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button onClick={() => handleEditComment(comment.id, comment.text)}>수정</button>
+                                    <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                                </>
+                            )}
                             <div className='Reply_area'>
                                 <button className='Reply_Write' onClick={() => toggleReply(comment.id)}>
                                     <span>답글</span>
                                 </button>
+                                {replyVisible[comment.id] && (
+                                    <div>
+                                        <textarea
+                                            value={replyText[comment.id] || ''}
+                                            onChange={(e) => handleReplyChange(e, comment.id)}
+                                        />
+                                        <button onClick={() => handleReplySubmit(comment.id)}>확인</button>
+                                    </div>
+                                )}
                             </div>
-
-
                         </div>
-                    ))}
-
-                </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

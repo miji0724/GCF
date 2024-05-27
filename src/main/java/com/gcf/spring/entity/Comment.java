@@ -34,5 +34,11 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
-    // Constructors, getters, setters, etc.
+    public String getContent() {
+    	return content;
+    }
+    
+    public void setContent(String content) {
+    	this.content = content;
+    }
 }
