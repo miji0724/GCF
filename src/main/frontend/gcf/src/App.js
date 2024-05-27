@@ -78,7 +78,7 @@ function App() {
                 <Routes className="myPage">
                         <Route path="/MyPage" element={<MyPage />} />
                         <Route path="/MyPageAuthenticationForm" element={<MyPageAuthenticationForm />} />
-                    </Routes>
+                </Routes>
 
 
                 <Routes className="manage">
@@ -115,5 +115,4 @@ function App() {
     );
 
 }
-
 export default App;

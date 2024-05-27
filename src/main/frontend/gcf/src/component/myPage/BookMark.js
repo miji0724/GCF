@@ -1,7 +1,7 @@
 import React from 'react';
 import './BookMark.css';
 
-function BookMakr() {
+function BookMark() {
   return (
     <div className='All'>
       <div className='boCenterContainer'>
@@ -17,4 +17,4 @@ function BookMakr() {
   );
 }
 
-export default BookMakr;
+export default BookMark;

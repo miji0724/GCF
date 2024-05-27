@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import './TeacherForm.css';
 
 function TeacherForm() {
@@ -6,6 +7,35 @@ function TeacherForm() {
     const [historyFields, setHistoryFields] = useState([{ event: '', startDate: '', endDate: '' }]);
     const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phoneNumber: '',
+        mobileNumber: '',
+        address1: '',
+        address2: '',
+        address3: '',
+        affiliation: '',
+        snsEmail: ''
+    });
+
+    useEffect(() => {
+        // 기본 정보를 백엔드에서 가져오는 함수
+        const fetchBasicInfo = async () => {
+            try {
+                const response = await axios.get('http://localhost:8090/member/info', {
+                    withCredentials: true, // 인증 정보를 포함
+                });
+                console.log(response.data); // 반환된 데이터 구조를 확인
+                setFormData(response.data);
+                setBirthDate(response.data.birthDate);
+            } catch (error) {
+                console.error('Failed to fetch basic info:', error);
+            }
+        };
+
+        fetchBasicInfo();
+    }, []);
 
     const handleBirthDateChange = (event) => {
         setBirthDate(event.target.value);
@@ -79,8 +109,31 @@ function TeacherForm() {
         setTeachingSubjectFields(newTeachingSubjectFields);
     };
 
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8090/lecture', {
+                formData,
+                birthDate,
+                historyFields,
+                certificationFields,
+                teachingSubjectFields
+            });
+            console.log(response.data);
+            // 여기서 필요한 처리를 수행합니다. 예를 들어, 성공 메시지를 표시하거나 리디렉션을 수행할 수 있습니다.
+        } catch (error) {
+            console.error('Failed to submit lecture info:', error);
+        }
+    };
+    
+
     return (
-        <div className='All' >
+        <div className='All'>
             <div className="Ma">
                 <div className='ClassState'>강사 등록 신청서</div>
                 <div className="ClassMenuContainer">
@@ -103,78 +156,141 @@ function TeacherForm() {
 
                         <div className='formName'>
                             <label htmlFor='name'>이름:</label>
-                            <input type='text' id='name' name='name' />
+                            <input
+                                type='text'
+                                id='name'
+                                name='name'
+                                value={formData.name}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
                         <div className='formEmail'>
                             <label htmlFor='email'>이메일:</label>
-                            <input type='email' id='email' name='email' />
+                            <input
+                                type='email'
+                                id='email'
+                                name='email'
+                                value={formData.email}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
                         <div className='formNumber'>
                             <label htmlFor='phoneNumber'>전화번호:</label>
-                            <input type='tel' id='phoneNumber' name='phoneNumber' />
+                            <input
+                                type='tel'
+                                id='phoneNumber'
+                                name='phoneNumber'
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange}
+                            />
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
                         <div className='formHNumber'>
                             <label htmlFor='mobileNumber'>휴대폰 번호:</label>
-                            <input type='tel' id='mobileNumber' name='mobileNumber' />
+                            <input
+                                type='tel'
+                                id='mobileNumber'
+                                name='mobileNumber'
+                                value={formData.mobileNumber}
+                                onChange={handleInputChange}
+                            />
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
                         <div className='formDate'>
                             <label htmlFor='birthDate'>생년월일:</label>
-                            <input type='date' id='birthDate' name='birthDate' value={birthDate} onChange={handleBirthDateChange} />
+                            <input
+                                type='date'
+                                id='birthDate'
+                                name='birthDate'
+                                value={birthDate}
+                                onChange={handleBirthDateChange}
+                            />
                         </div>
 
                         <div className='formAddress'>
                             <label htmlFor='address1'>주소:</label>
-                            <input type='text' id='address1' name='address1' className='addressInput1' />
-                            <input type='text' id='address2' name='address2' className='addressInput2' />
-                            <input type='text' id='address3' name='address3' className='addressInput3' />
+                            <input
+                                type='text'
+                                id='address1'
+                                name='address1'
+                                className='addressInput1'
+                                value={formData.address1}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type='text'
+                                id='address2'
+                                name='address2'
+                                className='addressInput2'
+                                value={formData.address2}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type='text'
+                                id='address3'
+                                name='address3'
+                                className='addressInput3'
+                                value={formData.address3}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
                         <h2>강의정보</h2>
 
                         <div className='formAffiliation'>
                             <label htmlFor='affiliation'>소속기관:</label>
-                            <input type='text' id='affiliation' name='affiliation' />
+                            <input
+                                type='text'
+                                id='affiliation'
+                                name='affiliation'
+                                value={formData.affiliation}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
                         <div className='CheckGroup'>
                             <label>강의분야:</label>
                             <div className="CheckBoxGroup">
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>문학</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>미술</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>음악</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>무용</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>영상</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>연극</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>영화</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>국악</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>건축</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>출판</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>만화</label>
-                            <input type='checkbox' id='literature' name='field' value='literature' />
-                            <label htmlFor='literature'>기타</label>
+                                <input type='checkbox' id='literature' name='field' value='literature' />
+                                <label htmlFor='literature'>문학</label>
+                                <input type='checkbox' id='art' name='field' value='art' />
+                                <label htmlFor='art'>미술</label>
+                                <input type='checkbox' id='music' name='field' value='music' />
+                                <label htmlFor='music'>음악</label>
+                                <input type='checkbox' id='dance' name='field' value='dance' />
+                                <label htmlFor='dance'>무용</label>
+                                <input type='checkbox' id='video'
+                                    name='field' value='video' />
+                                <label htmlFor='video'>영상</label>
+                                <input type='checkbox' id='theater' name='field' value='theater' />
+                                <label htmlFor='theater'>연극</label>
+                                <input type='checkbox' id='movie' name='field' value='movie' />
+                                <label htmlFor='movie'>영화</label>
+                                <input type='checkbox' id='traditional-music' name='field' value='traditional-music' />
+                                <label htmlFor='traditional-music'>국악</label>
+                                <input type='checkbox' id='architecture' name='field' value='architecture' />
+                                <label htmlFor='architecture'>건축</label>
+                                <input type='checkbox' id='publishing' name='field' value='publishing' />
+                                <label htmlFor='publishing'>출판</label>
+                                <input type='checkbox' id='comics' name='field' value='comics' />
+                                <label htmlFor='comics'>만화</label>
+                                <input type='checkbox' id='other' name='field' value='other' />
+                                <label htmlFor='other'>기타</label>
                             </div>
                         </div>
-
                         <div className='SnsEmail'>
                             <label htmlFor='snsEmail'>SNS주소:</label>
-                            <input type='email' id='snsEmail' name='snsEmail' />
+                            <input
+                                type='email'
+                                id='snsEmail'
+                                name='snsEmail'
+                                value={formData.snsEmail}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
                         {/* 주요 이력 입력란 */}
@@ -210,8 +326,8 @@ function TeacherForm() {
                         </div>
                         {/* 주요 이력 입력란 */}
 
-                         {/* 자격증 및 면허 입력란 */}
-                         <div className='formGroup'>
+                        {/* 자격증 및 면허 입력란 */}
+                        <div className='formGroup'>
                             <label htmlFor='certification'>자격증 및 면허:</label>
                             {certificationFields.map((field, index) => (
                                 <div key={index} className="certificationField">
@@ -260,14 +376,14 @@ function TeacherForm() {
                                     <div className="agreement_content1">이용약관 내용</div>
                                     이용약관에 동의하시겠습니까?&nbsp;&nbsp;
                                     <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                    <label for="agreement1"></label>
+                                    <label htmlFor="agreement1"></label>
                                 </div>
                                 <div id="agreement2">
                                     <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
                                     <div className="agreement_content2">이용약관 내용</div>
                                     개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
                                     <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                    <label for="agreement1"></label>
+                                    <label htmlFor="agreement1"></label>
                                 </div>
                             </div>
                         </div>
