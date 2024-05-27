@@ -4,11 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gcf.spring.dto.NoticeDto;
+import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.Notice;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
@@ -23,43 +27,49 @@ public class AttachmentService {
 
 	private final String BUCKET_NAME = "gcf_attachment_storage_bucket";
 
-	public String uploadFile(MultipartFile file) {
+	public Attachment uploadNoticeFile(MultipartFile file, Notice notice) {
 	    try {
-	        String fileName = file.getOriginalFilename();
+	        String originalFileName = file.getOriginalFilename();
+	        String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
+
+	        // UUID를 사용하여 고유한 파일 이름 생성
+	        String uniqueFileName = UUID.randomUUID().toString() + extension;
+
 	        byte[] fileBytes = file.getBytes();
-
-	        // 바이트 배열을 InputStream으로 변환합니다.
 	        InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
-
 	        // GCS에 파일을 업로드합니다.
-	        BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+	        BlobId blobId = BlobId.of(BUCKET_NAME, uniqueFileName);
 	        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-
-	        String fileUrl = null; // 파일의 URL을 저장할 변수 선언
 
 	        try (WriteChannel writer = storage.writer(blobInfo)) {
 	            writer.write(ByteBuffer.wrap(fileBytes));
 	        } catch (Exception ex) {
 	            // 예외 처리 코드
 	            ex.printStackTrace();
+	            return null; // 업로드 실패 시 null 반환
 	        }
-
-	        // 파일 업로드 후 처리할 작업을 추가할 수 있습니다.
 
 	        // GCS에 업로드된 파일의 URL을 가져옵니다.
 	        Blob blob = storage.get(blobId);
+	        String fileUrl = null; // 파일의 URL을 저장할 변수 선언
 	        if (blob != null) {
 	            fileUrl = blob.getMediaLink(); // 파일의 URL 가져오기
 	        }
+	        
+	        // 첨부 파일 정보를 notice 객체에 추가
+	        Attachment attachment = new Attachment();
+	        attachment.setNotice_id(notice);
+	        attachment.setFile_path(fileUrl);
+	        attachment.setFile_name(originalFileName);
+	        attachment.setType("notice");
+	        notice.getAttachments().add(attachment); // notice 객체에 첨부 파일 추가
 
 	        // InputStream을 닫습니다.
 	        fileInputStream.close();
-
-	        // 파일의 URL을 반환합니다.
-	        return fileUrl;
+	        
+	        return attachment;
 	    } catch (IOException e) {
 	        e.printStackTrace();
-	        // 필요에 따라 예외 처리를 수행할 수 있습니다.
 	        return null;
 	    }
 	}

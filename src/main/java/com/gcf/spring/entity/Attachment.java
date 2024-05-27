@@ -34,7 +34,7 @@ public class Attachment {
     private Notice notice_id; 
     
     @Column
-    private String Type;
+    private String type;
     
     @Override
     public String toString() {
@@ -42,7 +42,7 @@ public class Attachment {
                 "fileName='" + this.file_name + '\'' +
                 ", filePath='" + this.file_path + '\'' +
                 ",notice_id='" + (this. notice_id!= null ? this.notice_id.getId() : null) + '\'' +
-                ", Type='" + this.Type + '\'' +
+                ", Type='" + this.type + '\'' +
                 '}';
     }
     

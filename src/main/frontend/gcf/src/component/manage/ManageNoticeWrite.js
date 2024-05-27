@@ -48,6 +48,12 @@ function ManageNoticeWrite() {
 
 
     const sendNoticeAndAttachments = async () => {
+
+        if (!title || !editorState.getCurrentContent().hasText()) {
+            setError('제목과 내용을 작성해주세요.');
+            return;
+        }
+
         const noticeData = {
             title,
             content: JSON.stringify(convertToRaw(editorState.getCurrentContent())), // JSON 문자열로 변환하여 전송

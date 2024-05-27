@@ -1,6 +1,7 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -17,7 +18,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +29,8 @@ import lombok.Setter;
 @Setter
 public class Notice {
 
-    public Notice() {
+	public Notice() {
+        this.attachments = new ArrayList<>();
     }
 	
     @Id

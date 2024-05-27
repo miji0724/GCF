@@ -15,7 +15,7 @@ public class GoogleCloudStorageConfig {
     public Storage storage() throws IOException {
         // GCS 인증 정보를 로드합니다. 여기서는 resources 디렉토리에 있는 서비스 계정 키 파일을 사용합니다.
         GoogleCredentials credentials = GoogleCredentials.fromStream(
-                new ClassPathResource("classpath:project-gcf-424105-d1392a5ef44a.json").getInputStream());
+                new ClassPathResource("project-gcf-424105-d1392a5ef44a.json").getInputStream());
 
         // Storage 인스턴스를 생성합니다.
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();

@@ -1,10 +1,6 @@
 package com.gcf.spring.dto;
 
-import java.time.LocalDateTime;
-
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
+import com.gcf.spring.entity.Notice;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +21,7 @@ public class AttachmentDto {
 	@NotBlank
 	private String file_path;
 
-	private NoticeDto notice_id;  // 변경된 필드 이름
+	private Notice notice_id;  // 변경된 필드 이름
 
 	@NotBlank
 	private String type;
