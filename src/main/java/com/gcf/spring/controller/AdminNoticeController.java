@@ -56,6 +56,7 @@ public class AdminNoticeController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Notice> createNotice(@RequestPart("noticeDto") NoticeDto noticeDto,
 			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
+		System.out.println("files : " + files);
 		// NoticeDto와 첨부 파일을 함께 받아서 처리
 		Notice createdNotice = adminNoticeService.createNotice(noticeDto, files);
 		return ResponseEntity.ok(createdNotice);
@@ -64,7 +65,7 @@ public class AdminNoticeController {
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Notice> updateNotice(@PathVariable("id") Long id, @RequestPart("noticeDto") NoticeDto noticeDto,
 			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
-		System.out.println("test");
+		System.out.println("files : " + files);
 		Notice updatedNotice = adminNoticeService.updateNotice(id, noticeDto, files);
 		if (updatedNotice != null) {
 			return ResponseEntity.ok(updatedNotice);

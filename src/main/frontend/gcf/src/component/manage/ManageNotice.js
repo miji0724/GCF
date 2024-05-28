@@ -56,6 +56,7 @@ function ManageNotice() {
         .then(response => {
             const getNotice = response.data;
             console.log(" response.data : ",response.data); // 디버깅 용
+            const attachmentIds = getNotice.attachments.map(attachment => attachment.id);
             navigate(`/manage/noticewrite/${id}`, { state: { getNotice } }); // useNavigate 사용
         })
         .catch(error => {

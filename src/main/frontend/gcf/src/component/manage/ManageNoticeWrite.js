@@ -30,7 +30,7 @@ function ManageNoticeWrite() {
             if (notice.attachments) {
                 const allAttachments = notice.attachments.map(file => ({
                     name: file.original_name,
-                    file: null,
+                    file: file, // 파일 객체의 정보를 모두 포함하여 초기화
                 }));
                 setAttachments(allAttachments);
             }
@@ -168,14 +168,17 @@ function ManageNoticeWrite() {
                     <div className='noticeWrite_attachArea'>
                         <p>첨부파일</p>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            {attachments.map((file, index) => (
+                        {attachments.map((file, index) => (
                                 <div key={index} className='custom_file_input'>
-                                    <input
-                                        type='file'
-                                        onChange={e => handleFileChange(index, e)}
-                                    />
+                                    <label>
+                                        <span>{file ? file.name : '파일 선택'}</span>
+                                        <input
+                                            type='file'
+                                            style={{ display: 'none' }}
+                                            onChange={e => handleFileChange(index, e)}
+                                        />
+                                    </label>
                                     <button onClick={() => removeInput(index)}>삭제</button>
-                                    {file && <span>{file.name}</span>} {/* 파일 이름 표시 */}
                                 </div>
                             ))}
                             <button onClick={addInput}>첨부파일 추가</button>

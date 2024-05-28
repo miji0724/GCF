@@ -63,7 +63,6 @@ public class AttachmentService {
 	        // 첨부 파일 정보를 notice 객체에 추가
 	        Attachment attachment = new Attachment();
 	        attachment.setNotice_id(notice);
-	        
 	        attachment.setOriginal_name(originalFileName);
 	        attachment.setFile_name(uniqueFileName);
 	        attachment.setFile_path(fileUrl);
@@ -84,11 +83,7 @@ public class AttachmentService {
 		// GCS에서 파일을 다운로드합니다.
 		BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
 		Blob blob = storage.get(blobId);
-		if (blob != null) {
-			return blob.getContent();
-		} else {
-			return null;
-		}
+		return blob != null ? blob.getContent() : null;
 	}
 
 	public void deleteFile(Attachment attachment) {
