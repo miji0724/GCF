@@ -26,14 +26,29 @@ function TeacherForm() {
                 const response = await axios.get('http://localhost:8090/member/info', {
                     withCredentials: true, // 인증 정보를 포함
                 });
-                console.log(response.data); // 반환된 데이터 구조를 확인
-                setFormData(response.data);
-                setBirthDate(response.data.birthDate);
+                console.log('API response data:', response.data); // 반환된 데이터 구조를 확인
+    
+                const { name, email, phoneNumber, mobileNumber, address, detail_address, birth } = response.data;
+                const updatedFormData = {
+                    name: name,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    mobileNumber: mobileNumber,
+                    address1: address,
+                    address2: detail_address,
+                    address3: '', // 추가 주소 필드가 필요하면 여기에 설정합니다.
+                    affiliation: '',
+                    snsEmail: ''
+                };
+    
+                setFormData(updatedFormData);
+                setBirthDate(birth);
+                console.log('Updated form data:', updatedFormData); // formData가 올바르게 설정되었는지 확인
             } catch (error) {
                 console.error('Failed to fetch basic info:', error);
             }
         };
-
+    
         fetchBasicInfo();
     }, []);
 
@@ -130,7 +145,6 @@ function TeacherForm() {
             console.error('Failed to submit lecture info:', error);
         }
     };
-    
 
     return (
         <div className='All'>
@@ -143,17 +157,18 @@ function TeacherForm() {
                 </div>
                 <div className='TeacherFormContainer'>
                     <h2>기본정보</h2>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className='validation'>
-                            <button type='validation'>확인</button>
+                            <button type='button'>확인</button>
                         </div>
                         <div className='modify'>
-                            <button type='modify'>수정</button>
+                            <button type='button'>수정</button>
                         </div>
                         <div className='delete'>
-                            <button type='delete'>삭제</button>
+                            <button type='button'>삭제</button>
                         </div>
 
+                        {/* 이름 */}
                         <div className='formName'>
                             <label htmlFor='name'>이름:</label>
                             <input
@@ -165,6 +180,7 @@ function TeacherForm() {
                             />
                         </div>
 
+                        {/* 이메일 */}
                         <div className='formEmail'>
                             <label htmlFor='email'>이메일:</label>
                             <input
@@ -176,6 +192,7 @@ function TeacherForm() {
                             />
                         </div>
 
+                        {/* 전화번호 */}
                         <div className='formNumber'>
                             <label htmlFor='phoneNumber'>전화번호:</label>
                             <input
@@ -188,6 +205,7 @@ function TeacherForm() {
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
+                        {/* 휴대폰 번호 */}
                         <div className='formHNumber'>
                             <label htmlFor='mobileNumber'>휴대폰 번호:</label>
                             <input
@@ -200,6 +218,7 @@ function TeacherForm() {
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
+                        {/* 생년월일 */}
                         <div className='formDate'>
                             <label htmlFor='birthDate'>생년월일:</label>
                             <input
@@ -211,6 +230,7 @@ function TeacherForm() {
                             />
                         </div>
 
+                        {/* 주소 */}
                         <div className='formAddress'>
                             <label htmlFor='address1'>주소:</label>
                             <input
@@ -227,14 +247,6 @@ function TeacherForm() {
                                 name='address2'
                                 className='addressInput2'
                                 value={formData.address2}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type='text'
-                                id='address3'
-                                name='address3'
-                                className='addressInput3'
-                                value={formData.address3}
                                 onChange={handleInputChange}
                             />
                         </div>
@@ -263,8 +275,7 @@ function TeacherForm() {
                                 <label htmlFor='music'>음악</label>
                                 <input type='checkbox' id='dance' name='field' value='dance' />
                                 <label htmlFor='dance'>무용</label>
-                                <input type='checkbox' id='video'
-                                    name='field' value='video' />
+                                <input type='checkbox' id='video' name='field' value='video' />
                                 <label htmlFor='video'>영상</label>
                                 <input type='checkbox' id='theater' name='field' value='theater' />
                                 <label htmlFor='theater'>연극</label>
@@ -285,7 +296,7 @@ function TeacherForm() {
                         <div className='SnsEmail'>
                             <label htmlFor='snsEmail'>SNS주소:</label>
                             <input
-                                type='email'
+                                type='text'
                                 id='snsEmail'
                                 name='snsEmail'
                                 value={formData.snsEmail}
@@ -382,8 +393,8 @@ function TeacherForm() {
                                     <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
                                     <div className="agreement_content2">이용약관 내용</div>
                                     개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
-                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                    <label htmlFor="agreement1"></label>
+                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
+                                    <label htmlFor="agreement2"></label>
                                 </div>
                             </div>
                         </div>

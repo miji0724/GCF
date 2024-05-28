@@ -23,9 +23,25 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-		
+    
     private final MemberService memberService;
-	
+
+    private String getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            return (String) principal;
+        } else {
+            return null;
+        }
+    }
+    
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
         System.out.println("아이디 중복확인");
@@ -35,9 +51,7 @@ public class MemberController {
     @PostMapping("/signUp/ok")
     public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
         try {
-            // 서비스의 회원가입 메서드를 호출
-            ResponseEntity<String> response = memberService.signUp(memberDto);
-            return response;
+            return memberService.signUp(memberDto);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -52,9 +66,9 @@ public class MemberController {
 
         Member authenticatedMember = memberService.authenticate(inputId, inputPassword);
         if (authenticatedMember != null) {
-            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
+            return ResponseEntity.ok(authenticatedMember);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
     
@@ -75,34 +89,28 @@ public class MemberController {
     @PostMapping("/member/authentication")
     public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request) {
         String inputPassword = request.get("password");
-        
-        // 인증을 위해 현재 로그인한 사용자의 아이디를 얻어옴
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        String userId = getAuthenticatedUserId();
+
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUsername();
 
         Member authenticatedMember = memberService.authenticateByPassword(userId, inputPassword);
         if (authenticatedMember != null) {
-            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
+            return ResponseEntity.ok(authenticatedMember);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
     
     @GetMapping("/member/info")
     public ResponseEntity<MemberDto> getMemberInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        String userId = getAuthenticatedUserId();
+        
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUsername();
-        
         MemberDto memberDto = memberService.getUserInfo(userId);
         if (memberDto != null) {
             return ResponseEntity.ok(memberDto);

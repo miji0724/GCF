@@ -43,7 +43,7 @@ public class MemberService implements UserDetailsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body("아이디는 5글자 이상, 20자 이하이어야 하며 영문과 숫자를 포함해야 합니다. 특수문자는 사용 불가합니다.");
         }
-  
+
         if (existsById(id)) {
             return ResponseEntity.ok("이미 사용 중인 아이디입니다. 아이디를 변경해주세요.");
         } else {
@@ -51,24 +51,20 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    public boolean isPasswordMatch(String password, String confirm_password) {
-        return password.equals(confirm_password);
+    public boolean isPasswordMatch(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
     }
 
-    // 회원가입
     public ResponseEntity<String> signUp(MemberDto memberDto) {
-        // 아이디 유효성 검사
         if (!isValidId(memberDto.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body("아이디는 5글자 이상, 20자 이하이어야 하며 영문과 숫자를 포함해야 합니다. 특수문자는 사용 불가합니다.");
         }
 
-        // 비밀번호 일치 여부 확인
         if (!isPasswordMatch(memberDto.getPassword(), memberDto.getConfirm_password())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
         }
 
-        // 아이디 중복 체크
         if (existsById(memberDto.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 사용 중인 아이디입니다. 아이디를 변경해주세요.");
         }
@@ -77,7 +73,6 @@ public class MemberService implements UserDetailsService {
         member.setRole(Role.USER);
 
         try {
-            // 회원 정보를 데이터베이스에 저장
             memberRepository.save(member);
             return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
         } catch (Exception e) {
@@ -86,51 +81,18 @@ public class MemberService implements UserDetailsService {
     }
 
     public Member authenticate(String id, String password) {
-        try {
-            Optional<Member> memberOptional = memberRepository.findById(id);
-
-            if (memberOptional.isPresent()) {
-                Member member = memberOptional.get();
-                System.out.println(member);
-                
-                // 비밀번호 매칭
-                boolean matches = passwordEncoder.matches(password, member.getPassword());
-                System.out.println("비밀번호 매칭 결과: " + matches);
-                if (matches) {
-                    return member; // 비밀번호가 일치하는 경우 회원 정보 반환
-                } else {
-                    System.out.println("비밀번호가 일치하지 않습니다.");
-                    return null; // 비밀번호가 일치하지 않는 경우 null 반환
-                }
-            } else {
-                System.out.println("회원이 존재하지 않습니다.");
-                return null; // 회원이 존재하지 않는 경우 null 반환
-            }
-        } catch (Exception e) {
-            System.out.println("예외: " + e.getMessage());
-            return null; // 예외 발생 시 null 반환
-        }
+        return authenticateByPassword(id, password);
     }
 
     public Member authenticateByPassword(String userId, String password) {
-        try {
-            Optional<Member> memberOptional = memberRepository.findById(userId);
-
-            if (memberOptional.isPresent()) {
-                Member member = memberOptional.get();
-                boolean matches = passwordEncoder.matches(password, member.getPassword());
-                if (matches) {
-                    return member;
-                } else {
-                    return null; // 비밀번호가 일치하지 않는 경우 null 반환
-                }
-            } else {
-                return null; // 조회된 회원이 없는 경우 null 반환
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            if (passwordEncoder.matches(password, member.getPassword())) {
+                return member;
             }
-        } catch (Exception e) {
-            System.out.println("예외: " + e.getMessage());
-            return null; // 예외 발생 시 null 반환
         }
+        return null;
     }
 
     @Override
@@ -149,40 +111,18 @@ public class MemberService implements UserDetailsService {
 
     public String findId(MemberDto memberDto) {
         Optional<Member> foundMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
-        if (foundMember.isPresent()) {
-            Member member = foundMember.get();
-            System.out.println(member);
-            
-            String findId = member.getId();
-            System.out.println(findId);
-            
-            return findId;
-        } else {
-            return null;
-        }
+        return foundMember.map(Member::getId).orElse(null);
     }
 
     public MemberDto convertToDto(Member member) {
         MemberDto memberDto = new MemberDto();
         memberDto.setName(member.getName());
         memberDto.setId(member.getId());
-        // 나머지 필드 설정...
-
         return memberDto;
     }
 
     public MemberDto getUserInfo(String userId) {
-        try {
-            // userId를 이용하여 사용자 정보를 조회
-            Member member = memberRepository.findById(userId).orElse(null);
-            if (member != null) {
-                return convertToDto(member);
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            System.out.println("예외: " + e.getMessage());
-            return null;
-        }
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        return memberOptional.map(this::convertToDto).orElse(null);
     }
 }
