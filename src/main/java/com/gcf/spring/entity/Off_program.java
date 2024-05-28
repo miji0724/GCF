@@ -106,32 +106,5 @@ public class Off_program {
 	public Off_program() {
 	}
 
-	// 매개변수를 가진 생성자
-	public Off_program(String off_program_name, Date recruitment_start_date, Date recruitment_end_date,
-			Date operating_start_day, Date operating_end_day, Target participation_target, int participation_fee,
-			Time start_time, Time end_time, int max_participants, int current_participants, ProgramState state,
-			String day_of_week, int views, int likes_count, Off_Category offline_category, String note,
-			Place place_name, Boolean bookmark, On_or_OFF program_type, Poster poster) {
-		this.off_program_name = off_program_name;
-		this.recruitment_start_date = recruitment_start_date;
-		this.recruitment_end_date = recruitment_end_date;
-		this.operating_start_day = operating_start_day;
-		this.operating_end_day = operating_end_day;
-		this.participation_target = participation_target;
-		this.participation_fee = participation_fee;
-		this.start_time = start_time;
-		this.end_time = end_time;
-		this.max_participants = max_participants;
-		this.current_participants = current_participants;
-		this.state = state;
-		this.day_of_week = day_of_week;
-		this.views = views;
-		this.likes_count = likes_count;
-		this.offline_category = offline_category;
-		this.note = note;
-		this.place_name = place_name;
-		this.bookmark = bookmark;
-		this.program_type = program_type;
-		this.poster = poster;
-	}
+
 }

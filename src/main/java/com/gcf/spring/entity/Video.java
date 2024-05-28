@@ -43,6 +43,10 @@ public class Video {
     @JoinColumn(name = "on_program_id")
     private On_Program onProgram; // 연관된 온라인 프로그램
 
+    // 기본 생성자
+    public Video() {
+    }
+    
     // 매개변수를 가진 생성자
     public Video(String videoUrl, Time videoDuration, double progressRate, String episodeNumber, String episodeTitle, On_Program onProgram) {
         this.videoUrl = videoUrl;

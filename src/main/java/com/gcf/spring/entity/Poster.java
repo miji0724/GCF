@@ -32,7 +32,7 @@ public class Poster {
 
 
     // 매개변수를 가진 생성자
-    public Poster(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public Poster() {
+        
     }
 }

@@ -68,16 +68,5 @@ public class On_Program {
     public On_Program() {
     }
 
-    // 매개변수를 가진 생성자
-    public On_Program(String on_program_name, Date operating_start_day, int views, int likes_count, On_Category online_category,
-                      Boolean bookmark, On_or_OFF program_type, Poster poster) {
-        this.on_program_name = on_program_name;
-        this.operating_start_day = operating_start_day;
-        this.views = views;
-        this.likes_count = likes_count;
-        this.online_category = online_category;
-        this.bookmark = bookmark;
-        this.program_type = program_type;
-        this.poster = poster;
-    }
+
 }

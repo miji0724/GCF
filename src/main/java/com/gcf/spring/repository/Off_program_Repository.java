@@ -2,6 +2,8 @@ package com.gcf.spring.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +15,11 @@ import com.gcf.spring.entity.Off_program;
 @Repository
 public interface Off_program_Repository extends JpaRepository<Off_program, Integer> {
 
-    List<Off_program> findByOff_program_name(String off_program_name); // 이름 검색
+    // 이름으로 프로그램 검색
+    Page<Off_program> findByOff_program_nameContaining(String off_program_name, Pageable pageable);
 
-    List<Off_program> findByStateAndPlaceNameAndOfflineCategory( // 필터 기능
-        ProgramState state, Place placeName, Off_Category category
+    // 상태, 장소 및 카테고리로 프로그램 검색
+    Page<Off_program> findByStateAndPlaceNameAndOffline_category(
+        ProgramState state, Place placeName, Off_Category category, Pageable pageable
     );
 }

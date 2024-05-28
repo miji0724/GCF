@@ -43,18 +43,15 @@ public class On_programService {
 		return program.map(p -> modelMapper.map(p, On_ProgramDTO.class));
 	}
 
-	// 카테고리별 및 이름별 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
+	// 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
 	public List<On_ProgramDTO> findFilteredPrograms(On_Category category, String name, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<On_Program> filteredPrograms;
 
 		if (category != null && (name == null || name.isEmpty())) {
-			filteredPrograms = onProgramRepository.findByOfflineCategory(category, pageable);
+			filteredPrograms = onProgramRepository.findByOnlineCategory(category, pageable);
 		} else if (category == null && name != null && !name.isEmpty()) {
 			filteredPrograms = onProgramRepository.findByOn_program_nameContaining(name, pageable);
-		} else if (category != null && name != null && !name.isEmpty()) {
-			filteredPrograms = onProgramRepository.findByOfflineCategoryAndOn_program_nameContaining(category, name,
-					pageable);
 		} else {
 			filteredPrograms = onProgramRepository.findAll(pageable);
 		}
@@ -64,35 +61,19 @@ public class On_programService {
 				.map(program -> modelMapper.map(program, On_ProgramDTO.class)).collect(Collectors.toList());
 	}
 
-	public boolean incrementViews(int id) {
+	public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
 		Optional<On_Program> optionalProgram = onProgramRepository.findById(id);
 		if (optionalProgram.isPresent()) {
 			On_Program program = optionalProgram.get();
-			program.setViews(program.getViews() + 1);
-			onProgramRepository.save(program);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean incrementLikes(int id) {
-		Optional<On_Program> optionalProgram = onProgramRepository.findById(id);
-		if (optionalProgram.isPresent()) {
-			On_Program program = optionalProgram.get();
-			program.setLikes_count(program.getLikes_count() + 1);
-			onProgramRepository.save(program);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean toggleBookmark(int id) {
-		Optional<On_Program> optionalProgram = onProgramRepository.findById(id);
-		if (optionalProgram.isPresent()) {
-			On_Program program = optionalProgram.get();
-			program.setBookmark(!program.getBookmark());
+			if (incrementViews) {
+				program.setViews(program.getViews() + 1);
+			}
+			if (incrementLikes) {
+				program.setLikes_count(program.getLikes_count() + 1);
+			}
+			if (toggleBookmark) {
+				program.setBookmark(!program.getBookmark());
+			}
 			onProgramRepository.save(program);
 			return true;
 		} else {

@@ -16,9 +16,8 @@ public interface On_programRepository extends JpaRepository<On_Program, Integer>
     List<On_Program> findByOn_program_nameContaining(String name);
 
     // 카테고리로 프로그램 검색
-    List<On_Program> findByOfflineCategory(On_Category category);
+    List<On_Program> findByOnlineCategory(On_Category category);
 
-    Page<On_Program> findByOfflineCategory(On_Category category, Pageable pageable);
+    Page<On_Program> findByOnlineCategory(On_Category category, Pageable pageable);
     Page<On_Program> findByOn_program_nameContaining(String name, Pageable pageable);
-    Page<On_Program> findByOfflineCategoryAndOn_program_nameContaining(On_Category category, String name, Pageable pageable);
 }

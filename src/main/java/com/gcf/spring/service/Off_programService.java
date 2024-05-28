@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gcf.spring.constant.Off_Category;
@@ -27,70 +30,60 @@ public class Off_programService {
         this.offProgramRepository = offProgramRepository;
         this.modelMapper = modelMapper;
     }
-    
+
     // 기본으로 최신순으로 정렬된 프로그램 목록을 반환하도록 수정
-    public List<Off_ProgramDTO> getAllPrograms() {
-    List<Off_program> programs = offProgramRepository.findAll();
-    return programs.stream()
-    .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
-    .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
-    .collect(Collectors.toList());
+    public List<Off_ProgramDTO> getAllPrograms(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Off_program> programsPage = offProgramRepository.findAll(pageable);
+        return programsPage.stream()
+                           .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+                           .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
+                           .collect(Collectors.toList());
     }
-    
 
     public Optional<Off_ProgramDTO> getProgramById(int id) {
         Optional<Off_program> program = offProgramRepository.findById(id);
         return program.map(p -> modelMapper.map(p, Off_ProgramDTO.class));
     }
 
-    public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, Date date) {
-        // 모든 프로그램을 가져온 후 필터링합니다.
-        List<Off_program> filteredPrograms = offProgramRepository.findAll();
+    // 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
+    public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, Date date, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Off_program> filteredPrograms;
 
-        // 상태로 필터링
-        if (state != null) {
-            filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getState() == state)
-                                               .collect(Collectors.toList());
+        // 카테고리, 장소, 상태, 이름, 날짜에 따른 필터링
+        if (state != null && placeName != null && category != null) {
+            filteredPrograms = offProgramRepository.findByStateAndPlaceNameAndOffline_category(state, placeName, category, pageable);
+        } else if (name != null && !name.isEmpty()) {
+            filteredPrograms = offProgramRepository.findByOff_program_nameContaining(name, pageable);
+        } else {
+            filteredPrograms = offProgramRepository.findAll(pageable);
         }
 
-        // 장소로 필터링
-        if (placeName != null) {
-            filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getPlace_name() == placeName)
-                                               .collect(Collectors.toList());
-        }
-
-        // 카테고리로 필터링
-        if (category != null) {
-            filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getOffline_category() == category)
-                                               .collect(Collectors.toList());
-        }
-
-        // 이름으로 필터링
-        if (name != null && !name.isEmpty()) {
-            filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> program.getOff_program_name().contains(name))
-                                               .collect(Collectors.toList());
-        }
-
-        // 날짜로 필터링
-        if (date != null) {
-            filteredPrograms = filteredPrograms.stream()
-                                               .filter(program -> !program.getOperating_start_day().after(date) && !program.getOperating_end_day().before(date))
-                                               .collect(Collectors.toList());
-        }
-
-        
-        //운영 일자 기준 최신순으로 정렬되게 함
         return filteredPrograms.stream()
-                .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
-                .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
-                .collect(Collectors.toList());
+                               .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+                               .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
+                               .collect(Collectors.toList());
     }
-    
-    
-    
-    
+
+    // 프로그램의 조회수, 좋아요 수, 북마크 상태를 업데이트
+    public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
+        Optional<Off_program> optionalProgram = offProgramRepository.findById(id);
+        if (optionalProgram.isPresent()) {
+            Off_program program = optionalProgram.get();
+            if (incrementViews) {
+                program.setViews(program.getViews() + 1);
+            }
+            if (incrementLikes) {
+                program.setLikes_count(program.getLikes_count() + 1);
+            }
+            if (toggleBookmark) {
+                program.setBookmark(!program.getBookmark());
+            }
+            offProgramRepository.save(program);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
