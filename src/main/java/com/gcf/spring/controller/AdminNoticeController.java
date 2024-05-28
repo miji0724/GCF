@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,61 +25,62 @@ import com.gcf.spring.service.AdminNoticeService;
 @RequestMapping("/notices")
 public class AdminNoticeController {
 
-    @Autowired
-    private AdminNoticeService adminNoticeService;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private AdminNoticeService adminNoticeService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getNotice(@PathVariable("id") Integer id) {
-        Notice notice = adminNoticeService.getNotice(id);
-        if (notice != null) {
-            try {
-                // 객체를 JSON 문자열로 변환
-                String jsonNotice = objectMapper.writeValueAsString(notice);
-                return ResponseEntity.ok(jsonNotice);
-            } catch (JsonProcessingException e) {
-                // JSON 변환 중 에러가 발생하면 500 에러를 반환
-                return ResponseEntity.status(500).body("Error converting notice to JSON");
-            }
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @GetMapping
-    public List<Notice> getAllNotices() {
-        return adminNoticeService.getAllNotices();
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<String> getNotice(@PathVariable("id") Long id) {
+		Notice notice = adminNoticeService.getNotice(id);
+		if (notice != null) {
+			try {
+				// 객체를 JSON 문자열로 변환
+				String jsonNotice = objectMapper.writeValueAsString(notice);
+				return ResponseEntity.ok(jsonNotice);
+			} catch (JsonProcessingException e) {
+				// JSON 변환 중 에러가 발생하면 500 에러를 반환
+				return ResponseEntity.status(500).body("Error converting notice to JSON");
+			}
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Notice> createNotice(@RequestPart("noticeDto") NoticeDto noticeDto,
-                                                @RequestPart(value = "files", required = false) List<MultipartFile> attachments) {
-        // NoticeDto와 첨부 파일을 함께 받아서 처리
-        Notice createdNotice = adminNoticeService.createNoticeWithAttachments(noticeDto, attachments);
-        return ResponseEntity.ok(createdNotice);
-    }
+	@GetMapping
+	public List<Notice> getAllNotices() {
+		return adminNoticeService.getAllNotices();
+	}
 
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Notice> createNotice(@RequestPart("noticeDto") NoticeDto noticeDto,
+			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
+		// NoticeDto와 첨부 파일을 함께 받아서 처리
+		Notice createdNotice = adminNoticeService.createNotice(noticeDto, files);
+		return ResponseEntity.ok(createdNotice);
+	}
 
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<Notice> updateNotice(@PathVariable("id") Integer id, @RequestBody NoticeDto noticeDto) {
-        Notice updatedNotice = adminNoticeService.updateNotice(id, noticeDto);
-        if (updatedNotice != null) {
-            return ResponseEntity.ok(updatedNotice);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Notice> updateNotice(@PathVariable("id") Long id, @RequestPart("noticeDto") NoticeDto noticeDto,
+			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
+		System.out.println("test");
+		Notice updatedNotice = adminNoticeService.updateNotice(id, noticeDto, files);
+		if (updatedNotice != null) {
+			return ResponseEntity.ok(updatedNotice);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotice(@PathVariable("id") Integer id) {
-        boolean deleted = adminNoticeService.deleteNotice(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteNotice(@PathVariable("id") Long id) {
+		boolean deleted = adminNoticeService.deleteNotice(id);
+		if (deleted) {
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 }

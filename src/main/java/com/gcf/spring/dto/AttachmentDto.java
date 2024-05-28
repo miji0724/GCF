@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AttachmentDto {
 	@NotNull
-	private Integer id;
+	private Long id;
 
+	@NotBlank
+	private String original_name;
+	
 	@NotBlank
 	private String file_name;
 
@@ -24,5 +27,5 @@ public class AttachmentDto {
 	private Notice notice_id;  // 변경된 필드 이름
 
 	@NotBlank
-	private String type;
+	private String parent;
 }

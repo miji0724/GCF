@@ -24,60 +24,91 @@ function ManageNoticeWrite() {
 
     useEffect(() => {
         if (getNotice) {
-            setTitle(getNotice.title);
-            if (getNotice.content) {
-                try {
-                    // JSON 문자열을 JavaScript 객체로 파싱
-                    const parsedContent = JSON.parse(getNotice.content);
+            console.log(getNotice);
+            const notice = JSON.parse(getNotice);
+            console.log(notice.attachments);
+            if (notice.attachments) {
+                const allAttachments = notice.attachments.map(file => ({
+                    name: file.original_name,
+                    file: null,
+                }));
+                setAttachments(allAttachments);
+            }
+            if (notice) {
+                setTitle(notice.title);
+                if (notice.content) {
+                    try {
+                        // JSON 문자열을 JavaScript 객체로 파싱
+                        const parsedContent = JSON.parse(notice.content);
 
-                    // JavaScript 객체를 contentState로 변환
-                    const contentState = convertFromRaw(parsedContent);
+                        // JavaScript 객체를 contentState로 변환
+                        const contentState = convertFromRaw(parsedContent);
 
-                    console.log(contentState);
+                        console.log(contentState);
 
-                    // contentState 설정
-                    setEditorState(EditorState.createWithContent(contentState));
+                        // contentState 설정
+                        setEditorState(EditorState.createWithContent(contentState));
 
-                } catch (error) {
-                    console.error('Error parsing content:', error);
+                    } catch (error) {
+                        console.error('Error parsing content:', error);
+                    }
                 }
             }
         }
     }, [getNotice]);
 
-
-
-    const sendNoticeAndAttachments = async () => {
-
+    const prepareNoticeData = () => {
         if (!title || !editorState.getCurrentContent().hasText()) {
             setError('제목과 내용을 작성해주세요.');
-            return;
+            return null;
         }
 
         const noticeData = {
             title,
-            content: JSON.stringify(convertToRaw(editorState.getCurrentContent())), // JSON 문자열로 변환하여 전송
+            content: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
         };
 
+        return noticeData;
+    };
+
+    const createFormData = (noticeData) => {
+        const formData = new FormData();
+
+        formData.append('noticeDto', JSON.stringify(noticeData));
+
+        if (attachments && attachments.length > 0) {
+            attachments.forEach((file) => {
+                formData.append('files', file);
+            });
+        }
+
+        if (id) {
+            formData.append('id', id);
+        }
+
+        return formData;
+    };
+
+    const sendNoticeAndAttachments = async () => {
+        const noticeData = prepareNoticeData();
+
+        if (!noticeData) {
+            return;
+        }
+
+        const formData = createFormData(noticeData);
+        const method = id ? 'PUT' : 'POST';
+
+        // FormData의 각 항목을 콘솔에 출력
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         try {
-            const formData = new FormData();
-
-            // 공지사항 정보를 FormData에 추가
-            formData.append('noticeDto', new Blob([JSON.stringify(noticeData)], { type: 'application/json' }));
-
-            // 첨부파일 정보를 FormData에 추가
-            if (attachments && attachments.length > 0) {
-                attachments.forEach((file) => {
-                    formData.append('files', file);
-                });
-            }
-
-            // FormData의 각 항목을 콘솔에 출력
-            for (const [key, value] of formData.entries()) {
-                console.log(key, value instanceof File ? 'File' : typeof value);
-            }
-
-            const response = await axios.post('http://localhost:8090/notices', formData, {
+            const response = await axios({
+                method,
+                url: id ? `http://localhost:8090/notices/${id}` : 'http://localhost:8090/notices',
+                data: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -91,8 +122,6 @@ function ManageNoticeWrite() {
             throw new Error('Notice and attachments upload failed. Please try again later.');
         }
     };
-
-
 
     const handleEditorChange = (editorState) => {
         setEditorState(editorState);
@@ -121,7 +150,7 @@ function ManageNoticeWrite() {
         <div className='noticewrite_container'>
             <SideMenu />
             <div className='noticewrite'>
-                <p>공지사항 생성/수정</p>
+                <p>{id ? '공지사항 수정' : '공지사항 등록'}</p>
                 <a className='back_button' href='/manage/notice'>목록으로 돌아가기 &gt;</a>
                 <div className='noticewrite_area'>
                     {error && <div className="error">{error}</div>}

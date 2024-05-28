@@ -1,5 +1,6 @@
 package com.gcf.spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.dto.AttachmentDto;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,10 @@ public class Attachment {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
+    
+    @Column
+    private String original_name;
     
     @Column
     private String file_name;
@@ -30,11 +34,12 @@ public class Attachment {
     private String file_path;
     
     @ManyToOne
-    @JoinColumn(name = "notice_id")
+    @JoinColumn(name = "notice_id", referencedColumnName = "id")
+    @JsonIgnore
     private Notice notice_id; 
     
     @Column
-    private String type;
+    private String parent;
     
     @Override
     public String toString() {
@@ -42,16 +47,7 @@ public class Attachment {
                 "fileName='" + this.file_name + '\'' +
                 ", filePath='" + this.file_path + '\'' +
                 ",notice_id='" + (this. notice_id!= null ? this.notice_id.getId() : null) + '\'' +
-                ", Type='" + this.type + '\'' +
+                ", Type='" + this.parent + '\'' +
                 '}';
     }
-    
-    public static Attachment createAttachment(AttachmentDto attachmentDto) {
-    	Attachment attachment = new Attachment();
-    	attachment.setFile_path(attachmentDto.getFile_path());
-    	attachment.setFile_name(attachmentDto.getFile_name());
-    	attachment.setType(attachmentDto.getType());
-    	return attachment;
-    }
-   
 }

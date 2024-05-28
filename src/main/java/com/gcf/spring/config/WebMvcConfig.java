@@ -27,13 +27,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
-    
 
     @Bean(name = "multipartResolver")
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-    
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         for (HttpMessageConverter<?> converter : converters) {

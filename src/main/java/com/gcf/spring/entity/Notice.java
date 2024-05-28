@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.gcf.spring.dto.NoticeDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,7 +36,7 @@ public class Notice {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String author = "관리자";
@@ -48,27 +48,18 @@ public class Notice {
     private String content;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created_at;
 
     @Column(nullable = false)
-    private Integer views;
+    private Integer views = 0;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Attachment> attachments;
     
     // 생성 시간 자동 설정
     @PrePersist
     protected void onCreate() {
         this.created_at = LocalDateTime.now();
-    }
-    
-    public static Notice createNotice(NoticeDto noticeDto) {
-       Notice notice = new Notice();
-       notice.setTitle(noticeDto.getTitle());
-       notice.setContent(noticeDto.getContent());
-       notice.setAuthor("관리자");
-       notice.setCreated_at(noticeDto.getCreated_at());
-       notice.setTitle(noticeDto.getTitle());
-       return notice;
     }
 }

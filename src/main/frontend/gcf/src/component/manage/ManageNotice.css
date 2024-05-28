@@ -48,6 +48,39 @@
     text-align: center;
 }
 
+.manageNotice_table{
+    table-layout: fixed;
+}
+
+.manageNotice .manageNotice_id {
+    width: 30px;
+}
+
+.manageNotice .manageNotice_title {
+    width: 500px;
+}
+
+.manageNotice .manageNotice_writer {
+    width: 50px;
+}
+
+.manageNotice .manageNotice_date {
+    width: 100px;
+}
+
+.manageNotice .manageNotice_views {
+    width: 50px;
+}
+
+.manageNotice .manageNotice_modify {
+    width: 50px;
+}
+
+.manageNotice .manageNotice_delete {
+    width: 50px;
+}
+
+
 .manageNotice_table button{
     border:none;
     width:50px;
