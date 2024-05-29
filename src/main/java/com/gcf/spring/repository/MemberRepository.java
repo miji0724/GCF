@@ -7,9 +7,8 @@ import org.springframework.lang.NonNull;
 
 import com.gcf.spring.entity.Member;
 
-public interface MemberRepository extends JpaRepository<Member, String>{
-	
-	Optional<Member> findByEmail(String email);
-	
-	Optional<Member> findById(@NonNull String id);
+public interface MemberRepository extends JpaRepository<Member, String> {
+    Optional<Member> findByEmail(String email);
+
+    Optional<Member> findById(@NonNull String id);
 }

@@ -1,51 +1,59 @@
 package com.gcf.spring.service;
 
-import java.util.Optional;
-
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.gcf.spring.dto.MemberDTO;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
-@RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
-	
-	private final MemberRepository memberRepository;
+public class MemberService {
 
-	public Member saveMember(Member member) {
-		validateDuplicateMember(member);	// 가입된 회원이 있는지 찾기
-		return memberRepository.save(member);
-	}
-	
-	private void validateDuplicateMember(Member member){
-		 Optional<Member> findMember = memberRepository.findById(member.getId());
-		 if(findMember != null){
-			 throw new IllegalStateException("이미 가입된 회원입니다."); // 이미 가입된 회원의 경우 예외를 발생시킨다.
-		 }
-	}
-	
-    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if (optionalMember.isEmpty()) {
-            throw new UsernameNotFoundException(id);
-        }
-        Member member = optionalMember.get();
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .roles(member.getRole().toString())
-                .build();
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public MemberDTO createMember(MemberDTO memberDTO) {
+        Member member = modelMapper.map(memberDTO, Member.class);
+        String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
+        member.setPassword(encodedPassword);
+        member = memberRepository.save(member);
+        return modelMapper.map(member, MemberDTO.class);
     }
-	
-	
+
+    public List<MemberDTO> getAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(member -> modelMapper.map(member, MemberDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public MemberDTO getMemberById(String id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
+        return modelMapper.map(member, MemberDTO.class);
+    }
+
+    public MemberDTO updateMember(String id, MemberDTO memberDTO) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
+        modelMapper.map(memberDTO, member);
+        if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
+            member.setPassword(encodedPassword);
+        }
+        member = memberRepository.save(member);
+        return modelMapper.map(member, MemberDTO.class);
+    }
+
+    public void deleteMember(String id) {
+        memberRepository.deleteById(id);
+    }
 }

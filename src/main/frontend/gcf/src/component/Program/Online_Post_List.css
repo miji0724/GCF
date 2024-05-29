@@ -1,0 +1,164 @@
+.online-body-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 70px 0 100px;
+    background-color: #F5F5F5;
+}
+
+.online-poster-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.online-poster-card {
+    background: linear-gradient(120deg, #ADD8E6 0%, white 100%);
+    border-radius: 15px;
+    color: #333;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    width: 300px;
+    transition: transform 0.2s;
+}
+
+.online-poster-card:hover {
+    transform: translateY(-5px);
+}
+
+.online-poster-image {
+    width: 100%;
+    height: auto;
+}
+
+.online-poster-details {
+    padding: 10px;
+}
+
+.online-poster-title {
+    font-size: 16px;
+    color: #333;
+    line-height: 20px;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.online-poster-dates {
+    font-size: 12px;
+    color: #666;
+}
+
+.online-poster-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.online-heart-icon {
+    cursor: pointer;
+    font-size: 24px;
+    color: red;
+}
+
+.online-like-count {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.online-views {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+}
+
+.online-bookmark-icon {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: grey;
+}
+
+.online-bookmark-icon.active {
+    color: gold;
+}
+
+.online-bookmark-icon:hover {
+    color: black;
+}
+
+.online-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.online-pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+}
+
+.online-pagination button.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+.online-poster-category{ /*모든 카테고리 모양을 둥글게*/
+    border-radius: 12px;
+    padding: 5px 10px;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+/*카테고리 별 색상 */
+.online-category-Music {
+    background-color: #FFD700;
+    color: black;
+    font-weight: bold;
+}
+
+.online-category-Art {
+    background-color: #F08080;
+    color: black;
+    font-weight: bold;
+}
+
+.online-category-Science {
+    background-color: #8FBC8F;
+    color: black;
+    font-weight: bold;
+}
+
+.online-category-Design {
+    background-color: #DAA520;
+    color: black;
+    font-weight: bold;
+}
+
+.online-category-Education {
+    background-color: #7B68EE;
+    color: white;
+    font-weight: bold;
+}
+
+.online-category-Others {
+    background-color: #FF6347;
+    color: white;
+    font-weight: bold;
+}
+
+.online-category-Undefined {
+    background-color: #C0C0C0;
+    color: black;
+    font-weight: bold;
+}

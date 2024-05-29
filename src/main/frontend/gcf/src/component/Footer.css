@@ -25,6 +25,7 @@ footer {
 }
 
 .left_footer > .text > div > a {
+    font-family: "Noto Sans KR", sans-serif;
     text-decoration: none;
     color: rgb(0, 0, 0);
 }
