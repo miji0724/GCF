@@ -33,27 +33,34 @@ public class Notice {
         this.attachments = new ArrayList<>();
     }
 	
+	//id
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
+    //작성자 고정(관리자)
     @Column(nullable = false)
     private String author = "관리자";
 
+    //공지사항 제목
     @Column(nullable = false)
     private String title;
 
+    //공지사항 내용
     @Column(nullable = false, columnDefinition = "VARCHAR(3000)")
     private String content;
 
+    //공지사항 작성일
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created_at;
 
+    //공지사항 조회수
     @Column(nullable = false)
     private Integer views = 0;
 
+    //공지사항 첨부파일
     @OneToMany(cascade = CascadeType.ALL)
     private List<Attachment> attachments;
     

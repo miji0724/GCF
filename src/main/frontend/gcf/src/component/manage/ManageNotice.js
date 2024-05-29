@@ -37,7 +37,7 @@ function ManageNotice() {
                 console.error('Error fetching notices:', error);
             });
     }, []);
-    
+
     const handleDelete = (id) => {
         if (window.confirm("정말로 삭제하시겠습니까?")) {
             axios.delete(`http://localhost:8090/notices/${id}`)
@@ -51,19 +51,18 @@ function ManageNotice() {
         }
     };
 
+    // 기존 코드에 parseAttachmentsData 함수 추가
     const handleEdit = (id) => {
         axios.get(`http://localhost:8090/notices/${id}`)
-        .then(response => {
-            const getNotice = response.data;
-            console.log(" response.data : ",response.data); // 디버깅 용
-            const attachmentIds = getNotice.attachments.map(attachment => attachment.id);
-            navigate(`/manage/noticewrite/${id}`, { state: { getNotice } }); // useNavigate 사용
-        })
-        .catch(error => {
-            console.error('Error fetching notice detail:', error);
-        });
-
-        // axios.get(`http://localhost:8090/attachment`)
+            .then(response => {
+                const getNotice = JSON.parse(response.data); // 받아온 데이터를 파싱하여 객체로 변환
+                console.log("getNotice:", getNotice); // 디버깅 용
+                navigate(`/manage/noticewrite/${id}`, { state: { getNotice } });
+            })
+            .catch(error => {
+                console.error('Error fetching notice detail:', error);
+                // 공지사항 정보를 가져오는데 실패한 경우에 대한 처리
+            });
     };
 
     return (
@@ -89,7 +88,7 @@ function ManageNotice() {
                             {currentItems.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.id}</td>
-                                    <td>{item.title.length > 20 ? `${item.title.slice(0, 50)}...` : item.title}</td>
+                                    <td>{item.title.length > 20 ? `${item.title.slice(0, 80)}...` : item.title}</td>
                                     <td>{item.author}</td>
                                     <td>{item.created_at}</td>
                                     <td>{item.views}</td>

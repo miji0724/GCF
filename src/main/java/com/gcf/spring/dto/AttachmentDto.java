@@ -24,7 +24,7 @@ public class AttachmentDto {
 	@NotBlank
 	private String file_path;
 
-	private Notice notice_id;  // 변경된 필드 이름
+	private Notice noticeId;
 
 	@NotBlank
 	private String parent;

@@ -1,5 +1,6 @@
 package com.gcf.spring.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,18 @@ public class AdminNoticeController {
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Notice> updateNotice(@PathVariable("id") Long id, @RequestPart("noticeDto") NoticeDto noticeDto,
 			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
-		System.out.println("files : " + files);
+		if (files != null) {
+		    for (MultipartFile file : files) {
+		        System.out.println("===== File Details =====");
+		        System.out.println("Name: " + file.getName());
+		        System.out.println("Original Filename: " + file.getOriginalFilename());
+		        System.out.println("Content Type: " + file.getContentType());
+		        System.out.println("Size: " + file.getSize());
+		    }
+		} else {
+		    System.out.println("No files uploaded.");
+		}
+		System.out.println("update** dto.attachments : " + noticeDto.getAttachments());
 		Notice updatedNotice = adminNoticeService.updateNotice(id, noticeDto, files);
 		if (updatedNotice != null) {
 			return ResponseEntity.ok(updatedNotice);

@@ -7,51 +7,27 @@ import SideMenu from './ManageSideMenu';
 import axios from 'axios';
 import { useParams, useLocation } from 'react-router-dom';
 
-
 function ManageNoticeWrite() {
     const [attachments, setAttachments] = useState([]);
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
     const [title, setTitle] = useState('');
     const [error, setError] = useState(null);
-    // const navigate = useNavigate();
-    const { id } = useParams(); // URL에서 공지사항 ID 가져오기
+    const { id } = useParams();
     const location = useLocation();
     const { getNotice } = location.state || {};
-
     const editorRef = useRef(null);
-
-
 
     useEffect(() => {
         if (getNotice) {
-            console.log(getNotice);
-            const notice = JSON.parse(getNotice);
-            console.log(notice.attachments);
-            if (notice.attachments) {
-                const allAttachments = notice.attachments.map(file => ({
-                    name: file.original_name,
-                    file: file, // 파일 객체의 정보를 모두 포함하여 초기화
-                }));
-                setAttachments(allAttachments);
-            }
-            if (notice) {
-                setTitle(notice.title);
-                if (notice.content) {
-                    try {
-                        // JSON 문자열을 JavaScript 객체로 파싱
-                        const parsedContent = JSON.parse(notice.content);
-
-                        // JavaScript 객체를 contentState로 변환
-                        const contentState = convertFromRaw(parsedContent);
-
-                        console.log(contentState);
-
-                        // contentState 설정
-                        setEditorState(EditorState.createWithContent(contentState));
-
-                    } catch (error) {
-                        console.error('Error parsing content:', error);
-                    }
+            const notice = getNotice;
+            setTitle(notice.title);
+            if (notice.content) {
+                try {
+                    const parsedContent = JSON.parse(notice.content);
+                    const contentState = convertFromRaw(parsedContent);
+                    setEditorState(EditorState.createWithContent(contentState));
+                } catch (error) {
+                    console.error('Error parsing content:', error);
                 }
             }
         }
@@ -63,24 +39,19 @@ function ManageNoticeWrite() {
             return null;
         }
 
-        const noticeData = {
+        return {
             title,
             content: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
         };
-
-        return noticeData;
     };
 
     const createFormData = (noticeData) => {
         const formData = new FormData();
-
         formData.append('noticeDto', JSON.stringify(noticeData));
 
-        if (attachments && attachments.length > 0) {
-            attachments.forEach((file) => {
-                formData.append('files', file);
-            });
-        }
+        attachments.forEach((file) => {
+            formData.append('files', file);
+        });
 
         if (id) {
             formData.append('id', id);
@@ -91,27 +62,17 @@ function ManageNoticeWrite() {
 
     const sendNoticeAndAttachments = async () => {
         const noticeData = prepareNoticeData();
-
-        if (!noticeData) {
-            return;
-        }
+        if (!noticeData) return;
 
         const formData = createFormData(noticeData);
         const method = id ? 'PUT' : 'POST';
-
-        // FormData의 각 항목을 콘솔에 출력
-        for (const [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
 
         try {
             const response = await axios({
                 method,
                 url: id ? `http://localhost:8090/notices/${id}` : 'http://localhost:8090/notices',
                 data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             console.log('Notice and attachments uploaded successfully:', response.data);
@@ -166,9 +127,8 @@ function ManageNoticeWrite() {
                         />
                     </div>
                     <div className='noticeWrite_attachArea'>
-                        <p>첨부파일</p>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        {attachments.map((file, index) => (
+                            {attachments.map((file, index) => (
                                 <div key={index} className='custom_file_input'>
                                     <label>
                                         <span>{file ? file.name : '파일 선택'}</span>

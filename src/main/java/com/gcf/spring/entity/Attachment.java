@@ -20,34 +20,40 @@ import lombok.Setter;
 @Setter
 public class Attachment {
     
+	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    //파일 원본 이름
     @Column
     private String original_name;
     
+    //고유 번호 + 원본 이름
     @Column
     private String file_name;
     
+    //파일 저장 경로
     @Column
     private String file_path;
     
+    //공지사항 참조(null 허용)
     @ManyToOne
-    @JoinColumn(name = "notice_id", referencedColumnName = "id")
+    @JoinColumn(name = "noticeId", referencedColumnName = "id")
     @JsonIgnore
-    private Notice notice_id; 
+    private Notice noticeId; 
     
+    //파일이 속한 엔티티
     @Column
     private String parent;
     
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "fileName='" + this.file_name + '\'' +
-                ", filePath='" + this.file_path + '\'' +
-                ",notice_id='" + (this. notice_id!= null ? this.notice_id.getId() : null) + '\'' +
-                ", Type='" + this.parent + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Attachment{" +
+//                "fileName='" + this.file_name + '\'' +
+//                ", filePath='" + this.file_path + '\'' +
+//                ",notice_id='" + (this. noticeId!= null ? this.noticeId.getId() : null) + '\'' +
+//                ", Type='" + this.parent + '\'' +
+//                '}';
+//    }
 }

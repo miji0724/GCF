@@ -14,7 +14,9 @@ import com.gcf.spring.dto.NoticeDto;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Notice;
 import com.gcf.spring.repository.AdminNoticeRepository;
+import com.gcf.spring.repository.AttachmentRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -25,13 +27,17 @@ public class AdminNoticeService {
     private ModelMapper modelMapper;
 
     @Autowired
+    private AttachmentService attachmentService;
+    
+    @Autowired
     private AdminNoticeRepository adminNoticeRepository;
 
     @Autowired
-    private AttachmentService attachmentService;
+    private AttachmentRepository attachmentRepository;
 
     public Notice getNotice(Long id) {
-        return adminNoticeRepository.findById(id).orElse(null);
+        return adminNoticeRepository.findById(id).orElseThrow(() -> 
+        new EntityNotFoundException("Notice not found with id: " + id));
     }
 
     public List<Notice> getAllNotices() {
@@ -48,39 +54,29 @@ public class AdminNoticeService {
 
     @Transactional
     public Notice updateNotice(Long id, NoticeDto noticeDto, List<MultipartFile> files) {
-        Notice existingNotice = getNotice(id);
-        if (existingNotice != null) {
-            existingNotice.setTitle(noticeDto.getTitle());
-            existingNotice.setContent(noticeDto.getContent());
-
-            // 기존 첨부 파일 중에서 삭제할 것들을 미리 삭제
-            List<Attachment> existingAttachments = existingNotice.getAttachments();
-            List<Attachment> attachmentsToDelete = new ArrayList<>();
-            if (files != null) { 
-                for (Attachment attachment : existingAttachments) {
-                    if (!files.stream().anyMatch(file -> file.getOriginalFilename().equals(attachment.getOriginal_name()))) {
-                        attachmentService.deleteFile(attachment);
-                        attachmentsToDelete.add(attachment);
-                    }
-                }
-            }
-            existingAttachments.removeAll(attachmentsToDelete);
-
-            // 새로운 첨부 파일을 추가하지 않고, 기존 첨부 파일만 유지
-            List<Attachment> addAttachments = handleAttachments(existingNotice, files);
-            if (addAttachments != null) {
-                existingNotice.getAttachments().addAll(addAttachments);
-            }
-
-            return adminNoticeRepository.save(existingNotice);
-        } else {
-            return null;
-        }
+        // 기존 공지 가져오기
+        Notice existingNotice = adminNoticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Notice not found with id: " + id));
+        
+        attachmentRepository.deleteAllByNoticeId(existingNotice);
+        
+        // 공지 업데이트
+        updateNoticeFields(existingNotice, noticeDto);
+        List<Attachment> attachments = handleAttachments(existingNotice, files);
+        existingNotice.setAttachments(attachments);
+        return adminNoticeRepository.save(existingNotice);
+    }
+    
+    private void updateNoticeFields(Notice notice, NoticeDto noticeDto) {
+        // 공지의 필드 업데이트 (제목, 내용 등)
+        notice.setTitle(noticeDto.getTitle());
+        notice.setContent(noticeDto.getContent());
+        // 필요한 경우 더 많은 필드 업데이트 가능
     }
 
     private List<Attachment> handleAttachments(Notice notice, List<MultipartFile> files) {
         List<Attachment> attachments = new ArrayList<>();
-        if (files != null) {
+        if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 try {
                     Attachment attachment = attachmentService.uploadNoticeFile(file, notice);
