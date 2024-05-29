@@ -88,11 +88,8 @@ public class Member {
 		member.setInterests(memberDto.getInterests());
 		member.setMarried(memberDto.getMarried());
 		member.setHasChildren(memberDto.getHasChildren());
-		member.setRole(Role.USER);
+		member.setRole(Role.ADMIN);
 		return member;
 	}
 	
-	
-	
-
 }
