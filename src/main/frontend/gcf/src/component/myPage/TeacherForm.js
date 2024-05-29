@@ -19,36 +19,38 @@ function TeacherForm() {
         snsEmail: ''
     });
 
+    const fetchBasicInfo = async () => {
+        try {
+            const response = await axios.get('http://localhost:8090/member/info', {
+                withCredentials: true, // 세션 쿠키를 포함
+            });
+            console.log('API response data:', response.data);
+
+            const { name, email, phoneNumber, mobileNumber, address, detail_address, birth } = response.data;
+            const updatedFormData = {
+                name,
+                email,
+                phoneNumber,
+                mobileNumber,
+                address1: address,
+                address2: detail_address,
+                address3: '',
+                affiliation: '',
+                snsEmail: ''
+            };
+
+            setFormData(updatedFormData);
+            setBirthDate(birth);
+            console.log('Updated form data:', updatedFormData);
+            console.log('Updated birth date:', birth);
+        } catch (error) {
+            console.error('Failed to fetch basic info:', error);
+            console.error('Error details:', error.response ? error.response.data : error.message);
+        }
+    };
+
     useEffect(() => {
-        // 기본 정보를 백엔드에서 가져오는 함수
-        const fetchBasicInfo = async () => {
-            try {
-                const response = await axios.get('http://localhost:8090/member/info', {
-                    withCredentials: true, // 인증 정보를 포함
-                });
-                console.log('API response data:', response.data); // 반환된 데이터 구조를 확인
-    
-                const { name, email, phoneNumber, mobileNumber, address, detail_address, birth } = response.data;
-                const updatedFormData = {
-                    name: name,
-                    email: email,
-                    phoneNumber: phoneNumber,
-                    mobileNumber: mobileNumber,
-                    address1: address,
-                    address2: detail_address,
-                    address3: '', // 추가 주소 필드가 필요하면 여기에 설정합니다.
-                    affiliation: '',
-                    snsEmail: ''
-                };
-    
-                setFormData(updatedFormData);
-                setBirthDate(birth);
-                console.log('Updated form data:', updatedFormData); // formData가 올바르게 설정되었는지 확인
-            } catch (error) {
-                console.error('Failed to fetch basic info:', error);
-            }
-        };
-    
+        // 컴포넌트가 마운트될 때 사용자 정보를 가져옵니다.
         fetchBasicInfo();
     }, []);
 
@@ -140,7 +142,6 @@ function TeacherForm() {
                 teachingSubjectFields
             });
             console.log(response.data);
-            // 여기서 필요한 처리를 수행합니다. 예를 들어, 성공 메시지를 표시하거나 리디렉션을 수행할 수 있습니다.
         } catch (error) {
             console.error('Failed to submit lecture info:', error);
         }
@@ -168,7 +169,6 @@ function TeacherForm() {
                             <button type='button'>삭제</button>
                         </div>
 
-                        {/* 이름 */}
                         <div className='formName'>
                             <label htmlFor='name'>이름:</label>
                             <input
@@ -180,7 +180,6 @@ function TeacherForm() {
                             />
                         </div>
 
-                        {/* 이메일 */}
                         <div className='formEmail'>
                             <label htmlFor='email'>이메일:</label>
                             <input
@@ -192,7 +191,6 @@ function TeacherForm() {
                             />
                         </div>
 
-                        {/* 전화번호 */}
                         <div className='formNumber'>
                             <label htmlFor='phoneNumber'>전화번호:</label>
                             <input
@@ -205,7 +203,6 @@ function TeacherForm() {
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
-                        {/* 휴대폰 번호 */}
                         <div className='formHNumber'>
                             <label htmlFor='mobileNumber'>휴대폰 번호:</label>
                             <input
@@ -218,7 +215,6 @@ function TeacherForm() {
                             <h4>※숫자만 입력 가능합니다.</h4>
                         </div>
 
-                        {/* 생년월일 */}
                         <div className='formDate'>
                             <label htmlFor='birthDate'>생년월일:</label>
                             <input
@@ -230,7 +226,6 @@ function TeacherForm() {
                             />
                         </div>
 
-                        {/* 주소 */}
                         <div className='formAddress'>
                             <label htmlFor='address1'>주소:</label>
                             <input
@@ -264,39 +259,10 @@ function TeacherForm() {
                             />
                         </div>
 
-                        <div className='CheckGroup'>
-                            <label>강의분야:</label>
-                            <div className="CheckBoxGroup">
-                                <input type='checkbox' id='literature' name='field' value='literature' />
-                                <label htmlFor='literature'>문학</label>
-                                <input type='checkbox' id='art' name='field' value='art' />
-                                <label htmlFor='art'>미술</label>
-                                <input type='checkbox' id='music' name='field' value='music' />
-                                <label htmlFor='music'>음악</label>
-                                <input type='checkbox' id='dance' name='field' value='dance' />
-                                <label htmlFor='dance'>무용</label>
-                                <input type='checkbox' id='video' name='field' value='video' />
-                                <label htmlFor='video'>영상</label>
-                                <input type='checkbox' id='theater' name='field' value='theater' />
-                                <label htmlFor='theater'>연극</label>
-                                <input type='checkbox' id='movie' name='field' value='movie' />
-                                <label htmlFor='movie'>영화</label>
-                                <input type='checkbox' id='traditional-music' name='field' value='traditional-music' />
-                                <label htmlFor='traditional-music'>국악</label>
-                                <input type='checkbox' id='architecture' name='field' value='architecture' />
-                                <label htmlFor='architecture'>건축</label>
-                                <input type='checkbox' id='publishing' name='field' value='publishing' />
-                                <label htmlFor='publishing'>출판</label>
-                                <input type='checkbox' id='comics' name='field' value='comics' />
-                                <label htmlFor='comics'>만화</label>
-                                <input type='checkbox' id='other' name='field' value='other' />
-                                <label htmlFor='other'>기타</label>
-                            </div>
-                        </div>
-                        <div className='SnsEmail'>
-                            <label htmlFor='snsEmail'>SNS주소:</label>
+                        <div className='formSns'>
+                            <label htmlFor='snsEmail'>SNS 계정(선택사항):</label>
                             <input
-                                type='text'
+                                type='email'
                                 id='snsEmail'
                                 name='snsEmail'
                                 value={formData.snsEmail}
@@ -304,105 +270,104 @@ function TeacherForm() {
                             />
                         </div>
 
-                        {/* 주요 이력 입력란 */}
-                        <div className='formHistory'>
-                            <label htmlFor='history'>주요 이력:</label>
-                            {historyFields.map((field, index) => (
-                                <div key={index} className="historyField">
-                                    <input
-                                        type='text'
-                                        value={field.event}
-                                        onChange={(event) => handleHistoryEventChange(event, index)}
-                                    />
-                                    <div className="dateRange">
-                                        <input
-                                            type='date'
-                                            value={field.startDate}
-                                            onChange={(event) => handleHistoryStartDateChange(event, index)}
-                                        />
-                                        <span> ~ </span>
-                                        <input
-                                            type='date'
-                                            value={field.endDate}
-                                            onChange={(event) => handleHistoryEndDateChange(event, index)}
-                                        />
-                                    </div>
-                                    {index === 0 ? (
-                                        <button type='button' onClick={handleAddHistoryField}>+</button>
-                                    ) : (
-                                        <button type='button' onClick={() => handleRemoveHistoryField(index)}>-</button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                        {/* 주요 이력 입력란 */}
+                        <h2>경력사항</h2>
 
-                        {/* 자격증 및 면허 입력란 */}
-                        <div className='formGroup'>
-                            <label htmlFor='certification'>자격증 및 면허:</label>
-                            {certificationFields.map((field, index) => (
-                                <div key={index} className="certificationField">
-                                    <input
-                                        type='text'
-                                        value={field.certification}
-                                        onChange={(event) => handleCertificationChange(event, index)}
-                                    />
-                                    {index === 0 ? (
-                                        <button type='button' onClick={handleAddCertificationField}>+</button>
-                                    ) : (
-                                        <button type='button' onClick={() => handleRemoveCertificationField(index)}>-</button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                        {/* 자격증 및 면허 입력란 */}
-
-                        {/* 강의 가능 분야 입력란 */}
-                        <div className='formGroup'>
-                            <label htmlFor='teachingSubjects'>강의 가능 분야:</label>
-                            {teachingSubjectFields.map((field, index) => (
-                                <div key={index} className="teachingSubjectField">
-                                    <input
-                                        type='text'
-                                        value={field.subject}
-                                        onChange={(event) => handleTeachingSubjectChange(event, index)}
-                                    />
-                                    {index === 0 ? (
-                                        <button type='button' onClick={handleAddTeachingSubjectField}>+</button>
-                                    ) : (
-                                        <button type='button' onClick={() => handleRemoveTeachingSubjectField(index)}>-</button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="subtitle">
-                            <div id="subtitle3">
-                                <div>이용약관 및 동의</div>
-                                <text>*은 필수 입력 사항입니다.</text>
+                        {historyFields.map((field, index) => (
+                            <div key={index} className="formHistory">
+                                <label htmlFor={`event${index}`}>경력:</label>
+                                <input
+                                    type="text"
+                                    id={`event${index}`}
+                                    name="event"
+                                    value={field.event}
+                                    onChange={(e) => handleHistoryEventChange(e, index)}
+                                />
+                                <label htmlFor={`startDate${index}`}>시작일:</label>
+                                <input
+                                    type="date"
+                                    id={`startDate${index}`}
+                                    name="startDate"
+                                    value={field.startDate}
+                                    onChange={(e) => handleHistoryStartDateChange(e, index)}
+                                />
+                                <label htmlFor={`endDate${index}`}>종료일:</label>
+                                <input
+                                    type="date"
+                                    id={`endDate${index}`}
+                                    name="endDate"
+                                    value={field.endDate}
+                                    onChange={(e) => handleHistoryEndDateChange(e, index)}
+                                />
+                                {index > 0 && (
+                                    <button type="button" onClick={() => handleRemoveHistoryField(index)}>제거</button>
+                                )}
                             </div>
-                            <div className="agreement">
-                                <div id="agreement1">
-                                    <div className="agreement_title">* 이용약관</div>
-                                    <div className="agreement_content1">이용약관 내용</div>
-                                    이용약관에 동의하시겠습니까?&nbsp;&nbsp;
-                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                    <label htmlFor="agreement1"></label>
-                                </div>
-                                <div id="agreement2">
-                                    <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
-                                    <div className="agreement_content2">이용약관 내용</div>
-                                    개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
-                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
-                                    <label htmlFor="agreement2"></label>
-                                </div>
+                        ))}
+
+                        <button type="button" onClick={handleAddHistoryField}>추가</button>
+
+                        <h2>자격증</h2>
+
+                        {certificationFields.map((field, index) => (
+                            <div key={index} className="formCertification">
+                                <label htmlFor={`certification${index}`}>자격증:</label>
+                                <input
+                                    type="text"
+                                    id={`certification${index}`}
+                                    name="certification"
+                                    value={field.certification}
+                                    onChange={(e) => handleCertificationChange(e, index)}
+                                />
+                                {index > 0 && (
+                                    <button type="button" onClick={() => handleRemoveCertificationField(index)}>제거</button>
+                                )}
+                            </div>
+                        ))}
+
+                        <button type="button" onClick={handleAddCertificationField}>추가</button>
+
+                        <h2>강의과목</h2>
+
+                        {teachingSubjectFields.map((field, index) => (
+                            <div key={index} className="formTeachingSubject">
+                                <label htmlFor={`subject${index}`}>강의과목:</label>
+                                <input
+                                    type="text"
+                                    id={`subject${index}`}
+                                    name="subject"
+                                    value={field.subject}
+                                    onChange={(e) => handleTeachingSubjectChange(e, index)}
+                                />
+                                {index > 0 && (
+                                    <button type="button" onClick={() => handleRemoveTeachingSubjectField(index)}>제거</button>
+                                )}
+                            </div>
+                        ))}
+
+                        <button type="button" onClick={handleAddTeachingSubjectField}>추가</button>
+
+                        <h2>약관 동의</h2>
+
+                        <div className="agreement">
+                            <div id="agreement1">
+                                <div className="agreement_title">* 이용약관 동의</div>
+                                <div className="agreement_content1">이용약관 내용</div>
+                                이용약관에 동의하시겠습니까?&nbsp;&nbsp;
+                                <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
+                                <label htmlFor="agreement1"></label>
+                            </div>
+                            <div id="agreement2">
+                                <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
+                                <div className="agreement_content2">이용약관 내용</div>
+                                개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
+                                <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
+                                <label htmlFor="agreement2"></label>
                             </div>
                         </div>
 
                         <div className='formGroup'>
                             <button type='submit'>신청하기</button>
                         </div>
-
                     </form>
                 </div>
             </div>

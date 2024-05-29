@@ -17,46 +17,35 @@ import com.gcf.spring.service.MemberService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Autowired
     private MemberService memberService;
-    
+
     @Autowired
     private PasswordEncoderConfig passwordEncoderConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-        		.csrf(csrf -> csrf.disable())
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/member/login")  // 커스텀 로그인 페이지 설정
-//                        .defaultSuccessUrl("/")  // 로그인 성공 시 이동할 기본 URL
-//                        .usernameParameter("id")  // 로그인 시 사용할 아이디 파라미터명
-//                        .passwordParameter("password")  // 로그인 시 사용할 비밀번호 파라미터명
-//                        .failureUrl("/member/login/error")  // 로그인 실패 시 이동할 URL
-//                        .permitAll())
-                
-                .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/"))
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.and()) // CORS 설정 추가
+            .logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/"))
 
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()  // 회원 관련 모든 URL 허용
-                        .requestMatchers(new AntPathRequestMatcher("/**/**/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/**/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")  // 관리자 페이지 접근 권한 설정
-                        .requestMatchers(new AntPathRequestMatcher("/member/Authentication")).permitAll() // 비밀번호만을 입력하여 인증이 가능한 URL
-                        .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()  // 회원 관련 모든 URL 허용
-                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")  // 관리자 페이지 접근 권한 설정
-                        .anyRequest().authenticated())
+            .authorizeHttpRequests(request -> request
+                .requestMatchers(new AntPathRequestMatcher("/member/login")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/member/signup")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/member/findId")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/member/authentication")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/member/info")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .anyRequest().permitAll())
 
-                .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+            .exceptionHandling(handling -> handling
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -65,5 +54,4 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoderConfig.passwordEncoder());
         return provider;
     }
-
 }

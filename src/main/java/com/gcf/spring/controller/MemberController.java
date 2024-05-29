@@ -1,5 +1,6 @@
 package com.gcf.spring.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.dto.ApplicationDto;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.service.MemberService;
@@ -85,7 +87,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
     }
-
+    
     @PostMapping("/member/authentication")
     public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request) {
         String inputPassword = request.get("password");
@@ -106,16 +108,31 @@ public class MemberController {
     @GetMapping("/member/info")
     public ResponseEntity<MemberDto> getMemberInfo() {
         String userId = getAuthenticatedUserId();
-        
+        System.out.println("Authenticated user ID: " + userId);
+
         if (userId == null) {
+            System.out.println("User is not authenticated");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         MemberDto memberDto = memberService.getUserInfo(userId);
         if (memberDto != null) {
+            System.out.println("Member info found for user ID: " + userId);
             return ResponseEntity.ok(memberDto);
         } else {
+            System.out.println("No member info found for user ID: " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/api/applications")
+    public ResponseEntity<List<ApplicationDto>> getApplications() {
+        String userId = getAuthenticatedUserId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        List<ApplicationDto> applications = memberService.getApplications(userId);
+        return ResponseEntity.ok(applications);
     }
 }

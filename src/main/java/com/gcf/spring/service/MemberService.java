@@ -1,5 +1,6 @@
 package com.gcf.spring.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gcf.spring.constant.Role;
+import com.gcf.spring.dto.ApplicationDto;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
@@ -27,7 +29,7 @@ public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; 
-    
+
     private boolean isValidId(String id) {
         String regex = "^[a-zA-Z0-9]{5,20}$";
         return Pattern.matches(regex, id);
@@ -124,5 +126,11 @@ public class MemberService implements UserDetailsService {
     public MemberDto getUserInfo(String userId) {
         Optional<Member> memberOptional = memberRepository.findById(userId);
         return memberOptional.map(this::convertToDto).orElse(null);
+    }
+
+    public List<ApplicationDto> getApplications(String userId) {
+        // 여기에 사용자 ID에 해당하는 신청 정보를 가져오는 로직을 추가합니다.
+        // 예: applicationRepository.findByUserId(userId);
+        return List.of(); // 실제 구현 시에는 적절한 데이터를 반환하도록 수정합니다.
     }
 }
