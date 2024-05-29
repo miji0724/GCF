@@ -1,0 +1,69 @@
+.noticeDetail {
+    padding-top: 5%;
+    padding-bottom: 5%;
+    text-align: center;
+}
+
+.noticeTitle {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+.date_view {
+    margin-bottom: 25px;
+}
+
+.calendarImg {
+    width: 15px;
+    margin-right: 7px;
+    margin-bottom: 3px;
+}
+
+.date_view > .viewImg {
+    margin-left: 25px;
+}
+
+.n_line {
+    width: 90%;
+    margin-left: 5%;
+    border: 1px solid rgb(170, 170, 170);
+}
+
+.noticeBody {
+    background-color: white;
+    width: 70%;
+    padding: 50px;
+    margin-left: 15%;
+}
+
+.noticeContent {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 3%;
+}
+
+.n_line_bt {
+    width: 90%;
+    margin-left: 5%;
+    border: 1px solid rgb(170, 170, 170);
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.return_list {
+    width: 90%;
+    height: 50px;
+    margin-left: 5%;
+    padding-top: 1%;
+}
+
+.return_list_btn {
+    text-decoration: none;
+    color: black;
+    border: 1px solid black;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 30px;
+}
