@@ -1,6 +1,5 @@
 package com.gcf.spring.controller;
 
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +40,8 @@ public class TeacherController {
     public ResponseEntity<Void> updateTeacherStats(
             @PathVariable String id,
             @RequestParam(required = false) String carrer,
-            @RequestParam(required = false) Year careerStartYear,
-            @RequestParam(required = false) Year careerEndYear,
+            @RequestParam(required = false) String careerStartYear,
+            @RequestParam(required = false) String careerEndYear,
             @RequestParam(required = false) String affiliatedOrganization,
             @RequestParam(required = false) String licenseCode) {
         if (teacherService.updateTeacherStats(id, carrer, careerStartYear, careerEndYear, affiliatedOrganization, licenseCode)) {

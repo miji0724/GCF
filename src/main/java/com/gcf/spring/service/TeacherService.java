@@ -56,7 +56,7 @@ public class TeacherService {
         return modelMapper.map(savedTeacher, TeacherDTO.class);
     }
 
-    public boolean updateTeacherStats(String id, String carrer, Year careerStartYear, Year careerEndYear, String affiliatedOrganization, String licenseCode) {
+    public boolean updateTeacherStats(String id, String carrer, String careerStartYear, String careerEndYear, String affiliatedOrganization, String licenseCode) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
         if (optionalTeacher.isPresent()) {
             Teacher teacher = optionalTeacher.get();
