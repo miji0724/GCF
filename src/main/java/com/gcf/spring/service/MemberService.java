@@ -1,6 +1,6 @@
 package com.gcf.spring.service;
 
-import java.util.List;
+
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gcf.spring.constant.Role;
-import com.gcf.spring.dto.ApplicationDto;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
@@ -29,7 +28,7 @@ public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; 
-
+    
     private boolean isValidId(String id) {
         String regex = "^[a-zA-Z0-9]{5,20}$";
         return Pattern.matches(regex, id);
@@ -116,21 +115,27 @@ public class MemberService implements UserDetailsService {
         return foundMember.map(Member::getId).orElse(null);
     }
 
-    public MemberDto convertToDto(Member member) {
-        MemberDto memberDto = new MemberDto();
-        memberDto.setName(member.getName());
-        memberDto.setId(member.getId());
-        return memberDto;
-    }
-
     public MemberDto getUserInfo(String userId) {
         Optional<Member> memberOptional = memberRepository.findById(userId);
         return memberOptional.map(this::convertToDto).orElse(null);
     }
 
-    public List<ApplicationDto> getApplications(String userId) {
-        // 여기에 사용자 ID에 해당하는 신청 정보를 가져오는 로직을 추가합니다.
-        // 예: applicationRepository.findByUserId(userId);
-        return List.of(); // 실제 구현 시에는 적절한 데이터를 반환하도록 수정합니다.
+    private MemberDto convertToDto(Member member) {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName(member.getName());
+        memberDto.setId(member.getId());
+        memberDto.setBirth(member.getBirth());
+        memberDto.setPhone_number(member.getPhone_number());
+        memberDto.setTelNumber(member.getTelNumber());
+        memberDto.setEmail(member.getEmail());
+        memberDto.setAddress(member.getAddress());
+        memberDto.setDetail_address(member.getDetail_address());
+        memberDto.setEmail_agreement(member.getEmail_agreement());
+        memberDto.setMessage_agreement(member.getMessage_agreement());
+        memberDto.setMail_agreement(member.getMail_agreement());
+        memberDto.setInterests(member.getInterests());
+        memberDto.setMarried(member.getMarried());
+        memberDto.setHasChildren(member.getHasChildren());
+        return memberDto;
     }
 }

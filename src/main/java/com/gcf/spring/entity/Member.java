@@ -12,10 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +38,7 @@ public class Member {
     private LocalDate birth;
     
     @Column(nullable = false)
-    private String phone_Number;
+    private String phone_number;
     
     private String telNumber;
     
@@ -77,7 +74,7 @@ public class Member {
         member.setName(memberDto.getName());
         member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         member.setBirth(memberDto.getBirth());
-        member.setPhone_Number(memberDto.getPhoneNumber());
+        member.setPhone_number(memberDto.getPhone_number());
         member.setTelNumber(memberDto.getTelNumber());
         member.setEmail(memberDto.getEmail());
         member.setAddress(memberDto.getAddress());
@@ -90,5 +87,6 @@ public class Member {
         member.setHasChildren(memberDto.getHasChildren());
         member.setRole(Role.USER);
         return member;
+        
     }
 }

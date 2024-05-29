@@ -1,8 +1,6 @@
 package com.gcf.spring.controller;
 
-import java.util.List;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gcf.spring.dto.ApplicationDto;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.service.MemberService;
@@ -25,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-    
+
     private final MemberService memberService;
 
     private String getAuthenticatedUserId() {
@@ -43,13 +40,12 @@ public class MemberController {
             return null;
         }
     }
-    
+
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
-        System.out.println("아이디 중복확인");
         return memberService.checkId(id);
     }
-    
+
     @PostMapping("/signUp/ok")
     public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
         try {
@@ -60,7 +56,7 @@ public class MemberController {
             return new ResponseEntity<>("이미 존재하는 회원입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @PostMapping("/member/login")
     public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
         String inputId = request.get("id");
@@ -68,12 +64,13 @@ public class MemberController {
 
         Member authenticatedMember = memberService.authenticate(inputId, inputPassword);
         if (authenticatedMember != null) {
+            httpRequest.getSession(true); // 세션을 생성하거나 기존 세션을 사용
             return ResponseEntity.ok(authenticatedMember);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
-    
+
     @PostMapping("/member/findId")
     public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
         try {
@@ -87,7 +84,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
     }
-    
+
     @PostMapping("/member/authentication")
     public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request) {
         String inputPassword = request.get("password");
@@ -104,35 +101,20 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
-    
+
     @GetMapping("/member/info")
     public ResponseEntity<MemberDto> getMemberInfo() {
         String userId = getAuthenticatedUserId();
-        System.out.println("Authenticated user ID: " + userId);
 
         if (userId == null) {
-            System.out.println("User is not authenticated");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         MemberDto memberDto = memberService.getUserInfo(userId);
         if (memberDto != null) {
-            System.out.println("Member info found for user ID: " + userId);
             return ResponseEntity.ok(memberDto);
         } else {
-            System.out.println("No member info found for user ID: " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-    }
-
-    @GetMapping("/api/applications")
-    public ResponseEntity<List<ApplicationDto>> getApplications() {
-        String userId = getAuthenticatedUserId();
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-
-        List<ApplicationDto> applications = memberService.getApplications(userId);
-        return ResponseEntity.ok(applications);
     }
 }

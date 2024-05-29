@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Offline_state.css';
-import LeftMenuBar_teacher from './LeftMenuBar_teacher';
+
 
 function Offline_state() {
   const [applications, setApplications] = useState([]);
@@ -9,7 +9,7 @@ function Offline_state() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8090/api/applications', { withCredentials: true });
+        const response = await axios.get('http://localhost:8090/member/info', { withCredentials: true });
         setApplications(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
