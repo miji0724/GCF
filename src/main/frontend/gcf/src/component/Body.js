@@ -20,7 +20,8 @@ import music from '../img/off_home_icon/music_icon.png';
 import design from '../img/off_home_icon/design_icon.png';
 import study from '../img/off_home_icon/study_icon.png';
 import etc from '../img/off_home_icon/etc_icon.png';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Body = () => {
     const images = [
@@ -35,10 +36,39 @@ const Body = () => {
     ];
 
     const [selectedProgram, setSelectedProgram] = useState(1);
+    const [notices, setNotices] = useState([]);
 
     const handleClick = (program) => {
         setSelectedProgram(program);
     };
+
+    useEffect(() => {
+        axios.get('/home/notices')
+            .then(response => {
+                const sortedNotices = response.data.slice(0, 4); // 이미 정렬된 데이터 사용
+                setNotices(sortedNotices);
+            })
+            .catch(error => {
+                console.error('Failed to fetch notices', error);
+            });
+    }, []);
+
+    const renderProgramContent = (program) => {
+        switch (program) {
+            case 1:
+                return { img: off_poster1, title: '2024 모담골 노는 학당[한옥 마을 교육 프로그램]' };
+            case 2:
+                return { img: off_poster2, title: '2024 문화예술 프로그램' };
+            case 3:
+                return { img: off_poster3, title: '2024 가족이 있는 플리마켓' };
+            case 4:
+                return { img: off_poster4, title: '향기롭던 보구곶의 봄[봄 전시 연계 프로그램]' };
+            default:
+                return {};
+        }
+    };
+
+    const selectedProgramContent = renderProgramContent(selectedProgram);
 
     return (
         <div className="body">
@@ -53,90 +83,47 @@ const Body = () => {
                     <a className="issue_button" href="#">증명서 발급<div>⇀</div></a>
                 </li>
                 <li className="notice_space">
-                    <li>
-                        <div>공지사항</div>
-                        <div><a href="/notice">더보기 →</a></div>
+                    <div>
+                        <span>공지사항</span>
+                        <span><a href="/notice">더보기 →</a></span>
+                    </div>
+                    {notices.map(notice => (
+                    <li key={notice.id} id='notice_content' onClick={() => window.location.href=`/notice/${notice.id}`}>
+                        {notice.title}
                     </li>
-                    <li id='notice_content'>1번 공지사항입니다.</li>
-                    <li id='notice_content'>2번 공지사항입니다.</li>
-                    <li id='notice_content'>3번 공지사항입니다.</li>
-                    <li id='notice_content'>4번 공지사항입니다.</li>
+                    ))}
                 </li>
             </ul>
 
             <div className="popular">
                 <div id="home_title1">인기있는 오프라인 교육/체험</div>
                 <ul className="popular_poster">
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster1}/>
-                            <div className="off_category1">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster2}></img>
-                            <div className="off_category1">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster3}></img>
-                            <div className="off_category2">체험</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster4}></img>
-                            <div className="off_category2">체험</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
+                    {[off_poster1, off_poster2, off_poster3, off_poster4].map((poster, index) => (
+                        <li key={index}>
+                            <a href='#'>
+                                <img src={poster} alt={`Poster ${index + 1}`} />
+                                <div className="off_category">교육</div>
+                                <div className="title1">2024 프로그램 제목</div>
+                                <div className="date">2024.05.02~2024.05.14</div>
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </div>
 
             <div className="popular">
                 <div id="home_title1">인기있는 온라인 교육/체험</div>
                 <ul className="popular_poster">
-                    <li>
-                        <a href='#'>
-                            <img src={printing_3D}/>
-                            <div className="on_category1">디자인</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={illust}></img>
-                            <div className="on_category2">미술</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={contentsDesign}></img>
-                            <div className="on_category3">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={contentsPlanning}></img>
-                            <div className="on_category3">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
+                    {[printing_3D, illust, contentsDesign, contentsPlanning].map((poster, index) => (
+                        <li key={index}>
+                            <a href='#'>
+                                <img src={poster} alt={`Poster ${index + 1}`} />
+                                <div className="on_category">교육</div>
+                                <div className="title1">2024 프로그램 제목</div>
+                                <div className="date">2024.05.02~2024.05.14</div>
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </div>
 
@@ -147,74 +134,37 @@ const Body = () => {
             <div className="new">
                 <div className="home_title2">
                     <div>새로운 오프라인 교육/체험</div>
-                    <div className="title2" onClick={() => handleClick(1)}>모담골 노는 학당</div>
-                    <div className="title2" onClick={() => handleClick(2)}>2024 문화예술 프로그램</div>
-                    <div className="title2" onClick={() => handleClick(3)}>2024 가족이 있는 플리마켓</div>
-                    <div className="title2" onClick={() => handleClick(4)}>향기롭던 보구곶의 봄</div>
+                    {['모담골 노는 학당', '2024 문화예술 프로그램', '2024 가족이 있는 플리마켓', '향기롭던 보구곶의 봄'].map((title, index) => (
+                        <div key={index} className="title2" onClick={() => handleClick(index + 1)}>{title}</div>
+                    ))}
                     <div><a href="#">더보기 →</a></div>
                 </div>
                 <a href="#" className="new_center">
-                    {selectedProgram && <img src={selectedProgram === 1 ? off_poster1 :
-                                                selectedProgram === 2 ? off_poster2 :
-                                                selectedProgram === 3 ? off_poster3 :
-                                                selectedProgram === 4 ? off_poster4 :
-                                                "" }
-                                        />}
-
-                    {selectedProgram && selectedProgram === 1 ? <div className="title1">2024 모담골 노는 학당[한옥 마을 교육 프로그램]</div> :
-                                        selectedProgram === 2 ? <div className="title1">2024 문화예술 프로그램</div> :
-                                        selectedProgram === 3 ? <div className="title1">2024 가족이 있는 플리마켓</div> :
-                                        selectedProgram === 4 ? <div className="title1">향기롭던 보구곶의 봄[봄 전시 연계 프로그램]</div> : 
-                                        ""}
-
+                    {selectedProgramContent.img && <img src={selectedProgramContent.img} alt="Selected Program" />}
+                    <div className="title1">{selectedProgramContent.title}</div>
                     <div className="date">2024.05.02~2024.05.14</div>
                 </a>
                 <div className="home_title3">
                     <div>새로운 온라인 교육/체험</div>
-                    <div className="title2" onClick={() => handleClick(1)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(2)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(3)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(4)}>프로그램 제목</div>
+                    {['프로그램 제목', '프로그램 제목', '프로그램 제목', '프로그램 제목'].map((title, index) => (
+                        <div key={index} className="title2" onClick={() => handleClick(index + 1)}>{title}</div>
+                    ))}
                     <div><a href="#">더보기 →</a></div>
                 </div>
             </div>
 
             <div className="online_category">
-                <div className="home_title4">
-                    온라인 교육
-                </div>
+                <div className="home_title4">온라인 교육</div>
                 <div className="icon">
-                    <a href='#'>
-                        <img src={art}></img>
-                        <text>미술</text>
-                    </a>
-                    <a href='#'>
-                        <img src={science}></img>
-                        <text>과학</text>
-                    </a>
-                    <a href='#'>
-                        <img src={music}></img>
-                        <text>음악</text>
-                    </a>
-                    <a href='#'>
-                        <img src={design}></img>
-                        <text>디자인</text>
-                    </a>
-                    <a href='#'>
-                        <img src={study}></img>
-                        <text>교육</text>
-                    </a>
-                    <a href='#'>
-                        <img src={etc}></img>
-                        <text>기타</text>
-                    </a>
+                    {[{src: art, label: '미술'}, {src: science, label: '과학'}, {src: music, label: '음악'}, {src: design, label: '디자인'}, {src: study, label: '교육'}, {src: etc, label: '기타'}].map((icon, index) => (
+                        <a key={index} href='#'>
+                            <img src={icon.src} alt={icon.label} />
+                            <span>{icon.label}</span>
+                        </a>
+                    ))}
                 </div>
             </div>
         </div>
-
-    
-        
-        
     );
 }
 
