@@ -23,7 +23,7 @@ import com.gcf.spring.entity.Notice;
 import com.gcf.spring.service.AdminNoticeService;
 
 @RestController
-@RequestMapping("/notices")
+@RequestMapping("/manage/notices")
 public class AdminNoticeController {
 
 	@Autowired

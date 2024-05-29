@@ -28,9 +28,9 @@ function ManageNotice() {
     const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
 
     useEffect(() => {
-        axios.get('http://localhost:8090/notices')
+        axios.get('http://localhost:8090/manage/notices')
             .then(response => {
-                const sortedNotices = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                const sortedNotices = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setNotices(sortedNotices);
             })
             .catch(error => {
@@ -40,7 +40,7 @@ function ManageNotice() {
 
     const handleDelete = (id) => {
         if (window.confirm("정말로 삭제하시겠습니까?")) {
-            axios.delete(`http://localhost:8090/notices/${id}`)
+            axios.delete(`http://localhost:8090/manage/notices/${id}`)
                 .then(response => {
                     const updatedNotices = notices.filter(item => item.id !== id);
                     setNotices(updatedNotices);
@@ -53,7 +53,7 @@ function ManageNotice() {
 
     // 기존 코드에 parseAttachmentsData 함수 추가
     const handleEdit = (id) => {
-        axios.get(`http://localhost:8090/notices/${id}`)
+        axios.get(`http://localhost:8090/manage/notices/${id}`)
             .then(response => {
                 const getNotice = JSON.parse(response.data); // 받아온 데이터를 파싱하여 객체로 변환
                 console.log("getNotice:", getNotice); // 디버깅 용
@@ -90,7 +90,7 @@ function ManageNotice() {
                                     <td>{item.id}</td>
                                     <td>{item.title.length > 20 ? `${item.title.slice(0, 80)}...` : item.title}</td>
                                     <td>{item.author}</td>
-                                    <td>{item.created_at}</td>
+                                    <td>{item.createdAt}</td>
                                     <td>{item.views}</td>
                                     <td><button onClick={() => handleEdit(item.id)} className='modify_button'>수정</button></td>
                                     <td><button onClick={() => handleDelete(item.id)} className='delete_button'>삭제</button></td>

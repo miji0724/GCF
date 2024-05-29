@@ -70,7 +70,7 @@ function ManageNoticeWrite() {
         try {
             const response = await axios({
                 method,
-                url: id ? `http://localhost:8090/notices/${id}` : 'http://localhost:8090/notices',
+                url: id ? `http://localhost:8090/manage/notices/${id}` : 'http://localhost:8090/manage/notices',
                 data: formData,
                 headers: { 'Content-Type': 'multipart/form-data' }
             });

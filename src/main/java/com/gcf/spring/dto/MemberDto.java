@@ -1,6 +1,7 @@
 package com.gcf.spring.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
@@ -21,11 +22,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberDto {
-	@NotBlank(message="이름은 필수 입력 값입니다.")
-	private String name;
-	
 	@NotBlank(message="아이디는 필수 입력 값입니다.")
 	private String id;
+	
+	@NotBlank(message="이름은 필수 입력 값입니다.")
+	private String name;
 	
 	@NotBlank(message="비밀번호는 필수 입력 값입니다.")
 	@Length(min=8, max=16, message="비밀번호는 8자 이상, 16자 이하로 입력해주세요.")
@@ -69,4 +70,6 @@ public class MemberDto {
 	@NotNull(message = "자녀 유무는 필수 입력 값입니다.")
     private Boolean hasChildren;
     
+	@NotNull
+	private LocalDateTime createdAt;
 }

@@ -10,9 +10,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class NoticeDto {
     
 	public NoticeDto() {
@@ -32,7 +36,7 @@ public class NoticeDto {
     private String content;
     
     @NotNull
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     
     @NotNull
     private Integer views = 0;
