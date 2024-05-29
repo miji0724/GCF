@@ -64,7 +64,7 @@ function App() {
                         <Route path="/signUp" element={<SignUp />} />
                         <Route path="/findId" element={<FindId />} />
                         <Route path="/findPw" element={<FindPw />} />
-                        <Route path="/notice" element={<Notice />} />
+                        <Route path="/notice/*" element={<Notice />} />
                         <Route path="/map/:locationName" element={<Map />} />
                         <Route path="/schedule" element={<Schedule />} />
                     </Routes>
