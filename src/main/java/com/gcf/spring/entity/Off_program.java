@@ -1,7 +1,8 @@
 package com.gcf.spring.entity;
 
-import java.sql.Date;
-import java.sql.Time;
+
+import java.time.LocalTime;
+import java.time.LocalDate;
 
 import com.gcf.spring.constant.Off_Category;
 import com.gcf.spring.constant.On_or_OFF;
@@ -20,8 +21,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor // 자동 생성자 생성
 @Entity
 @Table(name = "off_program")
 @Getter
@@ -37,16 +40,16 @@ public class Off_program {
 	private String off_program_name; // 프로그램 이름
 
 	@Column(name = "recruitment_start_date", nullable = false)
-	private Date recruitment_start_date; // 모집 시작일
+	private LocalDate recruitment_start_date; // 모집 시작일
 
 	@Column(name = "recruitment_end_date", nullable = false)
-	private Date recruitment_end_date; // 모집 종료일
+	private LocalDate recruitment_end_date; // 모집 종료일
 
 	@Column(name = "operating_start_day", nullable = false)
-	private Date operating_start_day; // 운영 시작일
+	private LocalDate operating_start_day; // 운영 시작일
 
 	@Column(name = "operating_end_day", nullable = false)
-	private Date operating_end_day; // 운영 종료일
+	private LocalDate operating_end_day; // 운영 종료일
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "participation_target", nullable = false)
@@ -56,10 +59,10 @@ public class Off_program {
 	private int participation_fee; // 참가료
 
 	@Column(name = "start_time", nullable = false)
-	private Time start_time; // 운영 시작 시간
+	private LocalTime start_time; // 운영 시작 시간
 
 	@Column(name = "end_time", nullable = false)
-	private Time end_time; // 운영 종료 시간
+	private LocalTime end_time; // 운영 종료 시간
 
 	@Column(name = "max_participants", nullable = false)
 	private int max_participants; // 참가 제한 인원
@@ -102,9 +105,6 @@ public class Off_program {
 	@JoinColumn(name = "poster_id")
 	private Poster poster; // 포스터 이미지
 
-	// 기본 생성자
-	public Off_program() {
-	}
 
 
 }

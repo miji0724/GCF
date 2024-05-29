@@ -1,6 +1,6 @@
 package com.gcf.spring.controller;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +45,7 @@ public class Off_programController {
         @RequestParam(required = false) Place placeName,
         @RequestParam(required = false) Off_Category category,
         @RequestParam(required = false) String name,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "4") int size) {
         return offProgramService.findFilteredPrograms(state, placeName, category, name, date, page, size);

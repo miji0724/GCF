@@ -8,12 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "poster")
 @Getter
 @Setter
+@NoArgsConstructor // 자동 생성자 생성
 public class Poster {
 
     @Id
@@ -31,8 +33,4 @@ public class Poster {
     private On_Program onlineProgram; // 연관된 온라인 프로그램
 
 
-    // 매개변수를 가진 생성자
-    public Poster() {
-        
-    }
 }

@@ -1,6 +1,7 @@
 package com.gcf.spring.entity;
 
-import java.sql.Time;
+
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,12 +12,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "video")
 @Getter
 @Setter
+@NoArgsConstructor // 자동 생성자 생성
+
 public class Video {
 
     @Id
@@ -28,7 +32,7 @@ public class Video {
     private String videoUrl; // 동영상 파일 URL
 
     @Column(name = "video_duration", nullable = false)
-    private Time videoDuration; // 동영상 파일 시간
+    private LocalTime videoDuration; // 동영상 파일 시간
 
     @Column(name = "progress_rate", nullable = false)
     private double progressRate; // 진도율
@@ -43,17 +47,5 @@ public class Video {
     @JoinColumn(name = "on_program_id")
     private On_Program onProgram; // 연관된 온라인 프로그램
 
-    // 기본 생성자
-    public Video() {
-    }
-    
-    // 매개변수를 가진 생성자
-    public Video(String videoUrl, Time videoDuration, double progressRate, String episodeNumber, String episodeTitle, On_Program onProgram) {
-        this.videoUrl = videoUrl;
-        this.videoDuration = videoDuration;
-        this.progressRate = progressRate;
-        this.episodeNumber = episodeNumber;
-        this.episodeTitle = episodeTitle;
-        this.onProgram = onProgram;
-    }
+
 }

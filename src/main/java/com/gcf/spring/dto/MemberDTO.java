@@ -1,6 +1,6 @@
 package com.gcf.spring.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
@@ -12,17 +12,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberDto {
+public class MemberDTO {
 	@NotBlank(message="이름은 필수 입력 값입니다.")
 	private String name;
 	
@@ -40,7 +38,7 @@ public class MemberDto {
     private String sex;
 	
 	@NotNull(message = "생년월일은 필수 입력 값입니다.")
-	private Date birth;
+	private LocalDate birth;
 	
 	@NotBlank(message = "휴대폰 번호는 필수 입력 값입니다.")
 	private String phone_number;
@@ -62,13 +60,13 @@ public class MemberDto {
 	private List<String> interest;
 	
     @NotNull(message = "이메일 수신 동의는 필수 입력 값입니다.")
-    private Boolean emailAgreement;
+    private Boolean email_agreement;
 
     @NotNull(message = "문자 수신 동의는 필수 입력 값입니다.")
-    private Boolean smsAgreement;
+    private Boolean message_agreement;
 
     @NotNull(message = "우편 수신 동의는 필수 입력 값입니다.")
-    private Boolean postalAgreement;
+    private Boolean mail_agreement;
 
 	@NotNull(message = "결혼 여부는 필수 입력 값입니다.")
     private Boolean married;

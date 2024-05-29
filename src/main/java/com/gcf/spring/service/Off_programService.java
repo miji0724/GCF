@@ -1,6 +1,6 @@
 package com.gcf.spring.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +47,7 @@ public class Off_programService {
     }
 
     // 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
-    public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, Date date, int page, int size) {
+    public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, LocalDate date, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Off_program> filteredPrograms;
 

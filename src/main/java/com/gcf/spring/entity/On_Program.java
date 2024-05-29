@@ -1,11 +1,11 @@
 package com.gcf.spring.entity;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.gcf.spring.constant.On_Category;
-import com.gcf.spring.constant.On_or_OFF;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -20,12 +20,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor // 자동 생성자 생성
 @Entity
 @Table(name = "on_program")
 @Getter
 @Setter
+
 public class On_Program {
 
     @Id
@@ -37,7 +40,7 @@ public class On_Program {
     private String on_program_name; // 프로그램 이름
 
     @Column(name = "operating_start_day", nullable = false)
-    private Date operating_start_day; // 운영 시작일
+    private LocalDate operating_start_day; // 운영 시작일
 
     @Column(name = "views")
     private int views; // 조회수
@@ -53,9 +56,6 @@ public class On_Program {
     @Column(name = "bookmark")
     private Boolean bookmark; // 북마크 여부
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "program_type", nullable = false)
-    private On_or_OFF program_type; // 프로그램 타입 (온라인/오프라인 구분)
 
     @OneToOne
     @JoinColumn(name = "poster_id")
@@ -64,9 +64,7 @@ public class On_Program {
     @OneToMany(mappedBy = "on_program")
     private Set<Video> videos = new HashSet<>(); // 동영상 파일들
 
-    // 기본 생성자
-    public On_Program() {
-    }
+
 
 
 }

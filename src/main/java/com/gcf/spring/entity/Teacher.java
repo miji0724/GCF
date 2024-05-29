@@ -1,9 +1,10 @@
 package com.gcf.spring.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.Year;
 
 import com.gcf.spring.constant.Role;
+import com.gcf.spring.constant.Teacher_category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,62 +14,58 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "teacher")
 @Getter
 @Setter
+@NoArgsConstructor // 자동 생성자 생성
+
 public class Teacher {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @Column(name = "carrer")
-    private String carrer;
-    
-    @Column(name = "career_start_year", nullable = false)
-    private Year careerStartYear;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Column(name = "affiliated_organization")
-    private String affiliated_Organization;
-    
-    @Column(name = "license_code")
-    private String license_code;
-
+    @MapsId
     @OneToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "id")
     private Member member;
-    
-    public String getName() {
-        return member != null ? member.getName() : null;
-    }
 
-    public String getPhoneNumber() {
-        return member != null ? member.getPhone_number() : null;
-    }
-    
-    public Role getRole() {
-        return member != null ? member.getRole() : null;
-    }
-    
+	@Column(name = "teacher_category")
+	private Teacher_category teacher_category;
 
-    // 기본 생성자
-    public Teacher() {}
+	@Column(name = "carrer", nullable = false)
+	private String carrer;
 
-    public Teacher(Member member) {
-        this.member = member;
-        this.member.setRole(Role.TEACHER); // Member 역할을 TEACHER로 설정
-    }
+	@Column(name = "career_start_year", nullable = false)
+	private String career_Start_Year;
+
+	@Column(name = "career_end_year", nullable = false)
+	private String career_End_Year;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
+	@Column(name = "sns_address")
+	private String sns_address;
+
+	@Column(name = "affiliated_organization")
+	private String affiliated_Organization;
+
+	@Column(name = "license_name")
+	private String license_name;
+
+	@Column(name = "birthday")
+	private LocalDate birthday;
 
 
-    
-    
+
+
+
 }

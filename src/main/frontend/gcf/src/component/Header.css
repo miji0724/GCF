@@ -8,6 +8,7 @@ header {
   padding: 0;
   /* 페이지의 기본 패딩 제거 */
   font-optical-sizing: auto;
+  font-size: 18px;
 }
 
 .top_header {
