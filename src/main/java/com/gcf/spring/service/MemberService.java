@@ -26,8 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    
 
     // 회원가입
     public ResponseEntity<String> signUp(MemberDto memberDto, PasswordEncoder passwordEncoder) {
