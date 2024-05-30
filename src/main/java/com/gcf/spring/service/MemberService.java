@@ -1,5 +1,6 @@
 package com.gcf.spring.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
     
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
     
 
     // 회원가입
@@ -69,6 +71,34 @@ public class MemberService implements UserDetailsService {
         return password.equals(confirm_password);
     }
     
+    public List<Member> getAllMembers(){
+    	return memberRepository.findAll();
+    }
+    
+    public Member memberModifyInManage(MemberDto memberDto, PasswordEncoder passwordEncoder) {
+        // 1. MemberDto 객체로부터 수정된 회원 정보를 추출합니다.
+        String memberId = memberDto.getId(); // 혹은 다른 방식으로 회원을 식별하는 정보를 사용할 수 있습니다.
+        
+        Member existingMember = memberRepository.findById(Optional<memberId>);
+        
+        // 새로운 회원 정보 업데이트
+        existingMember.setName(memberDto.getName());
+        existingMember.setEmail(memberDto.getEmail());
+        // 필요한 다른 정보들도 동일하게 업데이트합니다.
+
+        // 비밀번호 업데이트
+        String newPassword = memberDto.getPassword();
+        if (newPassword != null && !newPassword.isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(newPassword);
+            existingMember.setPassword(encryptedPassword);
+        }
+
+        // 2. 업데이트된 회원 정보를 저장하고 반환합니다.
+        return memberRepository.save(existingMember);
+    }
+
+
+    
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findById(id);
@@ -82,6 +112,7 @@ public class MemberService implements UserDetailsService {
                 .roles(member.getRole().toString())
                 .build();
     }
+    
     
     
 }

@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.service.MemberService;
@@ -25,7 +28,12 @@ public class MemberController {
 	
 	@GetMapping("/getAll")
 	public List<Member> getAllMembers(){
-		return memberRepository.findAll();
+		return memberService.getAllMembers();
+	}
+	
+	@PutMapping("/manage/modify/{id}")
+	public Member memberModifyInManage(@RequestBody MemberDto memberDto) {
+		return memberService.memberModifyInManage(memberDto, passwordEncoder);
 	}
 	
 //    @GetMapping("/checkId")
