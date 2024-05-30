@@ -1,24 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import './Offline_state.css';
-
+import LeftMenuBar_teacher from './LeftMenuBar_teacher';
 
 function Offline_state() {
-  const [applications, setApplications] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8090/member/info', { withCredentials: true });
-        setApplications(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <div className='All'>
       <div className='CenterContainer'>

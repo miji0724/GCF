@@ -1,20 +1,21 @@
 package com.gcf.spring.controller;
 
 import java.util.Map;
+import java.util.Optional; // Optional 임포트 추가
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
+import com.gcf.spring.repository.MemberRepository; // MemberRepository 임포트 추가
 import com.gcf.spring.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,19 +24,25 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-
+    
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository; // MemberRepository 주입 추가
 
-
+    // 회원가입 할 때 아이디 중복체크
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
+        System.out.println("아이디 중복확인");
         return memberService.checkId(id);
     }
 
+    // 회원가입
     @PostMapping("/signUp/ok")
     public ResponseEntity<String> signUp(@RequestBody MemberDto memberDto) {
         try {
-            return memberService.signUp(memberDto);
+            // 서비스의 회원가입 메서드를 호출
+            ResponseEntity<String> response = memberService.signUp(memberDto, passwordEncoder);
+            return response;
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -43,20 +50,23 @@ public class MemberController {
         }
     }
 
+ // 로그인
     @PostMapping("/member/login")
     public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String inputId = request.get("id");
-        String inputPassword = request.get("password");
+        String input_id = request.get("id");
+        String input_password = request.get("password");
 
-        Member authenticatedMember = memberService.authenticate(inputId, inputPassword);
+        Member authenticatedMember = memberService.authenticate(input_id, input_password);
         if (authenticatedMember != null) {
-            httpRequest.getSession(true); // 세션을 생성하거나 기존 세션을 사용
-            return ResponseEntity.ok(authenticatedMember);
+            // 로그인 성공 시 세션에 userId 설정
+            httpRequest.getSession().setAttribute("userId", authenticatedMember.getId());
+            return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
         }
     }
 
+    // 아이디 찾기
     @PostMapping("/member/findId")
     public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
         try {
@@ -71,53 +81,74 @@ public class MemberController {
         }
     }
 
+    // 비밀번호 찾기
+    @PostMapping("/member/findPw")
+    public ResponseEntity<String> findPw(@RequestBody MemberDto memberDto) {
+        try {
+            String foundPw = memberService.findPw(memberDto);
+            if (foundPw != null) {
+                return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 회원이거나 잘못 입력된 정보입니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
+    }
+    
+ // 비밀번호 인증
     @PostMapping("/member/authentication")
-    public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String inputPassword = request.get("password");
-        String userId = request.get("id");
-
-        System.out.println("Authenticating user: " + userId + " with password: " + inputPassword);
-
-        Member authenticatedMember = memberService.authenticateByPassword(userId, inputPassword);
-        if (authenticatedMember != null) {
-            return ResponseEntity.ok(authenticatedMember);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-    }
-
-    private String getAuthenticatedUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else if (principal instanceof String) {
-            return (String) principal;
-        } else {
-            return null;
-        }
-    }
-
-    @GetMapping("/member/info")
-    public ResponseEntity<MemberDto> getMemberInfo(HttpServletRequest request) {
-        String userId = getAuthenticatedUserId();
-
-        System.out.println("Authenticated user ID: " + userId);
+    public ResponseEntity<String> verifyPassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String password = request.get("password");
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
 
         if (userId == null) {
-            System.out.println("User is not authenticated.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            if (passwordEncoder.matches(password, member.getPassword())) {
+                return ResponseEntity.ok("인증 성공");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원 정보를 찾을 수 없습니다.");
+        }
+    }
+
+
+    @GetMapping("/member/myinfo")
+    public ResponseEntity<MemberDto> getMyInfo(HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        MemberDto memberDto = memberService.getUserInfo(userId);
-        if (memberDto != null) {
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            MemberDto memberDto = new MemberDto();
+            // 필요한 필드만 설정하여 반환
+            memberDto.setId(member.getId());
+            memberDto.setName(member.getName());
+            memberDto.setEmail(member.getEmail());
+            memberDto.setBirth(member.getBirth());
+            memberDto.setPhone_number(member.getPhone_number());
+            memberDto.setTelNumber(member.getTelNumber());
+            memberDto.setAddress(member.getAddress());
+            memberDto.setDetail_address(member.getDetail_address());
+            memberDto.setEmail_agreement(member.getEmail_agreement());
+            memberDto.setMessage_agreement(member.getMessage_agreement());
+            memberDto.setMail_agreement(member.getMail_agreement());
+            memberDto.setInterests(member.getInterests());
+            memberDto.setMarried(member.getMarried());
+            memberDto.setHasChildren(member.getHasChildren());
+            member.setRole(Role.USER);
             return ResponseEntity.ok(memberDto);
         } else {
-            System.out.println("User information not found for ID: " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }

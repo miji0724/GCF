@@ -39,7 +39,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    
     useEffect(() => {
         // 페이지가 로드될 때 세션을 확인하여 로그인 상태를 설정
         const storedUser = sessionStorage.getItem("id");
@@ -52,14 +52,15 @@ function App() {
 
     const handleLogout = () => {
         sessionStorage.removeItem("id");
-        window.location.href = "/";
+        window.location.href="/";
     };
 
     const handleLogin = (loginForm) => {
         sessionStorage.setItem("id", JSON.stringify(loginForm));
         setIsLoggedIn(true);
-        window.location.href = "/";
+        window.location.href="/";
     };
+
     return (
         <div className="App">
             <Router>
