@@ -31,6 +31,7 @@ import lombok.Setter;
 public class Member {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)

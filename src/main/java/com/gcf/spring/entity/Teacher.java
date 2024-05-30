@@ -1,7 +1,6 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
-import java.time.Year;
 
 import com.gcf.spring.constant.Role;
 import com.gcf.spring.constant.Teacher_category;
@@ -17,6 +16,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,17 +38,16 @@ public class Teacher {
     @JoinColumn(name = "id")
     private Member member;
 
-	@Column(name = "teacher_category")
-	private Teacher_category teacher_category;
+    @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
+    @Enumerated(EnumType.STRING)
+    private Teacher_category teacher_category;
 
-	@Column(name = "carrer", nullable = false)
-	private String carrer;
-
-	@Column(name = "career_start_year", nullable = false)
-	private String career_Start_Year;
-
-	@Column(name = "career_end_year", nullable = false)
-	private String career_End_Year;
+    @NotNull(message = "주요 이력은 필수 입력 값입니다.")
+    private String carrer;
+    @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
+    private String career_Start_Year;
+    @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
+    private String career_End_Year;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

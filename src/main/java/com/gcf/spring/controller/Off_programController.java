@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.gcf.spring.constant.Off_Category;
+import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.Place;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.dto.Off_ProgramDTO;
@@ -20,12 +25,32 @@ import com.gcf.spring.service.Off_programService;
 public class Off_programController {
 
     private final Off_programService offProgramService;
+    private final ObjectMapper objectMapper; // ObjectMapper를 Bean으로 주입받음
 
     @Autowired
-    public Off_programController(Off_programService offProgramService) {
+    public Off_programController(Off_programService offProgramService, ObjectMapper objectMapper) {
         this.offProgramService = offProgramService;
+        this.objectMapper = objectMapper;
     }
 
+    @PostMapping
+    public ResponseEntity<Off_ProgramDTO> createProgram(
+        @RequestPart("offProgramDTO") String offProgramJson,
+        @RequestPart("posterFile") MultipartFile posterFile,
+        @RequestPart("educationIntroductionFile") MultipartFile educationIntroductionFile,
+        @RequestPart("teacherIntroductionFile") MultipartFile teacherIntroductionFile,
+        @RequestParam("programType") On_or_OFF programType) {
+
+        try {
+            Off_ProgramDTO offProgramDTO = objectMapper.readValue(offProgramJson, Off_ProgramDTO.class);
+
+            Off_ProgramDTO createdProgram = offProgramService.saveProgram(offProgramDTO, posterFile, educationIntroductionFile, teacherIntroductionFile, programType);
+            return ResponseEntity.ok(createdProgram);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
     @GetMapping
     public List<Off_ProgramDTO> getAllPrograms(
         @RequestParam(defaultValue = "0") int page,

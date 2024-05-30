@@ -1,12 +1,13 @@
 package com.gcf.spring.entity;
 
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.gcf.spring.constant.On_Category;
+import com.gcf.spring.constant.On_or_OFF;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -20,16 +21,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor // 자동 생성자 생성
 @Entity
 @Table(name = "on_program")
 @Getter
 @Setter
-
-public class On_Program {
+public class On_program {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,15 +54,14 @@ public class On_Program {
     @Column(name = "bookmark")
     private Boolean bookmark; // 북마크 여부
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "program_type", nullable = false)
+    private On_or_OFF program_type; // 프로그램 타입 (온라인/오프라인 구분)
 
     @OneToOne
-    @JoinColumn(name = "poster_id")
-    private Poster poster; // 포스터 
+    @JoinColumn(name = "poster_file_id")
+    private FileEntity poster; // 포스터 이미지
 
-    @OneToMany(mappedBy = "on_program")
-    private Set<Video> videos = new HashSet<>(); // 동영상 파일들
-
-
-
-
+    @OneToMany(mappedBy = "on_program",cascade = CascadeType.ALL)
+    private Set<FileEntity> videos = new HashSet<>(); // 동영상 파일들
 }

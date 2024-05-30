@@ -1,8 +1,12 @@
 package com.gcf.spring.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -11,27 +15,38 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gcf.spring.constant.Off_Category;
+import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.dto.Off_ProgramDTO;
 import com.gcf.spring.constant.Place;
+import com.gcf.spring.entity.FileEntity;
 import com.gcf.spring.entity.Off_program;
+import com.gcf.spring.entity.On_program;
+import com.gcf.spring.entity.Teacher;
+import com.gcf.spring.repository.FileRepository;
 import com.gcf.spring.repository.Off_program_Repository;
+import com.gcf.spring.repository.TeacherRepository;
 
 @Service
 public class Off_programService {
 
     private final Off_program_Repository offProgramRepository;
+    private final TeacherRepository teacherRepository;
+    private final FileRepository fileRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public Off_programService(Off_program_Repository offProgramRepository, ModelMapper modelMapper) {
+    public Off_programService(Off_program_Repository offProgramRepository, TeacherRepository teacherRepository, FileRepository fileRepository, ModelMapper modelMapper) {
         this.offProgramRepository = offProgramRepository;
+        this.teacherRepository = teacherRepository;
+        this.fileRepository = fileRepository;
         this.modelMapper = modelMapper;
     }
 
-    // 기본으로 최신순으로 정렬된 프로그램 목록을 반환하도록 수정
     public List<Off_ProgramDTO> getAllPrograms(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Off_program> programsPage = offProgramRepository.findAll(pageable);
@@ -46,12 +61,10 @@ public class Off_programService {
         return program.map(p -> modelMapper.map(p, Off_ProgramDTO.class));
     }
 
-    // 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
     public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, LocalDate date, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Off_program> filteredPrograms;
 
-        // 카테고리, 장소, 상태, 이름, 날짜에 따른 필터링
         if (state != null && placeName != null && category != null) {
             filteredPrograms = offProgramRepository.findByStateAndPlaceNameAndOffline_category(state, placeName, category, pageable);
         } else if (name != null && !name.isEmpty()) {
@@ -66,7 +79,6 @@ public class Off_programService {
                                .collect(Collectors.toList());
     }
 
-    // 프로그램의 조회수, 좋아요 수, 북마크 상태를 업데이트
     public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
         Optional<Off_program> optionalProgram = offProgramRepository.findById(id);
         if (optionalProgram.isPresent()) {
@@ -84,6 +96,52 @@ public class Off_programService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Transactional
+    public Off_ProgramDTO saveProgram(Off_ProgramDTO offProgramDTO, MultipartFile posterFile, MultipartFile educationIntroductionFile, MultipartFile teacherIntroductionFile, On_or_OFF programType) {
+        Off_program off_program = modelMapper.map(offProgramDTO, Off_program.class);
+
+        Optional<Teacher> teacherOpt = teacherRepository.findById(offProgramDTO.getTeacherId());
+        if (teacherOpt.isPresent()) {
+            off_program.setTeacher(teacherOpt.get());
+        } else {
+            throw new RuntimeException("강사 정보가 없습니다");
+        }
+
+        off_program.setProgram_type(programType); // 프로그램 타입 설정
+
+        FileEntity poster = saveFile(posterFile, off_program, null);
+        FileEntity educationIntroduction = saveFile(educationIntroductionFile, off_program, null);
+        FileEntity teacherIntroduction = saveFile(teacherIntroductionFile, off_program, null);
+
+        off_program.setPoster(poster);
+        off_program.setFiles(List.of(educationIntroduction, teacherIntroduction));
+
+        Off_program savedProgram = offProgramRepository.save(off_program);
+        return modelMapper.map(savedProgram, Off_ProgramDTO.class);
+    }
+
+    private FileEntity saveFile(MultipartFile file, Off_program offProgram, On_program onProgram) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+        try {
+            String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            String uniqueFileName = UUID.randomUUID().toString() + fileExtension; // 같은 이름이 있을 것에 대비해여 UUID 사용
+            Path filePath = Paths.get("path/to/save/" + uniqueFileName);
+            Files.copy(file.getInputStream(), filePath);
+
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setFileName(uniqueFileName);
+            fileEntity.setFilePath(filePath.toString());
+            fileEntity.setFileType(file.getContentType());
+            fileEntity.setOffProgram(offProgram);
+            fileEntity.setOnProgram(onProgram);
+            return fileRepository.save(fileEntity);
+        } catch (Exception e) {
+            throw new RuntimeException("파일 저장 실패", e);
         }
     }
 }
