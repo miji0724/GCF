@@ -1,6 +1,7 @@
 package com.gcf.spring.controller;
 
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,21 +26,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    private String getAuthenticatedUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else if (principal instanceof String) {
-            return (String) principal;
-        } else {
-            return null;
-        }
-    }
 
     @GetMapping("/checkId")
     public ResponseEntity<String> checkId(@RequestParam("id") String id) {
@@ -86,13 +72,11 @@ public class MemberController {
     }
 
     @PostMapping("/member/authentication")
-    public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Member> authentication(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
         String inputPassword = request.get("password");
-        String userId = getAuthenticatedUserId();
+        String userId = request.get("id");
 
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
+        System.out.println("Authenticating user: " + userId + " with password: " + inputPassword);
 
         Member authenticatedMember = memberService.authenticateByPassword(userId, inputPassword);
         if (authenticatedMember != null) {
@@ -102,11 +86,30 @@ public class MemberController {
         }
     }
 
+    private String getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            return (String) principal;
+        } else {
+            return null;
+        }
+    }
+
     @GetMapping("/member/info")
-    public ResponseEntity<MemberDto> getMemberInfo() {
+    public ResponseEntity<MemberDto> getMemberInfo(HttpServletRequest request) {
         String userId = getAuthenticatedUserId();
 
+        System.out.println("Authenticated user ID: " + userId);
+
         if (userId == null) {
+            System.out.println("User is not authenticated.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
@@ -114,6 +117,7 @@ public class MemberController {
         if (memberDto != null) {
             return ResponseEntity.ok(memberDto);
         } else {
+            System.out.println("User information not found for ID: " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }

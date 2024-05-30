@@ -12,44 +12,40 @@ function TeacherForm() {
         email: '',
         phoneNumber: '',
         mobileNumber: '',
-        address1: '',
-        address2: '',
-        address3: '',
-        affiliation: '',
-        snsEmail: ''
+        address: ''
     });
 
-    const fetchBasicInfo = async () => {
-        try {
-            const response = await axios.get('http://localhost:8090/member/info', {
-                withCredentials: true, // 세션 쿠키를 포함
-            });
-            console.log('API response data:', response.data);
-
-            const { name, email, phoneNumber, mobileNumber, address, detail_address, birth } = response.data;
-            const updatedFormData = {
-                name,
-                email,
-                phoneNumber,
-                mobileNumber,
-                address1: address,
-                address2: detail_address,
-                address3: '',
-                affiliation: '',
-                snsEmail: ''
-            };
-
-            setFormData(updatedFormData);
-            setBirthDate(birth);
-            console.log('Updated form data:', updatedFormData);
-            console.log('Updated birth date:', birth);
-        } catch (error) {
-            console.error('Failed to fetch basic info:', error);
-            console.error('Error details:', error.response ? error.response.data : error.message);
-        }
-    };
-
     useEffect(() => {
+        const fetchBasicInfo = async () => {
+            try {
+                const response = await axios.get('http://localhost:8090/member/info', {
+                    withCredentials: true, // 세션 쿠키를 포함
+                });
+                console.log('API response data:', response.data);
+
+                const { name, email, phoneNumber, mobileNumber, address, detail_address, birth } = response.data;
+                const updatedFormData = {
+                    name,
+                    email,
+                    phoneNumber,
+                    mobileNumber,
+                    address1: address,
+                    address2: detail_address,
+                    affiliation: '',
+                    snsEmail: ''
+                };
+
+                setFormData(updatedFormData);
+                setBirthDate(birth);
+                console.log('Updated form data:', updatedFormData);
+                console.log('Updated birth date:', birth);
+            } catch (error) {
+                console.error('Failed to fetch basic info:', error);
+                console.error('Error details:', error.response ? error.response.data : error.message);
+                alert('기본 정보를 불러오는데 실패했습니다.');
+            }
+        };
+
         // 컴포넌트가 마운트될 때 사용자 정보를 가져옵니다.
         fetchBasicInfo();
     }, []);
@@ -58,47 +54,26 @@ function TeacherForm() {
         setBirthDate(event.target.value);
     };
 
-    const handleAddHistoryField = () => {
-        const newHistoryFields = [...historyFields, { event: '', startDate: '', endDate: '' }];
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleHistoryChange = (event, index, field) => {
+        const { value } = event.target;
+        const newHistoryFields = [...historyFields];
+        newHistoryFields[index][field] = value;
         setHistoryFields(newHistoryFields);
+    };
+
+    const handleAddHistoryField = () => {
+        setHistoryFields([...historyFields, { event: '', startDate: '', endDate: '' }]);
     };
 
     const handleRemoveHistoryField = (index) => {
         const newHistoryFields = [...historyFields];
         newHistoryFields.splice(index, 1);
         setHistoryFields(newHistoryFields);
-    };
-
-    const handleHistoryEventChange = (event, index) => {
-        const { value } = event.target;
-        const newHistoryFields = [...historyFields];
-        newHistoryFields[index].event = value;
-        setHistoryFields(newHistoryFields);
-    };
-
-    const handleHistoryStartDateChange = (event, index) => {
-        const { value } = event.target;
-        const newHistoryFields = [...historyFields];
-        newHistoryFields[index].startDate = value;
-        setHistoryFields(newHistoryFields);
-    };
-
-    const handleHistoryEndDateChange = (event, index) => {
-        const { value } = event.target;
-        const newHistoryFields = [...historyFields];
-        newHistoryFields[index].endDate = value;
-        setHistoryFields(newHistoryFields);
-    };
-
-    const handleAddCertificationField = () => {
-        const newCertificationFields = [...certificationFields, { certification: '' }];
-        setCertificationFields(newCertificationFields);
-    };
-
-    const handleRemoveCertificationField = (index) => {
-        const newCertificationFields = [...certificationFields];
-        newCertificationFields.splice(index, 1);
-        setCertificationFields(newCertificationFields);
     };
 
     const handleCertificationChange = (event, index) => {
@@ -108,15 +83,14 @@ function TeacherForm() {
         setCertificationFields(newCertificationFields);
     };
 
-    const handleAddTeachingSubjectField = () => {
-        const newTeachingSubjectFields = [...teachingSubjectFields, { subject: '' }];
-        setTeachingSubjectFields(newTeachingSubjectFields);
+    const handleAddCertificationField = () => {
+        setCertificationFields([...certificationFields, { certification: '' }]);
     };
 
-    const handleRemoveTeachingSubjectField = (index) => {
-        const newTeachingSubjectFields = [...teachingSubjectFields];
-        newTeachingSubjectFields.splice(index, 1);
-        setTeachingSubjectFields(newTeachingSubjectFields);
+    const handleRemoveCertificationField = (index) => {
+        const newCertificationFields = [...certificationFields];
+        newCertificationFields.splice(index, 1);
+        setCertificationFields(newCertificationFields);
     };
 
     const handleTeachingSubjectChange = (event, index) => {
@@ -126,16 +100,21 @@ function TeacherForm() {
         setTeachingSubjectFields(newTeachingSubjectFields);
     };
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+    const handleAddTeachingSubjectField = () => {
+        setTeachingSubjectFields([...teachingSubjectFields, { subject: '' }]);
+    };
+
+    const handleRemoveTeachingSubjectField = (index) => {
+        const newTeachingSubjectFields = [...teachingSubjectFields];
+        newTeachingSubjectFields.splice(index, 1);
+        setTeachingSubjectFields(newTeachingSubjectFields);
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post('http://localhost:8090/lecture', {
-                formData,
+                ...formData,
                 birthDate,
                 historyFields,
                 certificationFields,
@@ -280,7 +259,7 @@ function TeacherForm() {
                                     id={`event${index}`}
                                     name="event"
                                     value={field.event}
-                                    onChange={(e) => handleHistoryEventChange(e, index)}
+                                    onChange={(e) => handleHistoryChange(e, index, 'event')}
                                 />
                                 <label htmlFor={`startDate${index}`}>시작일:</label>
                                 <input
@@ -288,7 +267,7 @@ function TeacherForm() {
                                     id={`startDate${index}`}
                                     name="startDate"
                                     value={field.startDate}
-                                    onChange={(e) => handleHistoryStartDateChange(e, index)}
+                                    onChange={(e) => handleHistoryChange(e, index, 'startDate')}
                                 />
                                 <label htmlFor={`endDate${index}`}>종료일:</label>
                                 <input
@@ -296,7 +275,7 @@ function TeacherForm() {
                                     id={`endDate${index}`}
                                     name="endDate"
                                     value={field.endDate}
-                                    onChange={(e) => handleHistoryEndDateChange(e, index)}
+                                    onChange={(e) => handleHistoryChange(e, index, 'endDate')}
                                 />
                                 {index > 0 && (
                                     <button type="button" onClick={() => handleRemoveHistoryField(index)}>제거</button>

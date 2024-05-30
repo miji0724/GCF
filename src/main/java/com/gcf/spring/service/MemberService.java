@@ -1,6 +1,5 @@
 package com.gcf.spring.service;
 
-
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -85,16 +84,24 @@ public class MemberService implements UserDetailsService {
         return authenticateByPassword(id, password);
     }
 
-    public Member authenticateByPassword(String userId, String password) {
-        Optional<Member> memberOptional = memberRepository.findById(userId);
+    public Member authenticateByPassword(String id, String password) {
+        System.out.println("Authenticating user: " + id);
+        Optional<Member> memberOptional = memberRepository.findById(id);
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
+            System.out.println("Found user: " + member.getId());
             if (passwordEncoder.matches(password, member.getPassword())) {
+                System.out.println("Password matches for user: " + member.getId());
                 return member;
+            } else {
+                System.out.println("Password does not match for user: " + member.getId());
             }
+        } else {
+            System.out.println("User not found: " + id);
         }
         return null;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
@@ -104,7 +111,7 @@ public class MemberService implements UserDetailsService {
         }
         Member member = optionalMember.get();
         return User.builder()
-                   .username(member.getEmail())
+                   .username(member.getId()) // 로그인 시 사용자의 ID를 유저네임으로 사용
                    .password(member.getPassword())
                    .roles(member.getRole().toString())
                    .build();
