@@ -79,7 +79,15 @@ public class MemberService implements UserDetailsService {
         // 1. MemberDto 객체로부터 수정된 회원 정보를 추출합니다.
         String memberId = memberDto.getId(); // 혹은 다른 방식으로 회원을 식별하는 정보를 사용할 수 있습니다.
         
-        Member existingMember = memberRepository.findById(Optional<memberId>);
+        // 회원을 찾지 못한 경우에 대한 처리
+        Member existingMember = memberRepository.findById(memberId).orElse(null);
+        
+        // 회원을 찾지 못했을 때의 처리
+        if (existingMember == null) {
+            // 처리할 작업을 수행합니다. 예를 들어 예외를 던지거나 다른 방식으로 사용자에게 알릴 수 있습니다.
+            System.out.println("회원을 찾을 수 없습니다.");
+            return null; // 또는 다른 적절한 처리를 수행할 수 있습니다.
+        }
         
         // 새로운 회원 정보 업데이트
         existingMember.setName(memberDto.getName());
@@ -96,8 +104,6 @@ public class MemberService implements UserDetailsService {
         // 2. 업데이트된 회원 정보를 저장하고 반환합니다.
         return memberRepository.save(existingMember);
     }
-
-
     
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
@@ -112,7 +118,5 @@ public class MemberService implements UserDetailsService {
                 .roles(member.getRole().toString())
                 .build();
     }
-    
-    
     
 }
