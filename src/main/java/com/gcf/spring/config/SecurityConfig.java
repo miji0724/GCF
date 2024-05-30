@@ -28,6 +28,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
         		.csrf(csrf -> csrf.disable())
+        		.sessionManagement(sessionManagement -> 
+                	sessionManagement.maximumSessions(1)
+                		.expiredUrl("/member/login?expired=true")
+        		)
 //                .formLogin(formLogin -> formLogin
 //                        .loginPage("/member/login")  // 커스텀 로그인 페이지 설정
 //                        .defaultSuccessUrl("/")  // 로그인 성공 시 이동할 기본 URL
@@ -38,7 +42,9 @@ public class SecurityConfig {
                 
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true) // 세션 무효화
+                        .deleteCookies("JSESSIONID")) // 쿠키 삭제
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()  // 회원 관련 모든 URL 허용

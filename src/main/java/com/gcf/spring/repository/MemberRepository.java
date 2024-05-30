@@ -13,6 +13,8 @@ public interface MemberRepository extends JpaRepository<Member, String>{
 	
 	Optional<Member> findById(@NonNull String id);
 	
+	Optional<Member> findByName(String name);
+	
 	Optional<Member> findIdByNameAndEmail(String name, String email);
 	
 	Optional<Member> findIdByIdAndEmail(String id, String email);

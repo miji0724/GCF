@@ -96,7 +96,6 @@ public class MemberService implements UserDetailsService {
 
             if (memberOptional.isPresent()) {
                 Member member = memberOptional.get();
-                System.out.println(member);
                 
                 // 비밀번호 매칭
                 boolean matches = passwordEncoder.matches(password, member.getPassword());

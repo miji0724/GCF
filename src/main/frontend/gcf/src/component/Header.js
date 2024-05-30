@@ -19,7 +19,7 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
           {isLoggedIn ? (
             <>
               <a onClick={onLogout}>로그아웃</a> |
-              <a href="/myPage">마이페이지</a>
+              <a href="/MyAuthentication">마이페이지</a>
             </>
           ) : (
             <>

@@ -16,6 +16,7 @@ import com.gcf.spring.entity.Member;
 import com.gcf.spring.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -48,12 +49,14 @@ public class MemberController {
     
     // 로그인
     @PostMapping("/member/login")
-    public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
-        String input_id = request.get("id");
-        String input_password = request.get("password");
+    public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest, HttpSession session) {
+        String inputId = request.get("id");
+        String inputPassword = request.get("password");
 
-        Member authenticatedMember = memberService.authenticate(input_id, input_password);
+        Member authenticatedMember = memberService.authenticate(inputId, inputPassword);
+
         if (authenticatedMember != null) {
+            session.setAttribute("member", authenticatedMember);
             return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
@@ -90,7 +93,36 @@ public class MemberController {
         }
     }
     
+    @PostMapping("/member/authentication")
+    public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> request, HttpSession session) {
+        String password = request.get("password");
+
+        // 세션에서 사용자 정보를 가져오기 전에 세션에 저장된 값이 있는지 확인합니다.
+        if (session.getAttribute("member") == null) {
+        	System.out.println("세션없음");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
+
+        // 세션에서 가져온 사용자의 정보를 사용합니다.
+        Member loginMember = (Member) session.getAttribute("member");
+        System.out.println(loginMember);
+        // 세션에서 가져온 사용자의 비밀번호와 입력된 비밀번호를 비교합니다.
+        if (passwordEncoder.matches(password, loginMember.getPassword())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+        }
+    }
     
+    // 로그아웃 처리
+    @PostMapping("/member/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 세션이 존재하면 세션을 반환하고, 존재하지 않으면 null 반환
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
+        return ResponseEntity.ok("로그아웃 되었습니다.");
+    }
 
     // 임시 회원 만들기
 //    @GetMapping("/create")

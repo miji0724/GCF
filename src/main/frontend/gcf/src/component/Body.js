@@ -23,7 +23,7 @@ import etc from '../img/off_home_icon/etc_icon.png';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Body = () => {
+const Body = ({ isLoggedIn }) => {
     const images = [
         banner1,
         banner2,
@@ -79,8 +79,16 @@ const Body = () => {
             <ul className="button_notice">
                 <li className="button01">
                     <a className="plan_button" href="/schedule">이달의 일정<div>⇀</div></a>
-                    <a className="teacher_button" href="#">강사 등록<div>⇀</div></a>
-                    <a className="issue_button" href="#">증명서 발급<div>⇀</div></a>
+                    {isLoggedIn ? (
+                        <a className="teacher_button" href="/MyAuthentication">강사 등록<div>⇀</div></a>
+                    ) : (
+                        <a className="teacher_button" onClick={() => alert('로그인이 필요합니다.')}>강사 등록<div>⇀</div></a>
+                    )}
+                    {isLoggedIn ? (
+                        <a className="issue_button" href="/MyAuthentication">증명서 발급<div>⇀</div></a>
+                    ) : (
+                        <a className="issue_button" onClick={() => alert('로그인이 필요합니다.')}>증명서 발급<div>⇀</div></a>
+                    )}
                 </li>
                 <li className="notice_space">
                     <div>
