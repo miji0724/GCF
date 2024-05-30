@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './AuthenticationForm.css';
-import axios from 'axios';
 
 function AuthenticationForm() {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.post("/member/authentication", { password })
-      .then(response => {
-          navigate('/MyPage');
-      })
-      .catch(error => {
-          setError('비밀번호가 일치하지 않습니다.');
-      });
+    try {
+      const response = await axios.post('http://localhost:8090/member/authentication', { password }, { withCredentials: true });
+      if (response.status === 200) {
+        alert('본인확인이 완료됐습니다.');
+        navigate('/MyPage');
+      } else {
+        alert('실패했습니다.');
+      }
+    } catch (error) {
+      alert('실패했습니다.');
+    }
   };
-  
 
   return (
     <div className="authentication-form-container">
@@ -40,10 +42,9 @@ function AuthenticationForm() {
           <br />
           <button type="submit">인증하기</button>
         </form>
-        {error && <p className="error">{error}</p>}
       </div>
     </div>
   );
 }
 
-export default AuthenticationForm;
+export default AuthenticationForm
