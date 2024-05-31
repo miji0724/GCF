@@ -50,7 +50,7 @@ public class MemberController {
         }
     }
 
- // 로그인
+    // 로그인
     @PostMapping("/member/login")
     public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
         String input_id = request.get("id");
@@ -150,6 +150,37 @@ public class MemberController {
             return ResponseEntity.ok(memberDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    
+    @PostMapping("/member/update")
+    public ResponseEntity<String> updateMember(@RequestBody MemberDto memberDto, HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        try {
+            memberService.updateMember(userId, memberDto);
+            return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 업데이트 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/member/delete")
+    public ResponseEntity<String> deleteMember(HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        try {
+            memberService.deleteMember(userId);
+            httpRequest.getSession().invalidate();
+            return ResponseEntity.ok("회원 탈퇴가 성공적으로 처리되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 탈퇴 중 오류가 발생했습니다.");
         }
     }
 }

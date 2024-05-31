@@ -175,4 +175,32 @@ public class MemberService implements UserDetailsService {
                    .roles(member.getRole().toString())
                    .build();
     }
+    
+    public void updateMember(String userId, MemberDto memberDto) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            member.setName(memberDto.getName());
+            member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+            member.setBirth(memberDto.getBirth());
+            member.setPhone_number(memberDto.getPhone_number());
+            member.setTelNumber(memberDto.getTelNumber());
+            member.setEmail(memberDto.getEmail());
+            member.setAddress(memberDto.getAddress());
+            member.setDetail_address(memberDto.getDetail_address());
+            member.setEmail_agreement(memberDto.getEmail_agreement());
+            member.setMessage_agreement(memberDto.getMessage_agreement());
+            member.setMail_agreement(memberDto.getMail_agreement());
+            member.setInterests(memberDto.getInterests());
+            member.setMarried(memberDto.getMarried());
+            member.setHasChildren(memberDto.getHasChildren());
+            memberRepository.save(member);
+        }else {
+            throw new RuntimeException("Member not found with id: " + userId);
+        }
+    }
+
+    public void deleteMember(String userId) {
+        memberRepository.deleteById(userId);
+    }
 }
