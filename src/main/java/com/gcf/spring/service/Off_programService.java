@@ -23,24 +23,24 @@ import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.dto.Off_ProgramDTO;
 import com.gcf.spring.constant.Place;
-import com.gcf.spring.entity.FileEntity;
-import com.gcf.spring.entity.Off_program;
-import com.gcf.spring.entity.On_program;
+import com.gcf.spring.entity.OffProgram;
+import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.Teacher;
-import com.gcf.spring.repository.FileRepository;
+import com.gcf.spring.repository.AttachmentRepository;
 import com.gcf.spring.repository.Off_program_Repository;
 import com.gcf.spring.repository.TeacherRepository;
+
 
 @Service
 public class Off_programService {
 
     private final Off_program_Repository offProgramRepository;
     private final TeacherRepository teacherRepository;
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public Off_programService(Off_program_Repository offProgramRepository, TeacherRepository teacherRepository, FileRepository fileRepository, ModelMapper modelMapper) {
+    public Off_programService(Off_program_Repository offProgramRepository, TeacherRepository teacherRepository, AttachmentRepository fileRepository, ModelMapper modelMapper) {
         this.offProgramRepository = offProgramRepository;
         this.teacherRepository = teacherRepository;
         this.fileRepository = fileRepository;
@@ -49,7 +49,7 @@ public class Off_programService {
 
     public List<Off_ProgramDTO> getAllPrograms(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Off_program> programsPage = offProgramRepository.findAll(pageable);
+        Page<OffProgram> programsPage = offProgramRepository.findAll(pageable);
         return programsPage.stream()
                            .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
                            .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
@@ -112,9 +112,9 @@ public class Off_programService {
 
         off_program.setProgram_type(programType); // 프로그램 타입 설정
 
-        FileEntity poster = saveFile(posterFile, off_program, null);
-        FileEntity educationIntroduction = saveFile(educationIntroductionFile, off_program, null);
-        FileEntity teacherIntroduction = saveFile(teacherIntroductionFile, off_program, null);
+        Attachment poster = saveFile(posterFile, off_program, null);
+        Attachment educationIntroduction = saveFile(educationIntroductionFile, off_program, null);
+        Attachment teacherIntroduction = saveFile(teacherIntroductionFile, off_program, null);
 
         off_program.setPoster(poster);
         off_program.setFiles(List.of(educationIntroduction, teacherIntroduction));
@@ -123,7 +123,7 @@ public class Off_programService {
         return modelMapper.map(savedProgram, Off_ProgramDTO.class);
     }
 
-    private FileEntity saveFile(MultipartFile file, Off_program offProgram, On_program onProgram) {
+    private Attachment saveFile(MultipartFile file, Off_program offProgram, On_program onProgram) {
         if (file == null || file.isEmpty()) {
             return null;
         }
@@ -133,13 +133,13 @@ public class Off_programService {
             Path filePath = Paths.get("path/to/save/" + uniqueFileName);
             Files.copy(file.getInputStream(), filePath);
 
-            FileEntity fileEntity = new FileEntity();
-            fileEntity.setFileName(uniqueFileName);
-            fileEntity.setFilePath(filePath.toString());
-            fileEntity.setFileType(file.getContentType());
-            fileEntity.setOffProgram(offProgram);
-            fileEntity.setOnProgram(onProgram);
-            return fileRepository.save(fileEntity);
+            Attachment attachment = new Attachment();
+            attachment.setFileName(uniqueFileName);
+            attachment.setFilePath(filePath.toString());
+            attachment.setFileType(file.getContentType());
+            attachment.setOffProgram(offProgram);
+            attachment.setOnProgram(onProgram);
+            return fileRepository.save(attachment);
         } catch (Exception e) {
             throw new RuntimeException("파일 저장 실패", e);
         }

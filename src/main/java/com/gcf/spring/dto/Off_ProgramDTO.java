@@ -10,7 +10,6 @@ import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.Place;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.constant.Target;
-import com.gcf.spring.entity.FileEntity;
 import com.gcf.spring.entity.Teacher;
 
 import lombok.Getter;
@@ -40,8 +39,8 @@ public class Off_ProgramDTO {
     private Place place_name; // 장소명
     private Boolean bookmark; // 북마크 여부
     private On_or_OFF program_type; // 프로그램 타입 (온라인/오프라인 구분)
-    private FileDTO poster; // 포스터 정보
+    private AttachmentDto poster; // 포스터 정보
     private String teacherId; // 강사 ID
-    private List<FileEntity> files; // 연관 파일 
+    private List<AttachmentDto> files; // 연관 파일 
     private Teacher teacher;
 }
