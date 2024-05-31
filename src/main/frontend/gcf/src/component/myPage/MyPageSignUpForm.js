@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './MyPageSignUpForm.css'
+import './MyPageSignUpForm.css';
 
 const MyPageSignUpForm = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -71,10 +71,11 @@ const MyPageSignUpForm = () => {
     }
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
+        const newValue = type === 'checkbox' || type === 'radio' ? checked : value;
         setUserData({
             ...userData,
-            [name]: value
+            [name]: newValue
         });
     };
 
@@ -87,6 +88,7 @@ const MyPageSignUpForm = () => {
 
     const handleEdit = () => {
         setIsEditing(true);
+        alert('수정버튼을 누른 후에 저장하기 버튼을 눌러주세요');
     };
 
     const handleSave = async () => {
@@ -102,6 +104,7 @@ const MyPageSignUpForm = () => {
     
             if (response.status === 200) {
                 alert('정보가 성공적으로 저장되었습니다.');
+                setIsEditing(false); // 저장 후 수정 모드 종료
             } else {
                 alert('정보 저장에 실패했습니다.');
             }
@@ -146,7 +149,7 @@ const MyPageSignUpForm = () => {
                                     <li>* 비밀번호</li>
                                     <li>생년월일</li>
                                     <li>* 휴대폰 번호</li>
-                                    <li>* 전화번호</li>
+                                    <li>전화번호</li>
                                     <li>이메일</li>
                                     <li>주소</li>
                                     <li>상세주소</li>
@@ -165,8 +168,7 @@ const MyPageSignUpForm = () => {
                                             type='text'
                                             name='name'
                                             value={userData.name}
-                                            onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            readOnly
                                         />
                                     </li>
 
@@ -184,10 +186,10 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             id="password" 
                                             type='text'
-                                            // name='password'
-                                            // value={userData.password}
-                                            // onChange={handleInputChange}
-                                            // readOnly={!isEditing}
+                                            name='password'
+                                            value={userData.password}
+                                            onChange={handleInputChange}
+                                            readOnly={!isEditing}
                                         />
                                     </li>
                                     
@@ -199,7 +201,7 @@ const MyPageSignUpForm = () => {
                                             name='birthDate' 
                                             value={birthDate} 
                                             onChange={handleBirthDateChange}
-                                            readOnly={!isEditing} 
+                                            readOnly 
                                         />&nbsp;&nbsp;&nbsp;
                                     </li>
 
@@ -207,7 +209,7 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type='text' 
                                             id='mobileNumber' 
-                                            name='mobileNumber' 
+                                            name='phone_number' 
                                             value={userData.phone_number}
                                             onChange={handlePhoneNumberChange}
                                             readOnly={!isEditing}
@@ -218,7 +220,7 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type="text"  
                                             id='phoneNumber' 
-                                            name='phoneNumber' 
+                                            name='telNumber' 
                                             value={userData.telNumber}
                                             onChange={handleInputChange}
                                             readOnly={!isEditing}
@@ -240,7 +242,7 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             id="address" 
                                             type='text' 
-                                            name='address1' 
+                                            name='address' 
                                             className='addressInput1'
                                             value={userData.address}
                                             onChange={handleInputChange}
@@ -252,6 +254,7 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             id="detail_address" 
                                             type='text'
+                                            name='detail_address'
                                             className='addressInput2' 
                                             value={userData.detail_address}
                                             onChange={handleInputChange}
@@ -264,21 +267,21 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement1" 
+                                            name="email_agreement" 
                                             id="email_reception" 
                                             checked={userData.email_agreement === true}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
-                                        <label htmlFor="email_receptionn">동의</label>
+                                        <label htmlFor="email_reception">동의</label>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement1" 
+                                            name="email_agreement" 
                                             id="email_Not_reception" 
                                             checked={userData.email_agreement === false}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="email_Not_reception">비동의</label>
                                     </li>
@@ -286,21 +289,21 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement2" 
+                                            name="message_agreement" 
                                             id="message_reception" 
                                             checked={userData.message_agreement === true}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="message_reception">동의</label>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement2" 
+                                            name="message_agreement" 
                                             id="message_Not_reception" 
                                             checked={userData.message_agreement === false}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="message_Not_reception">비동의</label>
                                     </li>
@@ -308,21 +311,21 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement3" 
+                                            name="mail_agreement" 
                                             id="mail_reception" 
                                             checked={userData.mail_agreement === true}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="mail_reception">동의</label>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="agreement3" 
+                                            name="mail_agreement" 
                                             id="mail_Not_reception" 
                                             checked={userData.mail_agreement === false}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="mail_Not_reception">비동의</label>
                                     </li>
@@ -352,7 +355,7 @@ const MyPageSignUpForm = () => {
                                             id="music" 
                                             checked={interests.includes('music')}
                                             onChange={handleCheckboxChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="music">음악</label>
                                         <input 
@@ -362,7 +365,7 @@ const MyPageSignUpForm = () => {
                                             id="education" 
                                             checked={interests.includes('education')}
                                             onChange={handleCheckboxChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="education">교육</label>
                                         <input 
@@ -372,7 +375,7 @@ const MyPageSignUpForm = () => {
                                             id="art" 
                                             checked={interests.includes('art')}
                                             onChange={handleCheckboxChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="art">미술</label>
                                         <input 
@@ -382,7 +385,7 @@ const MyPageSignUpForm = () => {
                                             id="science" 
                                             checked={interests.includes('science')}
                                             onChange={handleCheckboxChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="science">과학</label>
                                         <input 
@@ -392,7 +395,7 @@ const MyPageSignUpForm = () => {
                                             id="design" 
                                             checked={interests.includes('design')}
                                             onChange={handleCheckboxChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="design">디자인</label>
                                         기타&nbsp; 
@@ -401,28 +404,28 @@ const MyPageSignUpForm = () => {
                                             name="interest" 
                                             id="interest_etc" 
                                             value={interests.includes('etc') ? '기타' : ''}
-                                            readOnly={!isEditing}
+                                            readOnly
                                         />
                                     </li>
                                     <li>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="marital" 
+                                            name="married" 
                                             id="children_y" 
                                             checked={userData.married === true}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="children_y">기혼</label>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="marital" 
+                                            name="married" 
                                             id="children_n" 
                                             checked={userData.married === false}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="children_n">미혼</label>
                                     </li>
@@ -430,21 +433,21 @@ const MyPageSignUpForm = () => {
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="children" 
+                                            name="hasChildren" 
                                             id="married" 
                                             checked={userData.hasChildren === true}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="married">있음</label>
                                         <input 
                                             type="radio" 
                                             className="radio" 
-                                            name="children" 
+                                            name="hasChildren" 
                                             id="single" 
                                             checked={userData.hasChildren === false}
                                             onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            disabled={!isEditing}
                                         />
                                         <label htmlFor="single">없음</label>
                                     </li>
