@@ -1,6 +1,5 @@
 import React from 'react';
 import './Offline_state.css';
-import LeftMenuBar_teacher from './LeftMenuBar_teacher';
 
 function Offline_state() {
   return (

@@ -84,7 +84,7 @@ function TeacherForm() {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get('http://localhost:8090/member/myinfo', { withCredentials: true });
+            const response = await axios.get('/member/myinfo', { withCredentials: true });
             setUserData(response.data);
             setBirthDate(response.data.birth); // 생년월일 초기화
           } catch (error) {
@@ -193,7 +193,7 @@ function TeacherForm() {
 
                             <label htmlFor='address2'>상세 주소:</label>
                             <input 
-                                type='text' 
+                                 
                                 id='address2' 
                                 name='address2' 
                                 className='addressInput2' 

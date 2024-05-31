@@ -9,7 +9,7 @@ const MyPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8090/member/myinfo', { withCredentials: true });
+        const response = await axios.get('/member/myinfo', { withCredentials: true });
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);

@@ -10,7 +10,7 @@ function AuthenticationForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8090/member/authentication', { password }, { withCredentials: true });
+      const response = await axios.post('/member/authentication', { password }, { withCredentials: true });
       if (response.status === 200) {
         alert('본인확인이 완료됐습니다.');
         navigate('/MyPage');
