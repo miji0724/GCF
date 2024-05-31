@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,13 @@ public class Attachment {
     @JsonIgnore
     private Off_program offProgram;
     
+    @OneToOne
+    @JoinColumn(name = "BannerOneId", referencedColumnName = "id")
+    private BannerOne bannerOne;
+    
+    @OneToOne
+    @JoinColumn(name = "BannerTwoId", referencedColumnName = "id")
+    private BannerTwo bannerTwo;
     
 //    @ManyToOne
 //    @JoinColumn(name = "OnlineId", referencedColumnName = "on_program_id")
