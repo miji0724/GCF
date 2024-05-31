@@ -112,7 +112,7 @@ function ManageNoticeWrite() {
             <SideMenu />
             <div className='noticewrite'>
                 <p>{id ? '공지사항 수정' : '공지사항 등록'}</p>
-                <a className='back_button' href='/manage/notice'>목록으로 돌아가기 &gt;</a>
+                <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                 <div className='noticewrite_area'>
                     {error && <div className="error">{error}</div>}
                     <div className='noticewrite_title'>

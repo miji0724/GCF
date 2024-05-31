@@ -191,6 +191,7 @@ function ManageLecOnDetail() {
                 <SideMenu />
                 <div className='lecOnDetail'>
                     <p>강의 상세정보(온라인)</p>
+                    <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                     <div className='lecOnDetail_area'>
                         <div className='lecOnDetail_left'>
                             <ul>

@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gcf.spring.dto.MemberDto;
@@ -32,9 +33,19 @@ public class MemberController {
 	}
 	
 	@PutMapping("/manage/modify/{id}")
-	public Member memberModifyInManage(@RequestBody MemberDto memberDto) {
+	public Member memberUpdateInManage(@RequestBody MemberDto memberDto) {
 		return memberService.memberUpdateInManage(memberDto, passwordEncoder);
 	}
+	
+	@GetMapping("/manage/searchMembers")
+    public List<Member> searchMembers(@RequestParam("searchType") String searchType, @RequestParam("searchTerm") String searchTerm) {
+        if (searchType.equals("member_name")) {
+            return memberRepository.findByNameContainingIgnoreCase(searchTerm);
+        } else if (searchType.equals("member_joinDate")) {
+            return memberRepository.findByCreatedAtContainingIgnoreCase(searchTerm);
+        }
+        return List.of(); // 빈 리스트 반환
+    }
 	
 //    @GetMapping("/checkId")
 //    public ResponseEntity<String> checkId(@RequestParam("id") String id) {

@@ -1,7 +1,6 @@
 package com.gcf.spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gcf.spring.dto.AttachmentDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +41,17 @@ public class Attachment {
     @JoinColumn(name = "noticeId", referencedColumnName = "id")
     @JsonIgnore
     private Notice noticeId; 
+    
+    @ManyToOne
+    @JoinColumn(name = "OfflineId", referencedColumnName = "off_program_id")
+    @JsonIgnore
+    private Off_program offProgram;
+    
+    
+//    @ManyToOne
+//    @JoinColumn(name = "OnlineId", referencedColumnName = "on_program_id")
+//    @JsonIgnore
+//    private On_program onProgram;
     
     //파일이 속한 엔티티
     @Column

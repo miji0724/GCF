@@ -94,13 +94,18 @@ public class AdminNoticeService {
     
     @Transactional
     public boolean deleteNotice(Long id) {
-        Optional<Notice> optionalNotice = adminNoticeRepository.findById(id);
-        if (optionalNotice.isPresent()) {
-            adminNoticeRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    	 Optional<Notice> optionalNotice = adminNoticeRepository.findById(id);
+    	    if (optionalNotice.isPresent()) {
+    	        Notice notice = optionalNotice.get();
+    	        List<Attachment> attachments = notice.getAttachments();
+    	        for (Attachment attachment : attachments) {
+    	            attachmentService.deleteFile(attachment);
+    	        }
+    	        adminNoticeRepository.deleteById(id);
+    	        return true;
+    	    } else {
+    	        return false;
+    	    }
     }
 
     public Notice convertToEntity(NoticeDto noticeDto) {

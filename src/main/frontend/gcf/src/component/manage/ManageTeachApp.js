@@ -68,6 +68,7 @@ function ManageTeachApp() {
                         <option value="teachApp_teachAppDate">강사 신청 날짜</option>
                     </select>
                     <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
+                    <button className='teachApp_search_button'>검색</button>
                 </div>
                 <div className='teachApp_area'>
                     <table className='teachApp_table'>

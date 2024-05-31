@@ -82,7 +82,7 @@ function ManageLecApp() {
                         <option value="lecApp_lecAppDate">강의 신청 날짜</option>
                     </select>
                     <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
-                    {/* 검색 버튼 추가 가능 */}
+                    <button className='lecApp_search_button'>검색</button>
                 </div>
                 <div className='lecApp_area'>
                     <table className='lecApp_table'>

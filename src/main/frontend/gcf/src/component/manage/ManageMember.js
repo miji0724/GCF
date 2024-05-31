@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // useNavigate로 변경
+import { useNavigate } from 'react-router-dom'; 
 import SideMenu from './ManageSideMenu';
 import './ManageMember.css';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
@@ -13,24 +13,23 @@ function ManageMember() {
     const [searchType, setSearchType] = useState('member_name');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // useNavigate 사용
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchMembers = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get('/getAll');
-                console.log(response);
-                setMembers(response.data);
-                setLoading(false);
-            } catch (error) {
-                setError(error);
-                setLoading(false);
-            }
-        };
-
         fetchMembers();
     }, []);
+
+    const fetchMembers = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('http://localhost:8090/getAll');
+            setMembers(response.data);
+            setLoading(false);
+        } catch (error) {
+            setError(error);
+            setLoading(false);
+        }
+    };
 
     const formatPhoneNumber = (phoneNumber) => {
         const cleaned = ('' + phoneNumber).replace(/\D/g, '');
@@ -41,15 +40,25 @@ function ManageMember() {
         return phoneNumber;
     };
 
-    const filteredItems = members.filter(item => {
-        if (searchTerm === '') return true;
-        if (searchType === 'member_name') {
-            return item.memberName.toLowerCase().includes(searchTerm.toLowerCase());
-        } else if (searchType === 'member_joinDate') {
-            return item.memberJoinDate.toLowerCase().includes(searchTerm.toLowerCase());
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('http://localhost:8090/manage/searchMembers', {
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+            setMembers(response.data);
+            setCurrentPage(1);
+            setLoading(false);
+        } catch (error) {
+            setError(error);
+            setLoading(false);
         }
-        return false;
-    });
+    };
+
+    const filteredItems = members;
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -62,12 +71,16 @@ function ManageMember() {
 
     const handleSearchChange = event => {
         setSearchTerm(event.target.value);
-        setCurrentPage(1);
     };
 
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
-        setCurrentPage(1);
+    };
+
+    const handleKeyPress = event => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
     };
 
     const isFirstGroup = currentPage <= 5;
@@ -87,7 +100,14 @@ function ManageMember() {
                         <option value="member_name">이름</option>
                         <option value="member_joinDate">회원가입 날짜</option>
                     </select>
-                    <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
+                    <input 
+                        type="text" 
+                        placeholder="검색어를 입력하세요" 
+                        value={searchTerm} 
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyPress} 
+                    />
+                    <button className='member_search_button' onClick={handleSearch}>검색</button>
                 </div>
                 <div className='member_area'>
                     {loading ? (
