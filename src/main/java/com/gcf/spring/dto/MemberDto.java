@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gcf.spring.constant.Role;
+import com.gcf.spring.entity.Teacher;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -70,6 +74,11 @@ public class MemberDto {
 	@NotNull(message = "자녀 유무는 필수 입력 값입니다.")
     private Boolean hasChildren;
     
+	private Role role;
+	
+	private Teacher teacher;
+	
 	@NotNull
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime createdAt;
 }

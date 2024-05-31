@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     
+	
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; 
     // 회원가입
@@ -73,7 +74,7 @@ public class MemberService implements UserDetailsService {
     	return memberRepository.findAll();
     }
     
-    public Member memberModifyInManage(MemberDto memberDto, PasswordEncoder passwordEncoder) {
+    public Member memberUpdateInManage(MemberDto memberDto, PasswordEncoder passwordEncoder) {
         // 1. MemberDto 객체로부터 수정된 회원 정보를 추출합니다.
         String memberId = memberDto.getId(); // 혹은 다른 방식으로 회원을 식별하는 정보를 사용할 수 있습니다.
         
@@ -89,7 +90,13 @@ public class MemberService implements UserDetailsService {
         
         // 새로운 회원 정보 업데이트
         existingMember.setName(memberDto.getName());
+        existingMember.setPassword(memberDto.getEmail());
         existingMember.setEmail(memberDto.getEmail());
+        existingMember.setEmail(memberDto.getEmail());
+        existingMember.setEmail(memberDto.getEmail());
+        existingMember.setEmail(memberDto.getEmail());
+        existingMember.setEmail(memberDto.getEmail());
+        existingMember.setAddress(memberDto.getAddress());
         // 필요한 다른 정보들도 동일하게 업데이트합니다.
 
         // 비밀번호 업데이트
@@ -117,4 +124,5 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
     
+   
 }

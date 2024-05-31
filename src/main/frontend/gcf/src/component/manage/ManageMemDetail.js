@@ -10,7 +10,7 @@ function ManageMemDetail() {
 
     const [emailId, setEmailId] = useState('');
     const [emailDomain, setEmailDomain] = useState('');
-    const [isEditing, setIsEditing] = useState(false); // isEditing 상태 추가
+    const [isEditing, setIsEditing] = useState(false); 
     const [editableMember, setEditableMember] = useState({ ...member, password: '' });
 
     useEffect(() => {
@@ -23,22 +23,9 @@ function ManageMemDetail() {
 
     useEffect(() => {
         if (member && member.birth) {
-            console.log('Raw birth date:', member.birth);
-    
-            // JavaScript Date 객체로 변환
-            const birthDate = new Date(member.birth[0], member.birth[1] - 1, member.birth[2]);
-    
-            // 원하는 형식으로 포맷팅 (YYYY-MM-DD)
-            const formattedDate = `${birthDate.getFullYear()}-${(birthDate.getMonth() + 1).toString().padStart(2, '0')}-${birthDate.getDate().toString().padStart(2, '0')}`;
-    
-            console.log('Formatted birth date:', formattedDate);
-    
-            setEditableMember(prevState => ({ ...prevState, birth: formattedDate }));
+            setEditableMember(prevState => ({ ...prevState, birth: formatDate(member.birth) }));
         }
     }, [member]);
-    
-    
-    
 
     if (!member) {
         return <div>멤버 정보가 없습니다.</div>;
@@ -59,29 +46,37 @@ function ManageMemDetail() {
     };
 
     const handleSave = () => {
-        // save logic here, you might want to send updated data to the server
-        const updatedMember = { ...editableMember };
+        const updatedMember = {
+            ...editableMember,
+            email: `${emailId}@${emailDomain}`
+        };
         
         if (updatedMember.password === '') {
             delete updatedMember.password;
         }
 
-        axios.put('http://localhost:8090/manage/modify/${member.id}', updatedMember)
-        .then(response => {
-            // Handle success
-            console.log('Member data updated successfully:', response.data);
-            setIsEditing(false); // Exit editing mode
-        })
-        .catch(error => {
-            // Handle error
-            console.error('Error updating member data:', error);
-            // You can show a toast or display an error message to the user
-        });
-};
+        console.log(updatedMember);
+
+        axios.put(`http://localhost:8090/manage/modify/${member.id}`, updatedMember)
+            .then(response => {
+                console.log('Member data updated successfully:', response.data);
+                setIsEditing(false); 
+            })
+            .catch(error => {
+                console.error('Error updating member data:', error);
+            });
+    };
 
     const handleDelete = () => {
-        // delete logic here
         console.log('member info :', editableMember);
+    };
+
+    const formatDate = (dateArray) => {
+        if (Array.isArray(dateArray) && dateArray.length === 3) {
+            const [year, month, day] = dateArray;
+            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+        return '';
     };
 
     return (
@@ -119,12 +114,12 @@ function ManageMemDetail() {
                                     type='text'
                                     id='id'
                                     value={editableMember.id}
-                                    readOnly // id 필드는 항상 readOnly로 설정
+                                    readOnly 
                                 />
                             </li>
                             <li>
                                 <input
-                                    type='text'
+                                    type='password'
                                     id='password'
                                     value={editableMember.password}
                                     onChange={handleInputChange}
@@ -152,8 +147,8 @@ function ManageMemDetail() {
                             <li>
                                 <input
                                     type='text'
-                                    id='landline'
-                                    value={editableMember.landline || ''}
+                                    id='tel_number'
+                                    value={editableMember.tel_number || ''}
                                     onChange={handleInputChange}
                                     readOnly={!isEditing}
                                 />

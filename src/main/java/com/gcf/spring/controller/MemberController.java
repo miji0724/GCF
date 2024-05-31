@@ -33,7 +33,7 @@ public class MemberController {
 	
 	@PutMapping("/manage/modify/{id}")
 	public Member memberModifyInManage(@RequestBody MemberDto memberDto) {
-		return memberService.memberModifyInManage(memberDto, passwordEncoder);
+		return memberService.memberUpdateInManage(memberDto, passwordEncoder);
 	}
 	
 //    @GetMapping("/checkId")
