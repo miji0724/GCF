@@ -161,12 +161,15 @@ public class MemberController {
         }
 
         try {
+            System.out.println("Updating member with ID: " + userId);
             memberService.updateMember(userId, memberDto);
             return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
+            e.printStackTrace(); // 상세한 에러 메시지 로그 출력
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 업데이트 중 오류가 발생했습니다.");
         }
     }
+
 
     @PostMapping("/member/delete")
     public ResponseEntity<String> deleteMember(HttpServletRequest httpRequest) {

@@ -181,7 +181,9 @@ public class MemberService implements UserDetailsService {
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             member.setName(memberDto.getName());
-            member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+            if (memberDto.getPassword() != null && !memberDto.getPassword().isEmpty()) {
+                member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+            }
             member.setBirth(memberDto.getBirth());
             member.setPhone_number(memberDto.getPhone_number());
             member.setTelNumber(memberDto.getTelNumber());
@@ -195,7 +197,7 @@ public class MemberService implements UserDetailsService {
             member.setMarried(memberDto.getMarried());
             member.setHasChildren(memberDto.getHasChildren());
             memberRepository.save(member);
-        }else {
+        } else {
             throw new RuntimeException("Member not found with id: " + userId);
         }
     }

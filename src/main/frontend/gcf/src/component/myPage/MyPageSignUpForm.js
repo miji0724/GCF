@@ -91,15 +91,17 @@ const MyPageSignUpForm = () => {
 
     const handleSave = async () => {
         try {
-            const response = await axios.post('/member/update', {
+            const updatedUserData = {
                 ...userData,
                 birth: birthDate,
-                interests
-            }, { withCredentials: true });
-
+                interests,
+                password: userData.password || '', // 패스워드가 null일 경우 빈 문자열로 설정
+            };
+    
+            const response = await axios.post('/member/update', updatedUserData, { withCredentials: true });
+    
             if (response.status === 200) {
                 alert('정보가 성공적으로 저장되었습니다.');
-                setIsEditing(false); // 저장 후 수정 모드 종료
             } else {
                 alert('정보 저장에 실패했습니다.');
             }
@@ -181,11 +183,11 @@ const MyPageSignUpForm = () => {
                                     <li>
                                         <input 
                                             id="password" 
-                                            type='string'
-                                            name='password'
-                                            value={userData.password}
-                                            onChange={handleInputChange}
-                                            readOnly={!isEditing}
+                                            type='text'
+                                            // name='password'
+                                            // value={userData.password}
+                                            // onChange={handleInputChange}
+                                            // readOnly={!isEditing}
                                         />
                                     </li>
                                     
