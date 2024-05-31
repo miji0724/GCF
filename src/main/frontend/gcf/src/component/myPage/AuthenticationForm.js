@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './AuthenticationForm.css';
 
 function AuthenticationForm() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -13,7 +14,9 @@ function AuthenticationForm() {
       const response = await axios.post('http://localhost:8090/member/authentication', { password }, { withCredentials: true });
       if (response.status === 200) {
         alert('본인확인이 완료됐습니다.');
-        navigate('/MyPage');
+        const urlParams = new URLSearchParams(location.search);
+        const component = urlParams.get('component');
+        navigate(`/MyPage${component ? `?component=${component}` : ''}`);
       } else {
         alert('실패했습니다.');
       }
@@ -47,4 +50,4 @@ function AuthenticationForm() {
   );
 }
 
-export default AuthenticationForm
+export default AuthenticationForm;

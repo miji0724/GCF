@@ -1,4 +1,5 @@
-import './Body.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Carousel from './carousel/Carousel';
 import Carousel2 from './carousel/Carousel2';
 import banner1 from '../img/banner/배너1.jpg';
@@ -20,8 +21,7 @@ import music from '../img/off_home_icon/music_icon.png';
 import design from '../img/off_home_icon/design_icon.png';
 import study from '../img/off_home_icon/study_icon.png';
 import etc from '../img/off_home_icon/etc_icon.png';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import './Body.css';
 
 const Body = ({ isLoggedIn }) => {
     const images = [
@@ -53,6 +53,18 @@ const Body = ({ isLoggedIn }) => {
             });
     }, []);
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const component = urlParams.get('component');
+        if (component) {
+            handleClick(component);
+        }
+    }, []);
+
+    const handleAuthRedirect = (componentName) => {
+        window.location.href = `/MyAuthentication?component=${componentName}`;
+    };
+
     const renderProgramContent = (program) => {
         switch (program) {
             case 1:
@@ -80,12 +92,12 @@ const Body = ({ isLoggedIn }) => {
                 <li className="button01">
                     <a className="plan_button" href="/schedule">이달의 일정<div>⇀</div></a>
                     {isLoggedIn ? (
-                        <a className="teacher_button" href="/MyAuthentication">강사 등록<div>⇀</div></a>
+                        <a className="teacher_button" onClick={() => handleAuthRedirect('teacher_register')}>강사 등록<div>⇀</div></a>
                     ) : (
                         <a className="teacher_button" onClick={() => alert('로그인이 필요합니다.')}>강사 등록<div>⇀</div></a>
                     )}
                     {isLoggedIn ? (
-                        <a className="issue_button" href="/MyAuthentication">증명서 발급<div>⇀</div></a>
+                        <a className="issue_button" onClick={() => handleAuthRedirect('certification')}>증명서 발급<div>⇀</div></a>
                     ) : (
                         <a className="issue_button" onClick={() => alert('로그인이 필요합니다.')}>증명서 발급<div>⇀</div></a>
                     )}
