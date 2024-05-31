@@ -1,8 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './MapForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const MapForm = ({ locationName }) => {
     const mapRef = useRef(null);
+    const navigate = useNavigate();
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [location, setLocation] = useState(null);
     const [tel, setTel] = useState(null);
@@ -172,15 +174,10 @@ const MapForm = ({ locationName }) => {
         }
     }, [locationName]);
 
-    const handleLocationClick = (location, locationName, tel, parking, subway, bus) => {
-        moveMapToAddress(location, parking, subway, bus);
-        setSelectedLocation(locationName);
-        setLocation(location);
-        setTel(tel);
-        setParkingInfo(parking);
-        setSubwayInfo(subway);
-        setBusInfo(bus);
+    const handleLocationClick = (locationName) => {
+        navigate(`/map/${locationName}`);
     };
+
 
     return (
         <div className="map_form">
@@ -192,7 +189,7 @@ const MapForm = ({ locationName }) => {
                         {Object.entries(locations).map(([name, { address, tel, parking, subway, bus }]) => (
                             <li
                                 key={name}
-                                onClick={() => handleLocationClick(address, name, tel, parking, subway, bus)}
+                                onClick={() => handleLocationClick(name)}
                                 className={selectedLocation === name ? 'selected' : ''}
                             >
                                 {name}
