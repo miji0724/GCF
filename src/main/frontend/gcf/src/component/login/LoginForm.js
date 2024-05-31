@@ -18,8 +18,6 @@ const LoginForm = ({ onLogin }) => {
             .then(response => {
                 if (response.status === 200) {
                     alert("로그인되었습니다.")
-                    sessionStorage.setItem("id", response.data.id);
-                    sessionStorage.setItem("role", response.data.role); 
                     onLogin();
                 }
             })
