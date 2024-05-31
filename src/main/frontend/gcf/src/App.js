@@ -34,7 +34,7 @@ function App() {
     
     useEffect(() => {
         // 페이지가 로드될 때 세션을 확인하여 로그인 상태를 설정
-        const storedUser = sessionStorage.getItem("id");
+        const storedUser = sessionStorage.getItem("member");
         if (storedUser) {
             setIsLoggedIn(true);
         } else {
@@ -43,12 +43,12 @@ function App() {
     }, []);
 
     const handleLogout = () => {
-        sessionStorage.removeItem("id");
+        sessionStorage.removeItem("member");
         window.location.href="/";
     };
 
     const handleLogin = (loginForm) => {
-        sessionStorage.setItem("id", JSON.stringify(loginForm));
+        sessionStorage.setItem("member", JSON.stringify(loginForm));
         setIsLoggedIn(true);
         window.location.href="/";
     };
@@ -59,13 +59,14 @@ function App() {
                 <Router>
                     <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
                     <Routes className="home">
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<Home isLoggedIn={isLoggedIn} onLogout={handleLogout} />} />
                         <Route path="/login" element={<Login onLogin={handleLogin} />} />
                         <Route path="/signUp" element={<SignUp />} />
                         <Route path="/findId" element={<FindId />} />
                         <Route path="/findPw" element={<FindPw />} />
                         <Route path="/notice/*" element={<Notice />} />
                         <Route path="/map/:locationName" element={<Map />} />
+                        <Route path="/" element={<Map />} />
                         <Route path="/schedule" element={<Schedule />} />
                     </Routes>
                     <Routes className="myPage">
