@@ -1,6 +1,7 @@
 import './ManageBanner.css';
 import SideMenu from './ManageSideMenu';
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inputs }) {
   const handleFileChange = (moduleId, index, event) => {
@@ -61,20 +62,44 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
   );
 }
 
+function sendBannerData(modules) {
+  // 각 모듈의 링크와 첨부 파일만을 추출하여 새로운 객체로 생성
+  const dataToSend = modules.map(module => ({
+    id: module.id,
+    inputs: module.inputs.map(input => ({
+      attachment: input.attachment,
+      link: input.link
+    }))
+  }));
+
+  // 새로운 객체를 백엔드로 전송
+  axios.post('http://localhost:8090/manage/updateBanners', dataToSend)
+    .then(response => {
+      console.log('Data sent successfully:', response.data);
+      console.log("Data to send: ", dataToSend);
+    })
+    .catch(error => {
+      console.error('Error sending data to backend:', error);
+      console.log("Data to send: ", dataToSend);
+    });
+}
+
+
 function ManageBanner() {
   const [modules, setModules] = useState([
     { id: 1, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] },
     { id: 2, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] }
   ]);
 
-  // 입력칸 추가 함수
   const addInput = moduleId => {
     setModules(prevModules =>
       prevModules.map(module =>
         module.id === moduleId ? { ...module, inputs: [...module.inputs, { attachment: [], link: '' }] } : module
       )
     );
+    console.log("modules after adding input: ", modules);
   };
+  
 
   // 입력칸 제거 함수
   const removeInput = (moduleId, indexToRemove) => {
@@ -122,6 +147,7 @@ function ManageBanner() {
             />
           ))}
         </div>
+        <button className='banner_confirm' onClick={sendBannerData}>저장</button>
       </div>
     </div>
   );
