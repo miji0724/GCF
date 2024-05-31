@@ -1,6 +1,7 @@
 package com.gcf.spring.controller;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
+import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,19 +51,20 @@ public class MemberController {
     
     // 로그인
     @PostMapping("/member/login")
-    public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest, HttpSession session) {
-        String inputId = request.get("id");
-        String inputPassword = request.get("password");
+    public ResponseEntity<Member> login(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String input_id = request.get("id");
+        String input_password = request.get("password");
 
-        Member authenticatedMember = memberService.authenticate(inputId, inputPassword);
-
+        Member authenticatedMember = memberService.authenticate(input_id, input_password);
         if (authenticatedMember != null) {
-            session.setAttribute("member", authenticatedMember);
+            // 로그인 성공 시 세션에 userId 설정
+            httpRequest.getSession().setAttribute("userId", authenticatedMember.getId());
             return ResponseEntity.ok(authenticatedMember); // 회원 인증 성공 시 회원 정보 반환
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 인증 실패 시 UNAUTHORIZED 반환
         }
     }
+
     
     // 아이디 찾기
     @PostMapping("/member/findId")
@@ -93,26 +96,31 @@ public class MemberController {
         }
     }
     
+    private final MemberRepository memberRepository;
+    
+    // 비밀번호 인증
     @PostMapping("/member/authentication")
-    public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> request, HttpSession session) {
+    public ResponseEntity<String> verifyPassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
         String password = request.get("password");
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
 
-        // 세션에서 사용자 정보를 가져오기 전에 세션에 저장된 값이 있는지 확인합니다.
-        if (session.getAttribute("member") == null) {
-        	System.out.println("세션없음");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
-        // 세션에서 가져온 사용자의 정보를 사용합니다.
-        Member loginMember = (Member) session.getAttribute("member");
-        System.out.println(loginMember);
-        // 세션에서 가져온 사용자의 비밀번호와 입력된 비밀번호를 비교합니다.
-        if (passwordEncoder.matches(password, loginMember.getPassword())) {
-            return ResponseEntity.ok().build();
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            if (passwordEncoder.matches(password, member.getPassword())) {
+                return ResponseEntity.ok("인증 성공");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원 정보를 찾을 수 없습니다.");
         }
     }
+
     
     // 로그아웃 처리
     @PostMapping("/member/logout")
