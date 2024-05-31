@@ -2,12 +2,18 @@ import './Header.css';
 import logo from '../img/logo.png';
 import search from '../img/search.png';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ isLoggedIn, onLogout }) =>  {
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
+
+  const navigate = useNavigate();
+  
+  const gotoOnlineListCategory = (category) => {
+    navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
+  };
 
   return (
     <header>
@@ -34,30 +40,27 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
           <li onMouseEnter={() => setIsActive(true)} 
               onMouseLeave={() => setIsActive(false)} 
           >
-            <a href="#">오프라인 교육/체험
-              {isActive && (
-                <ul className="dropdown">
-                  <li><a href="/schedule">이달의 일정</a></li>
-                  <li><a href="#">프로그램 신청</a></li>
-                </ul>
-              )}
-            </a>
+            <Link to="/OfflineList">오프라인 교육/체험</Link>
+            {isActive && (
+              <ul className="dropdown">
+                <li><Link to="/schedule">이달의 일정</Link></li>
+                <li><Link to="/OfflineList">프로그램 신청</Link></li>
+              </ul>
+            )}
           </li>
-          <li onMouseEnter={() => setIsActive2(true)} 
+          <li onMouseEnter={() => setIsActive2(true)}
               onMouseLeave={() => setIsActive2(false)}>
-            <Link>
-              온라인 교육
-              {isActive2 && (
-                <ul className="dropdown">
-                  <li><Link to="#">음악</Link></li>
-                  <li><Link to="#">미술</Link></li>
-                  <li><Link to="#">과학</Link></li>
-                  <li><Link to="#">디자인</Link></li>
-                  <li><Link to="#">교육</Link></li>
-                  <li><Link to="#">기타</Link></li>
-                </ul>
-              )}
-            </Link>
+            <Link to="/OnlineList">온라인 교육</Link>
+            {isActive2 && (
+              <ul className="dropdown">
+                <li><a onClick={() => gotoOnlineListCategory('음악')}>음악</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('미술')}>미술</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('과학')}>과학</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('디자인')}>디자인</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('교육')}>교육</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('기타')}>기타</a></li>
+              </ul>
+            )}
           </li>
           <li><a href="/notice">공지사항</a></li>
           <li onMouseEnter={() => setIsActive3(true)} 

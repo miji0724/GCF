@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Carousel from './carousel/Carousel';
 import Carousel2 from './carousel/Carousel2';
@@ -40,6 +41,12 @@ const Body = ({ isLoggedIn }) => {
 
     const handleClick = (program) => {
         setSelectedProgram(program);
+    };
+
+    const navigate = useNavigate();
+  
+    const gotoOnlineListCategory = (category) => {
+      navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
     };
 
     useEffect(() => {
@@ -177,7 +184,7 @@ const Body = ({ isLoggedIn }) => {
                 <div className="home_title4">온라인 교육</div>
                 <div className="icon">
                     {[{src: art, label: '미술'}, {src: science, label: '과학'}, {src: music, label: '음악'}, {src: design, label: '디자인'}, {src: study, label: '교육'}, {src: etc, label: '기타'}].map((icon, index) => (
-                        <a key={index} href='#'>
+                        <a key={index} onClick={() => gotoOnlineListCategory(icon.label)}>
                             <img src={icon.src} alt={icon.label} />
                             <span>{icon.label}</span>
                         </a>

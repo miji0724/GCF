@@ -152,7 +152,7 @@ public class MemberService implements UserDetailsService {
     }
     
     public String findPw(MemberDto memberDto) {
-        Optional<Member> foundPwMember = memberRepository.findIdByIdAndEmail(memberDto.getId(), memberDto.getEmail());
+        Optional<Member> foundPwMember = memberRepository.findByIdAndEmail(memberDto.getId(), memberDto.getEmail());
         if (foundPwMember.isPresent()) {
             Member member = foundPwMember.get();
 

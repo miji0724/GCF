@@ -1,13 +1,11 @@
 package com.gcf.spring.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -59,4 +57,7 @@ public class MemberDto {
     private Boolean hasChildren;
     
     private String zonecode;
+    
+	@NotNull
+	private LocalDateTime createdAt;
 }

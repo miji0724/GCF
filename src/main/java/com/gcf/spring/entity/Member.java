@@ -1,10 +1,12 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 
@@ -12,9 +14,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -69,6 +70,16 @@ public class Member {
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	
+	//회원가입 날짜
+    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime createdAt;
+	
+	@PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 	
 	
 	public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
