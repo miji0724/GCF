@@ -31,6 +31,7 @@ import lombok.Setter;
 public class Member {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
@@ -44,9 +45,9 @@ public class Member {
     private LocalDate birth;
 
     @Column(nullable = false)
-    private String phone_number;
+    private String phoneNumber;
 
-    private String tel_number;
+    private String telNumber;
 
     @Column(unique = true)
     private String email;
@@ -60,13 +61,13 @@ public class Member {
     private List<String> interest;
 
     @Column(nullable = false)
-    private Boolean email_agreement;
+    private Boolean emailAgreement;
 
     @Column(nullable = false)
-    private Boolean message_agreement;
+    private Boolean messageAgreement;
 
     @Column(nullable = false)
-    private Boolean mail_agreement;
+    private Boolean mailAgreement;
 
     private Boolean married;
 
