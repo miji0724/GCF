@@ -40,26 +40,26 @@ public class Teacher {
 
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
     @Enumerated(EnumType.STRING)
-    private Teacher_category teacher_category;
+    private Teacher_category teacherCategory;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
     private String carrer;
     @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
-    private String career_Start_Year;
+    private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
-    private String career_End_Year;
+    private String careerEndYear;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
 	@Column(name = "sns_address")
-	private String sns_address;
+	private String snsAddress;
 
 	@Column(name = "affiliated_organization")
-	private String affiliated_Organization;
+	private String affiliatedOrganization;
 
 	@Column(name = "license_name")
-	private String license_name;
+	private String licenseName;
 
 	@Column(name = "birthday")
 	private LocalDate birthday;
