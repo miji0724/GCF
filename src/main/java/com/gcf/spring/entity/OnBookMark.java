@@ -27,7 +27,7 @@ public class OnBookMark {
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     
     @MapsId
     @OneToOne
@@ -38,5 +38,6 @@ public class OnBookMark {
     @OneToOne
     @JoinColumn(name = "on_program_number")
     private OnProgram onprogram;
+    
     
 }

@@ -27,7 +27,7 @@ public class OffBookMark {
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
 
     @MapsId
     @OneToOne

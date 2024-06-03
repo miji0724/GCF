@@ -52,10 +52,6 @@ public class OnProgram {
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type", nullable = false)
     private On_or_OFF programType; // 프로그램 타입 (온라인/오프라인 구분)
-
-    @OneToOne
-    @JoinColumn(name = "poster_file_id")
-    private Attachment poster; // 포스터 이미지
     
     @ManyToOne
     @JoinColumn(name = "teacher_id")
