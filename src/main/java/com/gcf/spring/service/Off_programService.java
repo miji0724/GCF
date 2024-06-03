@@ -90,9 +90,7 @@ public class Off_programService {
             if (incrementLikes) {
                 program.setLikesCount(program.getLikesCount() + 1);
             }
-            if (toggleBookmark) {
-                program.setBookmark(!program.getBookmark());
-            }
+
             offProgramRepository.save(program);
             return true;
         } else {
@@ -100,47 +98,4 @@ public class Off_programService {
         }
     }
 
-    @Transactional
-    public Off_ProgramDTO saveProgram(Off_ProgramDTO offProgramDTO, MultipartFile posterFile, MultipartFile educationIntroductionFile, MultipartFile teacherIntroductionFile, On_or_OFF programType) {
-        OffProgram off_program = modelMapper.map(offProgramDTO, OffProgram.class);
-
-        Optional<Teacher> teacherOpt = teacherRepository.findById(offProgramDTO.getTeacherId());
-        if (teacherOpt.isPresent()) {
-            off_program.setTeacher(teacherOpt.get());
-        } else {
-            throw new RuntimeException("강사 정보가 없습니다");
-        }
-
-        off_program.setProgramType(programType); // 프로그램 타입 설정
-
-        Attachment poster = saveFile(posterFile, off_program, null);
-        Attachment educationIntroduction = saveFile(educationIntroductionFile, off_program, null);
-        Attachment teacherIntroduction = saveFile(teacherIntroductionFile, off_program, null);
-
-        off_program.setPoster(poster);
-        off_program.setFiles(List.of(educationIntroduction, teacherIntroduction));
-
-        OffProgram savedProgram = offProgramRepository.save(off_program);
-        return modelMapper.map(savedProgram, Off_ProgramDTO.class);
-    }
-
-    private Attachment saveFile(MultipartFile file, OffProgram offProgram, OnProgram onProgram) {
-        if (file == null || file.isEmpty()) {
-            return null;
-        }
-        try {
-            String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension; // 같은 이름이 있을 것에 대비해여 UUID 사용
-            Path filePath = Paths.get("path/to/save/" + uniqueFileName);
-            Files.copy(file.getInputStream(), filePath);
-
-            Attachment attachment = new Attachment();
-            attachment.setFile_name(uniqueFileName);
-            attachment.setFile_path(filePath.toString());
-            attachment.setOnProgram(onProgram);
-            return fileRepository.save(attachment);
-        } catch (Exception e) {
-            throw new RuntimeException("파일 저장 실패", e);
-        }
-    }
 }

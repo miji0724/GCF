@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.gcf.spring.constant.On_Category;
 import com.gcf.spring.dto.On_ProgramDTO;
 import com.gcf.spring.service.On_programService;
 
@@ -37,7 +36,7 @@ public class On_programController {
 
     @GetMapping("/filter")
     public List<On_ProgramDTO> searchByFilters(
-        @RequestParam(required = false) On_Category category,
+        @RequestParam(required = false) String category,
         @RequestParam(required = false) String name,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "4") int size) {
