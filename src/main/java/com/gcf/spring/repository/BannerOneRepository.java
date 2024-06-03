@@ -2,8 +2,8 @@ package com.gcf.spring.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.BannerOne;
 
-public interface BannerOneRepository  extends JpaRepository<Attachment, Long>{
+public interface BannerOneRepository extends JpaRepository<BannerOne, Long> {
 
 }

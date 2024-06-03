@@ -1,6 +1,6 @@
 package com.gcf.spring.dto;
 
-import com.gcf.spring.entity.Attachment;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,5 +22,5 @@ public class BannerOneDto {
 	@NotNull
 	private String url;
 	
-	private Attachment attachment;
+	private MultipartFile attachment;
 }

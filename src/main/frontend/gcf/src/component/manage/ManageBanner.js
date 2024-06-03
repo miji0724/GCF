@@ -1,23 +1,19 @@
 import './ManageBanner.css';
 import SideMenu from './ManageSideMenu';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inputs }) {
   const handleFileChange = (moduleId, index, event) => {
-    const files = event.target.files;
-    const fileNames = Array.from(files).map(file => file.name);
-    onInputChange(moduleId, index, { attachment: fileNames, link: inputs[index].link });
+    const files = Array.from(event.target.files); // 파일 객체 배열로 변환
+    onInputChange(moduleId, index, { attachment: files, link: inputs[index].link });
   };
 
   return (
     <div className='banner_item'>
-      {/* 배너 제목 */}
       <p>배너 {moduleId}</p>
-      {/* 입력칸들 렌더링 */}
       {inputs.map((input, index) => (
         <div key={index} className="input_row">
-          {/* 첨부 파일 입력 */}
           <div className="input_group">
             <ul>
               <li className='input_title'><p>첨부 파일 {index + 1} :</p></li>
@@ -34,11 +30,11 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
                     style={{ display: "none" }}
                     onChange={e => handleFileChange(moduleId, index, e)} // 모듈 ID 전달
                   />
-                  <span className="form__span--file">{input.attachment.length > 0 ? input.attachment.join(', ') : '선택된 파일이 없습니다.'}</span>
+                  <span className="form__span--file">{input.attachment.length > 0 ? input.attachment.map(file => file.name).join(', ') : '선택된 파일이 없습니다.'}</span>
                   <label className="form__label--file" htmlFor={`upload${moduleId}_${index}`}>파일선택</label>
                 </div>
               </li>
-              <li className='input_detail'>{/* 링크 입력, 추가 버튼, 제거 버튼 */}
+              <li className='input_detail'>
                 <input
                   type='text'
                   className='input_link'
@@ -46,7 +42,6 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
                   onChange={e => onInputChange(moduleId, index, { attachment: input.attachment, link: e.target.value })} // 모듈 ID 전달
                   placeholder={`링크를 입력하세요`}
                 />
-                {/* 삭제 버튼은 1개 있을 때만 비활성화 */}
                 {inputs.length > 1 && (
                   <button className='minus' onClick={() => onRemoveInput(moduleId, index)}>-</button>
                 )}
@@ -56,33 +51,45 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
           </div>
         </div>
       ))}
-      {/* + 버튼은 언제나 있음 */}
-
     </div>
   );
 }
 
 function sendBannerData(modules) {
-  // 각 모듈의 링크와 첨부 파일만을 추출하여 새로운 객체로 생성
-  const dataToSend = modules.map(module => ({
-    id: module.id,
-    inputs: module.inputs.map(input => ({
-      attachment: input.attachment,
-      link: input.link
-    }))
-  }));
+  const formData = new FormData();
 
-  // 새로운 객체를 백엔드로 전송
-  axios.post('http://localhost:8090/manage/updateBanners', dataToSend)
+  modules.forEach((module, moduleIndex) => {
+    const entityId = module.id === 1 ? 'bannerone' : 'bannertwo'; // Assigning entity IDs based on module ID
+    formData.append(`modules[${moduleIndex}].entityId`, entityId); // Appending entity ID to differentiate between bannerone and bannertwo
+    module.inputs.forEach((input, inputIndex) => {
+      input.attachment.forEach((file, fileIndex) => {
+        formData.append(`modules[${moduleIndex}].inputs[${inputIndex}].attachment`, file);
+      });
+      formData.append(`modules[${moduleIndex}].inputs[${inputIndex}].link`, input.link);
+    });
+  });
+
+  // FormData 출력
+  for (const pair of formData.entries()) {
+    console.log(pair[0] + ', ' + pair[1]);
+  }
+
+  // Axios를 사용하여 POST 요청을 보냅니다.
+  axios.post('http://localhost:8090/manage/updateBanners', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
     .then(response => {
-      console.log('Data sent successfully:', response.data);
-      console.log("Data to send: ", dataToSend);
+      console.log('배너 데이터가 성공적으로 전송되었습니다.');
+      // 서버로부터 응답을 받은 후 추가적인 처리를 수행할 수 있습니다.
     })
     .catch(error => {
-      console.error('Error sending data to backend:', error);
-      console.log("Data to send: ", dataToSend);
+      console.error('배너 데이터 전송 중 오류가 발생했습니다:', error);
+      // 오류 처리를 수행할 수 있습니다.
     });
 }
+
 
 
 function ManageBanner() {
@@ -97,11 +104,8 @@ function ManageBanner() {
         module.id === moduleId ? { ...module, inputs: [...module.inputs, { attachment: [], link: '' }] } : module
       )
     );
-    console.log("modules after adding input: ", modules);
   };
-  
 
-  // 입력칸 제거 함수
   const removeInput = (moduleId, indexToRemove) => {
     setModules(prevModules =>
       prevModules.map(module =>
@@ -115,7 +119,6 @@ function ManageBanner() {
     );
   };
 
-  // 입력값 변경 함수
   const handleInputChange = (moduleId, index, value) => {
     setModules(prevModules =>
       prevModules.map(module =>
@@ -129,13 +132,16 @@ function ManageBanner() {
     );
   };
 
+  useEffect(() => {
+    console.log("modules state updated: ", modules);
+  }, [modules]);
+
   return (
     <div className='banner_container'>
       <SideMenu />
       <div className='banner'>
         <p>배너 및 홈 화면 관리</p>
         <div className='banner_area'>
-          {/* 모듈들 렌더링 */}
           {modules.map(module => (
             <BannerModule
               key={module.id}
@@ -147,7 +153,7 @@ function ManageBanner() {
             />
           ))}
         </div>
-        <button className='banner_confirm' onClick={sendBannerData}>저장</button>
+        <button className='banner_confirm' onClick={() => sendBannerData(modules)}>저장</button>
       </div>
     </div>
   );

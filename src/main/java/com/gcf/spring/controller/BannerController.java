@@ -1,23 +1,24 @@
 package com.gcf.spring.controller;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
+import com.gcf.spring.dto.BannerModulesWrapper;
+import com.gcf.spring.service.BannerService;
 
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/manage")
 public class BannerController {
 
-	 @PostMapping("/manage/updateBanners")
-	    public ResponseEntity<String> updateBanners(@RequestBody List<Module> modules) {
-	        // 받은 데이터 처리
-	        System.out.println("Received modules: " + modules);
-	        
-	        return ResponseEntity.ok("Data received successfully");
-	    }	
+    private final BannerService bannerService;
+
+    public BannerController(BannerService bannerService) {
+        this.bannerService = bannerService;
+    }
+
+    @PostMapping("/updateBanners")
+    public String updateBanners(BannerModulesWrapper modules) {
+        return bannerService.updateBanners(modules);
+    }
 }
