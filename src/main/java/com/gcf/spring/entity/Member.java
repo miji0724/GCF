@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 
@@ -13,6 +14,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +70,17 @@ public class Member {
     
     @Enumerated(EnumType.STRING)
     private Role role;
+    
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name="id")
+    private OnProgram onProgram;
+    
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name="id")
+    private OffProgram offProgram;
+    
       
     public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
         Member member = new Member();

@@ -73,10 +73,19 @@ const MyPageSignUpForm = () => {
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         const newValue = type === 'checkbox' || type === 'radio' ? checked : value;
-        setUserData({
-            ...userData,
-            [name]: newValue
-        });
+
+        // 라디오 버튼의 값을 올바르게 설정하기 위한 코드 추가
+        if (type === 'radio') {
+            setUserData({
+                ...userData,
+                [name]: e.target.id === "children_y" || e.target.id === "married" ? true : false
+            });
+        } else {
+            setUserData({
+                ...userData,
+                [name]: newValue
+            });
+        }
     };
 
     const handleCheckboxChange = (e) => {
@@ -404,7 +413,7 @@ const MyPageSignUpForm = () => {
                                             name="interest" 
                                             id="interest_etc" 
                                             value={interests.includes('etc') ? '기타' : ''}
-                                            readOnly
+                                            readOnly={!isEditing}
                                         />
                                     </li>
                                     <li>

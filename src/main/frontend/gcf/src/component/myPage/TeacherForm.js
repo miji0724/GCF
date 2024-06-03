@@ -202,7 +202,7 @@ function TeacherForm() {
                             />
                         </div>
 
-                        <h2>강의정보</h2>
+                        <h2>강사정보</h2>
 
                         <div className='formAffiliation'>
                             <label htmlFor='affiliation'>소속기관:</label>
