@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 
 import com.gcf.spring.constant.Fee;
 import com.gcf.spring.constant.Off_Category;
@@ -14,6 +15,7 @@ import com.gcf.spring.constant.ProgramState;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -72,12 +74,13 @@ public class OffProgram {
     private int currentParticipants; // 현재 신청(참가) 인원
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "state")
-    @ColumnDefault("'접수중'")
-    private ProgramState State; // 강의 상태
+    @Column(name = "state", columnDefinition = "ENUM('접수마감', '진행중') DEFAULT '진행중'")
+    private ProgramState state = ProgramState.접수중; // 강의 상태
 
+    @ElementCollection
     @Column(name = "day_of_week", nullable = false)
-    private List<String> dayOfWweek; // 강의 요일
+    @Type(type = "json")
+    private List<String> dayOfWeek; // 강의 요일
 
     @Column(name = "views", nullable = false)
     @ColumnDefault("0")
