@@ -23,6 +23,7 @@ import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.dto.Off_ProgramDTO;
 import com.gcf.spring.constant.Place;
+import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.OffProgram;
 import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.Teacher;
@@ -51,43 +52,43 @@ public class Off_programService {
         Pageable pageable = PageRequest.of(page, size);
         Page<OffProgram> programsPage = offProgramRepository.findAll(pageable);
         return programsPage.stream()
-                           .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+                           .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
                            .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
                            .collect(Collectors.toList());
     }
 
     public Optional<Off_ProgramDTO> getProgramById(int id) {
-        Optional<Off_program> program = offProgramRepository.findById(id);
+        Optional<OffProgram> program = offProgramRepository.findById(id);
         return program.map(p -> modelMapper.map(p, Off_ProgramDTO.class));
     }
 
     public List<Off_ProgramDTO> findFilteredPrograms(ProgramState state, Place placeName, Off_Category category, String name, LocalDate date, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Off_program> filteredPrograms;
+        Page<OffProgram> filteredPrograms;
 
         if (state != null && placeName != null && category != null) {
             filteredPrograms = offProgramRepository.findByStateAndPlaceNameAndOffline_category(state, placeName, category, pageable);
         } else if (name != null && !name.isEmpty()) {
-            filteredPrograms = offProgramRepository.findByOff_program_nameContaining(name, pageable);
+            filteredPrograms = offProgramRepository.findByOffprogramnameContaining(name, pageable);
         } else {
             filteredPrograms = offProgramRepository.findAll(pageable);
         }
 
         return filteredPrograms.stream()
-                               .sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+                               .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
                                .map(program -> modelMapper.map(program, Off_ProgramDTO.class))
                                .collect(Collectors.toList());
     }
 
     public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
-        Optional<Off_program> optionalProgram = offProgramRepository.findById(id);
+        Optional<OffProgram> optionalProgram = offProgramRepository.findById(id);
         if (optionalProgram.isPresent()) {
-            Off_program program = optionalProgram.get();
+            OffProgram program = optionalProgram.get();
             if (incrementViews) {
                 program.setViews(program.getViews() + 1);
             }
             if (incrementLikes) {
-                program.setLikes_count(program.getLikes_count() + 1);
+                program.setLikesCount(program.getLikesCount() + 1);
             }
             if (toggleBookmark) {
                 program.setBookmark(!program.getBookmark());
@@ -101,7 +102,7 @@ public class Off_programService {
 
     @Transactional
     public Off_ProgramDTO saveProgram(Off_ProgramDTO offProgramDTO, MultipartFile posterFile, MultipartFile educationIntroductionFile, MultipartFile teacherIntroductionFile, On_or_OFF programType) {
-        Off_program off_program = modelMapper.map(offProgramDTO, Off_program.class);
+        OffProgram off_program = modelMapper.map(offProgramDTO, OffProgram.class);
 
         Optional<Teacher> teacherOpt = teacherRepository.findById(offProgramDTO.getTeacherId());
         if (teacherOpt.isPresent()) {
@@ -110,7 +111,7 @@ public class Off_programService {
             throw new RuntimeException("강사 정보가 없습니다");
         }
 
-        off_program.setProgram_type(programType); // 프로그램 타입 설정
+        off_program.setProgramType(programType); // 프로그램 타입 설정
 
         Attachment poster = saveFile(posterFile, off_program, null);
         Attachment educationIntroduction = saveFile(educationIntroductionFile, off_program, null);
@@ -119,11 +120,11 @@ public class Off_programService {
         off_program.setPoster(poster);
         off_program.setFiles(List.of(educationIntroduction, teacherIntroduction));
 
-        Off_program savedProgram = offProgramRepository.save(off_program);
+        OffProgram savedProgram = offProgramRepository.save(off_program);
         return modelMapper.map(savedProgram, Off_ProgramDTO.class);
     }
 
-    private Attachment saveFile(MultipartFile file, Off_program offProgram, On_program onProgram) {
+    private Attachment saveFile(MultipartFile file, OffProgram offProgram, OnProgram onProgram) {
         if (file == null || file.isEmpty()) {
             return null;
         }
@@ -134,10 +135,8 @@ public class Off_programService {
             Files.copy(file.getInputStream(), filePath);
 
             Attachment attachment = new Attachment();
-            attachment.setFileName(uniqueFileName);
-            attachment.setFilePath(filePath.toString());
-            attachment.setFileType(file.getContentType());
-            attachment.setOffProgram(offProgram);
+            attachment.setFile_name(uniqueFileName);
+            attachment.setFile_path(filePath.toString());
             attachment.setOnProgram(onProgram);
             return fileRepository.save(attachment);
         } catch (Exception e) {

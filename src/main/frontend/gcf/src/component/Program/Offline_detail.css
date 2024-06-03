@@ -1,3 +1,7 @@
+body {
+    background-color: #E8F8FF;
+}
+
 /* 부제목 섹션의 스타일  (프로그램 신청) */
 .Off_sub_title {
     border: 1px solid rgb(204, 204, 204); /* 연한 회색 테두리 */

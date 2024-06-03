@@ -1,16 +1,9 @@
 package com.gcf.spring.entity;
 
-import java.time.LocalDate;
-
-import com.gcf.spring.constant.Role;
-import com.gcf.spring.constant.Teacher_category;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -39,8 +32,8 @@ public class Teacher {
     private Member member;
 
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
-    @Enumerated(EnumType.STRING)
-    private Teacher_category teacherCategory;
+    @Column(name = "teacher_category")
+    private List<String> teacherCategory;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
     private String carrer;
@@ -48,9 +41,6 @@ public class Teacher {
     private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
     private String careerEndYear;
-
-	@Enumerated(EnumType.STRING)
-	private Role role;
 
 	@Column(name = "sns_address")
 	private String snsAddress;
@@ -60,12 +50,5 @@ public class Teacher {
 
 	@Column(name = "license_name")
 	private String licenseName;
-
-	@Column(name = "birthday")
-	private LocalDate birthday;
-
-
-
-
 
 }

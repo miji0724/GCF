@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.gcf.spring.dto.MemberDTO;
+import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public List<MemberDTO> getAllMembers() {
+    public List<MemberDto> getAllMembers() {
         return memberService.getAllMembers();
     }
 

@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberDTO {
+public class MemberDto {
 	@NotBlank(message="이름은 필수 입력 값입니다.")
 	private String name;
 	

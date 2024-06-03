@@ -1,6 +1,6 @@
 package com.gcf.spring.service;
 
-import java.time.Year;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,10 +61,10 @@ public class TeacherService {
         if (optionalTeacher.isPresent()) {
             Teacher teacher = optionalTeacher.get();
             teacher.setCarrer(carrer);
-            teacher.setCareer_Start_Year(careerStartYear);
-            teacher.setCareer_End_Year(careerEndYear);
-            teacher.setAffiliated_Organization(affiliatedOrganization);
-            teacher.setLicense_name(licenseCode);
+            teacher.setCareerStartYear(careerStartYear);
+            teacher.setCareerEndYear(careerEndYear);
+            teacher.setAffiliatedOrganization(affiliatedOrganization);
+            teacher.setLicenseName(licenseCode);
             teacherRepository.save(teacher);
             return true;
         } else {

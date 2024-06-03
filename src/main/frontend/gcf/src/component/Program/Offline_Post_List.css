@@ -1,5 +1,10 @@
+body {
+    background-color: #E8F8FF;
+}
+
 .Off-body-container {
     padding: 70px 0 100px;
+
 }
 
 .filterBox {
@@ -10,7 +15,7 @@
     background-color: #F5F5DC;
     padding: 10px;
     margin: 0 auto;
-}
+    }
 
 .filterSection {
     margin-bottom: 10px;

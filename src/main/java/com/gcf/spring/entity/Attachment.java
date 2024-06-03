@@ -55,15 +55,4 @@ public class Attachment {
     @JoinColumn(name = "on_program_id")
     private OnProgram onProgram; // 연관된 온라인 프로그램
     
-    
-    
-//    @Override
-//    public String toString() {
-//        return "Attachment{" +
-//                "fileName='" + this.file_name + '\'' +
-//                ", filePath='" + this.file_path + '\'' +
-//                ",notice_id='" + (this. noticeId!= null ? this.noticeId.getId() : null) + '\'' +
-//                ", Type='" + this.parent + '\'' +
-//                '}';
-//    }
 }

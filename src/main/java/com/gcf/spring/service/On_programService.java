@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.gcf.spring.constant.On_Category;
 import com.gcf.spring.dto.On_ProgramDTO;
-import com.gcf.spring.entity.On_program;
+import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.repository.On_programRepository;
 
 @Service
@@ -31,22 +31,22 @@ public class On_programService {
 	// 모든 프로그램 목록을 최신순으로 정렬하여 페이지네이션 지원
 	public List<On_ProgramDTO> getAllPrograms(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<On_program> programsPage = onProgramRepository.findAll(pageable);
+		Page<OnProgram> programsPage = onProgramRepository.findAll(pageable);
 		return programsPage.stream()
-				.sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+				.sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
 				.map(program -> modelMapper.map(program, On_ProgramDTO.class)).collect(Collectors.toList());
 	}
 
 	// ID로 프로그램 조회
 	public Optional<On_ProgramDTO> getProgramById(int id) {
-		Optional<On_program> program = onProgramRepository.findById(id);
+		Optional<OnProgram> program = onProgramRepository.findById(id);
 		return program.map(p -> modelMapper.map(p, On_ProgramDTO.class));
 	}
 
 	// 필터링된 프로그램 목록을 반환하며 페이지네이션 지원
 	public List<On_ProgramDTO> findFilteredPrograms(On_Category category, String name, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<On_program> filteredPrograms;
+		Page<OnProgram> filteredPrograms;
 
 		if (category != null && (name == null || name.isEmpty())) {
 			filteredPrograms = onProgramRepository.findByOnlineCategory(category, pageable);
@@ -57,19 +57,19 @@ public class On_programService {
 		}
 
 		return filteredPrograms.stream()
-				.sorted((p1, p2) -> p2.getOperating_start_day().compareTo(p1.getOperating_start_day()))
+				.sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
 				.map(program -> modelMapper.map(program, On_ProgramDTO.class)).collect(Collectors.toList());
 	}
 
 	public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
-		Optional<On_program> optionalProgram = onProgramRepository.findById(id);
+		Optional<OnProgram> optionalProgram = onProgramRepository.findById(id);
 		if (optionalProgram.isPresent()) {
-			On_program program = optionalProgram.get();
+			OnProgram program = optionalProgram.get();
 			if (incrementViews) {
 				program.setViews(program.getViews() + 1);
 			}
 			if (incrementLikes) {
-				program.setLikes_count(program.getLikes_count() + 1);
+				program.setLikesCount(program.getLikesCount() + 1);
 			}
 			if (toggleBookmark) {
 				program.setBookmark(!program.getBookmark());
