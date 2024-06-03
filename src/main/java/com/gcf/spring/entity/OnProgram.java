@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.gcf.spring.constant.On_or_OFF;
 
 import jakarta.persistence.CascadeType;
@@ -41,9 +43,11 @@ public class OnProgram {
     private LocalDate operatingStartDay; // 운영 시작일
 
     @Column(name = "views")
+    @ColumnDefault("0")
     private int views; // 조회수
 
     @Column(name = "likes_count", nullable = false)
+    @ColumnDefault("0")
     private int likesCount; // 좋아요 수
 
     @Column(name = "online_category", nullable = false)
