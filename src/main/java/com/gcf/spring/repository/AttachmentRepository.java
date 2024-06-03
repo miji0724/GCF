@@ -9,7 +9,7 @@ import com.gcf.spring.entity.Notice;
 
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 	List<Attachment> findAllById(Iterable<Long> ids);
-	List<Attachment> findAllByNoticeId(Notice notice);
-	void deleteAllByNoticeId(Notice notice);
+	List<Attachment> findAllByNotice(Notice notice);
+	void deleteAllByNotice(Notice notice);
 	
 }

@@ -2,7 +2,6 @@ package com.gcf.spring.service;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Notice;
 import com.gcf.spring.repository.AttachmentRepository;
+import com.google.api.gax.paging.Page;
 import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 
 @Service
@@ -75,7 +76,7 @@ public class AttachmentService {
 
 			// 데이터베이스에 첨부 파일 정보 저장
 			attachmentRepository.save(attachment);
-			
+
 			return attachment;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -84,17 +85,20 @@ public class AttachmentService {
 	}
 
 	public Attachment uploadBannerFile(MultipartFile file) {
+		if (file == null || file.isEmpty()) {
+			System.out.println("MultipartFile is null or empty.");
+			return null;
+		}
+
 		try {
 			String originalFileName = file.getOriginalFilename();
 			String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
 
 			// UUID를 사용하여 고유한 파일 이름 생성
 			String uniqueID = UUID.randomUUID().toString();
-
 			String uniqueFileName = uniqueID + "_" + originalFileName;
 
 			String folder = "banner/"; // 폴더명 설정
-
 			String fileInFolder = folder + uniqueFileName;
 
 			byte[] fileBytes = file.getBytes();
@@ -105,9 +109,10 @@ public class AttachmentService {
 			try (WriteChannel writer = storage.writer(blobInfo)) {
 				writer.write(ByteBuffer.wrap(fileBytes));
 			} catch (Exception ex) {
-				// 예외 처리 코드
+				// 업로드 실패 시 예외 처리
+				System.out.println("Failed to upload file to GCS.");
 				ex.printStackTrace();
-				return null; // 업로드 실패 시 null 반환
+				return null;
 			}
 
 			// GCS에 업로드된 파일의 URL을 가져옵니다.
@@ -126,9 +131,11 @@ public class AttachmentService {
 
 			// 데이터베이스에 첨부 파일 정보 저장
 			attachmentRepository.save(attachment);
-			
+
 			return attachment;
 		} catch (IOException e) {
+			// IO 예외 처리
+			System.out.println("IOException occurred during file upload.");
 			e.printStackTrace();
 			return null;
 		}
@@ -141,39 +148,40 @@ public class AttachmentService {
 		return blob != null ? blob.getContent() : null;
 	}
 
-	public void deleteFile(Attachment attachment) {
-	    String fileName = attachment.getFile_name(); // Attachment 객체에서 파일 이름 가져오기
+	public void deleteUnlinkedFiles() {
+		// GCS에서 Bucket을 가져옵니다.
+		Bucket bucket = storage.get(BUCKET_NAME);
 
-	    // 해당 attachment에 연결된 notice_id, banner_one_id, banner_two_id를 확인하여 삭제할 파일 결정
-	    Long noticeId = attachment.getNotice() != null ? attachment.getNotice().getId() : null;
-	    Long bannerOneId = attachment.getBannerOne() != null ? attachment.getBannerOne().getId() : null;
-	    Long bannerTwoId = attachment.getBannerTwo() != null ? attachment.getBannerTwo().getId() : null;
+		// Bucket이 존재하지 않으면 종료합니다.
+		if (bucket == null) {
+			return;
+		}
 
-	    // 파일 삭제 여부를 결정하기 위한 조건 확인
-	    if (noticeId != null || bannerOneId != null || bannerTwoId != null) {
-	        // notice_id, banner_one_id, banner_two_id 중 하나라도 값이 존재하면 삭제하지 않음
-	        System.out.println("File " + fileName + " is linked to a notice or banner. It will not be deleted.");
-	        return;
-	    }
+		// Bucket 내의 모든 Blob을 나열합니다.
+		Page<Blob> blobs = bucket.list();
 
-	    // 삭제할 파일의 BlobId 생성
-	    BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
-	    boolean deleted = storage.delete(blobId);
-	    if (deleted) {
-	        // 파일이 성공적으로 삭제되었을 때 처리할 작업을 추가할 수 있습니다.
-	        System.out.println("File " + fileName + " successfully deleted from GCS.");
-	    } else {
-	        // 파일 삭제 실패 시 처리할 작업을 추가할 수 있습니다.
-	        System.out.println("Failed to delete file " + fileName + " from GCS.");
-	    }
+		// 각 Blob의 메타데이터를 확인하여 파일 이름을 가져온 후 attachment의 file_name과 비교합니다.
+		for (Blob blob : blobs.iterateAll()) {
+			// Blob의 이름을 가져옵니다.
+			String blobName = blob.getName();
+
+			// attachment의 file_name과 비교하여 일치하는 데이터가 없는 경우 해당 파일을 삭제합니다.
+			boolean isLinked = false;
+			// attachmentRepository에서 해당 파일 이름을 가진 첨부 파일이 있는지 확인합니다.
+			// 이는 효율적인 방법이 아니므로 더 효율적인 방법을 고려해야 합니다.
+			for (Attachment attachment : attachmentRepository.findAll()) {
+				if (attachment.getFile_name().equals(blobName)) {
+					isLinked = true;
+					break;
+				}
+			}
+
+			// attachment의 file_name과 일치하는 데이터가 없는 경우 해당 파일을 삭제합니다.
+			if (!isLinked) {
+				blob.delete(); // 파일 삭제
+				System.out.println("File " + blobName + " deleted from GCS."); // 삭제된 파일에 대한 로그 출력
+			}
+		}
 	}
 
-	public void deleteAllNoLinkFiles() {
-	    List<Attachment> attachments = attachmentRepository.findAll(); // 모든 Attachment 조회
-	    for (Attachment attachment : attachments) {
-	        deleteFile(attachment); // 각 Attachment에 대해 파일 삭제 수행
-	    }
-	}
-
-	
 }

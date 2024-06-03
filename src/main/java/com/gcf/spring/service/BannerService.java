@@ -30,9 +30,9 @@ public class BannerService {
 	}
 
 	public String updateBanners(BannerModulesWrapper modules) {
+		
 		bannerOneRepository.deleteAll();
 		bannerTwoRepository.deleteAll();
-
 		for (BannerModule bannerModule : modules.getModules()) {
 			System.out.println("Entity ID: " + bannerModule.getEntityId());
 			for (BannerInput bannerInput : bannerModule.getInputs()) {
@@ -65,7 +65,7 @@ public class BannerService {
 				}
 			}
 		}
-		attachmentService.deleteAllNoLinkFiles();
+		attachmentService.deleteUnlinkedFiles();
 		return "배너 데이터가 성공적으로 업데이트되었습니다.";
 	}
 }

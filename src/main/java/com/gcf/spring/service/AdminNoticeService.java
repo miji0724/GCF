@@ -58,13 +58,15 @@ public class AdminNoticeService {
         Notice existingNotice = adminNoticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found with id: " + id));
         
-        attachmentRepository.deleteAllByNoticeId(existingNotice);
+        attachmentRepository.deleteAllByNotice(existingNotice);
         
         // 공지 업데이트
         updateNoticeFields(existingNotice, noticeDto);
         List<Attachment> attachments = handleAttachments(existingNotice, files);
         existingNotice.setAttachments(attachments);
-        attachmentService.deleteAllNoLinkFiles();
+        
+        attachmentService.deleteUnlinkedFiles();
+        
         return adminNoticeRepository.save(existingNotice);
     }
     
