@@ -27,25 +27,21 @@ public class BannerService {
     }
 
     public String updateBanners(BannerModulesWrapper modules) {
-    	
-    	// 기존 데이터 삭제
         bannerOneRepository.deleteAll();
         bannerTwoRepository.deleteAll();
     	
         for (BannerModule bannerModule : modules.getModules()) {
             System.out.println("Entity ID: " + bannerModule.getEntityId());
             for (BannerInput bannerInput : bannerModule.getInputs()) {
-            	System.out.println("FileName : " + bannerInput.getAttachment());
-            	System.out.println("Link : " + bannerInput.getLink());
-                // bannerId 관련 코드 삭제
+                System.out.println("FileName : " + bannerInput.getAttachment());
+                System.out.println("Link : " + bannerInput.getLink());
 
-                // 엔티티 ID에 따라서 bannerone 또는 bannertwo에 저장
                 if ("bannerone".equals(bannerModule.getEntityId())) {
                     BannerOne bannerOne = new BannerOne();
                     bannerOne.setUrl(bannerInput.getLink());
 
                     Attachment attachment = saveAttachment(bannerInput.getAttachment());
-                    attachment.setParent("banner"); 
+                    attachment.setBannerOne(bannerOne);
                     bannerOne.setAttachment(attachment);
                     
                     bannerOneRepository.save(bannerOne);
@@ -54,7 +50,7 @@ public class BannerService {
                     bannerTwo.setUrl(bannerInput.getLink());
 
                     Attachment attachment = saveAttachment(bannerInput.getAttachment());
-                    attachment.setParent("banner"); 
+                    attachment.setBannerTwo(bannerTwo);
                     bannerTwo.setAttachment(attachment);
 
                     bannerTwoRepository.save(bannerTwo);

@@ -6,27 +6,26 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-//배너1
 @Entity
 @Table(name = "bannerOne")
 @Getter
 @Setter
 public class BannerOne {
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	// ID에 해당하는 Url을 저장하는 컬럼이다.
-	@Column
-	private String url;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	// ID에 해당하는 그림을 저장하는 컬럼이다.
-	@OneToOne(mappedBy = "bannerOne", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column
+    private String url;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "attachment_id", referencedColumnName = "id")
     private Attachment attachment;
 }
