@@ -16,53 +16,56 @@ import com.gcf.spring.repository.BannerTwoRepository;
 @Service
 public class BannerService {
 
-    private final BannerOneRepository bannerOneRepository;
-    private final BannerTwoRepository bannerTwoRepository;
-    private final AttachmentRepository attachmentRepository;
+	private final BannerOneRepository bannerOneRepository;
+	private final BannerTwoRepository bannerTwoRepository;
+	private final AttachmentRepository attachmentRepository;
+	private final AttachmentService attachmentService;
 
-    public BannerService(BannerOneRepository bannerOneRepository, BannerTwoRepository bannerTwoRepository, AttachmentRepository attachmentRepository) {
-        this.bannerOneRepository = bannerOneRepository;
-        this.bannerTwoRepository = bannerTwoRepository;
-        this.attachmentRepository = attachmentRepository;
-    }
+	public BannerService(BannerOneRepository bannerOneRepository, BannerTwoRepository bannerTwoRepository,
+			AttachmentRepository attachmentRepository, AttachmentService attachmentService) {
+		this.bannerOneRepository = bannerOneRepository;
+		this.bannerTwoRepository = bannerTwoRepository;
+		this.attachmentRepository = attachmentRepository;
+		this.attachmentService = attachmentService;
+	}
 
-    public String updateBanners(BannerModulesWrapper modules) {
-        bannerOneRepository.deleteAll();
-        bannerTwoRepository.deleteAll();
-    	
-        for (BannerModule bannerModule : modules.getModules()) {
-            System.out.println("Entity ID: " + bannerModule.getEntityId());
-            for (BannerInput bannerInput : bannerModule.getInputs()) {
-                System.out.println("FileName : " + bannerInput.getAttachment());
-                System.out.println("Link : " + bannerInput.getLink());
+	public String updateBanners(BannerModulesWrapper modules) {
+		bannerOneRepository.deleteAll();
+		bannerTwoRepository.deleteAll();
 
-                if ("bannerone".equals(bannerModule.getEntityId())) {
-                    BannerOne bannerOne = new BannerOne();
-                    bannerOne.setUrl(bannerInput.getLink());
+		for (BannerModule bannerModule : modules.getModules()) {
+			System.out.println("Entity ID: " + bannerModule.getEntityId());
+			for (BannerInput bannerInput : bannerModule.getInputs()) {
+				System.out.println("FileName : " + bannerInput.getAttachment());
+				System.out.println("Link : " + bannerInput.getLink());
 
-                    Attachment attachment = saveAttachment(bannerInput.getAttachment());
-                    attachment.setBannerOne(bannerOne);
-                    bannerOne.setAttachment(attachment);
-                    
-                    bannerOneRepository.save(bannerOne);
-                } else if ("bannertwo".equals(bannerModule.getEntityId())) {
-                    BannerTwo bannerTwo = new BannerTwo();
-                    bannerTwo.setUrl(bannerInput.getLink());
+				MultipartFile file = bannerInput.getAttachment(); // 파일 가져오기
+				Attachment attachment = attachmentService.uploadBannerFile(file);
 
-                    Attachment attachment = saveAttachment(bannerInput.getAttachment());
-                    attachment.setBannerTwo(bannerTwo);
-                    bannerTwo.setAttachment(attachment);
+				if ("bannerone".equals(bannerModule.getEntityId())) {
+					BannerOne bannerOne = new BannerOne();
+					bannerOne.setUrl(bannerInput.getLink());
 
-                    bannerTwoRepository.save(bannerTwo);
-                }
-            }
-        }
-        return "배너 데이터가 성공적으로 업데이트되었습니다.";
-    }
+					if (attachment != null) {
+						attachment.setBannerOne(bannerOne);
+						bannerOne.setAttachment(attachment);
+					}
 
-    private Attachment saveAttachment(MultipartFile attachmentFile) {
-        Attachment attachment = new Attachment();
-        // 첨부 파일 관련 정보를 attachment 엔티티에 저장하는 코드 작성
-        return attachmentRepository.save(attachment);
-    }
+					bannerOneRepository.save(bannerOne);
+				} else if ("bannertwo".equals(bannerModule.getEntityId())) {
+					BannerTwo bannerTwo = new BannerTwo();
+					bannerTwo.setUrl(bannerInput.getLink());
+
+					if (attachment != null) {
+						attachment.setBannerTwo(bannerTwo);
+						bannerTwo.setAttachment(attachment);
+					}
+
+					bannerTwoRepository.save(bannerTwo);
+				}
+			}
+		}
+		attachmentService.deleteAllNoLinkFiles();
+		return "배너 데이터가 성공적으로 업데이트되었습니다.";
+	}
 }

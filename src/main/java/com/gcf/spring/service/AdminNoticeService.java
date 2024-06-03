@@ -64,6 +64,7 @@ public class AdminNoticeService {
         updateNoticeFields(existingNotice, noticeDto);
         List<Attachment> attachments = handleAttachments(existingNotice, files);
         existingNotice.setAttachments(attachments);
+        attachmentService.deleteAllNoLinkFiles();
         return adminNoticeRepository.save(existingNotice);
     }
     
@@ -71,7 +72,6 @@ public class AdminNoticeService {
         // 공지의 필드 업데이트 (제목, 내용 등)
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
-        // 필요한 경우 더 많은 필드 업데이트 가능
     }
 
     private List<Attachment> handleAttachments(Notice notice, List<MultipartFile> files) {

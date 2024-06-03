@@ -46,5 +46,5 @@ public class Attachment {
     @ManyToOne
     @JoinColumn(name = "noticeId", referencedColumnName = "id")
     @JsonIgnore
-    private Notice noticeId;
+    private Notice notice;
 }
