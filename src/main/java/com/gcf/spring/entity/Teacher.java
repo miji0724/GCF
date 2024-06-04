@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
@@ -57,6 +56,9 @@ public class Teacher {
 	@Column(name = "license_name")
 	private String licenseName;
 	
+	@Column(name = "teach_able_category")
+	private String teachAbleCategory;
+	
 	@Enumerated(EnumType.STRING)
     @Column(name = "TeacherState")
 	@ColumnDefault("'승인대기'")
@@ -73,6 +75,8 @@ public class Teacher {
 	            ", careerStartYear=" + careerStartYear +
 	            ", careerEndYear=" + careerEndYear +
 	            ", licenseName='" + licenseName + '\'' +
+	            ", TeacherState='" + TeacherState + '\'' +
+	            ", teachAbleCategory='" + teachAbleCategory + '\'' +
 	            '}';
 	}
 

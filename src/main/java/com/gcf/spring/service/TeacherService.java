@@ -46,6 +46,9 @@ public class TeacherService {
 	            teacher.setCareerStartYear(teacherDto.getCareerStartYear());
 	            teacher.setCareerEndYear(teacherDto.getCareerEndYear());
 	            teacher.setLicenseName(teacherDto.getLicenseName());
+	            
+	            //	  teacher.setLicenseName(teacherDto.getLicenseName());
+	            //	  teacher.setLicenseName(teacherDto.getLicenseName());
             
                 // 회원 정보를 데이터베이스에 저장
                 teacherRepository.save(teacher);

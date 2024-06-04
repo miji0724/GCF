@@ -18,6 +18,7 @@ function ClassForm() {
     const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
     const [selectedItem, setSelectedItem] = useState("");
     const [onlineEducation, setOnlineEducation] = useState(false);
+    const [offlineEducation, setOfflineEducation] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState("");
     const [startHour, setStartHour] = useState("06:00");
     const [endHour, setEndHour] = useState("07:00");
@@ -105,6 +106,10 @@ function ClassForm() {
         setOnlineEducation(event.target.checked);
     };
 
+    const handleOfflineEducationChange = (event) => {
+        setOnlineEducation(event.target.checked);
+    };
+
     const handleLocationChange = (event) => {
         setSelectedLocation(event.target.value);
     };
@@ -156,15 +161,16 @@ function ClassForm() {
                             <h4>강의정보</h4>
 
                             <div>
-                                <h5>교육 상세 프로그램명 선택*</h5>
-                                {/* 드롭다운 메뉴 */}
-                                <select value={selectedItem} onChange={handleDropdownChange}>
-                                    <option value="교육/체험">교육/체험 선택</option>
-                                    <option value="교육">교육</option>
-                                    <option value="체험">체험</option>
-                                </select>
-                                {/* 선택된 항목 출력 */}
-
+                                <div>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={offlineEducation}
+                                        onChange={handleOfflineEducationChange}
+                                    />
+                                    오프라인 교육
+                                </label>
+                                </div>
                                 <label>
                                     <input
                                         type="checkbox"
@@ -336,7 +342,7 @@ function ClassForm() {
                                 ))}
                             </div>
 
-                            <div>
+                            <div className="persons">
                                 <label htmlFor="numberOfApplicants">신청 인원:</label>
                                 <input
                                     type="text"
