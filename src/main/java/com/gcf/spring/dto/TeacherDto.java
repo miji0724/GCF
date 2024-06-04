@@ -17,4 +17,18 @@ public class TeacherDto {
     private String careerStartYear;
     private String careerEndYear;
     private String licenseName;
+    
+	@Override
+	public String toString() {
+	    return "Teacher{" +
+	            "id='" + id + '\'' +
+	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+	            ", teacherCategory='" + teacherCategory + '\'' +
+	            ", snsAddress='" + snsAddress + '\'' +
+	            ", career='" + career + '\'' +
+	            ", careerStartYear=" + careerStartYear +
+	            ", careerEndYear=" + careerEndYear +
+	            ", licenseName='" + licenseName + '\'' +
+	            '}';
+	}
 }

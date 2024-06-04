@@ -144,6 +144,17 @@ function TeacherForm() {
                         </div>
 
                         <div className='formName'>
+                            <label htmlFor='id'>아이디:</label>
+                            <input
+                                type='text'
+                                id='id'
+                                name='id'
+                                value={userData.id}
+                                readOnly
+                            />
+                        </div>
+
+                        <div className='formName'>
                             <label htmlFor='name'>이름:</label>
                             <input
                                 type='text'

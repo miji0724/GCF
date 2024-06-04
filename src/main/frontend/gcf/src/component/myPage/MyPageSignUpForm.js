@@ -407,14 +407,6 @@ const MyPageSignUpForm = () => {
                                             disabled={!isEditing}
                                         />
                                         <label htmlFor="design">디자인</label>
-                                        기타&nbsp; 
-                                        <input 
-                                            type="text" 
-                                            name="interest" 
-                                            id="interest_etc" 
-                                            value={interests.includes('etc') ? '기타' : ''}
-                                            readOnly={!isEditing}
-                                        />
                                     </li>
                                     <li>
                                         <input 

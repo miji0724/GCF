@@ -2,8 +2,15 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import com.gcf.spring.constant.ProgramState;
+import com.gcf.spring.constant.TeacherState;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -49,5 +56,24 @@ public class Teacher {
 
 	@Column(name = "license_name")
 	private String licenseName;
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "TeacherState")
+	@ColumnDefault("'승인대기'")
+    private TeacherState TeacherState; // 승인, 미승인, 승인대기
+		
+	@Override
+	public String toString() {
+	    return "Teacher{" +
+	            "id='" + id + '\'' +
+	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+	            ", teacherCategory='" + teacher_category + '\'' +
+	            ", snsAddress='" + snsAddress + '\'' +
+	            ", career='" + carrer + '\'' +
+	            ", careerStartYear=" + careerStartYear +
+	            ", careerEndYear=" + careerEndYear +
+	            ", licenseName='" + licenseName + '\'' +
+	            '}';
+	}
 
 }

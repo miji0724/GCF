@@ -10,13 +10,12 @@ import com.gcf.spring.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/teacher")
 @RequiredArgsConstructor
 public class TeacherController {
 
     private final TeacherService teacherService;
 
-    @PostMapping("/apply")
+    @PostMapping("/teacher/apply")
     public ResponseEntity<String> applyForTeacher(@RequestBody TeacherDto teacherDto) {
         try {
             teacherService.applyForTeacher(teacherDto);
