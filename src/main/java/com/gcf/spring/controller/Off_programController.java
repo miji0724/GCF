@@ -33,23 +33,7 @@ public class Off_programController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<Off_ProgramDTO> createProgram(
-        @RequestPart("offProgramDTO") String offProgramJson,
-        @RequestPart("posterFile") MultipartFile posterFile,
-        @RequestPart("educationIntroductionFile") MultipartFile educationIntroductionFile,
-        @RequestPart("teacherIntroductionFile") MultipartFile teacherIntroductionFile,
-        @RequestParam("programType") On_or_OFF programType) {
 
-        try {
-            Off_ProgramDTO offProgramDTO = objectMapper.readValue(offProgramJson, Off_ProgramDTO.class);
-
-            Off_ProgramDTO createdProgram = offProgramService.saveProgram(offProgramDTO, posterFile, educationIntroductionFile, teacherIntroductionFile, programType);
-            return ResponseEntity.ok(createdProgram);
-        } catch (JsonProcessingException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
     
     @GetMapping
     public List<Off_ProgramDTO> getAllPrograms(
