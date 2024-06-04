@@ -1,16 +1,9 @@
 package com.gcf.spring.entity;
 
-import java.time.LocalDate;
-
-import com.gcf.spring.constant.Role;
-import com.gcf.spring.constant.Teacher_category;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -39,33 +32,36 @@ public class Teacher {
     private Member member;
 
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
-    @Enumerated(EnumType.STRING)
-    private Teacher_category teacher_category;
+    private List<String> teacher_category;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
     private String carrer;
     @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
-    private String career_Start_Year;
+    private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
-    private String career_End_Year;
-
-	@Enumerated(EnumType.STRING)
-	private Role role;
+    private String careerEndYear;
 
 	@Column(name = "sns_address")
-	private String sns_address;
+	private String snsAddress;
 
 	@Column(name = "affiliated_organization")
-	private String affiliated_Organization;
+	private String affiliatedOrganization;
 
 	@Column(name = "license_name")
-	private String license_name;
-
-	@Column(name = "birthday")
-	private LocalDate birthday;
-
-
-
-
+	private String licenseName;
+	
+	@Override
+	public String toString() {
+	    return "Teacher{" +
+	            "id='" + id + '\'' +
+	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+	            ", teacherCategory='" + teacher_category + '\'' +
+	            ", snsAddress='" + snsAddress + '\'' +
+	            ", career='" + carrer + '\'' +
+	            ", careerStartYear=" + careerStartYear +
+	            ", careerEndYear=" + careerEndYear +
+	            ", licenseName='" + licenseName + '\'' +
+	            '}';
+	}
 
 }
