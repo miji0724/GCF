@@ -1,12 +1,13 @@
 package com.gcf.spring.controller;
 
-import com.gcf.spring.dto.TeacherDto;
-import com.gcf.spring.entity.Teacher;
-import com.gcf.spring.service.TeacherService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.gcf.spring.dto.TeacherDto;
+import com.gcf.spring.service.TeacherService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/teacher")
@@ -15,14 +16,13 @@ public class TeacherController {
 
     private final TeacherService teacherService;
 
-    // 강사 신청
     @PostMapping("/apply")
-    public ResponseEntity<Teacher> applyForTeacher(@RequestBody TeacherDto teacherDto) {
+    public ResponseEntity<String> applyForTeacher(@RequestBody TeacherDto teacherDto) {
         try {
-            Teacher teacher = teacherService.applyForTeacher(teacherDto);
-            return new ResponseEntity<>(teacher, HttpStatus.CREATED);
+            teacherService.applyForTeacher(teacherDto);
+            return ResponseEntity.ok("신청이 완료되었습니다.");
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신청 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 }

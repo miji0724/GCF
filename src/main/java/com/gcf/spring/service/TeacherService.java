@@ -1,13 +1,15 @@
 package com.gcf.spring.service;
 
+import org.springframework.stereotype.Service;
+
 import com.gcf.spring.dto.TeacherDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.repository.TeacherRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
