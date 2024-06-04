@@ -2,6 +2,7 @@ import './ManageBanner.css';
 import SideMenu from './ManageSideMenu';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inputs }) {
   const handleFileChange = (moduleId, index, event) => {
@@ -24,13 +25,14 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
                 <div className="form__input--file_wrap">
                   <input
                     className="form__input--file"
-                    id={`upload${moduleId}_${index}`} // 고유한 ID 부여
+                    id={`upload${moduleId}_${index}`}
                     type="file"
+                    accept="image/*" // 이미지 파일만 허용
                     multiple
                     style={{ display: "none" }}
-                    onChange={e => handleFileChange(moduleId, index, e)} // 모듈 ID 전달
+                    onChange={e => handleFileChange(moduleId, index, e)}
                   />
-                  <span className="form__span--file">{input.attachment.length > 0 ? input.attachment.map(file => file.name).join(', ') : '선택된 파일이 없습니다.'}</span>
+                  <span className="form__span--file">{input.attachment.length > 0 ? input.attachment.map(file => file.name).join(', ') : '이미지 파일만 업로드 바랍니다.'}</span>
                   <label className="form__label--file" htmlFor={`upload${moduleId}_${index}`}>파일선택</label>
                 </div>
               </li>
@@ -109,16 +111,23 @@ function sendBannerData(modules, setLoading) {
 }
 
 function ManageBanner() {
-  const [modules, setModules] = useState([
-    { id: 1, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] },
-    { id: 2, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] }
-  ]);
-  const [loading, setLoading] = useState(false); // 전송 중인지 여부를 나타내는 상태
+  const initialInputs = { attachment: [], link: '' };
+  const initialModules = [
+    { id: 1, inputs: [initialInputs, initialInputs] },
+    { id: 2, inputs: [initialInputs, initialInputs] }
+  ];
+  const [modules, setModules] = useState(initialModules);
+  const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1); //뒤로가기
+  };
 
   const addInput = moduleId => {
     setModules(prevModules =>
       prevModules.map(module =>
-        module.id === moduleId ? { ...module, inputs: [...module.inputs, { attachment: [], link: '' }] } : module
+        module.id === moduleId ? { ...module, inputs: [...module.inputs, { ...initialInputs }] } : module
       )
     );
   };
@@ -149,9 +158,17 @@ function ManageBanner() {
     );
   };
 
+  const resetInputs = () => {
+    setModules(initialModules);
+  };
+
   useEffect(() => {
     console.log("modules state updated: ", modules);
   }, [modules]);
+
+  useEffect(() => {
+    resetInputs(); // 컴포넌트가 처음 렌더링될 때 초기화 함수 호출
+  }, []); // 빈 배열을 전달하여 한 번만 실행되도록 설정
 
   return (
     <div className='banner_container'>
@@ -173,7 +190,10 @@ function ManageBanner() {
         {loading ? (
           <p>전송 중입니다. 잠시 기다려주세요...</p>
         ) : (
+          <div>
           <button className='banner_confirm' onClick={() => sendBannerData(modules, setLoading)}>저장</button>
+          <button className='banner_cancel' onClick={handleBack}>취소</button>
+          </div>
         )}
       </div>
     </div>

@@ -90,8 +90,12 @@
     height: 30px;
 }
 
+.noticewrite_button_area{
+    display:flex;
+}
+
 .noticewrite_confirm{
-    margin-top:50px;
+    margin:50px 20px;
     background-color: #AECCF2;
     border-radius: 10px;
     width:100px;
@@ -100,3 +104,12 @@
     font-weight:600;
 }
 
+.noticewrite_cancel{
+    margin:50px 20px;
+    background-color: #FF8585;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}

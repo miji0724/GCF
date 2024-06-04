@@ -1,38 +1,36 @@
 package com.gcf.spring.dto;
 
-import com.gcf.spring.constant.Teacher_category;
-import com.gcf.spring.entity.Member;
+import java.util.List;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class TeacherDto {
-	
-	@NotNull
-    private Member member;
-	
-	private String affiliated_Organization;
+    private String id;
+    private String affiliatedOrganization;
+    private List<String> teacherCategory;
+    private String snsAddress;
+    private String career;
+    private String careerStartYear;
+    private String careerEndYear;
+    private String licenseName;
+    private String teachAbleCategory;
     
-	@NotNull(message = "강의 분야는 필수 입력 값입니다.")
-    @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
-    private Teacher_category teacher_category;
-	
-	private String sns_address;
-    
-	@NotNull(message = "주요 이력은 필수 입력 값입니다.")
-    private String carrer;
-	
-	@NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
-    private String career_start_year;
-	
-	@NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
-    private String career_end_year;
-    
-    private String license;
-    
-    private String teach_able_field;
+	@Override
+	public String toString() {
+	    return "Teacher{" +
+	            "id='" + id + '\'' +
+	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+	            ", teacherCategory='" + teacherCategory + '\'' +
+	            ", snsAddress='" + snsAddress + '\'' +
+	            ", career='" + career + '\'' +
+	            ", careerStartYear=" + careerStartYear +
+	            ", careerEndYear=" + careerEndYear +
+	            ", licenseName='" + licenseName + '\'' +
+	            '}';
+	}
 }

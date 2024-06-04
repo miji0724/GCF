@@ -1,65 +1,75 @@
-//package com.gcf.spring;
-//
-//import java.time.Year;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.junit.jupiter.api.Test;
-//import org.springframework.test.annotation.Rollback;
-//
-//import com.gcf.spring.constant.Role;
-//import com.gcf.spring.constant.Teacher_category;
-//import com.gcf.spring.dto.TeacherDto;
-//import com.gcf.spring.entity.Member;
-//import com.gcf.spring.entity.Teacher;
-//
-//public class TeacherRepositoryTest {
-//	@Test
-//	@Transactional
-//	@Rollback(false)
-//	public void testInsertTeachersWithExistingMembers() {
-//	    List<Teacher> teachers = new ArrayList<>();
-//
-//	    // 데이터베이스에서 기존 Member 엔티티 조회
-//	    List<Member> existingMembers = memberRepository.findAll();
-//
-//	    // 기존 Member 엔티티를 활용하여 Teacher 엔티티 생성
-//	    for (Member existingMember : existingMembers) {
-//	        // 테스트 데이터 생성 (기존 Member 엔티티 속성 활용)
-//	        TeacherDto teacherDto = new TeacherDto();
-//	        teacherDto.setId(existingMember.getId()); // Member의 ID를 Teacher의 ID로 활용
-//	        teacherDto.setName(existingMember.getName());
-//	        teacherDto.setBirth(existingMember.getBirth());
-//	        teacherDto.setPhone_number(existingMember.getPhone_number());
-//	        teacherDto.setEmail(existingMember.getEmail());
-//	        teacherDto.setAddress(existingMember.getAddress());
-//	        teacherDto.setEmail_agreement(existingMember.isEmail_agreement());
-//	        teacherDto.setMessage_agreement(existingMember.isMessage_agreement());
-//	        teacherDto.setMail_agreement(existingMember.isMail_agreement());
-//	        teacherDto.setInterests(existingMember.getInterests());
-//	        teacherDto.setMarried(existingMember.isMarried());
-//	        teacherDto.setHasChildren(existingMember.isHasChildren());
-//
-//	        // Teacher 엔티티 생성
-//	        Teacher teacher = Teacher.createTeacher(teacherDto, passwordEncoder);
-//	        teacher.setTeacher_category(Teacher_category.PRIMARY_SCHOOL); // Set teacher category
-//	        teacher.setCarrer("Your career"); // Set career
-//	        teacher.setCareer_Start_Year(Year.of(2000)); // Set career start year
-//	        teacher.setCareer_End_Year(Year.of(2020)); // Set career end year
-//	        teacher.setRole(Role.TEACHER); // Set role
-//
-//	        teachers.add(teacher);
-//	    }
-//
-//	    // 생성된 Teacher 엔티티들을 한 번에 저장
-//	    teacherRepository.saveAll(teachers);
-//
-//	    // 저장된 데이터 확인
-//	    for (Teacher teacher : teachers) {
-//	        String teacherId = teacher.getId();
-//	        Teacher savedTeacher = teacherRepository.findById(teacherId).orElse(null);
-//	        assert savedTeacher != null;
-//	        // 필요한 경우 다른 필드도 확인할 수 있습니다.
-//	    }
-//	}
-//}
+package com.gcf.spring;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
+
+import com.gcf.spring.entity.Member;
+import com.gcf.spring.entity.Teacher;
+import com.gcf.spring.repository.MemberRepository;
+import com.gcf.spring.repository.TeacherRepository;
+
+import jakarta.transaction.Transactional;
+
+@SpringBootTest
+public class TeacherRepositoryTest {
+	
+	@Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private TeacherRepository teacherRepository;
+	
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void testInsertTeachersWithExistingMembers(MemberRepository memberRepository, TeacherRepository teacherRepository, PasswordEncoder passwordEncoder) {
+		// 1. 모의 데이터 생성 (없음)
+        // 테스트 코드 내에서 필요한 만큼의 Member 데이터를 생성
+
+        // 2. Teacher 생성 및 필드 설정
+        List<Teacher> teachers = new ArrayList<>();
+        // 기존 회원 데이터가 없을 경우 예시 코드 제공
+        if (memberRepository.count() == 0) {
+            // 필요한 만큼 Member 데이터 생성 (생략)
+            List<Member> members = createMemberData(2);
+            memberRepository.saveAll(members);
+        }
+
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            Teacher teacher = new Teacher();
+            teacher.setMember(member); // 기존 회원 연결
+            teacher.setAffiliatedOrganization("중앙능력개발원");
+            List<String> teacherCategories = new ArrayList<>();
+            teacherCategories.add("기타");
+            teacher.setTeacher_category(teacherCategories);
+            teacher.setSnsAddress("Instagram/joong");
+            // 경력, 자격증, 가능 분야는 콤마(,)로 구분된 문자열을 저장하는 것이 일반적이지 않음
+            // 별도의 리스트를 사용하는 것이 좋습니다. (예시 코드 제공)
+            teacher.setCareer("주요 이력1,주요 이력2");
+            teacher.setLicenseName("자격증1,자격증2,자격증3");
+            teacher.setTeachAbleCategory("가능 분야1, 가능 분야2");
+            teachers.add(teacher);
+        }
+
+	    // 4. 저장
+	    teacherRepository.saveAll(teachers);
+
+	    // 5. 검증
+	    for (Teacher teacher : teachers) {
+	        String teacherId = teacher.getId();
+	        Teacher savedTeacher = teacherRepository.findById(teacherId).orElse(null);
+	        assert savedTeacher != null;
+	        // 필요한 경우 다른 필드 검증 코드 추가
+	    }
+	}
+}

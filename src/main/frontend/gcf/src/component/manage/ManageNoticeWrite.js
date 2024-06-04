@@ -5,7 +5,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './ManageNoticeWrite.css';
 import SideMenu from './ManageSideMenu';
 import axios from 'axios';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 function ManageNoticeWrite() {
     const [attachments, setAttachments] = useState([]);
@@ -16,6 +16,7 @@ function ManageNoticeWrite() {
     const location = useLocation();
     const { getNotice } = location.state || {};
     const editorRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (getNotice) {
@@ -32,6 +33,10 @@ function ManageNoticeWrite() {
             }
         }
     }, [getNotice]);
+
+    const handleBack = () => {
+        navigate(-1); //뒤로가기
+      };
 
     const prepareNoticeData = () => {
         if (!title || !editorState.getCurrentContent().hasText()) {
@@ -112,7 +117,7 @@ function ManageNoticeWrite() {
             <SideMenu />
             <div className='noticewrite'>
                 <p>{id ? '공지사항 수정' : '공지사항 등록'}</p>
-                <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
+                <a className='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                 <div className='noticewrite_area'>
                     {error && <div className="error">{error}</div>}
                     <div className='noticewrite_title'>
@@ -144,9 +149,14 @@ function ManageNoticeWrite() {
                             <button onClick={addInput}>첨부파일 추가</button>
                         </div>
                     </div>
+                    <div className='noticewrite_button_area'>
                     <button className='noticewrite_confirm' onClick={sendNoticeAndAttachments}>
                         {id ? '수정' : '등록'}
                     </button>
+                    <button className='noticewrite_cancel' onClick={handleBack} >
+                        취소
+                    </button>
+                    </div>
                 </div>
             </div>
         </div>

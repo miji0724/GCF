@@ -15,8 +15,9 @@
 }
 
 .banner>p {
+    margin-top:30px;
     font-size: 30px;
-    font-weight: 800;
+    font-weight:800;
 }
 
 .banner_area {
@@ -24,7 +25,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-around;
-    flex: 1;
+    
 }
 
 .banner_item {
@@ -136,11 +137,23 @@
 }
 
 .banner_confirm{
+    margin:50px 20px;
     border-radius: 10px;
     border:none;
     width:150px;
     height: 75px;
     background-color: #AECCF2;
+    text-align: center;
+    font-size: 30px;
+}
+
+.banner_cancel{
+    margin:50px 20px;
+    border-radius: 10px;
+    border:none;
+    width:150px;
+    height: 75px;
+    background-color: #FF8585;
     text-align: center;
     font-size: 30px;
 }
