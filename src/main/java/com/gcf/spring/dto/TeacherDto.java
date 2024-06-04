@@ -19,6 +19,7 @@ public class TeacherDto {
     private String careerEndYear;
     private String licenseName;
     private String teachAbleCategory;
+    private String teacherState;
     
 	@Override
 	public String toString() {

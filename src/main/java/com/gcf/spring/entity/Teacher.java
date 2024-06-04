@@ -10,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -60,9 +62,8 @@ public class Teacher {
 	private String teachAbleCategory;
 	
 	@Enumerated(EnumType.STRING)
-    @Column(name = "TeacherState")
-	@ColumnDefault("'승인대기'")
-    private TeacherState TeacherState; // 승인, 미승인, 승인대기
+    @Column(name = "TeacherState", nullable = false)
+    private TeacherState teacherState = TeacherState.승인대기;
 		
 	@Override
 	public String toString() {
