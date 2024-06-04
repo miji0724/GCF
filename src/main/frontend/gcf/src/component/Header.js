@@ -2,13 +2,11 @@ import './Header.css';
 import logo from '../img/logo.png';
 import search from '../img/search.png';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-const Header = () =>  {
+const Header = ({ isLoggedIn, onLogout }) =>  {
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
-
 
   return (
     <header>
@@ -17,12 +15,17 @@ const Header = () =>  {
           <a href="/"><img src={logo} alt="Logo" /></a>
         </div>
         <div className="member_btns">
-          <div ><a href="/login">로그인</a> |
-               <a href="/signUp">회원가입</a> |
-               <a href="/MyAuthentication">마이페이지 인증</a> |
-               <a href="/MyPage">마이페이지</a>|
-               <a href="/manage">관리자 페이지</a>
-               </div> 
+          {isLoggedIn ? (
+            <>
+              <a onClick={onLogout}>로그아웃</a> |
+              <a href="/MyPageAuthenticationForm">마이페이지</a>
+            </>
+          ) : (
+            <>
+              <a href="/login">로그인</a> |
+              <a href="/signUp">회원가입</a>
+            </>
+          )}
         </div>
       </div>
       <nav className="navigation">

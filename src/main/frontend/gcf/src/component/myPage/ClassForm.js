@@ -151,30 +151,8 @@ function ClassForm() {
                         <div className='ClassFState'>강의 등록 신청서</div>
                     </div>
                     <div className="whiteBox">
-                        <h4>강사정보</h4>
+                        
                         <form> 
-                            <div className='ClassName'>
-                                <label htmlFor='name'>강사 이름:</label>
-                                <input type='text' id='name' name='name' />
-                            </div>
-
-                            <div className='ClassEmail'>
-                                <label htmlFor='email'>강사 이메일:</label>
-                                <input type='email' id='email' name='email' />
-                            </div>
-
-                            <div className='ClassNumber'>
-                                <label htmlFor='phoneNumber'>강사 전화번호:</label>
-                                <input type='tel' id='phoneNumber' name='phoneNumber' />
-                                <h1>※숫자만 입력 가능합니다.</h1>
-                            </div>
-
-                            <div className='ClassHNumber'>
-                                <label htmlFor='mobileNumber'>강사 휴대폰 번호:</label>
-                                <input type='tel' id='mobileNumber' name='mobileNumber' />
-                                <h1>※숫자만 입력 가능합니다.</h1>
-                            </div>
-
                             <h4>강의정보</h4>
 
                             <div>
@@ -370,54 +348,7 @@ function ClassForm() {
                                 />
                             </div>
 
-                            {/* 중복신청가능여부 라디오 버튼 */}
-                            <div>
-                                중복 신청 가능 여부:
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="duplicateApply"
-                                        value="O"
-                                        checked={duplicateApply === "O"}
-                                        onChange={(e) => setDuplicateApply(e.target.value)}
-                                    />
-                                    O
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="duplicateApply"
-                                        value="X"
-                                        checked={duplicateApply === "X"}
-                                        onChange={(e) => setDuplicateApply(e.target.value)}
-                                    />
-                                    X
-                                </label>
-                            </div>
-
-                            <div className="age">
-                                모집 대상:
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="targetAudience"
-                                        value="adult"
-                                        checked={targetAudience === "adult"}
-                                        onChange={(e) => setTargetAudience(e.target.value)}
-                                    />
-                                    성인
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="targetAudience"
-                                        value="child"
-                                        checked={targetAudience === "child"}
-                                        onChange={(e) => setTargetAudience(e.target.value)}
-                                    />
-                                    어린이
-                                </label>
-                            </div>
+                            
                             {/* 달력으로 모집 기간 선택 */}
                             <h4>모집 기간 선택</h4>
                             <DateRangePicker
