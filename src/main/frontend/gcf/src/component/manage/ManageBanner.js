@@ -55,12 +55,32 @@ function BannerModule({ moduleId, onAddInput, onRemoveInput, onInputChange, inpu
   );
 }
 
-function sendBannerData(modules) {
+function sendBannerData(modules, setLoading) {
+  // 빈 칸이 있는지 확인하는 변수
+  let isEmpty = false;
+
+  // 모든 모듈 및 입력에 대해 빈 칸 여부를 확인합니다.
+  modules.forEach((module, moduleIndex) => {
+    module.inputs.forEach((input, inputIndex) => {
+      // 첨부 파일 또는 링크 중 하나라도 비어 있으면 isEmpty를 true로 설정합니다.
+      if (input.attachment.length === 0 || input.link.trim() === '') {
+        isEmpty = true;
+      }
+    });
+  });
+
+  // 빈 칸이 있을 경우 경고창을 띄웁니다.
+  if (isEmpty) {
+    alert('빈 칸을 모두 작성해주세요.');
+    return;
+  }
+
+  // 빈 칸이 없으면 FormData를 만들어서 서버로 데이터를 전송합니다.
   const formData = new FormData();
 
   modules.forEach((module, moduleIndex) => {
-    const entityId = module.id === 1 ? 'bannerone' : 'bannertwo'; // Assigning entity IDs based on module ID
-    formData.append(`modules[${moduleIndex}].entityId`, entityId); // Appending entity ID to differentiate between bannerone and bannertwo
+    const entityId = module.id === 1 ? 'bannerone' : 'bannertwo';
+    formData.append(`modules[${moduleIndex}].entityId`, entityId);
     module.inputs.forEach((input, inputIndex) => {
       input.attachment.forEach((file, fileIndex) => {
         formData.append(`modules[${moduleIndex}].inputs[${inputIndex}].attachment`, file);
@@ -69,12 +89,9 @@ function sendBannerData(modules) {
     });
   });
 
-  // FormData 출력
-  for (const pair of formData.entries()) {
-    console.log(pair[0] + ', ' + pair[1]);
-  }
+  // 전송 중임을 사용자에게 알립니다.
+  setLoading(true);
 
-  // Axios를 사용하여 POST 요청을 보냅니다.
   axios.post('http://localhost:8090/manage/updateBanners', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -82,21 +99,21 @@ function sendBannerData(modules) {
   })
     .then(response => {
       console.log('배너 데이터가 성공적으로 전송되었습니다.');
-      // 서버로부터 응답을 받은 후 추가적인 처리를 수행할 수 있습니다.
+      alert('배너 데이터가 성공적으로 업데이트되었습니다.');
+      setLoading(false); // 전송 완료 후 로딩 상태 변경
     })
     .catch(error => {
       console.error('배너 데이터 전송 중 오류가 발생했습니다:', error);
-      // 오류 처리를 수행할 수 있습니다.
+      setLoading(false); // 오류 발생 후 로딩 상태 변경
     });
 }
-
-
 
 function ManageBanner() {
   const [modules, setModules] = useState([
     { id: 1, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] },
     { id: 2, inputs: [{ attachment: [], link: '' }, { attachment: [], link: '' }] }
   ]);
+  const [loading, setLoading] = useState(false); // 전송 중인지 여부를 나타내는 상태
 
   const addInput = moduleId => {
     setModules(prevModules =>
@@ -148,15 +165,20 @@ function ManageBanner() {
               moduleId={module.id}
               inputs={module.inputs}
               onAddInput={() => addInput(module.id)}
-              onRemoveInput={(moduleId, index) => removeInput(moduleId, index)}
+              onRemoveInput={(moduleId, index) => removeInput(module.id, index)}
               onInputChange={(moduleId, index, value) => handleInputChange(moduleId, index, value)}
             />
           ))}
         </div>
-        <button className='banner_confirm' onClick={() => sendBannerData(modules)}>저장</button>
+        {loading ? (
+          <p>전송 중입니다. 잠시 기다려주세요...</p>
+        ) : (
+          <button className='banner_confirm' onClick={() => sendBannerData(modules, setLoading)}>저장</button>
+        )}
       </div>
     </div>
   );
 }
 
 export default ManageBanner;
+

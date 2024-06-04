@@ -100,10 +100,8 @@ public class AdminNoticeService {
     	    if (optionalNotice.isPresent()) {
     	        Notice notice = optionalNotice.get();
     	        List<Attachment> attachments = notice.getAttachments();
-    	        for (Attachment attachment : attachments) {
-    	            attachmentService.deleteFile(attachment);
-    	        }
     	        adminNoticeRepository.deleteById(id);
+    	        attachmentService.deleteUnlinkedFiles();
     	        return true;
     	    } else {
     	        return false;

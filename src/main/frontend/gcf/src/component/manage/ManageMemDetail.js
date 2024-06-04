@@ -108,8 +108,20 @@ function ManageMemDetail() {
         }));
     };
 
-
-
+    const handlePhoneChange = (e) => {
+        const { value } = e.target;
+        // 입력된 값이 숫자인지 확인합니다.
+        const phoneNumber = value.replace(/\D/g, '');
+        // 11자리인지 확인합니다.
+        if (phoneNumber.length > 11) {
+            return;
+        }
+        // 숫자 11자리인 경우만 상태를 업데이트합니다.
+        setEditableMember(prevState => ({
+            ...prevState,
+            phone_number: phoneNumber
+        }));
+    };
 
     const handleRadioChange = (e) => {
         const { id, value } = e.target;
@@ -187,7 +199,7 @@ function ManageMemDetail() {
                                     type='text'
                                     id='phone_number'
                                     value={editableMember.phone_number}
-                                    onChange={handleInputChange}
+                                    onChange={handlePhoneChange}
                                     disabled={!isEditing}
                                 />
                             </li>

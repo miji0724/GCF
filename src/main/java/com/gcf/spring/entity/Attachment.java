@@ -29,7 +29,7 @@ public class Attachment {
     @Column
     private String file_name;
 
-    @Column
+    @Column(columnDefinition = "VARCHAR(500)")
     private String file_path;
 
     @Column
