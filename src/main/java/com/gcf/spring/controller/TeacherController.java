@@ -35,4 +35,24 @@ public class TeacherController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTeacherInfo(@PathVariable String id, @RequestBody TeacherDto teacherDto) {
+        try {
+            teacherService.updateTeacherInfo(id, teacherDto);
+            return ResponseEntity.ok("정보가 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTeacherInfo(@PathVariable String id) {
+        try {
+            teacherService.deleteTeacherInfo(id);
+            return ResponseEntity.ok("삭제가 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
 }

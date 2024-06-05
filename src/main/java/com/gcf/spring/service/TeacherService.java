@@ -36,7 +36,7 @@ public class TeacherService {
 
             // Teacher 엔티티 생성 및 설정
             Teacher teacher = new Teacher();
-            teacher.setId(teacherDto.getId());
+          
             teacher.setMember(member);
             teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
             teacher.setTeacher_category(teacherDto.getTeacherCategory());
@@ -61,7 +61,6 @@ public class TeacherService {
                 .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
 
         TeacherDto teacherDto = new TeacherDto();
-        teacherDto.setId(teacher.getId());
         teacherDto.setAffiliatedOrganization(teacher.getAffiliatedOrganization());
         teacherDto.setTeacherCategory(teacher.getTeacher_category());
         teacherDto.setSnsAddress(teacher.getSnsAddress());
@@ -72,5 +71,30 @@ public class TeacherService {
         teacherDto.setTeachAbleCategory(teacher.getTeachAbleCategory());
 
         return teacherDto;
+    }
+    
+    // 강사 정보 업데이트
+    public void updateTeacherInfo(String id, TeacherDto teacherDto) {
+    	Teacher teacher = teacherRepository.findById(id)
+    			.orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+    	
+    	teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
+        teacher.setTeacher_category(teacherDto.getTeacherCategory());
+        teacher.setSnsAddress(teacherDto.getSnsAddress());
+        teacher.setCarrer(teacherDto.getCareer());
+        teacher.setCareerStartYear(teacherDto.getCareerStartYear());
+        teacher.setCareerEndYear(teacherDto.getCareerEndYear());
+        teacher.setLicenseName(teacherDto.getLicenseName());
+        teacher.setTeachAbleCategory(teacherDto.getTeachAbleCategory());
+
+        teacherRepository.save(teacher);
+    }
+    
+ // 강사 정보 삭제
+    public void deleteTeacherInfo(String id) {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+
+        teacherRepository.delete(teacher);
     }
 }

@@ -16,6 +16,7 @@ function TeacherForm() {
         careerStartYear: '',
         careerEndYear: '',
         licenseName: '',
+        teachAbleCategory: ''
     });
     const [userData, setUserData] = useState(null);
 
@@ -27,12 +28,25 @@ function TeacherForm() {
                 setBirthDate(userResponse.data.birth);
     
                 const teacherResponse = await axios.get(`/teacher/myinfo?userId=${userResponse.data.id}`, { withCredentials: true });
-                setTeacherData(teacherResponse.data);
-    
-                // 초기 history, certification, teaching subject 필드 설정
-                setHistoryFields(parseFieldArray(teacherResponse.data.career, teacherResponse.data.careerStartYear, teacherResponse.data.careerEndYear));
-                setCertificationFields(parseSingleFieldArray(teacherResponse.data.licenseName));
-                setTeachingSubjectFields(parseSingleFieldArray(teacherResponse.data.teachAbleCategory));
+                if (teacherResponse.data) {
+                    setTeacherData(teacherResponse.data);
+                    // 초기 history, certification, teaching subject 필드 설정
+                    setHistoryFields(parseFieldArray(teacherResponse.data.career, teacherResponse.data.careerStartYear, teacherResponse.data.careerEndYear));
+                    setCertificationFields(parseSingleFieldArray(teacherResponse.data.licenseName, 'certification'));
+                    setTeachingSubjectFields(parseSingleFieldArray(teacherResponse.data.teachAbleCategory, 'subject'));
+                } else {
+                    setTeacherData({
+                        id: userResponse.data.id,
+                        affiliatedOrganization: '',
+                        teacherCategory: [],
+                        snsAddress: '',
+                        career: '',
+                        careerStartYear: '',
+                        careerEndYear: '',
+                        licenseName: '',
+                        teachAbleCategory: ''
+                    });
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -40,11 +54,23 @@ function TeacherForm() {
     
         fetchData();
     }, []);
-    
-    const parseFieldArray = (events, startDates, endDates) => {
-        const eventArray = events.split(',');
-        const startDateArray = startDates.split(',');
-        const endDateArray = endDates.split(',');
+
+    useEffect(() => {
+        if (!teacherData.career) {
+            setHistoryFields([{ event: '', startDate: '', endDate: '' }]);
+        }
+        if (!teacherData.licenseName) {
+            setCertificationFields([{ certification: '' }]);
+        }
+        if (!teacherData.teachAbleCategory) {
+            setTeachingSubjectFields([{ subject: '' }]);
+        }
+    }, [teacherData]);
+
+    const parseFieldArray = (events = '', startDates = '', endDates = '') => {
+        const eventArray = events ? events.split(',') : [''];
+        const startDateArray = startDates ? startDates.split(',') : [''];
+        const endDateArray = endDates ? endDates.split(',') : [''];
         return eventArray.map((event, index) => ({
             event,
             startDate: startDateArray[index] || '',
@@ -52,8 +78,8 @@ function TeacherForm() {
         }));
     };
 
-    const parseSingleFieldArray = (data) => {
-        return data.split(',').map(item => ({ certification: item }));
+    const parseSingleFieldArray = (data = '', fieldName) => {
+        return data ? data.split(',').map(item => ({ [fieldName]: item })) : [{ [fieldName]: '' }];
     };
 
     const handleBirthDateChange = (event) => {
@@ -128,6 +154,41 @@ function TeacherForm() {
         setTeachingSubjectFields(newTeachingSubjectFields);
     };
 
+    const handleVerify = () => {
+        alert('현재 입력된 데이터를 확인해주세요.\n' + JSON.stringify(teacherData, null, 2));
+    };
+
+    const handleSave = async () => {
+        try {
+            await axios.put(`/teacher/${teacherData.id}`, teacherData, { withCredentials: true });
+            alert('저장이 완료되었습니다.');
+        } catch (error) {
+            console.error('Error saving teacher data:', error);
+            alert('저장 중 오류가 발생했습니다.');
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`/teacher/${teacherData.id}`, { withCredentials: true });
+            setTeacherData({
+                id: userData.id,
+                affiliatedOrganization: '',
+                teacherCategory: [],
+                snsAddress: '',
+                career: '',
+                careerStartYear: '',
+                careerEndYear: '',
+                licenseName: '',
+                teachAbleCategory: ''
+            });
+            alert('삭제가 완료되었습니다.');
+        } catch (error) {
+            console.error('Error deleting teacher data:', error);
+            alert('삭제 중 오류가 발생했습니다.');
+        }
+    };
+
     if (!userData) {
         return <div>Loading...</div>;
     }
@@ -142,11 +203,12 @@ function TeacherForm() {
             career: historyFields.map(field => field.event).join(','),
             careerStartYear: historyFields.map(field => field.startDate).join(','),
             careerEndYear: historyFields.map(field => field.endDate).join(','),
-            licenseName: certificationFields.map(field => field.certification).join(',')
+            licenseName: certificationFields.map(field => field.certification).join(','),
+            teachAbleCategory: teachingSubjectFields.map(field => field.subject).join(',')
         };
 
         try {
-            const response = await axios.post('/teacher/apply', teacherData, { withCredentials: true });
+            await axios.post('/teacher/apply', teacherData, { withCredentials: true });
             alert('신청이 완료되었습니다.');
         } catch (error) {
             console.error('Error submitting teacher application:', error);
@@ -167,13 +229,13 @@ function TeacherForm() {
                     <h2>기본정보</h2>
                     <form onSubmit={handleSubmit}>
                         <div className='validation'>
-                            <button type='button'>확인</button>
+                            <button type='button' onClick={handleVerify}>저장</button>
                         </div>
                         <div className='modify'>
-                            <button type='button'>수정</button>
+                            <button type='button' onClick={handleSave}>수정</button>
                         </div>
                         <div className='delete'>
-                            <button type='button'>삭제</button>
+                            <button type='button' onClick={handleDelete}>취소</button>
                         </div>
 
                         <div className='formName'>
@@ -274,6 +336,7 @@ function TeacherForm() {
                                 id='affiliation'
                                 name='affiliation'
                                 value={teacherData.affiliatedOrganization}
+                                onChange={(e) => setTeacherData({ ...teacherData, affiliatedOrganization: e.target.value })}
                             />
                         </div>
 
@@ -286,6 +349,12 @@ function TeacherForm() {
                                     name='field'
                                     value='literature'
                                     checked={teacherData.teacherCategory.includes('literature')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='literature'>문학</label>
                                 <input
@@ -294,6 +363,12 @@ function TeacherForm() {
                                     name='field'
                                     value='art'
                                     checked={teacherData.teacherCategory.includes('art')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='art'>미술</label>
                                 <input
@@ -302,6 +377,12 @@ function TeacherForm() {
                                     name='field'
                                     value='music'
                                     checked={teacherData.teacherCategory.includes('music')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='music'>음악</label>
                                 <input
@@ -310,6 +391,12 @@ function TeacherForm() {
                                     name='field'
                                     value='dance'
                                     checked={teacherData.teacherCategory.includes('dance')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='dance'>무용</label>
                                 <input
@@ -318,6 +405,12 @@ function TeacherForm() {
                                     name='field'
                                     value='video'
                                     checked={teacherData.teacherCategory.includes('video')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='video'>영상</label>
                                 <input
@@ -326,6 +419,12 @@ function TeacherForm() {
                                     name='field'
                                     value='theater'
                                     checked={teacherData.teacherCategory.includes('theater')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='theater'>연극</label>
                                 <input
@@ -334,6 +433,12 @@ function TeacherForm() {
                                     name='field'
                                     value='movie'
                                     checked={teacherData.teacherCategory.includes('movie')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='movie'>영화</label>
                                 <input
@@ -342,6 +447,12 @@ function TeacherForm() {
                                     name='field'
                                     value='koreanMusic'
                                     checked={teacherData.teacherCategory.includes('koreanMusic')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='koreanMusic'>국악</label>
                                 <input
@@ -350,6 +461,12 @@ function TeacherForm() {
                                     name='field'
                                     value='architecture'
                                     checked={teacherData.teacherCategory.includes('architecture')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='architecture'>건축</label>
                                 <input
@@ -358,6 +475,12 @@ function TeacherForm() {
                                     name='field'
                                     value='publication'
                                     checked={teacherData.teacherCategory.includes('publication')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='publication'>출판</label>
                                 <input
@@ -366,6 +489,12 @@ function TeacherForm() {
                                     name='field'
                                     value='comic'
                                     checked={teacherData.teacherCategory.includes('comic')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='comic'>만화</label>
                                 <input
@@ -374,6 +503,12 @@ function TeacherForm() {
                                     name='field'
                                     value='etc'
                                     checked={teacherData.teacherCategory.includes('etc')}
+                                    onChange={(e) => {
+                                        const updatedCategories = e.target.checked
+                                            ? [...teacherData.teacherCategory, e.target.value]
+                                            : teacherData.teacherCategory.filter(category => category !== e.target.value);
+                                        setTeacherData({ ...teacherData, teacherCategory: updatedCategories });
+                                    }}
                                 />
                                 <label htmlFor='etc'>기타</label>
                             </div>
@@ -386,6 +521,7 @@ function TeacherForm() {
                                 id='snsEmail'
                                 name='snsEmail'
                                 value={teacherData.snsAddress}
+                                onChange={(e) => setTeacherData({ ...teacherData, snsAddress: e.target.value })}
                             />
                         </div>
 
@@ -478,8 +614,8 @@ function TeacherForm() {
                                     <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
                                     <div className="agreement_content2">이용약관 내용</div>
                                     개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
-                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                    <label htmlFor="agreement1"></label>
+                                    <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
+                                    <label htmlFor="agreement2"></label>
                                 </div>
                             </div>
                         </div>
