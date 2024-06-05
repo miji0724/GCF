@@ -76,4 +76,19 @@ public class On_programService {
             return false;
         }
     }
+    
+
+
+    public OnProgram saveOnProgram(OnProgram onProgram) {
+        return onProgramRepository.save(onProgram);
+    }
+
+    public Optional<OnProgram> getOnProgramById(int id) {
+        return onProgramRepository.findById(id);
+    }
+
+    public List<OnProgram> getAllOnPrograms() {
+        return onProgramRepository.findAll();
+    }
+    
 }

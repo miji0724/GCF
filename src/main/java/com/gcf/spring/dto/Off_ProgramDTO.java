@@ -9,19 +9,23 @@ import com.gcf.spring.constant.Off_Category;
 import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.Place;
 import com.gcf.spring.constant.ProgramState;
+import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.Teacher;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Off_ProgramDTO {
     private int offProgramNumber; // 프로그램 번호
     private String offProgramName; // 프로그램 이름
-    private LocalDate recruitmentStartDate; // 모집 시작일
-    private LocalDate recruitmentEndDate; // 모집 종료일
+    private LocalDate recruitmentstartDate; // 모집 시작일
+    private LocalDate recruitmentendDate; // 모집 종료일
     private LocalDate operatingStartDay; // 운영 시작일
-    private LocalDate operatingEndDay; // 운영 종료일
+    private LocalDate operatingendDay; // 운영 종료일
     private Fee participationFee; // 참가료
     private LocalTime startTime; // 운영 시작 시간
     private LocalTime endTime; // 운영 종료 시간
@@ -34,4 +38,10 @@ public class Off_ProgramDTO {
     private Off_Category offlineCategory; // 오프라인 카테고리
     private Place placeName; // 장소명
     private On_or_OFF programType; // 프로그램 타입 (온라인/오프라인 구분)
+    private Attachment poster; // 포스터 정보
+    private List<Attachment> programInfos; // 프로그램 정보
+    private List<Attachment> teacherInfos; // 강사 소개 파일
+    private Teacher teacher; // 강사 ID
+    
+
 }

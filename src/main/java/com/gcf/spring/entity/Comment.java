@@ -52,7 +52,7 @@ public class Comment {
     // 댓글 작성 날짜
     @Column(name = "created_date", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createdDate = LocalDate.now(); // 댓글 작성 날짜 초기화
+    private LocalDate createdDate = LocalDate.now(); // 지금 날짜
 
     // 댓글 수정 날짜
     @Column(name = "modified_date")

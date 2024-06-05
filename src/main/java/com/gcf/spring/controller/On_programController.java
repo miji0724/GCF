@@ -1,5 +1,6 @@
 package com.gcf.spring.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.dto.On_ProgramDTO;
+import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.service.On_programService;
 
 @RestController
@@ -54,5 +57,25 @@ public class On_programController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    
+    @PostMapping("/createOnProgram")
+    public ResponseEntity<String> createOnProgram(@RequestBody OnProgram onProgram) {
+        onProgramService.saveOnProgram(onProgram);
+        return ResponseEntity.ok("온라인 프로그램이 생성되었습니다.");
+    }
+    
+    @GetMapping("/createOnProgramSample")
+    public ResponseEntity<String> createOnProgramSample() {
+        OnProgram onProgram = new OnProgram();
+        onProgram.setOnProgramName("예시 온라인 프로그램");
+        onProgram.setOperatingStartDay(LocalDate.now());
+        onProgram.setViews(0);
+        onProgram.setLikesCount(0);
+        onProgram.setOnlineCategory(List.of("카테고리1", "카테고리2"));
+        onProgram.setProgramType(On_or_OFF.온라인);
+
+        onProgramService.saveOnProgram(onProgram);
+        return ResponseEntity.ok("예시 온라인 프로그램이 생성되었습니다.");
     }
 }

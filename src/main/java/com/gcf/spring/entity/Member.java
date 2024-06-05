@@ -1,6 +1,7 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -70,6 +73,9 @@ public class Member {
     
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
     
     @OneToOne
     @JsonIgnore
@@ -81,7 +87,6 @@ public class Member {
     @JoinColumn(name="id")
     private OffProgram offProgram;
     
-      
     public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
         Member member = new Member();
         member.setId(memberDto.getId());
@@ -92,15 +97,15 @@ public class Member {
         member.setTelNumber(memberDto.getTel_number());
         member.setEmail(memberDto.getEmail());
         member.setAddress(memberDto.getAddress());
-        member.setDetail_address(memberDto.getDetailAddress());
+        member.setDetail_address(memberDto.getDetail_address());
         member.setEmail_agreement(memberDto.getEmail_agreement());
         member.setMessage_agreement(memberDto.getMessage_agreement());
         member.setMail_agreement(memberDto.getMail_agreement());
-        member.setInterests(memberDto.getInterest());
+        member.setInterests(memberDto.getInterests());
         member.setMarried(memberDto.getMarried());
         member.setHasChildren(memberDto.getHasChildren());
         member.setRole(Role.USER);
+        member.setCreatedAt(LocalDateTime.now());
         return member;
-        
     }
 }

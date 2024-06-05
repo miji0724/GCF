@@ -27,15 +27,13 @@ public class OffBookMark {
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
 
-    @MapsId
     @OneToOne
-    @JoinColumn(name = "id")
-    private Member member;
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member_id;
     
-    @MapsId
-    @OneToOne
-    @JoinColumn(name = "off_program_number")
-    private OffProgram offprogram;
+	@OneToOne
+	@JoinColumn(name = "off_program_number", referencedColumnName = "off_program_number")
+	private OffProgram offProgram;
 }

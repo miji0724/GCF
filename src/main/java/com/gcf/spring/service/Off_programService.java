@@ -1,7 +1,6 @@
 package com.gcf.spring.service;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,23 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gcf.spring.constant.Off_Category;
-import com.gcf.spring.constant.On_or_OFF;
+import com.gcf.spring.constant.Place;
 import com.gcf.spring.constant.ProgramState;
 import com.gcf.spring.dto.Off_ProgramDTO;
-import com.gcf.spring.constant.Place;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.OffProgram;
-import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.repository.AttachmentRepository;
 import com.gcf.spring.repository.Off_program_Repository;
 import com.gcf.spring.repository.TeacherRepository;
-
 
 @Service
 public class Off_programService {
@@ -67,9 +65,9 @@ public class Off_programService {
         Page<OffProgram> filteredPrograms;
 
         if (state != null && placeName != null && category != null) {
-            filteredPrograms = offProgramRepository.findByStateAndPlaceNameAndOffline_category(state, placeName, category, pageable);
+            filteredPrograms = offProgramRepository.findByStateAndPlaceNameAndOfflineCategory(state, placeName, category, pageable);
         } else if (name != null && !name.isEmpty()) {
-            filteredPrograms = offProgramRepository.findByOffprogramnameContaining(name, pageable);
+            filteredPrograms = offProgramRepository.findByOffProgramNameContaining(name, pageable);
         } else {
             filteredPrograms = offProgramRepository.findAll(pageable);
         }
@@ -80,7 +78,7 @@ public class Off_programService {
                                .collect(Collectors.toList());
     }
 
-    public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
+    public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes) {
         Optional<OffProgram> optionalProgram = offProgramRepository.findById(id);
         if (optionalProgram.isPresent()) {
             OffProgram program = optionalProgram.get();
@@ -98,4 +96,7 @@ public class Off_programService {
         }
     }
 
+    public void makeOffProgram(OffProgram offProgram) {
+    	offProgramRepository.save(offProgram);
+    }
 }

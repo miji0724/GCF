@@ -1,9 +1,7 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -55,9 +53,24 @@ public class OnProgram {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type", nullable = false)
-    private On_or_OFF programType; // 프로그램 타입 (온라인/오프라인 구분)
+    private On_or_OFF programType; // 프로그램 타입 (온라인/오프라인 구분) 
+    
+    @OneToOne
+    @JoinColumn(name = "poster_id")
+    private Attachment poster; // 포스터 정보
+    
+    @OneToMany(mappedBy = "onProgramInfo", cascade = CascadeType.ALL)
+    private List<Attachment> programInfos; // 프로그램 정보
+    
+    @OneToMany(mappedBy = "onProgramTeacherInfo", cascade = CascadeType.ALL)
+    private List<Attachment> teacherInfos; // 강사 소개 파일
+
+    @OneToMany(mappedBy = "onProgramVideo", cascade = CascadeType.ALL)
+    private List<Attachment> videos; // 동영상 리스트
     
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    private Teacher teacher; // 강사 ID
+    
+    //댓글 구현 예정
 }

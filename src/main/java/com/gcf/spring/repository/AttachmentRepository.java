@@ -11,5 +11,4 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 	List<Attachment> findAllById(Iterable<Long> ids);
 	List<Attachment> findAllByNoticeId(Notice notice);
 	void deleteAllByNoticeId(Notice notice);
-	
 }

@@ -1,75 +1,58 @@
 package com.gcf.spring.controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.gcf.spring.constant.Fee;
 import com.gcf.spring.constant.Off_Category;
 import com.gcf.spring.constant.On_or_OFF;
 import com.gcf.spring.constant.Place;
 import com.gcf.spring.constant.ProgramState;
-import com.gcf.spring.dto.Off_ProgramDTO;
+import com.gcf.spring.entity.OffProgram;
 import com.gcf.spring.service.Off_programService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/api/off_programs")
+@RequiredArgsConstructor
 public class Off_programController {
 
-    private final Off_programService offProgramService;
-    private final ObjectMapper objectMapper; // ObjectMapper를 Bean으로 주입받음
+    private final Off_programService off_programService;
 
-    @Autowired
-    public Off_programController(Off_programService offProgramService, ObjectMapper objectMapper) {
-        this.offProgramService = offProgramService;
-        this.objectMapper = objectMapper;
-    }
+    @GetMapping("/createOffProgram")
+    public ResponseEntity<String> createTestOffProgram() {
+        OffProgram offProgram = new OffProgram();
+        List<String> dayOfWeek = new ArrayList<>();
+        dayOfWeek.add("월요일");
+        dayOfWeek.add("수요일");
 
+        offProgram.setOffProgramNumber(1);
+        offProgram.setOffProgramName("모담골 노는 학당");
+        offProgram.setRecruitmentstartDate(LocalDate.now());
+        offProgram.setRecruitmentendDate(LocalDate.now().plusWeeks(4));
+        offProgram.setOperatingStartDay(LocalDate.now().plusWeeks(5));
+        offProgram.setOperatingendDay(LocalDate.now().plusDays(20));
+        offProgram.setParticipationFee(Fee.무료);
+        offProgram.setStartTime(LocalTime.of(10, 0));
+        offProgram.setEndTime(LocalTime.of(16, 0));
+        offProgram.setMaxParticipants(30);
+        offProgram.setCurrentParticipants(0);
+        offProgram.setState(ProgramState.접수중);
+        offProgram.setDayOfWeek(dayOfWeek);
+        offProgram.setViews(0);
+        offProgram.setLikesCount(0);
+        offProgram.setOfflineCategory(Off_Category.체험);
+        offProgram.setPlaceName(Place.김포아트빌리지한옥마을);
+        offProgram.setProgramType(On_or_OFF.오프라인);
+        offProgram.setTeacher("teacher1");
 
-    
-    @GetMapping
-    public List<Off_ProgramDTO> getAllPrograms(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "4") int size) {
-        return offProgramService.getAllPrograms(page, size);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Off_ProgramDTO> getProgramById(@PathVariable int id) {
-        Optional<Off_ProgramDTO> program = offProgramService.getProgramById(id);
-        return program.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/filter")
-    public List<Off_ProgramDTO> searchByFilters(
-        @RequestParam(required = false) ProgramState state,
-        @RequestParam(required = false) Place placeName,
-        @RequestParam(required = false) Off_Category category,
-        @RequestParam(required = false) String name,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "4") int size) {
-        return offProgramService.findFilteredPrograms(state, placeName, category, name, date, page, size);
-    }
-
-    @PostMapping("/{id}/updateStats")
-    public ResponseEntity<Void> updateProgramStats(
-        @PathVariable int id,
-        @RequestParam(required = false, defaultValue = "false") boolean incrementViews,
-        @RequestParam(required = false, defaultValue = "false") boolean incrementLikes,
-        @RequestParam(required = false, defaultValue = "false") boolean toggleBookmark) {
-        if (offProgramService.updateProgramStats(id, incrementViews, incrementLikes, toggleBookmark)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        off_programService.makeOffProgram(offProgram);
+        return ResponseEntity.ok("오프라인 프로그램이 성공적으로 생성되었습니다.");
     }
 }
