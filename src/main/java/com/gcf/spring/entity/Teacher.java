@@ -2,16 +2,13 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -37,6 +34,7 @@ public class Teacher {
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Member member;
 
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")

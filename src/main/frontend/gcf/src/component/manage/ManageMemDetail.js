@@ -380,12 +380,12 @@ function ManageMemDetail() {
                 <div className='memDetail_button_area'>
                     {!isEditing ? (
                         <button id='memDetail_confirmStart' onClick={handleEditToggle}>
-                            수정하기
+                            수정
                         </button>
                     ) : (
                         <>
                             <button id='memDetail_confirm' onClick={handleSave}>
-                                수정
+                                완료
                             </button>
                             <button id='memDetail_delete' onClick={handleDelete}>
                                 삭제

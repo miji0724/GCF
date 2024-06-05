@@ -1,34 +1,34 @@
-.teachDetail_container
+.teachAppDetail_container
 {
     display: flex;
     height:100%;
 }
 
-.teachDetail_container ul{
+.teachAppDetail_container ul{
     list-style-type: none;
 }
 
-.teachDetail
+.teachAppDetail
 {
     flex:0.8;
     background-color: #ffffff;
     text-align: center;
 }
 
-.teachDetail > p{
+.teachAppDetail > p{
     margin-top:30px;
     font-size: 30px;
     font-weight:800;
 }
 
-.teachDetail_area{
+.teachAppDetail_area{
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.teachDetail input,
-.teachDetail select
+.teachAppDetail input,
+.teachAppDetail select
 {
     border-style: none;
     background-color: #ededed;
@@ -36,50 +36,50 @@
     text-align: center;
 }
 
-.teachDetail_area li{
+.teachAppDetail_area li{
     line-height: 45px;
 }
 
-.teachDetail_left{
+.teachAppDetail_left{
     text-align: right;
 }
 
-.teachDetail_right,
-#teachDetail_lecField{
+.teachAppDetail_right,
+#teachAppDetail_lecField{
     text-align: left;
 }
 
-.teachDetail_radio_area{
+.teachAppDetail_radio_area{
     margin-left: 10px;
 }
 
-#teachDetail_birth_detail{
+#teachAppDetail_birth_detail{
     width:185px;
 }
 
-#teachDetail_emailId{
+#teachAppDetail_emailId{
     width:120px;
 }
 
-#teachDetail_emailAddr{
+#teachAppDetail_emailAddr{
     width:180px;
 }
 
-#teachDetail_addr,
-#teachDetail_addrD{
+#teachAppDetail_addr,
+#teachAppDetail_addrD{
     width:500px;
 }
 
-#teachDetail_lecField{
+#teachAppDetail_lecField{
     width:173px;
     text-align: center;
 }
 
-.teachDetail_checkboxArea{
+.teachAppDetail_checkboxArea{
     display:flex;
 }
 
-.teachDetail_checkboxDetailArea{
+.teachAppDetail_checkboxDetailArea{
     display:flex;
     align-items: center;
 }
@@ -105,9 +105,9 @@
     justify-content: center;
 }
 
-.teachDetail .mainCareer_area,
-.teachDetail .License_area,
-.teachDetail .teachAble_area{
+.teachAppDetail .mainCareer_area,
+.teachAppDetail .License_area,
+.teachAppDetail .teachAble_area{
     max-height: 130px;
     min-height: 130px;  /* 최대 높이 설정 */
     width:500px;
@@ -119,27 +119,27 @@
     gap: 5px;
 }
 
-.teachDetail .mainCareer_buttonAlign,
-.teachDetail .License_buttonAlign,
-.teachDetail .teachAble_buttonAlign {
+.teachAppDetail .mainCareer_buttonAlign,
+.teachAppDetail .License_buttonAlign,
+.teachAppDetail .teachAble_buttonAlign {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10px;
 }
 
-.teachDetail .mainCareer_flexArea,
-.teachDetail .License_flexArea,
-.teachDetail .teachAble_flexArea{
+.teachAppDetail .mainCareer_flexArea,
+.teachAppDetail .License_flexArea,
+.teachAppDetail .teachAble_flexArea{
     display: flex;
     align-items: center;
     gap: 5px;
     height:30px;
 }
 
-#teachDetail_License1_attachment,
-#teachDetail_License2_attachment,
-#teachDetail_License3_attachment{
+#teachAppDetail_License1_attachment,
+#teachAppDetail_License2_attachment,
+#teachAppDetail_License3_attachment{
     width:180px;
     background-color: rgba(0, 0, 0, 0);
 }
@@ -152,7 +152,7 @@
     width:400px;
 }
 
-.teachDetail_button_area button{
+.teachAppDetail_button_area button{
     margin-left: 20px;
     margin-bottom: 30px;
     border-radius: 10px;
@@ -163,11 +163,11 @@
     font-weight:600;
 }
 
-#teachDetail_confirm{
+#teachAppDetail_confirm{
     background-color: #AECCF2;
 }
 
-#teachDetail_delete{
+#teachAppDetail_delete{
     background-color: #FF8585;
 }
 
@@ -178,19 +178,7 @@
     margin-right: 10px;
 }
 
-.teachDetail_confirmStartBtn{
-    margin-right: 20px;
-    margin-bottom: 30px;
-    background-color: #E8F8FF;
-    border-radius: 10px;
-    width:150px;
-    height: 75px;
-    font-size: 25px;
-    font-weight:600;
-    border:none;
-}
-
-.teachDetail_confirmBtn{
+.teachAppDetail_approval{
     margin-right: 20px;
     margin-bottom: 30px;
     background-color: #AECCF2;
@@ -202,7 +190,7 @@
     border:none;
 }
 
-.teachDetail_deleteBtn{
+.teachAppDetail_notApproval{
     margin-left: 20px;
     margin-bottom: 30px;
     background-color: #FF8585;

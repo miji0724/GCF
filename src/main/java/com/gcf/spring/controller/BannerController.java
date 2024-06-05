@@ -8,7 +8,7 @@ import com.gcf.spring.dto.BannerModulesWrapper;
 import com.gcf.spring.service.BannerService;
 
 @RestController
-@RequestMapping("/manage")
+@RequestMapping
 public class BannerController {
 
     private final BannerService bannerService;
@@ -17,7 +17,7 @@ public class BannerController {
         this.bannerService = bannerService;
     }
 
-    @PostMapping("/updateBanners")
+    @PostMapping("/manage/updateBanners")
     public String updateBanners(BannerModulesWrapper modules) {
         return bannerService.updateBanners(modules);
     }

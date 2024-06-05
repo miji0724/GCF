@@ -1,6 +1,7 @@
 package com.gcf.spring.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.gcf.spring.constant.TeacherState;
+import com.gcf.spring.dto.MemTeachDto;
 import com.gcf.spring.dto.TeacherDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.Teacher;
@@ -58,10 +61,34 @@ public class TeacherService {
 	}
 	
 	
-	// VV 관리자 페이지에서 사용하는 메서드 VV //
+	// VV 관리자 페이지에서 사용하는 메서드 영역 VV //
 	
-	public List<TeacherDto> getTeachersWithPendingApproval() {
-        return teacherRepository.findByTeacherState("승인 대기"); // 여기서 부터 진행
-    }
-	
+	 public List<MemTeachDto> getTeachersWithPendingApproval() {
+		 TeacherState state = TeacherState.승인대기;
+	        return teacherRepository.findByTeacherState(state)
+	                .stream()
+	                .map(MemTeachDto::createMemTeachDto)
+	                .collect(Collectors.toList());
+	    }
+	 
+	  public boolean updateTeacherState(String id) {
+	        try {
+	            // 요청으로 받은 아이디로 강사 정보를 찾아옵니다.
+	            Teacher teacher = teacherRepository.findTeacherById(id);
+
+	            TeacherState newState = TeacherState.승인;
+	            
+	            if (teacher != null) {
+	                // 강사 정보의 상태를 업데이트합니다.
+	                teacher.setTeacherState(newState);
+	                teacherRepository.save(teacher);
+	                return true;
+	            } else {
+	                return false;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
 }

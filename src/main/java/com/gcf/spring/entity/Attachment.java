@@ -21,7 +21,7 @@ public class Attachment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @Column
     private String original_name;

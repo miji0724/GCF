@@ -1,6 +1,5 @@
 package com.gcf.spring.repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +22,4 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
 	@Query("SELECT m FROM Member m WHERE LOWER(FUNCTION('DATE_FORMAT', m.createdAt, '%Y-%m-%d %H:%i:%s')) LIKE LOWER(CONCAT('%', :createdAt ,'%'))")
 	List<Member> findByCreatedAtContainingIgnoreCase(@Param("createdAt") String createdAt);
-
 }

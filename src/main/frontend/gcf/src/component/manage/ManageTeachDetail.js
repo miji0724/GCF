@@ -1,11 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SideMenu from './ManageSideMenu';
 import './ManageTeachDetail.css';
+import { useLocation } from 'react-router-dom';
 
 function ManageTeachDetail() {
+    const location = useLocation();
+    const { teacher, from } = location.state;
+
+    const [teacherInfo, setTeacherInfo] = useState({
+        name: '',
+        birth: '',
+        phone_number: '',
+        tel_number: '',
+        email_id: '',
+        email_domain: '',
+        address: '',
+        detail_address: '',
+        affiliated_organization: '',
+        sns_address: '',
+        teachDetail_lec: [],
+    });
 
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [selectedFileNames, setSelectedFileNames] = useState(['', '', '']); // 세 개의 파일 이름을 저장할 상태
+    const [selectedFileNames, setSelectedFileNames] = useState(['', '', '']);
+    const [teacherCategories, setTeacherCategories] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [careerInputs, setCareerInputs] = useState([]);
+    const [LicenseInputs, setLicenseInputs] = useState([]);
+    const [teachAbleInputs, setTeachAbleInputs] = useState([]);
+
+    const [accessFrom, setAccessFrom] = useState('');
+
+    // TeachApp 클래스를 통한 접근 여부 확인
+    const isTeachAppAccess = from === 'TeachApp';
+
+    // Teacher 클래스를 통한 접근 여부 확인
+    const isTeacherAccess = from === 'Teacher';
+
+    useEffect(() => {
+        if (teacher) {
+            const {
+                email,
+                teacherCategory,
+                career,
+                careerStartYear,
+                careerEndYear,
+                licenseName,
+                teachAbleCategory,
+                ...rest
+            } = teacher;
+
+            const [id, domain] = email.split('@');
+
+            setTeacherCategories(teacherCategory);
+            setTeacherInfo({
+                ...rest,
+                birth: formatDate(teacher.birth),
+                phone_number: teacher.phone_number,
+                tel_number: teacher.tel_number,
+                email_id: id,
+                email_domain: domain,
+                teachDetail_lec: teacherCategory,
+            });
+
+            setCareerInputs(career.split(',').map((value, index) => ({
+                id: index,
+                value,
+                startYear: careerStartYear.split(',')[index] || '',
+                endYear: careerEndYear.split(',')[index] || '',
+            })));
+
+            setLicenseInputs(licenseName.split(',').map((value, index) => ({
+                id: index,
+                value,
+            })));
+
+            setTeachAbleInputs(teachAbleCategory.split(',').map((value, index) => ({
+                id: index,
+                value,
+            })));
+        }
+    }, [teacher]);
+
+    useEffect(() => {
+        if (from === 'TeachApp') {
+            setAccessFrom('TeachApp');
+        } else if (from === 'Teacher') {
+            setAccessFrom('Teacher');
+        }
+    }, [from]);
+
+    const formatDate = (dateArray) => {
+        if (Array.isArray(dateArray) && dateArray.length === 3) {
+            const [year, month, day] = dateArray;
+            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+        return '';
+    };
 
     const autoHypenPhone = (str) => {
         str = str.replace(/[^0-9]/g, '');
@@ -35,169 +127,239 @@ function ManageTeachDetail() {
     };
 
     const handleAttachmentButtonClick = (index) => {
-        // 해당 인덱스의 파일 입력 엘리먼트 클릭
-        document.getElementById(`teachDetail_sCertifi${index + 1}_attachment`).click();
+        document.getElementById(`teachDetail_License${index + 1}_attachment`).click();
     };
 
     const handleFileChange = (event, index) => {
-        // 파일 선택 이벤트 처리
         const file = event.target.files[0];
         const newSelectedFileNames = [...selectedFileNames];
-        newSelectedFileNames[index] = file.name; // 선택된 파일의 이름을 해당 인덱스의 상태에 저장
+        newSelectedFileNames[index] = file.name;
         setSelectedFileNames(newSelectedFileNames);
-        // 선택된 파일을 처리하는 로직 추가 (예: 파일 업로드)
     };
 
-    const [careerInputs, setCareerInputs] = useState([{ id: 1 }]);
-    const [sCertifiInputs, setSCertifiInputs] = useState([{ id: 1 }]);
-    const [teachAbleInputs, setTeachAbleInputs] = useState([{ id: 1 }]);
+    const handleInputChange = (e, field, index = null) => {
+        const value = e.target.value;
+        setTeacherInfo((prev) => {
+            if (index !== null) {
+                const newArray = [...prev[field]];
+                newArray[index] = value;
+                return { ...prev, [field]: newArray };
+            }
+            return { ...prev, [field]: value };
+        });
+    };
+
+    const handleTeachDetailChange = (event) => {
+        const { value, checked } = event.target;
+        setTeacherInfo((prev) => {
+            if (checked) {
+                return { ...prev, teachDetail_lec: [...prev.teachDetail_lec, value] };
+            } else {
+                return { ...prev, teachDetail_lec: prev.teachDetail_lec.filter((item) => item !== value) };
+            }
+        });
+    };
 
     const handleAddCareerInput = () => {
-        setCareerInputs([...careerInputs, { id: careerInputs.length + 1 }]);
+        setCareerInputs((prev) => [
+            ...prev,
+            { id: prev.length, value: '', startYear: '', endYear: '' },
+        ]);
     };
 
     const handleRemoveCareerInput = (id) => {
-        setCareerInputs(careerInputs.filter(input => input.id !== id));
+        setCareerInputs((prev) => prev.filter((input) => input.id !== id));
     };
 
-    const handleAddSCertifiInput = () => {
-        setSCertifiInputs([...sCertifiInputs, { id: sCertifiInputs.length + 1 }]);
+    const handleAddLicenseInput = () => {
+        setLicenseInputs((prev) => [
+            ...prev,
+            { id: prev.length, value: '' },
+        ]);
     };
 
-    const handleRemoveSCertifiInput = (id) => {
-        setSCertifiInputs(sCertifiInputs.filter(input => input.id !== id));
+    const handleRemoveLicenseInput = (id) => {
+        setLicenseInputs((prev) => prev.filter((input) => input.id !== id));
     };
 
     const handleAddTeachAbleInput = () => {
-        setTeachAbleInputs([...teachAbleInputs, { id: teachAbleInputs.length + 1 }]);
+        setTeachAbleInputs((prev) => [
+            ...prev,
+            { id: prev.length, value: '' },
+        ]);
     };
 
     const handleRemoveTeachAbleInput = (id) => {
-        setTeachAbleInputs(teachAbleInputs.filter(input => input.id !== id));
+        setTeachAbleInputs((prev) => prev.filter((input) => input.id !== id));
     };
 
+    console.log(from);
+
     return (
-        <body>
-            <div className='teachDetail_container'>
-                <SideMenu />
-                <div className='teachDetail'>
-                    <p>강사회원 상세정보</p>
-                    <div className='teachDetail_area'>
-                        <div className='teachDetail_left'>
-                            <ul>
-                                <li>* 이름</li>
-                                <li>* 생년월일</li>
-                                <li>* 휴대폰 번호</li>
-                                <li>전화번호</li>
-                                <li>* 이메일</li>
-                                <li>* 주소</li>
-                                <li>&nbsp;</li>
-                                <li>상세주소</li>
-                                <li>소속기관</li>
-                                <li>* 강의분야</li>
-                                <li>SNS주소</li>
-                                <li>* 주요이력</li>
-                                <li>&nbsp;</li>
-                                <li className='marginTop10'>&nbsp;</li>
-                                <li className='marginTop10'>자격증</li>
-                                <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li className='marginTop10'>강의가능분야</li>
-                                <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                            </ul>
-                        </div>
-                        <div className='teachDetail_right'>
-                            <ul>
-                                <li> <input type='text' id='teachDetail_name' /></li>
-                                <li className='teachDetail_birth_container'>
-                                    <input type='date' id='teachDetail_birth_detail' />
-                                    <div className="teachDetail_radio_area">
-                                        <input type='radio' name='birth' value='solar' /> 양력
-                                        <input type='radio' name='birth' value='lunar' /> 음력
-                                    </div>
-                                </li>
-                                <li> <input type="text" id='teachDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
-                                <li> <input type="text" id='teachDetail_landNum' maxLength="11" /> </li>
-                                <li>
-                                    <input type='text' id='teachDetail_emailId' />
-                                    &nbsp;@&nbsp;
-                                    <input type='text' id='teachDetail_emailAddr' />
-                                    <select id='teachDetail_email_dropdown'>
-                                        <option value="direct_input">직접입력</option>
-                                        <option value="naver_input">naver.com</option>
-                                    </select>
-                                </li>
-                                <li className='teachDetail_zipArea'>
-                                    <input type='text' id='teachDetail_zip' />
-                                    <button id='teachDetail_zipCheck'>우편번호 조회</button>
-                                </li>
-                                <li><input type='text' id='teachDetail_addr' /></li>
-                                <li> <input type='text' id='teachDetail_addrD' /> </li>
-                                <li><input type='text' id='teachDetail_organizaion' /></li>
-                                <li>
-                                    <select id='teachDetail_lec'>{/*문학 미술 음악 무용 영상 연극 영화 국악 건축 출판 만화*/}
-                                        <option value='literature'>문학</option>
-                                        <option value='art'>미술</option>
-                                        <option value='music'>음악</option>
-                                        <option value='dancing'>무용</option>
-                                        <option value='video'>영상</option>
-                                        <option value='theater'>연극</option>
-                                        <option value='movie'>영화</option>
-                                        <option value='ktm'>국악</option>
-                                        <option value='construct'>건축</option>
-                                        <option value='publishing'>출판</option>
-                                        <option value='comic'>만화</option>
-                                        <option value='etc'>기타</option>
-                                    </select>
-                                </li>
-                                <li> <input type='text' id='teachDetail_snsAddr' /></li>
+        <div className='teachDetail_container'>
+            <SideMenu />
+            <div className='teachDetail'>
+                <p>강사회원 상세정보</p>
+                <div className='teachDetail_area'>
+                    <div className='teachDetail_left'>
+                        <ul>
+                            <li>* 이름</li>
+                            <li>* 생년월일</li>
+                            <li>* 휴대폰 번호</li>
+                            <li>전화번호</li>
+                            <li>* 이메일</li>
+                            <li>* 주소</li>
+                            <li>상세주소</li>
+                            <li>소속기관</li>
+                            <li>* 강의분야</li>
+                            <li>SNS주소</li>
+                            <li>* 주요이력</li>
+                            <li>&nbsp;</li>
+                            <li className='marginTop10'>&nbsp;</li>
+                            <li className='marginTop10'>자격증</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li className='marginTop10'>강의가능분야</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                        </ul>
+                    </div>
+                    <div className='teachDetail_right'>
+                        <ul>
+                            <li> <input type='text' id='teachDetail_name' value={teacherInfo.name} onChange={(e) => handleInputChange(e, 'name')} disabled={!isEditing} /></li>
+                            <li className='teachDetail_birth_container'>
+                                <input type='date' id='teachDetail_birth_detail' value={teacherInfo.birth} onChange={(e) => handleInputChange(e, 'birth')} disabled={!isEditing} />
+                            </li>
+                            <li> <input type="text" id='teachDetail_phoneNum' maxLength="13" value={teacherInfo.phone_number} onChange={(e) => handlePhoneNumberChange(e)} disabled={!isEditing} /></li>
+                            <li> <input type="text" id='teachDetail_telNum' maxLength="11" value={teacherInfo.tel_number} onChange={(e) => handleInputChange(e, 'tel_number')} disabled={!isEditing} /> </li>
+                            <li>
+                                <input type='text' id='teachDetail_emailId' value={teacherInfo.email_id} onChange={(e) => handleInputChange(e, 'email_id')} disabled={!isEditing} />
+                                &nbsp;@&nbsp;
+                                <input type='text' id='teachDetail_emailAddr' value={teacherInfo.email_domain} onChange={(e) => handleInputChange(e, 'email_domain')} disabled={!isEditing} />
+                            </li>
+                            <li> <input type='text' id='teachDetail_addr' value={teacherInfo.address} onChange={(e) => handleInputChange(e, 'address')} disabled={!isEditing} /></li>
+                            <li> <input type='text' id='teachDetail_addrD' value={teacherInfo.detail_address} onChange={(e) => handleInputChange(e, 'detail_address')} disabled={!isEditing} /> </li>
+                            <li> <input type='text' id='teachDetail_organizaion' value={teacherInfo.affiliated_organization} onChange={(e) => handleInputChange(e, 'affiliated_organization')} disabled={!isEditing} /> </li>
+                            <li>
+                                <div className='Detail_category'>
+                                    {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
+                                        <label key={index}>
+                                            <input
+                                                type="checkbox"
+                                                name='teachDetail_lec'
+                                                value={category}
+                                                checked={teacherInfo.teachDetail_lec.includes(category)}
+                                                onChange={handleTeachDetailChange}
+                                                disabled={!isEditing}
+                                            />
+                                            {category}
+                                        </label>
+                                    ))}
+                                </div>
+                            </li>
+                            <li> <input type='text' id='teachDetail_sns' value={teacherInfo.snsAddress} onChange={(e) => handleInputChange(e, 'sns_address')} disabled={!isEditing} /> </li>
+                            <li>
                                 <div className='mainCareer_buttonAlign'>
                                     <div className='mainCareer_area'>
-                                        {careerInputs.map(input => (
+                                        {careerInputs.map((input) => (
                                             <div key={input.id} className='mainCareer_flexArea'>
-                                                <input type='text' className='mainCareer_detail' id={`teachDetail_mainCareer${input.id}_detail`} />
-                                                <input type='number' className='mainCareer_startDate' id={`teachDetail_mainCareer${input.id}_startDate`} />~
-                                                <input type='number' className='mainCareer_endDate' id={`teachDetail_mainCareer${input.id}_endDate`} />
-                                                <button onClick={() => handleRemoveCareerInput(input.id)} style={{backgroundColor: "#FF8585"}}>-</button>
+                                                <input
+                                                    type='text'
+                                                    className='mainCareer_detail'
+                                                    id={`teachDetail_mainCareer${input.id}_detail`}
+                                                    value={input.value}
+                                                    onChange={(e) => handleInputChange(e, 'careerArray', input.id)}
+                                                    disabled={!isEditing}
+                                                />
+                                                <input
+                                                    type='number'
+                                                    className='mainCareer_startDate'
+                                                    id={`teachDetail_mainCareer${input.id}_startDate`}
+                                                    value={input.startYear}
+                                                    onChange={(e) => handleInputChange(e, 'careerStartYearArray', input.id)}
+                                                    disabled={!isEditing}
+                                                />
+                                                ~
+                                                <input
+                                                    type='number'
+                                                    className='mainCareer_endDate'
+                                                    id={`teachDetail_mainCareer${input.id}_endDate`}
+                                                    value={input.endYear}
+                                                    onChange={(e) => handleInputChange(e, 'careerEndYearArray', input.id)}
+                                                    disabled={!isEditing}
+                                                />
+                                                <button onClick={() => handleRemoveCareerInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={handleAddCareerInput}>+</button>
+                                    <button onClick={handleAddCareerInput} style={{ backgroundColor: "#8A95FF" }} disabled={!isEditing}>+</button>
                                 </div>
-                                <div className='sCertifi_buttonAlign'>
-                                    <div className='sCertifi_area'>
-                                        {sCertifiInputs.map(input => (
-                                            <div key={input.id} className='sCertifi_flexArea'>
-                                                <input type='text' className='sCertifi' id={`teachDetail_sCertifi${input.id}`} />
-                                                <button onClick={() => handleRemoveSCertifiInput(input.id)} style={{backgroundColor: "#FF8585"}}>-</button>
+                            </li>
+                            <li className='marginTop10'>
+                                <div className='License_buttonAlign'>
+                                    <div className='License_area'>
+                                        {LicenseInputs.map((input) => (
+                                            <div key={input.id} className='License_flexArea'>
+                                                <input
+                                                    type='text'
+                                                    className='License'
+                                                    id={`teachDetail_License${input.id}`}
+                                                    value={input.value}
+                                                    onChange={(e) => handleInputChange(e, 'licenseNameArray', input.id)}
+                                                    disabled={!isEditing}
+                                                />
+                                                <button onClick={() => handleRemoveLicenseInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={handleAddSCertifiInput}>+</button>
+                                    <button onClick={handleAddLicenseInput} style={{ backgroundColor: "#8A95FF" }} disabled={!isEditing}>+</button>
                                 </div>
+                            </li>
+                            <li className='marginTop10'>
                                 <div className='teachAble_buttonAlign'>
                                     <div className='teachAble_area'>
-                                        {teachAbleInputs.map(input => (
+                                        {teachAbleInputs.map((input) => (
                                             <div key={input.id} className='teachAble_flexArea'>
-                                                <input type='text' className='teachAble' id={`teachDetail_teachAble${input.id}`} />
-                                                <button onClick={() => handleRemoveTeachAbleInput(input.id)} style={{backgroundColor: "#FF8585"}}>-</button>
+                                                <input
+                                                    type='text'
+                                                    className='teachAble'
+                                                    id={`teachDetail_teachAble${input.id}`}
+                                                    value={input.value}
+                                                    onChange={(e) => handleInputChange(e, 'teachAbleCategoryArray', input.id)}
+                                                    disabled={!isEditing}
+                                                />
+                                                <button onClick={() => handleRemoveTeachAbleInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={handleAddTeachAbleInput}>+</button>
+                                    <button onClick={handleAddTeachAbleInput} style={{ backgroundColor: "#8A95FF" }} disabled={!isEditing}>+</button>
                                 </div>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div className='teachDetail_button_area'>
-                        <button id='teachDetail_confirm'>수정</button>
-                        <button id='teachDetail_delete'>삭제</button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+                <div className='teachDetail_btnArea'>
+                {accessFrom === 'TeachApp' ? (
+                    <>
+                        {/* TeachApp용 버튼 */}
+                        {isEditing ? (
+                            <>
+                                <button onClick={() => setIsEditing(false)} className='teachDetail_confirmBtn'>완료</button>
+                                <button className='teachDetail_deleteBtn'>삭제</button>
+                            </>
+                        ) : (
+                            <button onClick={() => setIsEditing(true)} className='teachDetail_confirmStartBtn'>수정</button>
+                        )}
+                    </>
+                ) : accessFrom === 'Teacher' ? (
+                    <>
+                        {/* Teacher용 버튼 */}
+                        {/* Teacher에 맞는 버튼을 여기에 배치하세요 */}
+                    </>
+                ) : null}
             </div>
-        </body >
+            </div>
+        </div>
     );
 }
 

@@ -18,6 +18,7 @@ import ManageMemDetailPage from './pages/manage/ManageMemDetailPage';
 import ManageTeacherPage from './pages/manage/ManageTeacherPage';
 import ManageTeachAppPage from './pages/manage/ManageTeachAppPage';
 import ManageTeachDetailPage from './pages/manage/ManageTeachDetailPage';
+import ManageTeachAppDetailPage from './pages/manage/ManageTeachAppDetailPage';
 import ManageLecturePage from './pages/manage/ManageLecturePage';
 import ManageLecAppPage from './pages/manage/ManageLecAppPage';
 import ManageLecOnDetailPage from './pages/manage/ManageLecOnDetailPage';
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/manage/teacher" element={<ManageTeacherPage />} />
                     <Route path="/manage/teachapp" element={<ManageTeachAppPage />} />
                     <Route path="/manage/teachdetail" element={<ManageTeachDetailPage />} />
+                    <Route path="/manage/teachappdetail" element={<ManageTeachAppDetailPage />} />
                     <Route path="/manage/lecture" element={<ManageLecturePage />} />
                     <Route path="/manage/lecapp" element={<ManageLecAppPage />} />
                     <Route path="/manage/lecondetail" element={<ManageLecOnDetailPage />} />

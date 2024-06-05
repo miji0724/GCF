@@ -1,29 +1,37 @@
 import './ManageTeachApp.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SideMenu from './ManageSideMenu';
-import items from './TestItems/TeachAppItems';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
-
-function teachDetailGo(){
-    window.location.href = '/manage/teachdetail';
-}
+import { useNavigate } from 'react-router-dom';
 
 function ManageTeachApp() {
-    // 게시글과 페이지 관련 상태
+    const [teachers, setTeachers] = useState([]); // 강사 데이터 상태
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [itemsPerPage] = useState(15); // 페이지 당 게시글 수
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
     const [searchType, setSearchType] = useState('teachApp_name'); // 검색 기준 상태 추가
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 백엔드에서 데이터 가져오기
+        axios.get('/manage/pendingApproval')
+            .then(response => {
+                setTeachers(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the teachers!', error);
+            });
+    }, []);
 
     // 검색 필터링
-    const filteredItems = items.filter(item => {
-        // 검색어가 비어있으면 모든 아이템을 보여줌
+    const filteredItems = teachers.filter(item => {
         if (searchTerm === '') return true;
-        // 선택한 검색 기준에 따라 검색 수행
         if (searchType === 'teachApp_name') {
-            return item.teachApp_name.toLowerCase().includes(searchTerm.toLowerCase());
+            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
         } else if (searchType === 'teachApp_teachAppDate') {
-            return item.teachApp_teachAppDate.toLowerCase().includes(searchTerm.toLowerCase());
+            return item.teachAppDate.toLowerCase().includes(searchTerm.toLowerCase());
         }
         return false;
     });
@@ -42,13 +50,19 @@ function ManageTeachApp() {
     // 검색어 업데이트 함수
     const handleSearchChange = event => {
         setSearchTerm(event.target.value);
-        setCurrentPage(1); // 검색어가 변경될 때 첫 페이지로 이동
+        setCurrentPage(1);
     };
 
     // 검색 기준 업데이트 함수
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
-        setCurrentPage(1); // 검색 기준이 변경될 때 첫 페이지로 이동
+        setCurrentPage(1);
+    };
+
+    // 강사 상세 정보 페이지로 이동
+    const handleTeacherDetail = (teacher) => {
+        // 강사 정보를 props로 전달하면서 페이지 이동
+        navigate(`/manage/teachappdetail/`, { state: { teacher } });
     };
 
     // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
@@ -70,6 +84,7 @@ function ManageTeachApp() {
                     <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
                     <button className='teachApp_search_button'>검색</button>
                 </div>
+
                 <div className='teachApp_area'>
                     <table className='teachApp_table'>
                         <thead>
@@ -79,20 +94,18 @@ function ManageTeachApp() {
                                 <th className='teachApp_phoneNum'>휴대폰 번호</th>
                                 <th className='teachApp_certifi'>자격증</th>
                                 <th className='teachApp_career'>이력</th>
-                                <th className='teachApp_teachAppDate'>강사 신청 날짜</th>
                                 <th className='teachApp_detail'>신청서 보기</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentItems.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.teachApp_id}</td>
-                                    <td>{item.teachApp_name}</td>
-                                    <td>{item.teachApp_phoneNum}</td>
-                                    <td>{item.teachApp_certifi}</td>
-                                    <td>{item.teachApp_career}</td>
-                                    <td>{item.teachApp_teachAppDate}</td>
-                                    <td><button onClick={teachDetailGo}>정보</button></td>
+                                    <td>{item.id}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.phone_number}</td>
+                                    <td>{item.licenseName}</td>
+                                    <td>{item.career}</td>
+                                    <td><button onClick={() => handleTeacherDetail(item)}>정보</button></td>
                                 </tr>
                             ))}
                         </tbody>

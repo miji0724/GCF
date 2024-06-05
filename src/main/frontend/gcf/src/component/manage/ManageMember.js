@@ -22,7 +22,7 @@ function ManageMember() {
     const fetchMembers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8090/getAll');
+            const response = await axios.get('http://localhost:8090/manage/getAll');
             setMembers(response.data);
             setLoading(false);
         } catch (error) {
@@ -62,7 +62,7 @@ function ManageMember() {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(filteredItems) ? filteredItems.slice(indexOfFirstItem, indexOfLastItem) : [];
 
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {

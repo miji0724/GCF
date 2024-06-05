@@ -33,7 +33,7 @@ public class AdminNoticeController {
 	private ObjectMapper objectMapper;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<String> getNotice(@PathVariable("id") Long id) {
+	public ResponseEntity<String> getNotice(@PathVariable("id") Integer id) {
 		Notice notice = adminNoticeService.getNotice(id);
 		if (notice != null) {
 			try {
@@ -64,7 +64,7 @@ public class AdminNoticeController {
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Notice> updateNotice(@PathVariable("id") Long id, @RequestPart("noticeDto") NoticeDto noticeDto,
+	public ResponseEntity<Notice> updateNotice(@PathVariable("id") Integer id, @RequestPart("noticeDto") NoticeDto noticeDto,
 			@RequestPart(value = "files", required = false) List<MultipartFile> files) {
 		if (files != null) {
 		    for (MultipartFile file : files) {
@@ -87,7 +87,7 @@ public class AdminNoticeController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteNotice(@PathVariable("id") Long id) {
+	public ResponseEntity<Void> deleteNotice(@PathVariable("id") Integer id) {
 		boolean deleted = adminNoticeService.deleteNotice(id);
 		if (deleted) {
 			return ResponseEntity.noContent().build();

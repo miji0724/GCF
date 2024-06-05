@@ -37,7 +37,7 @@ public class Notice {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long id;
+    private Integer id;
 
     //작성자 고정(관리자)
     @Column(nullable = false)

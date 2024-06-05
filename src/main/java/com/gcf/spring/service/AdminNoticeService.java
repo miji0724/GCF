@@ -35,7 +35,7 @@ public class AdminNoticeService {
     @Autowired
     private AttachmentRepository attachmentRepository;
 
-    public Notice getNotice(Long id) {
+    public Notice getNotice(Integer id) {
         return adminNoticeRepository.findById(id).orElseThrow(() -> 
         new EntityNotFoundException("Notice not found with id: " + id));
     }
@@ -53,7 +53,7 @@ public class AdminNoticeService {
     }
 
     @Transactional
-    public Notice updateNotice(Long id, NoticeDto noticeDto, List<MultipartFile> files) {
+    public Notice updateNotice(Integer id, NoticeDto noticeDto, List<MultipartFile> files) {
         // 기존 공지 가져오기
         Notice existingNotice = adminNoticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found with id: " + id));
@@ -95,7 +95,7 @@ public class AdminNoticeService {
     }
     
     @Transactional
-    public boolean deleteNotice(Long id) {
+    public boolean deleteNotice(Integer id) {
     	 Optional<Notice> optionalNotice = adminNoticeRepository.findById(id);
     	    if (optionalNotice.isPresent()) {
     	        Notice notice = optionalNotice.get();
