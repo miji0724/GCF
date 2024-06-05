@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @Setter
 public class Attachment {
     
-	//id
+    //id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -42,17 +43,40 @@ public class Attachment {
     @JsonIgnore
     private Notice noticeId; 
     
-    
     //파일이 속한 엔티티
     @Column
     private String parent;
     
-    @ManyToOne
-    @JoinColumn(name = "off_program_id")
-    private OffProgram offProgram; // 연관된 오프라인 프로그램
+    // 포스터를 가진 오프라인 프로그램
+    @OneToOne(mappedBy = "poster")
+    private OffProgram offProgramPoster;
 
-    @ManyToOne
-    @JoinColumn(name = "on_program_id")
-    private OnProgram onProgram; // 연관된 온라인 프로그램
+    // 포스터를 가진 온라인 프로그램
+    @OneToOne(mappedBy = "poster")
+    private OnProgram onProgramPoster;
     
+    // 프로그램 정보를 가진 오프라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "off_program_info_id")
+    private OffProgram offProgramInfo;
+    
+    // 프로그램 정보를 가진 온라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "on_program_info_id")
+    private OnProgram onProgramInfo;
+    
+    // 강사 정보를 가진 오프라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "off_program_teacher_info_id")
+    private OffProgram offProgramTeacherInfo;
+    
+    // 강사 정보를 가진 온라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "on_program_teacher_info_id")
+    private OnProgram onProgramTeacherInfo;
+    
+    // 연관된 온라인 프로그램의 동영상
+    @ManyToOne
+    @JoinColumn(name = "on_program_video_id")
+    private OnProgram onProgramVideo;
 }

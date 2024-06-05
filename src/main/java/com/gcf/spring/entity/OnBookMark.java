@@ -23,16 +23,14 @@ public class OnBookMark {
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     
-    @MapsId
     @OneToOne
-    @JoinColumn(name = "id")
-    private Member member;
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member_id;
     
-    @MapsId
     @OneToOne
-    @JoinColumn(name = "on_program_number")
-    private OnProgram onprogram;
+    @JoinColumn(name = "on_program_number", referencedColumnName = "on_program_number")
+    private OnProgram onProgram;
     
 }
