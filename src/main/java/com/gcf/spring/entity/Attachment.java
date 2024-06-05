@@ -17,8 +17,8 @@ import lombok.Setter;
 @Table(name="attachment")
 @Getter
 @Setter
-public class Attachment {
-    
+public class Attachment { 
+      
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

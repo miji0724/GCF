@@ -7,8 +7,6 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import 'react-time-picker/dist/TimePicker.css';
 import ManageLecOnDetail from "./ManageLecOnDetail";
 
-
-
 function ClassForm() {
 
     const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
@@ -107,7 +105,7 @@ function ClassForm() {
     };
 
     const handleOfflineEducationChange = (event) => {
-        setOnlineEducation(event.target.checked);
+        setOfflineEducation(event.target.checked);
     };
 
     const handleLocationChange = (event) => {
@@ -161,7 +159,6 @@ function ClassForm() {
                             <h4>강의정보</h4>
 
                             <div>
-                                <div>
                                 <label>
                                     <input
                                         type="checkbox"
@@ -170,7 +167,7 @@ function ClassForm() {
                                     />
                                     오프라인 교육
                                 </label>
-                                </div>
+                            
                                 <label>
                                     <input
                                         type="checkbox"
@@ -250,6 +247,7 @@ function ClassForm() {
                             
                             <div className="OnlineLec">
                             <h4>온라인 강의</h4>
+                            <h7>온라인 교육 체크시</h7>
                             <div><ManageLecOnDetail /></div>
                             </div>
                         
@@ -260,6 +258,7 @@ function ClassForm() {
                                     {/* 장소 선택 드롭다운 메뉴 */}
                                     <div style={{ marginRight: "20px" }}>
                                         <h4>오프라인 장소 선택</h4>
+                                        <h7>오프라인 교육 체크시</h7>
                                         <select value={selectedLocation} onChange={handleLocationChange}>
                                             <option value="">장소 선택</option>
                                             <option value="김포아트빌리지">김포아트빌리지</option>
@@ -409,26 +408,26 @@ function ClassForm() {
                                         <div className="agreement_content1">이용약관 내용</div>
                                         이용약관에 동의하시겠습니까?&nbsp;&nbsp;
                                         <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                        <label for="agreement1"></label>
+                                        <label htmlFor="agreement1"></label>
                                     </div>
                                     <div id="agreement2">
                                         <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
                                         <div className="agreement_content2">이용약관 내용</div>
                                         개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
                                         <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                        <label for="agreement1"></label>
+                                        <label htmlFor="agreement1"></label>
                                     </div>
                                 </div>
                             </div>
 
                             <div className='validation'>
-                                <button type='validation'>확인</button>
+                                <button type='button'>확인</button>
                             </div>
                             <div className='modify'>
-                                <button type='modify'>수정</button>
+                                <button type='button'>수정</button>
                             </div>
                             <div className='delete'>
-                                <button type='delete'>삭제</button>
+                                <button type='button'>삭제</button>
                             </div>
 
                             <div className='formGroup'>
