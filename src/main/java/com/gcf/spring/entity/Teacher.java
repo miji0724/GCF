@@ -60,10 +60,10 @@ public class Teacher {
 	private String teachAbleCategory;
 	
 	@Enumerated(EnumType.STRING)
-    @Column(name = "TeacherState")
-	@ColumnDefault("'승인대기'")
-    private TeacherState TeacherState; // 승인, 미승인, 승인대기
+    @Column(name = "TeacherState", nullable = false)
+    private TeacherState teacherState = TeacherState.승인대기;
 		
+	
 	@Override
 	public String toString() {
 	    return "Teacher{" +
@@ -75,8 +75,6 @@ public class Teacher {
 	            ", careerStartYear=" + careerStartYear +
 	            ", careerEndYear=" + careerEndYear +
 	            ", licenseName='" + licenseName + '\'' +
-	            ", TeacherState='" + TeacherState + '\'' +
-	            ", teachAbleCategory='" + teachAbleCategory + '\'' +
 	            '}';
 	}
 

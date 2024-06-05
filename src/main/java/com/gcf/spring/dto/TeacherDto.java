@@ -17,10 +17,7 @@ public class TeacherDto {
     private String careerStartYear;
     private String careerEndYear;
     private String licenseName;
-    
-    private String TeacherState;
-    private String teachAbleCategory;
-    
+     
 	@Override
 	public String toString() {
 	    return "Teacher{" +
@@ -32,8 +29,6 @@ public class TeacherDto {
 	            ", careerStartYear=" + careerStartYear +
 	            ", careerEndYear=" + careerEndYear +
 	            ", licenseName='" + licenseName + '\'' +
-	            ", TeacherState='" + TeacherState + '\'' +
-	            ", teachAbleCategory='" + teachAbleCategory + '\'' +
 	            '}';
 	}
 }
