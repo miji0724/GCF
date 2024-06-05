@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SideMenu from './ManageSideMenu';
 import './ManageTeachDetail.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function ManageTeachDetail() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { teacher, from } = location.state;
 
     const [teacherInfo, setTeacherInfo] = useState({

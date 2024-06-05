@@ -60,7 +60,7 @@ function ManageTeachApp() {
     };
 
     // 강사 상세 정보 페이지로 이동
-    const handleTeacherDetail = (teacher) => {
+    const handleTeacherAppDetail = (teacher) => {
         // 강사 정보를 props로 전달하면서 페이지 이동
         navigate(`/manage/teachappdetail/`, { state: { teacher } });
     };
@@ -105,7 +105,7 @@ function ManageTeachApp() {
                                     <td>{item.phone_number}</td>
                                     <td>{item.licenseName}</td>
                                     <td>{item.career}</td>
-                                    <td><button onClick={() => handleTeacherDetail(item)}>정보</button></td>
+                                    <td><button onClick={() => handleTeacherAppDetail(item)}>정보</button></td>
                                 </tr>
                             ))}
                         </tbody>

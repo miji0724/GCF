@@ -71,12 +71,41 @@ public class TeacherService {
 	                .collect(Collectors.toList());
 	    }
 	 
-	  public boolean updateTeacherState(String id) {
+	 public List<MemTeachDto> getTeachersWithApproved() {
+		 TeacherState state = TeacherState.승인;
+	        return teacherRepository.findByTeacherState(state)
+	                .stream()
+	                .map(MemTeachDto::createMemTeachDto)
+	                .collect(Collectors.toList());
+	    }
+	 
+	  public boolean updateTeacherStateApproval(String id) {
 	        try {
 	            // 요청으로 받은 아이디로 강사 정보를 찾아옵니다.
 	            Teacher teacher = teacherRepository.findTeacherById(id);
 
 	            TeacherState newState = TeacherState.승인;
+	            
+	            if (teacher != null) {
+	                // 강사 정보의 상태를 업데이트합니다.
+	                teacher.setTeacherState(newState);
+	                teacherRepository.save(teacher);
+	                return true;
+	            } else {
+	                return false;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
+	  
+	  public boolean updateTeacherStateNotApproval(String id) {
+	        try {
+	            // 요청으로 받은 아이디로 강사 정보를 찾아옵니다.
+	            Teacher teacher = teacherRepository.findTeacherById(id);
+
+	            TeacherState newState = TeacherState.미승인;
 	            
 	            if (teacher != null) {
 	                // 강사 정보의 상태를 업데이트합니다.

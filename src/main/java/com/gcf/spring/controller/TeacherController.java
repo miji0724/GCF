@@ -41,12 +41,32 @@ public class TeacherController {
 		return ResponseEntity.ok(teachers);
 	}
 	
+	@GetMapping("/manage/approvedTeacher")
+	public ResponseEntity<List<MemTeachDto>> getTeachersWithApproved() {
+		List<MemTeachDto> teachers = teacherService.getTeachersWithApproved();
+		return ResponseEntity.ok(teachers);
+	}
+	
 	@PutMapping("/manage/teacherApproval")
-    public ResponseEntity<String> updateTeacherState(@RequestBody String id) {
+    public ResponseEntity<String> updateTeacherStateApproval(@RequestBody String id) {
         
 		System.out.println(id);
 		
-        boolean success = teacherService.updateTeacherState(id);
+        boolean success = teacherService.updateTeacherStateApproval(id);
+        
+        if (success) {
+            return new ResponseEntity<>("Teacher state updated successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to update teacher state", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	@PutMapping("/manage/teacherNotApproval")
+    public ResponseEntity<String> updateTeacherStateNotApproval(@RequestBody String id) {
+        
+		System.out.println(id);
+		
+        boolean success = teacherService.updateTeacherStateNotApproval(id);
         
         if (success) {
             return new ResponseEntity<>("Teacher state updated successfully", HttpStatus.OK);
