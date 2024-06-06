@@ -24,8 +24,7 @@ import lombok.Setter;
 @Table(name = "teacher")
 @Getter
 @Setter
-@NoArgsConstructor // 자동 생성자 생성
-
+@NoArgsConstructor 
 public class Teacher {
     @Id
     @Column(name = "id", nullable = false)

@@ -112,7 +112,7 @@ function ManageTeacher() {
                                     <td>{item.licenseName}</td>
                                     <td>{item.career}</td>
                                     <td><button onClick={() => teachLecGo(item.teacher_name)}>강의</button></td>
-                                    <td><button onClick={handleTeacherDetail}>정보</button></td>
+                                    <td><button onClick={() => handleTeacherDetail(item)}>정보</button></td>
                                 </tr>
                             ))}
                         </tbody>

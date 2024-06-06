@@ -54,7 +54,7 @@ public class MemTeachDto {
     
     @Override
     public String toString() {
-        return "MemTeach{" +
+        return "디버깅 MemTeach{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", birth=" + birth +

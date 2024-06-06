@@ -1,6 +1,7 @@
 package com.gcf.spring.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -120,4 +121,37 @@ public class TeacherService {
 	            return false;
 	        }
 	    }
+	  
+	  public Teacher saveTeacher(MemTeachDto memTeachDto) {
+		    // 기존에 등록된 강사인지 확인
+		    Optional<Teacher> existingTeacherOptional = teacherRepository.findById(memTeachDto.getId());
+		    if (existingTeacherOptional.isPresent()) {
+		        Teacher existingTeacher = existingTeacherOptional.get();
+		        // 새로운 정보로 기존 강사 정보 업데이트
+		        existingTeacher.setCareer(memTeachDto.getCareer());
+		        existingTeacher.setCareerStartYear(memTeachDto.getCareerStartYear());
+		        existingTeacher.setCareerEndYear(memTeachDto.getCareerEndYear());
+		        existingTeacher.setSnsAddress(memTeachDto.getSnsAddress());
+		        existingTeacher.setAffiliatedOrganization(memTeachDto.getAffiliatedOrganization());
+		        existingTeacher.setLicenseName(memTeachDto.getLicenseName());
+		        existingTeacher.setTeachAbleCategory(memTeachDto.getTeachAbleCategory());
+		        existingTeacher.setTeacher_category(memTeachDto.getTeacherCategory());
+		        existingTeacher.setTeacherState(TeacherState.승인); // 기본 값 설정
+
+		        // 회원 정보 업데이트
+		        Member member = existingTeacher.getMember();
+		        member.setName(memTeachDto.getName());
+		        member.setBirth(memTeachDto.getBirth());
+		        member.setPhone_number(memTeachDto.getPhone_number());
+		        member.setTel_number(memTeachDto.getTel_number());
+		        member.setEmail(memTeachDto.getEmail());
+		        member.setAddress(memTeachDto.getAddress());
+		        member.setDetail_address(memTeachDto.getDetail_address());
+
+		        return teacherRepository.save(existingTeacher);
+		    } else {
+		        // 기존에 등록된 강사가 없으면 수정할 수 없음
+		        throw new IllegalArgumentException("해당 ID를 가진 강사가 존재하지 않습니다.");
+		    }
+		}
 }

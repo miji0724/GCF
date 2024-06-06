@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gcf.spring.dto.MemTeachDto;
 import com.gcf.spring.dto.TeacherDto;
+import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
@@ -73,5 +73,12 @@ public class TeacherController {
         } else {
             return new ResponseEntity<>("Failed to update teacher state", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+	
+
+    @PutMapping("/manage/confirmTeacherInfo")
+    public Teacher confirmTeacherInfo(@RequestBody MemTeachDto memTeachDto) {
+    	System.out.println(memTeachDto.toString());
+        return teacherService.saveTeacher(memTeachDto);
     }
 }

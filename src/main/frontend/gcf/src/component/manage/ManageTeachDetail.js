@@ -7,7 +7,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 function ManageTeachDetail() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { teacher, from } = location.state;
+    const { teacher } = location.state;
+
+    console.log(teacher);
 
     const [teacherInfo, setTeacherInfo] = useState({
         name: '',
@@ -18,27 +20,18 @@ function ManageTeachDetail() {
         email_domain: '',
         address: '',
         detail_address: '',
-        affiliated_organization: '',
-        sns_address: '',
-        teachDetail_lec: [],
+        affiliatedOrganization: '',
+        snsAddress: '',
+        teacherCategory: [],
     });
 
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [selectedFileNames, setSelectedFileNames] = useState(['', '', '']);
     const [teacherCategories, setTeacherCategories] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
 
     const [careerInputs, setCareerInputs] = useState([]);
     const [LicenseInputs, setLicenseInputs] = useState([]);
     const [teachAbleInputs, setTeachAbleInputs] = useState([]);
-
-    const [accessFrom, setAccessFrom] = useState('');
-
-    // TeachApp 클래스를 통한 접근 여부 확인
-    const isTeachAppAccess = from === 'TeachApp';
-
-    // Teacher 클래스를 통한 접근 여부 확인
-    const isTeacherAccess = from === 'Teacher';
 
     useEffect(() => {
         if (teacher) {
@@ -63,7 +56,7 @@ function ManageTeachDetail() {
                 tel_number: teacher.tel_number,
                 email_id: id,
                 email_domain: domain,
-                teachDetail_lec: teacherCategory,
+                teacherCategory: teacherCategory,
             });
 
             setCareerInputs(career.split(',').map((value, index) => ({
@@ -84,14 +77,6 @@ function ManageTeachDetail() {
             })));
         }
     }, [teacher]);
-
-    useEffect(() => {
-        if (from === 'TeachApp') {
-            setAccessFrom('TeachApp');
-        } else if (from === 'Teacher') {
-            setAccessFrom('Teacher');
-        }
-    }, [from]);
 
     const formatDate = (dateArray) => {
         if (Array.isArray(dateArray) && dateArray.length === 3) {
@@ -126,38 +111,35 @@ function ManageTeachDetail() {
     const handlePhoneNumberChange = (event) => {
         const value = event.target.value;
         setPhoneNumber(autoHypenPhone(value));
-    };
-
-    const handleAttachmentButtonClick = (index) => {
-        document.getElementById(`teachDetail_License${index + 1}_attachment`).click();
-    };
-
-    const handleFileChange = (event, index) => {
-        const file = event.target.files[0];
-        const newSelectedFileNames = [...selectedFileNames];
-        newSelectedFileNames[index] = file.name;
-        setSelectedFileNames(newSelectedFileNames);
+        handleInputChange(event, 'phone_number');
     };
 
     const handleInputChange = (e, field, index = null) => {
-        const value = e.target.value;
-        setTeacherInfo((prev) => {
-            if (index !== null) {
+        const value = e.target.value; // 여기부터
+        if (Array.isArray(teacherInfo[field])) {
+            setTeacherInfo((prev) => {
                 const newArray = [...prev[field]];
-                newArray[index] = value;
+                if (index !== null) {
+                    newArray[index] = value;
+                } else {
+                    newArray.push(value);
+                }
                 return { ...prev, [field]: newArray };
-            }
-            return { ...prev, [field]: value };
-        });
+            });
+        } else {
+            setTeacherInfo((prev) => ({ ...prev, [field]: value }));
+        }
     };
+    
+    
 
     const handleTeachDetailChange = (event) => {
         const { value, checked } = event.target;
         setTeacherInfo((prev) => {
             if (checked) {
-                return { ...prev, teachDetail_lec: [...prev.teachDetail_lec, value] };
+                return { ...prev, teacherCategory: [...prev.teacherCategory, value] };
             } else {
-                return { ...prev, teachDetail_lec: prev.teachDetail_lec.filter((item) => item !== value) };
+                return { ...prev, teacherCategory: prev.teacherCategory.filter((item) => item !== value) };
             }
         });
     };
@@ -195,8 +177,43 @@ function ManageTeachDetail() {
         setTeachAbleInputs((prev) => prev.filter((input) => input.id !== id));
     };
 
-    console.log(from);
+    const sendConfirmTeacherInfo = () => {
+        const { email_id, email_domain, ...rest } = teacherInfo;
+    
+        const updatedTeacherInfo = {
+            ...rest,
+            name: teacherInfo.name,
+            birth: teacherInfo.birth,
+            phone_number: teacherInfo.phone_number,
+            tel_number: teacherInfo.tel_number,
+            address: teacherInfo.address,
+            detail_address: teacherInfo.detail_address,
+            affiliatedOrganization: teacherInfo.affiliatedOrganization,
+            snsAddress: teacherInfo.snsAddress,
+            teacherCategory: teacherInfo.teacherCategory,
+            career: careerInputs.map(input => input.value).join(','),
+            careerStartYear: careerInputs.map(input => input.startYear).join(','),
+            careerEndYear: careerInputs.map(input => input.endYear).join(','),
+            licenseName: LicenseInputs.map(input => input.value).join(','),
+            teachAbleCategory: teachAbleInputs.map(input => input.value).join(','),
+            email: `${email_id}@${email_domain}`
+        };
 
+        axios.put('/manage/confirmTeacherInfo', updatedTeacherInfo, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            alert('강사 정보를 성공적으로 수정하였습니다.');
+            console.log(updatedTeacherInfo)
+            navigate(-1);
+        })
+        .catch(error => {
+            console.error('There was a problem with your axios operation:', error);
+            console.log(updatedTeacherInfo)
+        });
+    };
     return (
         <div className='teachDetail_container'>
             <SideMenu />
@@ -241,16 +258,16 @@ function ManageTeachDetail() {
                             </li>
                             <li> <input type='text' id='teachDetail_addr' value={teacherInfo.address} onChange={(e) => handleInputChange(e, 'address')} disabled={!isEditing} /></li>
                             <li> <input type='text' id='teachDetail_addrD' value={teacherInfo.detail_address} onChange={(e) => handleInputChange(e, 'detail_address')} disabled={!isEditing} /> </li>
-                            <li> <input type='text' id='teachDetail_organizaion' value={teacherInfo.affiliated_organization} onChange={(e) => handleInputChange(e, 'affiliated_organization')} disabled={!isEditing} /> </li>
+                            <li> <input type='text' id='teachDetail_organizaion' value={teacherInfo.affiliatedOrganization} onChange={(e) => handleInputChange(e, 'affiliatedOrganization')} disabled={!isEditing} /> </li>
                             <li>
                                 <div className='Detail_category'>
                                     {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
                                         <label key={index}>
                                             <input
                                                 type="checkbox"
-                                                name='teachDetail_lec'
+                                                name='teacherCategory'
                                                 value={category}
-                                                checked={teacherInfo.teachDetail_lec.includes(category)}
+                                                checked={teacherInfo.teacherCategory.includes(category)}
                                                 onChange={handleTeachDetailChange}
                                                 disabled={!isEditing}
                                             />
@@ -259,7 +276,7 @@ function ManageTeachDetail() {
                                     ))}
                                 </div>
                             </li>
-                            <li> <input type='text' id='teachDetail_sns' value={teacherInfo.snsAddress} onChange={(e) => handleInputChange(e, 'sns_address')} disabled={!isEditing} /> </li>
+                            <li> <input type='text' id='teachDetail_sns' value={teacherInfo.snsAddress} onChange={(e) => handleInputChange(e, 'snsAddress')} disabled={!isEditing} /> </li>
                             <li>
                                 <div className='mainCareer_buttonAlign'>
                                     <div className='mainCareer_area'>
@@ -341,25 +358,15 @@ function ManageTeachDetail() {
                     </div>
                 </div>
                 <div className='teachDetail_btnArea'>
-                {accessFrom === 'TeachApp' ? (
-                    <>
-                        {/* TeachApp용 버튼 */}
-                        {isEditing ? (
-                            <>
-                                <button onClick={() => setIsEditing(false)} className='teachDetail_confirmBtn'>완료</button>
-                                <button className='teachDetail_deleteBtn'>삭제</button>
-                            </>
-                        ) : (
-                            <button onClick={() => setIsEditing(true)} className='teachDetail_confirmStartBtn'>수정</button>
-                        )}
-                    </>
-                ) : accessFrom === 'Teacher' ? (
-                    <>
-                        {/* Teacher용 버튼 */}
-                        {/* Teacher에 맞는 버튼을 여기에 배치하세요 */}
-                    </>
-                ) : null}
-            </div>
+                    {isEditing ? (
+                        <>
+                            <button onClick={sendConfirmTeacherInfo} className='teachDetail_confirmBtn'>완료</button>
+                            <button className='teachDetail_deleteBtn'>삭제</button>
+                        </>
+                    ) : (
+                        <button onClick={() => setIsEditing(true)} className='teachDetail_confirmStartBtn'>수정</button>
+                    )}
+                </div>
             </div>
         </div>
     );

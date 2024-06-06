@@ -22,10 +22,7 @@ function ManageTeachAppDetail() {
         sns_address: '',
         teachAppDetail_lec: [],
     });
-
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [teacherCategories, setTeacherCategories] = useState([]);
-    const [isEditing, setIsEditing] = useState(false);
 
     const [careerInputs, setCareerInputs] = useState([]);
     const [LicenseInputs, setLicenseInputs] = useState([]);
@@ -109,9 +106,7 @@ function ManageTeachAppDetail() {
 
     // 승인
     const sendApprovalRequest = () => {
-        const id = teacher.id;
-
-        axios.put(`http://localhost:8090/manage/teacherApproval`, teacher.id, {
+        axios.put(`/manage/teacherApproval`, teacher.id, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -122,16 +117,13 @@ function ManageTeachAppDetail() {
             })
             .catch(error => {
                 console.error('There was a problem with your axios operation:', error);
-                console.log(id);
                 // 오류 처리 로직을 추가할 수 있습니다.
             });
     };
 
     // 미승인
     const sendNotApprovalRequest = () => {
-        const id = teacher.id;
-
-        axios.put(`http://localhost:8090/manage/teacherNotApproval`, teacher.id, {
+        axios.put(`/manage/teacherNotApproval`, teacher.id, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -142,7 +134,6 @@ function ManageTeachAppDetail() {
             })
             .catch(error => {
                 console.error('There was a problem with your axios operation:', error);
-                console.log(id);
                 // 오류 처리 로직을 추가할 수 있습니다.
             });
     };
