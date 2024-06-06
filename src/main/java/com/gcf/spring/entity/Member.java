@@ -97,11 +97,11 @@ public class Member {
         member.setTelNumber(memberDto.getTel_number());
         member.setEmail(memberDto.getEmail());
         member.setAddress(memberDto.getAddress());
-        member.setDetail_address(memberDto.getDetail_address());
+        member.setDetail_address(memberDto.getAddress());
         member.setEmail_agreement(memberDto.getEmail_agreement());
         member.setMessage_agreement(memberDto.getMessage_agreement());
         member.setMail_agreement(memberDto.getMail_agreement());
-        member.setInterests(memberDto.getInterests());
+        member.setInterests(memberDto.getInterest());
         member.setMarried(memberDto.getMarried());
         member.setHasChildren(memberDto.getHasChildren());
         member.setRole(Role.USER);

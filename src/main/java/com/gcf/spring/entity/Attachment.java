@@ -79,4 +79,8 @@ public class Attachment {
     @ManyToOne
     @JoinColumn(name = "on_program_video_id")
     private OnProgram onProgramVideo;
+    
+    // 포스터 인덱스 추가
+    @Column
+    private int index;
 }

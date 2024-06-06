@@ -2,8 +2,7 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
@@ -25,8 +24,7 @@ import lombok.Setter;
 @Table(name = "teacher")
 @Getter
 @Setter
-@NoArgsConstructor // 자동 생성자 생성
-
+@NoArgsConstructor 
 public class Teacher {
     @Id
     @Column(name = "id", nullable = false)
@@ -35,13 +33,14 @@ public class Teacher {
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Member member;
 
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
     private List<String> teacher_category;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
-    private String carrer;
+    private String career;
     @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
     private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
@@ -60,9 +59,8 @@ public class Teacher {
 	private String teachAbleCategory;
 	
 	@Enumerated(EnumType.STRING)
-    @Column(name = "TeacherState")
-	@ColumnDefault("'승인대기'")
-    private TeacherState TeacherState; // 승인, 미승인, 승인대기
+    @Column(name = "TeacherState", nullable = false)
+    private TeacherState teacherState = TeacherState.승인대기;
 		
 	@Override
 	public String toString() {
@@ -71,12 +69,10 @@ public class Teacher {
 	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
 	            ", teacherCategory='" + teacher_category + '\'' +
 	            ", snsAddress='" + snsAddress + '\'' +
-	            ", career='" + carrer + '\'' +
+	            ", career='" + career + '\'' +
 	            ", careerStartYear=" + careerStartYear +
 	            ", careerEndYear=" + careerEndYear +
 	            ", licenseName='" + licenseName + '\'' +
-	            ", TeacherState='" + TeacherState + '\'' +
-	            ", teachAbleCategory='" + teachAbleCategory + '\'' +
 	            '}';
 	}
 
