@@ -41,7 +41,7 @@ public class TeacherService {
             teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
             teacher.setTeacher_category(teacherDto.getTeacherCategory());
             teacher.setSnsAddress(teacherDto.getSnsAddress());
-            teacher.setCarrer(teacherDto.getCareer());
+            teacher.setCareer(teacherDto.getCareer());
             teacher.setCareerStartYear(teacherDto.getCareerStartYear());
             teacher.setCareerEndYear(teacherDto.getCareerEndYear());
             teacher.setLicenseName(teacherDto.getLicenseName());
@@ -64,7 +64,7 @@ public class TeacherService {
         teacherDto.setAffiliatedOrganization(teacher.getAffiliatedOrganization());
         teacherDto.setTeacherCategory(teacher.getTeacher_category());
         teacherDto.setSnsAddress(teacher.getSnsAddress());
-        teacherDto.setCareer(teacher.getCarrer());
+        teacherDto.setCareer(teacher.getCareer());
         teacherDto.setCareerStartYear(teacher.getCareerStartYear());
         teacherDto.setCareerEndYear(teacher.getCareerEndYear());
         teacherDto.setLicenseName(teacher.getLicenseName());
@@ -81,7 +81,7 @@ public class TeacherService {
     	teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
         teacher.setTeacher_category(teacherDto.getTeacherCategory());
         teacher.setSnsAddress(teacherDto.getSnsAddress());
-        teacher.setCarrer(teacherDto.getCareer());
+        teacher.setCareer(teacherDto.getCareer());
         teacher.setCareerStartYear(teacherDto.getCareerStartYear());
         teacher.setCareerEndYear(teacherDto.getCareerEndYear());
         teacher.setLicenseName(teacherDto.getLicenseName());

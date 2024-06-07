@@ -37,7 +37,7 @@ public class Teacher {
     private List<String> teacher_category;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
-    private String carrer;
+    private String career;
     @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
     private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
@@ -59,17 +59,17 @@ public class Teacher {
     @Column(name = "TeacherState", nullable = false)
     private TeacherState teacherState = TeacherState.승인대기;
 
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "id='" + id + '\'' +
-                ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
-                ", teacherCategory='" + teacher_category + '\'' +
-                ", snsAddress='" + snsAddress + '\'' +
-                ", career='" + carrer + '\'' +
-                ", careerStartYear=" + careerStartYear +
-                ", careerEndYear=" + careerEndYear +
-                ", licenseName='" + licenseName + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Teacher{" +
+//                "id='" + id + '\'' +
+//                ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+//                ", teacherCategory='" + teacher_category + '\'' +
+//                ", snsAddress='" + snsAddress + '\'' +
+//                ", career='" + carrer + '\'' +
+//                ", careerStartYear=" + careerStartYear +
+//                ", careerEndYear=" + careerEndYear +
+//                ", licenseName='" + licenseName + '\'' +
+//                '}';
+//    }
 }

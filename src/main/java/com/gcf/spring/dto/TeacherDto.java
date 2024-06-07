@@ -31,6 +31,6 @@ public class TeacherDto {
                 ", careerEndYear=" + careerEndYear +
                 ", licenseName='" + licenseName + '\'' +
                 ", teachAbleCategory='" + teachAbleCategory + '\'' +
-                '}';
+                '}';  
     }
 }

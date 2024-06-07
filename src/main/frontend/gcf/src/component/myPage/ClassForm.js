@@ -134,6 +134,12 @@ function ClassForm() {
         setProgramNames(newProgramNames);
     };
 
+    const [CName, setCName] = useState('');
+
+    const handleCNameChange = (e) => {
+        setCName(e.target.value);
+    };
+
     const [duplicateApply, setDuplicateApply] = useState("O"); // 초기값은 O로 설정할 수 있습니다.
     const [targetAudience, setTargetAudience] = useState("adult"); // 초기값은 성인으로 설정할 수 있습니다.
 
@@ -154,8 +160,8 @@ function ClassForm() {
                         <div className='ClassFState'>강의 등록 신청서</div>
                     </div>
                     <div className="whiteBox">
-                        
-                        <form> 
+
+                        <form>
                             <h4>강의정보</h4>
 
                             <div>
@@ -167,7 +173,7 @@ function ClassForm() {
                                     />
                                     오프라인 교육
                                 </label>
-                            
+
                                 <label>
                                     <input
                                         type="checkbox"
@@ -176,6 +182,18 @@ function ClassForm() {
                                     />
                                     온라인 교육
                                 </label>
+                            </div>
+
+                            <div className="ClassName">
+                                <label htmlFor="CName">프로그래명 이름:</label>
+                                <input
+                                    type="text"
+                                    id="CName"
+                                    name="CName"
+                                    placeholder="프로그래명 이름 입력"
+                                    value={CName}
+                                    onChange={handleCNameChange}
+                                />
                             </div>
 
                             <div className='InfoGroup'>
@@ -208,7 +226,7 @@ function ClassForm() {
                                     <div key={index} className="teachingSubjectField">
                                         <input
                                             type='text'
-                                            
+
                                             value={field.subject}
                                             onChange={(event) => handleTeachingSubjectChange(event, index)}
                                         />
@@ -238,19 +256,19 @@ function ClassForm() {
                                             )}
                                         </div>
                                     ))}
-                                    
+
                                 </div>
 
                                 {/* 교육 배너 포스터 입력란 */}
                             </div>
 
-                            
+
                             <div className="OnlineLec">
-                            <h4>온라인 강의</h4>
-                            <h7>온라인 교육 체크시</h7>
-                            <div><ManageLecOnDetail /></div>
+                                <h4>온라인 강의</h4>
+                                <h7>온라인 교육 체크시</h7>
+                                <div><ManageLecOnDetail /></div>
                             </div>
-                        
+
                             <div style={{ display: "flex" }}>
 
                                 {/* 드롭다운 메뉴 */}
@@ -313,7 +331,7 @@ function ClassForm() {
 
                             {/* 운영 요일 선택 */}
                             <div>
-                                강의 운영 요일: 
+                                강의 운영 요일:
                                 <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)}>
                                     <option value="">운영 요일 선택</option>
                                     <option value="월요일">월요일</option>
@@ -328,7 +346,7 @@ function ClassForm() {
 
                             <div>
                                 {/* 상세프로그램명 입력 인풋들 */}
-                                상세프로그램명 입력: 
+                                상세프로그램명 입력:
                                 {programNames.map((programName, index) => (
                                     <div key={index}>
                                         <input
@@ -353,7 +371,7 @@ function ClassForm() {
                                 />
                             </div>
 
-                            
+
                             {/* 달력으로 모집 기간 선택 */}
                             <h4>모집 기간 선택</h4>
                             <DateRangePicker

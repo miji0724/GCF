@@ -535,7 +535,7 @@ function TeacherForm() {
                         </div>
 
                         <div className='SnsEmail'>
-                            <label htmlFor='snsEmail'>SNS주소:</label>
+                            <label htmlFor='snsEmail'>강사 이메일:</label>
                             <input
                                 type='email'
                                 id='snsEmail'
