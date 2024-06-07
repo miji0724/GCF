@@ -78,6 +78,9 @@ public class Member {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<OffProgram> offProgram;
 
 
 //강의 댓글 추가

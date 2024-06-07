@@ -97,10 +97,9 @@ public class OffProgram {
     private Attachment poster; // 프로그램 포스터 정보
 
     @OneToMany
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "offProgramNumber")
     private List<ProgramInfo> programInfos; // 프로그램 소개
 
-    @OneToMany
-    @JoinColumn(referencedColumnName = "id")
-    private List<TeacherInfo> teacherInfos; // 강사 소개
+
+
 }

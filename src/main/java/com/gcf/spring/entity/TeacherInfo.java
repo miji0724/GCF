@@ -12,19 +12,10 @@ public class TeacherInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer bb;
 
     private String description; 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "attachment_id", referencedColumnName = "id")
-    private Attachment attachment;
 
-    @ManyToOne
-    @JoinColumn(name = "off_program_id", referencedColumnName = "offProgramNumber")
-    private OffProgram offProgram;
-    
-    @ManyToOne
-    @JoinColumn(name = "on_program_id", referencedColumnName = "onProgramNumber")
-    private OnProgram onProgram;
+
 }

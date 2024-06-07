@@ -37,8 +37,7 @@ public class Attachment {
     @JoinColumn(referencedColumnName = "offProgramNumber")
     private OffProgram offProgramPoster;
 
-    @JoinColumn(referencedColumnName = "onProgramNumber")
-    private OnProgram onProgramPoster;
+
 
     @ManyToOne
     @JoinColumn(name = "off_program_info_id")
