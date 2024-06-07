@@ -27,6 +27,8 @@ function ClassForm() {
     const [PeriodofflineLocationEndDate, PeriodsetOfflineLocationEndDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState("");
     const [numberOfApplicants, setNumberOfApplicants] = useState("");
+    const [offlineProgramType, setOfflineProgramType] = useState(""); // New state for offline program type
+    
 
     const handleAddCertificationField = () => {
         const newCertificationFields = [...certificationFields, { certification: '' }];
@@ -140,9 +142,6 @@ function ClassForm() {
         setCName(e.target.value);
     };
 
-    const [duplicateApply, setDuplicateApply] = useState("O"); // 초기값은 O로 설정할 수 있습니다.
-    const [targetAudience, setTargetAudience] = useState("adult"); // 초기값은 성인으로 설정할 수 있습니다.
-
     const handleNumberOfApplicantsChange = (event) => {
         const { value } = event.target;
         // 숫자만 입력되도록 정규식을 사용하여 유효성을 검사할 수 있습니다.
@@ -151,9 +150,12 @@ function ClassForm() {
         }
     };
 
+    const handleOfflineProgramTypeChange = (event) => {
+        setOfflineProgramType(event.target.value);
+    };
 
     return (
-        <div className='All' >
+        <div className='All'>
             <div className="May">
                 <div className='ClassFormContainer'>
                     <div className='ClassFContainer'>
@@ -226,7 +228,6 @@ function ClassForm() {
                                     <div key={index} className="teachingSubjectField">
                                         <input
                                             type='text'
-
                                             value={field.subject}
                                             onChange={(event) => handleTeachingSubjectChange(event, index)}
                                         />
@@ -272,13 +273,21 @@ function ClassForm() {
                             <div style={{ display: "flex" }}>
 
                                 {/* 드롭다운 메뉴 */}
-                                <div style={{ display: "flex" }}>
+                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                    {/* 오프라인 프로그램 선택 드롭다운 메뉴 */}
+                                    <div style={{ marginBottom: "20px" }}>
+                                        <h4>오프라인 프로그램 선택</h4>
+                                        <select value={offlineProgramType} onChange={handleOfflineProgramTypeChange}>
+                                            <option value="Education">교육</option>
+                                            <option value="Experience">체험</option>
+                                        </select>
+                                    </div>
+
                                     {/* 장소 선택 드롭다운 메뉴 */}
-                                    <div style={{ marginRight: "20px" }}>
+                                    <div style={{ marginBottom: "20px" }}>
                                         <h4>오프라인 장소 선택</h4>
                                         <h7>오프라인 교육 체크시</h7>
                                         <select value={selectedLocation} onChange={handleLocationChange}>
-                                            <option value="">장소 선택</option>
                                             <option value="김포아트빌리지">김포아트빌리지</option>
                                             <option value="통진두레문화센터">통진두레문화센터</option>
                                             <option value="김포국제조각공원">김포국제조각공원</option>
@@ -289,43 +298,43 @@ function ClassForm() {
                                             {/* 다른 장소들에 대한 옵션 추가 */}
                                         </select>
                                     </div>
+                                </div>
 
-                                    {/* 날짜 선택 캘린더 */}
-                                    <div>
-                                        <h5>날짜 선택</h5>
-                                        <DateRangePicker
-                                            onChange={(ranges) => {
-                                                const { selection } = ranges;
-                                                setOfflineLocationStartDate(selection.startDate);
-                                                setOfflineLocationEndDate(selection.endDate);
-                                            }}
-                                            ranges={[{ startDate: offlineLocationStartDate, endDate: offlineLocationEndDate, key: 'selection' }]}
-                                        />
-                                        <p>선택된 날짜: {offlineLocationStartDate.toLocaleDateString()} - {offlineLocationEndDate.toLocaleDateString()}</p>
-                                        <p>선택된 시간: {startHour} - {endHour}</p>
-                                    </div>
+                                {/* 날짜 선택 캘린더 */}
+                                <div>
+                                    <h5>날짜 선택</h5>
+                                    <DateRangePicker
+                                        onChange={(ranges) => {
+                                            const { selection } = ranges;
+                                            setOfflineLocationStartDate(selection.startDate);
+                                            setOfflineLocationEndDate(selection.endDate);
+                                        }}
+                                        ranges={[{ startDate: offlineLocationStartDate, endDate: offlineLocationEndDate, key: 'selection' }]}
+                                    />
+                                    <p>선택된 날짜: {offlineLocationStartDate.toLocaleDateString()} - {offlineLocationEndDate.toLocaleDateString()}</p>
+                                    <p>선택된 시간: {startHour} - {endHour}</p>
+                                </div>
 
-                                    <div style={{ marginRight: "20px" }}>
-                                        <h4>Start</h4>
-                                        <select value={startHour} onChange={(e) => setStartHour(e.target.value)}>
-                                            {[...Array(17)].map((_, index) => {
-                                                const hour = index + 6;
-                                                const formattedHour = hour.toString().padStart(2, '0');
-                                                return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
-                                            })}
-                                        </select>
-                                    </div>
+                                <div style={{ marginRight: "20px" }}>
+                                    <h4>Start</h4>
+                                    <select value={startHour} onChange={(e) => setStartHour(e.target.value)}>
+                                        {[...Array(17)].map((_, index) => {
+                                            const hour = index + 6;
+                                            const formattedHour = hour.toString().padStart(2, '0');
+                                            return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
+                                        })}
+                                    </select>
+                                </div>
 
-                                    <div>
-                                        <h4>End</h4>
-                                        <select value={endHour} onChange={(e) => setEndHour(e.target.value)}>
-                                            {[...Array(17)].map((_, index) => {
-                                                const hour = index + 7;
-                                                const formattedHour = hour.toString().padStart(2, '0');
-                                                return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
-                                            })}
-                                        </select>
-                                    </div>
+                                <div>
+                                    <h4>End</h4>
+                                    <select value={endHour} onChange={(e) => setEndHour(e.target.value)}>
+                                        {[...Array(17)].map((_, index) => {
+                                            const hour = index + 7;
+                                            const formattedHour = hour.toString().padStart(2, '0');
+                                            return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
+                                        })}
+                                    </select>
                                 </div>
                             </div>
 
@@ -371,7 +380,6 @@ function ClassForm() {
                                 />
                             </div>
 
-
                             {/* 달력으로 모집 기간 선택 */}
                             <h4>모집 기간 선택</h4>
                             <DateRangePicker
@@ -408,8 +416,6 @@ function ClassForm() {
                                     {/* 다른 옵션 추가 가능 */}
                                 </select>
                             </div>
-
-
 
                             <div className="subtitle">
                                 {/* 서브 타이틀 내용 생략 */}

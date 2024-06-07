@@ -47,3 +47,6 @@ src/main/frontend/dist/
 # Miscellaneous
 .DS_Store
 .env
+
+# Ignore Google Cloud service account credentials
+src/main/resources/project-gcf-424105-d1392a5ef44a.json

@@ -59,17 +59,4 @@ public class Teacher {
     @Column(name = "TeacherState", nullable = false)
     private TeacherState teacherState = TeacherState.승인대기;
 
-//    @Override
-//    public String toString() {
-//        return "Teacher{" +
-//                "id='" + id + '\'' +
-//                ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
-//                ", teacherCategory='" + teacher_category + '\'' +
-//                ", snsAddress='" + snsAddress + '\'' +
-//                ", career='" + carrer + '\'' +
-//                ", careerStartYear=" + careerStartYear +
-//                ", careerEndYear=" + careerEndYear +
-//                ", licenseName='" + licenseName + '\'' +
-//                '}';
-//    }
 }
