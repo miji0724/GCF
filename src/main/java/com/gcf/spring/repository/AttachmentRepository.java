@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Notice;
 
-public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
-	List<Attachment> findAllById(Iterable<Long> ids);
-	List<Attachment> findAllByNoticeId(Notice notice);
-	void deleteAllByNoticeId(Notice notice);
+public interface AttachmentRepository extends JpaRepository<Attachment, Integer> {
+	List<Attachment> findAllById(Iterable<Integer> ids);
+	List<Attachment> findAllByNotice(Notice notice);
+	void deleteAllByNotice(Notice notice);
+	
 }

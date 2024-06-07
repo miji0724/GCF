@@ -38,15 +38,11 @@ public class Comment {
     @Column(nullable = false)
     private Integer commentNumber; 
 
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
-    private Member member;
-
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(nullable = false)
     @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "onProgramNumber", nullable = false)
     private OnProgram postId;
 
     // 댓글 작성 날짜
@@ -72,14 +68,5 @@ public class Comment {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
     private List<Comment> replies;
 
-    // 댓글 수정 메서드
-    public void updateContent(String newContent) {
-        this.content = newContent;
-        this.modifiedDate = LocalDateTime.now();
-    }
 
-    // 댓글 삭제 메서드
-    public void deleteComment() {
-        this.isDeleted = true;
-    }
 }

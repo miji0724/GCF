@@ -143,7 +143,7 @@ public class TeacherService {
 		        member.setName(memTeachDto.getName());
 		        member.setBirth(memTeachDto.getBirth());
 		        member.setPhone_number(memTeachDto.getPhone_number());
-		        member.setTelNumber(memTeachDto.getTel_number());
+		        member.setTel_number(memTeachDto.getTel_number());
 		        member.setEmail(memTeachDto.getEmail());
 		        member.setAddress(memTeachDto.getAddress());
 		        member.setDetail_address(memTeachDto.getDetail_address());

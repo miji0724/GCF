@@ -28,31 +28,31 @@ public class OnProgram {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "on_program_number", nullable = false)
+    @Column(nullable = false)
     private Integer onProgramNumber; // 프로그램 번호
 
-    @Column(name = "on_program_name", nullable = false)
+    @Column( nullable = false)
     private String onProgramName; // 프로그램 이름
 
-    @Column(name = "operating_start_day", nullable = false)
+    @Column( nullable = false)
     private LocalDate operatingStartDay; // 업로드 날짜
 
-    @Column(name = "views")
+    @Column(nullable = false)
     private Integer views = 0; // 조회수
 
-    @Column(name = "likes_count", nullable = false)
+    @Column(nullable = false)
 
     private Integer likesCount = 0; // 좋아요 수
 
-    @Column(name = "online_category", nullable = false)
+    @Column(nullable = false)
     private String onlineCategory; //프로그램 카테고리
 
 
-    @Column(name = "program_type", nullable = false)
+    @Column(nullable = false)
     private String programType; //프로그램 온/오프라인 구분
     
     @OneToOne
-    @JoinColumn(name = "poster_id")
+    @JoinColumn(nullable = false)
     private Attachment poster; // 포스터 정보
     
     @OneToMany(mappedBy = "onProgramInfo", cascade = CascadeType.ALL)

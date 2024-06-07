@@ -14,21 +14,17 @@ public class TeacherInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "description")
     private String description; 
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "attachment_id", referencedColumnName = "id")
-    private Attachment attachment; // 첨부파일
+    private Attachment attachment;
 
     @ManyToOne
-    @JoinColumn(name = "off_program_id", referencedColumnName = "id")
-    private OffProgram offProgram; // 연관된 오프라인 프로그램
+    @JoinColumn(name = "off_program_id", referencedColumnName = "offProgramNumber")
+    private OffProgram offProgram;
     
     @ManyToOne
-    @JoinColumn(name = "on_program_id", referencedColumnName = "id")
-    private OnProgram onProgram; // 연관된 오프라인 프로그램
-    
-    
-    
+    @JoinColumn(name = "on_program_id", referencedColumnName = "onProgramNumber")
+    private OnProgram onProgram;
 }

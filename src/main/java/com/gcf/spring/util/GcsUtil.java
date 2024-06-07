@@ -28,11 +28,4 @@ public class GcsUtil {
                 .setContentType(contentType)
                 .build();
     }
-    
-    
-    public void uploadFile(String bucketName, String fileName, MultipartFile file) throws StorageException, IOException {
-        BlobId blobId = createBlobId(bucketName, fileName);
-        BlobInfo blobInfo = createBlobInfo(blobId, file.getContentType());
-        storage.create(blobInfo, file.getBytes());
-    }
 }

@@ -61,6 +61,8 @@ public class Teacher {
 	@Enumerated(EnumType.STRING)
     @Column(name = "TeacherState", nullable = false)
     private TeacherState teacherState = TeacherState.승인대기;
+	
+	
 		
 	@Override
 	public String toString() {

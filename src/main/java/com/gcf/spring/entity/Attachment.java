@@ -26,17 +26,18 @@ public class Attachment {
     private String file_path;
 
     @ManyToOne
-    @JoinColumn(name = "noticeId", referencedColumnName = "id")
+    @JoinColumn(referencedColumnName = "id")
     @JsonIgnore
     private Notice noticeId;
 
     @Column
     private String parent;
 
-    @OneToOne(mappedBy = "poster")
+    @OneToOne
+    @JoinColumn(referencedColumnName = "offProgramNumber")
     private OffProgram offProgramPoster;
 
-    @OneToOne(mappedBy = "poster")
+    @JoinColumn(referencedColumnName = "onProgramNumber")
     private OnProgram onProgramPoster;
 
     @ManyToOne

@@ -8,37 +8,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.gcf.spring.constant.On_or_OFF;
-import com.gcf.spring.dto.On_ProgramDTO;
+import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.OnProgram;
-import com.gcf.spring.service.On_programService;
+import com.gcf.spring.service.OnProgramService;
 
 @RestController
 @RequestMapping("/api/on_programs")
-public class On_programController {
+public class OnProgramController {
 
-    private final On_programService onProgramService;
+    private final OnProgramService onProgramService;
 
     @Autowired
-    public On_programController(On_programService onProgramService) {
+    public OnProgramController(OnProgramService onProgramService) {
         this.onProgramService = onProgramService;
     }
 
     @GetMapping
-    public List<On_ProgramDTO> getAllPrograms(
+    public List<OnProgramDto> getAllPrograms(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "4") int size) {
         return onProgramService.getAllPrograms(page, size);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<On_ProgramDTO> getProgramById(@PathVariable int id) {
-        Optional<On_ProgramDTO> program = onProgramService.getProgramById(id);
+    public ResponseEntity<OnProgramDto> getProgramById(@PathVariable int id) {
+        Optional<OnProgramDto> program = onProgramService.getProgramById(id);
         return program.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/filter")
-    public List<On_ProgramDTO> searchByFilters(
+    public List<OnProgramDto> searchByFilters(
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String name,
         @RequestParam(defaultValue = "0") int page,
@@ -50,9 +49,8 @@ public class On_programController {
     public ResponseEntity<Void> updateProgramStats(
         @PathVariable int id,
         @RequestParam(required = false, defaultValue = "false") boolean incrementViews,
-        @RequestParam(required = false, defaultValue = "false") boolean incrementLikes,
-        @RequestParam(required = false, defaultValue = "false") boolean toggleBookmark) {
-        if (onProgramService.updateProgramStats(id, incrementViews, incrementLikes, toggleBookmark)) {
+        @RequestParam(required = false, defaultValue = "false") boolean incrementLikes) {
+        if (onProgramService.updateProgramStats(id, incrementViews, incrementLikes)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
@@ -72,8 +70,8 @@ public class On_programController {
         onProgram.setOperatingStartDay(LocalDate.now());
         onProgram.setViews(0);
         onProgram.setLikesCount(0);
-        onProgram.setOnlineCategory(List.of("카테고리1", "카테고리2"));
-        onProgram.setProgramType(On_or_OFF.온라인);
+        onProgram.setOnlineCategory("카테고리1, 카테고리2");
+        onProgram.setProgramType("온라인");
 
         onProgramService.saveOnProgram(onProgram);
         return ResponseEntity.ok("예시 온라인 프로그램이 생성되었습니다.");

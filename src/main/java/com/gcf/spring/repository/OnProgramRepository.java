@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.gcf.spring.entity.OnProgram;
 
 @Repository
-public interface On_programRepository extends JpaRepository<OnProgram, Integer> {
-    // 이름으로 프로그램 검색
-    Page<OnProgram> findByOnProgramNameContaining(String name, Pageable pageable);
+public interface OnProgramRepository extends JpaRepository<OnProgram, Integer> {
 
     // 카테고리로 프로그램 검색
-    Page<OnProgram> findByOnlineCategoryContaining(String category, Pageable pageable);
+    Page<OnProgram> findByOnlineCategoryContaining(String onlineCategory, Pageable pageable);
+
+    // 이름으로 프로그램 검색
+    Page<OnProgram> findByOnProgramNameContaining(String onProgramName, Pageable pageable);
 }

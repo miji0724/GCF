@@ -11,37 +11,37 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.gcf.spring.dto.On_ProgramDTO;
+import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.OnProgram;
-import com.gcf.spring.repository.On_programRepository;
+import com.gcf.spring.repository.OnProgramRepository;
 
 @Service
-public class On_programService2 {
+public class OnProgramService {
 
-    private final On_programRepository onProgramRepository;
+    private final OnProgramRepository onProgramRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public On_programService2(On_programRepository onProgramRepository, ModelMapper modelMapper) {
+    public OnProgramService(OnProgramRepository onProgramRepository, ModelMapper modelMapper) {
         this.onProgramRepository = onProgramRepository;
         this.modelMapper = modelMapper;
     }
 
-    public List<On_ProgramDTO> getAllPrograms(int page, int size) {
+    public List<OnProgramDto> getAllPrograms(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<OnProgram> programsPage = onProgramRepository.findAll(pageable);
         return programsPage.stream()
                 .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
-                .map(program -> modelMapper.map(program, On_ProgramDTO.class))
+                .map(program -> modelMapper.map(program, OnProgramDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Optional<On_ProgramDTO> getProgramById(int id) {
+    public Optional<OnProgramDto> getProgramById(int id) {
         Optional<OnProgram> program = onProgramRepository.findById(id);
-        return program.map(p -> modelMapper.map(p, On_ProgramDTO.class));
+        return program.map(p -> modelMapper.map(p, OnProgramDto.class));
     }
 
-    public List<On_ProgramDTO> findFilteredPrograms(String category, String name, int page, int size) {
+    public List<OnProgramDto> findFilteredPrograms(String category, String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<OnProgram> filteredPrograms;
 
@@ -55,11 +55,11 @@ public class On_programService2 {
 
         return filteredPrograms.stream()
                 .sorted((p1, p2) -> p2.getOperatingStartDay().compareTo(p1.getOperatingStartDay()))
-                .map(program -> modelMapper.map(program, On_ProgramDTO.class))
+                .map(program -> modelMapper.map(program, OnProgramDto.class))
                 .collect(Collectors.toList());
     }
 
-    public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes, boolean toggleBookmark) {
+    public boolean updateProgramStats(int id, boolean incrementViews, boolean incrementLikes) {
         Optional<OnProgram> optionalProgram = onProgramRepository.findById(id);
         if (optionalProgram.isPresent()) {
             OnProgram program = optionalProgram.get();
@@ -75,5 +75,17 @@ public class On_programService2 {
         } else {
             return false;
         }
+    }
+
+    public OnProgram saveOnProgram(OnProgram onProgram) {
+        return onProgramRepository.save(onProgram);
+    }
+
+    public Optional<OnProgram> getOnProgramById(int id) {
+        return onProgramRepository.findById(id);
+    }
+
+    public List<OnProgram> getAllOnPrograms() {
+        return onProgramRepository.findAll();
     }
 }

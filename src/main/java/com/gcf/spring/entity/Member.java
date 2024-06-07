@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.Role;
-import com.gcf.spring.dto.MemberDTO;
+import com.gcf.spring.dto.MemberDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +16,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -46,7 +47,7 @@ public class Member {
     @Column(nullable = false)
     private String phone_number;
     
-    private String telNumber;
+    private String tel_number;
     
     @Column(unique = true)
     private String email;
@@ -77,24 +78,18 @@ public class Member {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-    @OneToOne
-    @JsonIgnore
-    @JoinColumn(name="id")
-    private OnProgram onProgram;
+
+
+//강의 댓글 추가
     
-    @OneToOne
-    @JsonIgnore
-    @JoinColumn(name="id")
-    private OffProgram offProgram;
-    
-    public static Member createMember(MemberDTO memberDto, PasswordEncoder passwordEncoder){
+    public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
         Member member = new Member();
         member.setId(memberDto.getId());
         member.setName(memberDto.getName());
         member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         member.setBirth(memberDto.getBirth());
         member.setPhone_number(memberDto.getPhone_number());
-        member.setTelNumber(memberDto.getTel_number());
+        member.setTel_number(memberDto.getTel_number());
         member.setEmail(memberDto.getEmail());
         member.setAddress(memberDto.getAddress());
         member.setDetail_address(memberDto.getAddress());
