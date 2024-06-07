@@ -1,7 +1,6 @@
 package com.gcf.spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gcf.spring.dto.AttachmentDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,45 +14,37 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="attachment")
+@Table(name = "attachment")
 @Getter
 @Setter
 public class Attachment {
-    
-	//id
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
-    //파일 원본 이름
+    private int id;
+
     @Column
     private String original_name;
-    
-    //고유 번호 + 원본 이름
+
     @Column
     private String file_name;
-    
-    //파일 저장 경로
-    @Column
+
+    @Column(columnDefinition = "VARCHAR(500)")
     private String file_path;
-    
-    //공지사항 참조(null 허용)
+
+    @Column
+    private String parent;
+
+    @ManyToOne
+    @JoinColumn(name = "banner_one_id", referencedColumnName = "id")
+    private BannerOne bannerOne;
+
+    @ManyToOne
+    @JoinColumn(name = "banner_two_id", referencedColumnName = "id")
+    private BannerTwo bannerTwo;
+
     @ManyToOne
     @JoinColumn(name = "noticeId", referencedColumnName = "id")
     @JsonIgnore
-    private Notice noticeId; 
-    
-    //파일이 속한 엔티티
-    @Column
-    private String parent;
-    
-//    @Override
-//    public String toString() {
-//        return "Attachment{" +
-//                "fileName='" + this.file_name + '\'' +
-//                ", filePath='" + this.file_path + '\'' +
-//                ",notice_id='" + (this. noticeId!= null ? this.noticeId.getId() : null) + '\'' +
-//                ", Type='" + this.parent + '\'' +
-//                '}';
-//    }
+    private Notice notice;
 }
