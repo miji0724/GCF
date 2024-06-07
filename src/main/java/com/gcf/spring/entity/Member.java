@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.Role;
-import com.gcf.spring.dto.MemberDto;
+import com.gcf.spring.dto.MemberDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -87,7 +87,7 @@ public class Member {
     @JoinColumn(name="id")
     private OffProgram offProgram;
     
-    public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
+    public static Member createMember(MemberDTO memberDto, PasswordEncoder passwordEncoder){
         Member member = new Member();
         member.setId(memberDto.getId());
         member.setName(memberDto.getName());

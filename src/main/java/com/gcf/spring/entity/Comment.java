@@ -35,22 +35,22 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comm_num", nullable = false)
+    @Column(nullable = false)
     private Integer commentNumber; 
 
     @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(referencedColumnName = "id")
     private Member member;
 
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(nullable = false)
     @ManyToOne
     private OnProgram postId;
 
     // 댓글 작성 날짜
-    @Column(name = "created_date", nullable = false)
+    @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdDate = LocalDate.now(); // 지금 날짜
 
@@ -60,7 +60,7 @@ public class Comment {
     private LocalDateTime modifiedDate;
 
     // 댓글 삭제 여부
-    @Column(name = "is_deleted", nullable = false)
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     // 답글 기능을 위한 부모 댓글

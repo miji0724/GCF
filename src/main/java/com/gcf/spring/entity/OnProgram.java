@@ -5,14 +5,10 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.gcf.spring.constant.On_or_OFF;
-import com.gcf.spring.constant.Online_category;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,21 +45,21 @@ public class OnProgram {
     private Integer likesCount = 0; // 좋아요 수
 
     @Column(name = "online_category", nullable = false)
-    private Online_category onlineCategory; //프로그램 카테고리
+    private String onlineCategory; //프로그램 카테고리
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "program_type", nullable = false)
-    private On_or_OFF programType; // 프로그램 타입 (온라인/오프라인 구분) 
+    private String programType; //프로그램 온/오프라인 구분
     
     @OneToOne
     @JoinColumn(name = "poster_id")
     private Attachment poster; // 포스터 정보
     
     @OneToMany(mappedBy = "onProgramInfo", cascade = CascadeType.ALL)
-    private List<Attachment> programInfos; // 프로그램 정보
+    private List<ProgramInfo> programInfos; // 프로그램 정보
     
     @OneToMany(mappedBy = "onProgramTeacherInfo", cascade = CascadeType.ALL)
-    private List<ProgramInfo> teacherInfos; // 강사 소개 파일
+    private List<TeacherInfo> teacherInfos; // 강사 소개 파일
 
     @OneToMany(mappedBy = "onProgramVideo", cascade = CascadeType.ALL)
     private List<TeacherInfo> videos; // 동영상 리스트
