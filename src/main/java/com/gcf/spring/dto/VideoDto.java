@@ -5,9 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OnBookMarkDTO {
+public class VideoDto {
 
     private Integer id;
-    private MemberDTO user;
-    private OnProgramDTO onProgram;
+    private String title;
+    private String url;
+    private OnProgramDto onProgram;
 }
