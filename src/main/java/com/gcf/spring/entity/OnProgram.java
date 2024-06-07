@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.gcf.spring.constant.On_or_OFF;
+import com.gcf.spring.constant.Online_category;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,24 +33,23 @@ public class OnProgram {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "on_program_number", nullable = false)
-    private int onProgramNumber; // 프로그램 번호
+    private Integer onProgramNumber; // 프로그램 번호
 
     @Column(name = "on_program_name", nullable = false)
     private String onProgramName; // 프로그램 이름
 
     @Column(name = "operating_start_day", nullable = false)
-    private LocalDate operatingStartDay; // 운영 시작일
+    private LocalDate operatingStartDay; // 업로드 날짜
 
     @Column(name = "views")
-    @ColumnDefault("0")
-    private int views; // 조회수
+    private Integer views = 0; // 조회수
 
     @Column(name = "likes_count", nullable = false)
-    @ColumnDefault("0")
-    private int likesCount; // 좋아요 수
+
+    private Integer likesCount = 0; // 좋아요 수
 
     @Column(name = "online_category", nullable = false)
-    private List<String> onlineCategory;
+    private Online_category onlineCategory; //프로그램 카테고리
 
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type", nullable = false)
@@ -72,5 +72,6 @@ public class OnProgram {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher; // 강사 ID
     
-    //댓글 구현 예정
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
+    private List<Comment> comments; // 댓글 리스트
 }
