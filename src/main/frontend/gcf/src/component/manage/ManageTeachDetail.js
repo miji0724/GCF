@@ -28,9 +28,8 @@ function ManageTeachDetail() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [teacherCategories, setTeacherCategories] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
-
     const [careerInputs, setCareerInputs] = useState([]);
-    const [LicenseInputs, setLicenseInputs] = useState([]);
+    const [licenseInputs, setLicenseInputs] = useState([]);
     const [teachAbleInputs, setTeachAbleInputs] = useState([]);
 
     useEffect(() => {
@@ -86,52 +85,33 @@ function ManageTeachDetail() {
         return '';
     };
 
-    const autoHypenPhone = (str) => {
-        str = str.replace(/[^0-9]/g, '');
-        let tmp = '';
-        if (str.length < 4) {
-            return str;
-        } else if (str.length < 7) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3);
-            return tmp;
-        } else if (str.length < 11) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 3) + '-';
-            tmp += str.substr(6);
-            return tmp;
-        } else {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 4) + '-';
-            tmp += str.substr(7);
-            return tmp;
-        }
+    const handleInputChange = (e, field) => {
+        const value = e.target.value;
+        setTeacherInfo((prev) => ({ ...prev, [field]: value }));
     };
 
-    const handlePhoneNumberChange = (event) => {
-        const value = event.target.value;
-        setPhoneNumber(autoHypenPhone(value));
-        handleInputChange(event, 'phone_number');
-    };
-
-    const handleInputChange = (e, field, index = null) => {
-        const value = e.target.value; // 여기부터
-        if (Array.isArray(teacherInfo[field])) {
-            setTeacherInfo((prev) => {
-                const newArray = [...prev[field]];
-                if (index !== null) {
-                    newArray[index] = value;
-                } else {
-                    newArray.push(value);
-                }
-                return { ...prev, [field]: newArray };
+    const handleArrayInputChange = (e, arrayName, index, key) => {
+        const value = e.target.value;
+        if (arrayName === 'careerInputs') {
+            setCareerInputs((prev) => {
+                const newArray = [...prev];
+                newArray[index] = { ...newArray[index], [key]: value };
+                return newArray;
             });
-        } else {
-            setTeacherInfo((prev) => ({ ...prev, [field]: value }));
+        } else if (arrayName === 'licenseInputs') {
+            setLicenseInputs((prev) => {
+                const newArray = [...prev];
+                newArray[index] = { ...newArray[index], [key]: value };
+                return newArray;
+            });
+        } else if (arrayName === 'teachAbleInputs') {
+            setTeachAbleInputs((prev) => {
+                const newArray = [...prev];
+                newArray[index] = { ...newArray[index], [key]: value };
+                return newArray;
+            });
         }
     };
-    
-    
 
     const handleTeachDetailChange = (event) => {
         const { value, checked } = event.target;
@@ -179,7 +159,7 @@ function ManageTeachDetail() {
 
     const sendConfirmTeacherInfo = () => {
         const { email_id, email_domain, ...rest } = teacherInfo;
-    
+
         const updatedTeacherInfo = {
             ...rest,
             name: teacherInfo.name,
@@ -194,7 +174,7 @@ function ManageTeachDetail() {
             career: careerInputs.map(input => input.value).join(','),
             careerStartYear: careerInputs.map(input => input.startYear).join(','),
             careerEndYear: careerInputs.map(input => input.endYear).join(','),
-            licenseName: LicenseInputs.map(input => input.value).join(','),
+            licenseName: licenseInputs.map(input => input.value).join(','),
             teachAbleCategory: teachAbleInputs.map(input => input.value).join(','),
             email: `${email_id}@${email_domain}`
         };
@@ -204,16 +184,32 @@ function ManageTeachDetail() {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            alert('강사 정보를 성공적으로 수정하였습니다.');
-            console.log(updatedTeacherInfo)
-            navigate(-1);
-        })
-        .catch(error => {
-            console.error('There was a problem with your axios operation:', error);
-            console.log(updatedTeacherInfo)
-        });
+            .then(response => {
+                alert('강사 정보를 성공적으로 수정하였습니다.');
+                console.log(updatedTeacherInfo);
+                navigate(-1);
+            })
+            .catch(error => {
+                console.error('There was a problem with your axios operation:', error);
+                console.log(updatedTeacherInfo);
+            });
     };
+
+    const deleteTeacherInfo = () => {
+        axios.delete(`/manage/deleteTeacherInfo/${teacherInfo.id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                alert('해당 강사를 성공적으로 해임하였습니다.');
+                navigate(-1);
+            })
+            .catch(error => {
+                console.error('There was a problem with your axios operation:', error);
+            });
+    };
+
     return (
         <div className='teachDetail_container'>
             <SideMenu />
@@ -245,24 +241,98 @@ function ManageTeachDetail() {
                     </div>
                     <div className='teachDetail_right'>
                         <ul>
-                            <li> <input type='text' id='teachDetail_name' value={teacherInfo.name} onChange={(e) => handleInputChange(e, 'name')} disabled={!isEditing} /></li>
-                            <li className='teachDetail_birth_container'>
-                                <input type='date' id='teachDetail_birth_detail' value={teacherInfo.birth} onChange={(e) => handleInputChange(e, 'birth')} disabled={!isEditing} />
-                            </li>
-                            <li> <input type="text" id='teachDetail_phoneNum' maxLength="13" value={teacherInfo.phone_number} onChange={(e) => handlePhoneNumberChange(e)} disabled={!isEditing} /></li>
-                            <li> <input type="text" id='teachDetail_telNum' maxLength="11" value={teacherInfo.tel_number} onChange={(e) => handleInputChange(e, 'tel_number')} disabled={!isEditing} /> </li>
                             <li>
-                                <input type='text' id='teachDetail_emailId' value={teacherInfo.email_id} onChange={(e) => handleInputChange(e, 'email_id')} disabled={!isEditing} />
-                                &nbsp;@&nbsp;
-                                <input type='text' id='teachDetail_emailAddr' value={teacherInfo.email_domain} onChange={(e) => handleInputChange(e, 'email_domain')} disabled={!isEditing} />
+                                <input
+                                    type='text'
+                                    name='name'
+                                    value={teacherInfo.name}
+                                    onChange={(e) => handleInputChange(e, 'name')}
+                                    disabled={!isEditing}
+                                />
                             </li>
-                            <li> <input type='text' id='teachDetail_addr' value={teacherInfo.address} onChange={(e) => handleInputChange(e, 'address')} disabled={!isEditing} /></li>
-                            <li> <input type='text' id='teachDetail_addrD' value={teacherInfo.detail_address} onChange={(e) => handleInputChange(e, 'detail_address')} disabled={!isEditing} /> </li>
-                            <li> <input type='text' id='teachDetail_organizaion' value={teacherInfo.affiliatedOrganization} onChange={(e) => handleInputChange(e, 'affiliatedOrganization')} disabled={!isEditing} /> </li>
+                            <li>
+                                <input
+                                    type='date'
+                                    name='birth'
+                                    value={teacherInfo.birth}
+                                    onChange={(e) => handleInputChange(e, 'birth')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='phone_number'
+                                    value={teacherInfo.phone_number}
+                                    onChange={(e) => handleInputChange(e, 'phone_number')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='tel_number'
+                                    value={teacherInfo.tel_number}
+                                    onChange={(e) => handleInputChange(e, 'tel_number')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='email_id'
+                                    value={teacherInfo.email_id}
+                                    onChange={(e) => handleInputChange(e, 'email_id')}
+                                    disabled={!isEditing}
+                                />@
+                                <input
+                                    type='text'
+                                    name='email_domain'
+                                    value={teacherInfo.email_domain}
+                                    onChange={(e) => handleInputChange(e, 'email_domain')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='address'
+                                    value={teacherInfo.address}
+                                    onChange={(e) => handleInputChange(e, 'address')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='detail_address'
+                                    value={teacherInfo.detail_address}
+                                    onChange={(e) => handleInputChange(e, 'detail_address')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='affiliatedOrganization'
+                                    value={teacherInfo.affiliatedOrganization}
+                                    onChange={(e) => handleInputChange(e, 'affiliatedOrganization')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
+                            <li>
+                                <input
+                                    type='text'
+                                    name='snsAddress'
+                                    value={teacherInfo.snsAddress}
+                                    onChange={(e) => handleInputChange(e, 'snsAddress')}
+                                    disabled={!isEditing}
+                                />
+                            </li>
                             <li>
                                 <div className='Detail_category'>
                                     {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
-                                        <label key={index}>
+                                        <label key={index} className="teacher_category">
                                             <input
                                                 type="checkbox"
                                                 name='teacherCategory'
@@ -276,35 +346,37 @@ function ManageTeachDetail() {
                                     ))}
                                 </div>
                             </li>
-                            <li> <input type='text' id='teachDetail_sns' value={teacherInfo.snsAddress} onChange={(e) => handleInputChange(e, 'snsAddress')} disabled={!isEditing} /> </li>
                             <li>
                                 <div className='mainCareer_buttonAlign'>
                                     <div className='mainCareer_area'>
-                                        {careerInputs.map((input) => (
-                                            <div key={input.id} className='mainCareer_flexArea'>
+                                        {careerInputs.map((input, index) => (
+                                            <div key={index} className='mainCareer_flexArea'>
                                                 <input
                                                     type='text'
                                                     className='mainCareer_detail'
-                                                    id={`teachDetail_mainCareer${input.id}_detail`}
+                                                    name={`career_${index}`}
                                                     value={input.value}
-                                                    onChange={(e) => handleInputChange(e, 'careerArray', input.id)}
+                                                    onChange={(e) => handleArrayInputChange(e, 'careerInputs', index, 'value')}
+                                                    placeholder='주요 이력'
                                                     disabled={!isEditing}
                                                 />
                                                 <input
-                                                    type='number'
+                                                    type='text'
                                                     className='mainCareer_startDate'
-                                                    id={`teachDetail_mainCareer${input.id}_startDate`}
+                                                    name={`careerStartYear_${index}`}
                                                     value={input.startYear}
-                                                    onChange={(e) => handleInputChange(e, 'careerStartYearArray', input.id)}
+                                                    onChange={(e) => handleArrayInputChange(e, 'careerInputs', index, 'startYear')}
+                                                    placeholder='시작 연도'
                                                     disabled={!isEditing}
                                                 />
                                                 ~
                                                 <input
-                                                    type='number'
+                                                    type='text'
                                                     className='mainCareer_endDate'
-                                                    id={`teachDetail_mainCareer${input.id}_endDate`}
+                                                    name={`careerEndYear_${index}`}
                                                     value={input.endYear}
-                                                    onChange={(e) => handleInputChange(e, 'careerEndYearArray', input.id)}
+                                                    onChange={(e) => handleArrayInputChange(e, 'careerInputs', index, 'endYear')}
+                                                    placeholder='종료 연도'
                                                     disabled={!isEditing}
                                                 />
                                                 <button onClick={() => handleRemoveCareerInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
@@ -314,17 +386,18 @@ function ManageTeachDetail() {
                                     <button onClick={handleAddCareerInput} style={{ backgroundColor: "#8A95FF" }} disabled={!isEditing}>+</button>
                                 </div>
                             </li>
-                            <li className='marginTop10'>
+                            <li>
                                 <div className='License_buttonAlign'>
                                     <div className='License_area'>
-                                        {LicenseInputs.map((input) => (
-                                            <div key={input.id} className='License_flexArea'>
+                                        {licenseInputs.map((input, index) => (
+                                            <div key={index} className='License_flexArea'>
                                                 <input
                                                     type='text'
                                                     className='License'
-                                                    id={`teachDetail_License${input.id}`}
+                                                    name={`license_${index}`}
                                                     value={input.value}
-                                                    onChange={(e) => handleInputChange(e, 'licenseNameArray', input.id)}
+                                                    onChange={(e) => handleArrayInputChange(e, 'licenseInputs', index, 'value')}
+                                                    placeholder='자격증'
                                                     disabled={!isEditing}
                                                 />
                                                 <button onClick={() => handleRemoveLicenseInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
@@ -334,17 +407,18 @@ function ManageTeachDetail() {
                                     <button onClick={handleAddLicenseInput} style={{ backgroundColor: "#8A95FF" }} disabled={!isEditing}>+</button>
                                 </div>
                             </li>
-                            <li className='marginTop10'>
+                            <li>
                                 <div className='teachAble_buttonAlign'>
                                     <div className='teachAble_area'>
-                                        {teachAbleInputs.map((input) => (
-                                            <div key={input.id} className='teachAble_flexArea'>
+                                        {teachAbleInputs.map((input, index) => (
+                                            <div key={index} className='teachAble_flexArea'>
                                                 <input
                                                     type='text'
                                                     className='teachAble'
-                                                    id={`teachDetail_teachAble${input.id}`}
+                                                    name={`teachAble_${index}`}
                                                     value={input.value}
-                                                    onChange={(e) => handleInputChange(e, 'teachAbleCategoryArray', input.id)}
+                                                    onChange={(e) => handleArrayInputChange(e, 'teachAbleInputs', index, 'value')}
+                                                    placeholder='강의 가능 분야'
                                                     disabled={!isEditing}
                                                 />
                                                 <button onClick={() => handleRemoveTeachAbleInput(input.id)} style={{ backgroundColor: "#FF8585" }} disabled={!isEditing}>-</button>
@@ -361,7 +435,7 @@ function ManageTeachDetail() {
                     {isEditing ? (
                         <>
                             <button onClick={sendConfirmTeacherInfo} className='teachDetail_confirmBtn'>완료</button>
-                            <button className='teachDetail_deleteBtn'>삭제</button>
+                            <button onClick={deleteTeacherInfo} className='teachDetail_deleteBtn'>해임</button>
                         </>
                     ) : (
                         <button onClick={() => setIsEditing(true)} className='teachDetail_confirmStartBtn'>수정</button>

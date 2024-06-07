@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,4 +83,11 @@ public class TeacherController {
     	System.out.println(memTeachDto.toString());
         return teacherService.saveTeacher(memTeachDto);
     }
+    
+    @DeleteMapping("/manage/deleteTeacherInfo/{id}")
+    public ResponseEntity<Void> deleteTeacherInfo(@PathVariable("id") String id) {
+        teacherService.deleteTeacherById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

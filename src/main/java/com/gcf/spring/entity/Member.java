@@ -107,4 +107,25 @@ public class Member {
 		member.setRole(Role.ADMIN);
 		return member;
 	}
+	
+	 @Override
+	    public String toString() {
+	        return "Member 디버깅용{" +
+	                "id='" + id + '\'' +
+	                ", name='" + name + '\'' +
+	                ", birth=" + birth +
+	                ", phone_number='" + phone_number + '\'' +
+	                ", tel_number='" + tel_number + '\'' +
+	                ", email='" + email + '\'' +
+	                ", address='" + address + '\'' +
+	                ", detail_address='" + detail_address + '\'' +
+	                ", email_agreement=" + email_agreement +
+	                ", message_agreement=" + message_agreement +
+	                ", mail_agreement=" + mail_agreement +
+	                ", married=" + married +
+	                ", hasChildren=" + hasChildren +
+	                ", role=" + role +
+	                ", createdAt=" + createdAt +
+	                '}';
+	    }
 }

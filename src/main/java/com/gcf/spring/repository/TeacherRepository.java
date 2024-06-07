@@ -11,4 +11,5 @@ import com.gcf.spring.entity.Teacher;
 public interface TeacherRepository extends JpaRepository<Teacher, String> {
 	List<Teacher> findByTeacherState(TeacherState teacherState);
 	Teacher findTeacherById(String id);
+	void deleteById(String id);
 }

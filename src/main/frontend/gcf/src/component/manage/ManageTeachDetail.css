@@ -89,8 +89,23 @@
     margin-right: 20px;
 }
 
+.License,
+.teachAble{
+    width:400px;
+}
+
 .mainCareer_flexArea input[type='number'] {
     width:100px;
+}
+
+.Detail_category{
+    display:flex;
+    flex-direction: row;
+}
+
+.teacher_category{
+    display:flex;
+    align-items: center;
 }
 
 .mainCareer_buttonAlign button,
@@ -137,13 +152,10 @@
     height:30px;
 }
 
-#teachDetail_License1_attachment,
-#teachDetail_License2_attachment,
-#teachDetail_License3_attachment{
-    width:180px;
-    background-color: rgba(0, 0, 0, 0);
+.mainCareer_endDate,
+.mainCareer_startDate{
+width:100px;
 }
-
 .License_flexArea input[type='text']{
     width:400px;
 }
