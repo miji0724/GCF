@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gcf.spring.dto.MemTeachDto;
 import com.gcf.spring.dto.TeacherDto;
 import com.gcf.spring.entity.Teacher;
+import com.gcf.spring.repository.OffProgramRepository;
 import com.gcf.spring.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class TeacherController {
 
 	private final TeacherService teacherService;
+	
+	
 
 	@PostMapping("/teacher/apply")
 	public ResponseEntity<String> applyForTeacher(@RequestBody TeacherDto teacherDto) {

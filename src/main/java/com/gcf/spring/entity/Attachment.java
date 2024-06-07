@@ -36,34 +36,35 @@ public class Attachment {
 	@Column
 	private String parent;
 
-	@ManyToOne
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "banner_one_id", referencedColumnName = "id")
 	private BannerOne bannerOne;
 
-	@ManyToOne
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "banner_two_id", referencedColumnName = "id")
 	private BannerTwo bannerTwo;
 
-	@ManyToOne
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "noticeId", referencedColumnName = "id")
 	@JsonIgnore
 	private Notice notice;
 
-	@OneToOne(mappedBy = "poster")
+	@OneToOne(mappedBy = "poster", optional = true)
 	private OffProgram offProgramPoster;
-	
-	@OneToOne(mappedBy = "poster")
-	private OnProgram onProgramPoster;
-	
-	@ManyToOne
-	@JoinColumn(name = "on_program_info_id")
-	private ProgramInfo ProgramInfo;
 
-	@ManyToOne
+	@OneToOne(mappedBy = "poster", optional = true)
+	private OnProgram onProgramPoster;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "on_program_info_id")
+	private ProgramInfo programInfo;
+
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "on_program_teacher_info_id")
-	private TeacherInfo ProgramTeacherInfo;
-	
-	@ManyToOne
+	private TeacherInfo programTeacherInfo;
+
+	@ManyToOne(optional = true)
 	@JoinColumn(name="on_video_id")
 	private OnVideo onVideo;
+
 }

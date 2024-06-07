@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.gcf.spring.constant.Day_of_week;
+import com.gcf.spring.dto.OffProgramDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -101,4 +102,35 @@ public class OffProgram {
 
     @OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL)
     private List<TeacherInfo> teacherInfos; //강사 소개
+    
+    
+    public static OffProgram createOffProgram(OffProgramDto off_programDto){
+        OffProgram offProgram = new OffProgram();
+        offProgram.setOffProgramNumber(off_programDto.getOffProgramNumber());
+        offProgram.setOffProgramName(off_programDto.getOffProgramName());
+        offProgram.setOffProgramDetailName(off_programDto.getOffProgramDetailName());
+        offProgram.setApplication_info(off_programDto.getApplication_info());
+         offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
+         offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
+         offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
+         offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
+         offProgram.setParticipationFee(off_programDto.getParticipationFee());
+         offProgram.setStartTime(off_programDto.getStartTime());
+         offProgram.setEndTime(off_programDto.getEndTime());
+         offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
+         offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
+         offProgram.setState(off_programDto.getState());
+         offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
+         offProgram.setViews(off_programDto.getViews());
+         offProgram.setLikesCount(off_programDto.getLikesCount());
+         offProgram.setOfflineCategory(off_programDto.getOfflineCategory());
+         offProgram.setPlaceName(off_programDto.getPlaceName());
+         offProgram.setProgramType(off_programDto.getProgramType());
+         offProgram.setTeacher(off_programDto.getTeacher());
+         offProgram.setPoster(null);
+         offProgram.setProgramInfos(null);
+         offProgram.setTeacherInfos(null);
+         return offProgram;
+         
+     }
 }

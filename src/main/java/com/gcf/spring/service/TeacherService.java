@@ -1,5 +1,7 @@
 package com.gcf.spring.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,13 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.gcf.spring.constant.Day_of_week;
 import com.gcf.spring.constant.Role;
 import com.gcf.spring.constant.TeacherState;
 import com.gcf.spring.dto.MemTeachDto;
+import com.gcf.spring.dto.OffProgramDto;
 import com.gcf.spring.dto.TeacherDto;
+import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Member;
+import com.gcf.spring.entity.OffProgram;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.repository.MemberRepository;
+import com.gcf.spring.repository.OffProgramRepository;
 import com.gcf.spring.repository.TeacherRepository;
 
 import jakarta.transaction.Transactional;
@@ -33,7 +40,10 @@ public class TeacherService {
 
 	@Autowired
 	private final MemberRepository memberRepository;
-
+	
+	@Autowired
+	private final OffProgramRepository offProgramRepository;
+	
 	private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
 
 	// 강사 신청
