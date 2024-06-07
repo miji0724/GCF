@@ -101,7 +101,7 @@ public class Member {
         member.setEmail_agreement(memberDto.getEmail_agreement());
         member.setMessage_agreement(memberDto.getMessage_agreement());
         member.setMail_agreement(memberDto.getMail_agreement());
-        member.setInterests(memberDto.getInterest());
+        member.setInterests(memberDto.getInterests());
         member.setMarried(memberDto.getMarried());
         member.setHasChildren(memberDto.getHasChildren());
         member.setRole(Role.USER);

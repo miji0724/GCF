@@ -27,7 +27,7 @@ public class OffBookMark {
 	//id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id")

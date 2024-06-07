@@ -63,10 +63,10 @@ public class OnProgram {
     private List<Attachment> programInfos; // 프로그램 정보
     
     @OneToMany(mappedBy = "onProgramTeacherInfo", cascade = CascadeType.ALL)
-    private List<Attachment> teacherInfos; // 강사 소개 파일
+    private List<ProgramInfo> teacherInfos; // 강사 소개 파일
 
     @OneToMany(mappedBy = "onProgramVideo", cascade = CascadeType.ALL)
-    private List<Attachment> videos; // 동영상 리스트
+    private List<TeacherInfo> videos; // 동영상 리스트
     
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")

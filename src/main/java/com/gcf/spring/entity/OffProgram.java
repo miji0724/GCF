@@ -100,8 +100,8 @@ public class OffProgram {
     private Attachment poster; //프로그램 포스터 정보
 
     @OneToMany(mappedBy = "offProgramInfo", cascade = CascadeType.ALL)
-    private List<Attachment> programInfos; //프로그램 소개
+    private List<ProgramInfo> programInfos; //프로그램 소개
 
     @OneToMany(mappedBy = "offProgramTeacherInfo", cascade = CascadeType.ALL)
-    private List<Attachment> teacherInfos; //강사 소개
+    private List<TeacherInfo> teacherInfos; //강사 소개
 }

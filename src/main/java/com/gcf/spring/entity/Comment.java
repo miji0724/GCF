@@ -36,7 +36,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comm_num", nullable = false)
-    private int commentNumber; 
+    private Integer commentNumber; 
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id")
