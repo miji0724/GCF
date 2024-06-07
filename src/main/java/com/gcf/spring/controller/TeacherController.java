@@ -37,7 +37,7 @@ public class TeacherController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTeacherInfo(@PathVariable String id, @RequestBody TeacherDto teacherDto) {
+    public ResponseEntity<String> updateTeacherInfo(@PathVariable("id") String id, @RequestBody TeacherDto teacherDto) {
         try {
             teacherService.updateTeacherInfo(id, teacherDto);
             return ResponseEntity.ok("정보가 업데이트되었습니다.");
@@ -47,7 +47,7 @@ public class TeacherController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTeacherInfo(@PathVariable String id) {
+    public ResponseEntity<String> deleteTeacherInfo(@PathVariable("id") String id) {
         try {
             teacherService.deleteTeacherInfo(id);
             return ResponseEntity.ok("삭제가 완료되었습니다.");

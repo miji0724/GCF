@@ -19,6 +19,7 @@ function TeacherForm() {
         teachAbleCategory: ''
     });
     const [userData, setUserData] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,17 +27,20 @@ function TeacherForm() {
                 const userResponse = await axios.get('/member/myinfo', { withCredentials: true });
                 setUserData(userResponse.data);
                 setBirthDate(userResponse.data.birth);
-    
+
                 const teacherResponse = await axios.get(`/teacher/myinfo?userId=${userResponse.data.id}`, { withCredentials: true });
                 if (teacherResponse.data) {
-                    setTeacherData(teacherResponse.data);
+                    setTeacherData({
+                        ...teacherResponse.data,
+                        id: userResponse.data.id,  // 여기에 userResponse.data.id 설정
+                    });
                     // 초기 history, certification, teaching subject 필드 설정
                     setHistoryFields(parseFieldArray(teacherResponse.data.career, teacherResponse.data.careerStartYear, teacherResponse.data.careerEndYear));
                     setCertificationFields(parseSingleFieldArray(teacherResponse.data.licenseName, 'certification'));
                     setTeachingSubjectFields(parseSingleFieldArray(teacherResponse.data.teachAbleCategory, 'subject'));
                 } else {
                     setTeacherData({
-                        id: userResponse.data.id,
+                        id: userResponse.data.id,  // 여기에 userResponse.data.id 설정
                         affiliatedOrganization: '',
                         teacherCategory: [],
                         snsAddress: '',
@@ -51,7 +55,7 @@ function TeacherForm() {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     }, []);
 
@@ -155,13 +159,24 @@ function TeacherForm() {
     };
 
     const handleVerify = () => {
-        alert('현재 입력된 데이터를 확인해주세요.\n' + JSON.stringify(teacherData, null, 2));
+        setIsEditing(true);
+        alert('수정 완료 후 저장버튼을 눌러주세요.');
     };
 
     const handleSave = async () => {
+        const updatedTeacherData = {
+            ...teacherData,
+            career: historyFields.map(field => field.event).join(','),
+            careerStartYear: historyFields.map(field => field.startDate).join(','),
+            careerEndYear: historyFields.map(field => field.endDate).join(','),
+            licenseName: certificationFields.map(field => field.certification).join(','),
+            teachAbleCategory: teachingSubjectFields.map(field => field.subject).join(',')
+        };
+
         try {
-            await axios.put(`/teacher/${teacherData.id}`, teacherData, { withCredentials: true });
+            await axios.put(`/teacher/${teacherData.id}`, updatedTeacherData, { withCredentials: true });
             alert('저장이 완료되었습니다.');
+            setIsEditing(false);
         } catch (error) {
             console.error('Error saving teacher data:', error);
             alert('저장 중 오류가 발생했습니다.');
@@ -169,6 +184,11 @@ function TeacherForm() {
     };
 
     const handleDelete = async () => {
+        if (!teacherData.id) {
+            alert('ID가 설정되지 않았습니다.');
+            return;
+        }
+
         try {
             await axios.delete(`/teacher/${teacherData.id}`, { withCredentials: true });
             setTeacherData({
@@ -229,10 +249,10 @@ function TeacherForm() {
                     <h2>기본정보</h2>
                     <form onSubmit={handleSubmit}>
                         <div className='validation'>
-                            <button type='button' onClick={handleVerify}>저장</button>
+                            <button type='button' onClick={handleSave}>저장</button>
                         </div>
                         <div className='modify'>
-                            <button type='button' onClick={handleSave}>수정</button>
+                            <button type='button' onClick={handleVerify}>수정</button>
                         </div>
                         <div className='delete'>
                             <button type='button' onClick={handleDelete}>취소</button>
@@ -244,7 +264,7 @@ function TeacherForm() {
                                 type='text'
                                 id='id'
                                 name='id'
-                                value={userData.id}
+                                value={teacherData.id || userData.id}  // 여기에 userData.id 추가
                                 readOnly
                             />
                         </div>
