@@ -11,12 +11,14 @@ import com.gcf.spring.entity.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class OnProgramDto {
 	private Teacher teacher;
 	private Integer onProgramNumber; // 프로그램 번호

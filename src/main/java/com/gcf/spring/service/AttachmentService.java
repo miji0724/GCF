@@ -167,8 +167,6 @@ public class AttachmentService {
 
 			// attachment의 file_name과 비교하여 일치하는 데이터가 없는 경우 해당 파일을 삭제합니다.
 			boolean isLinked = false;
-			// attachmentRepository에서 해당 파일 이름을 가진 첨부 파일이 있는지 확인합니다.
-			// 이는 효율적인 방법이 아니므로 더 효율적인 방법을 고려해야 합니다.
 			for (Attachment attachment : attachmentRepository.findAll()) {
 				if (attachment.getFile_name().equals(blobName)) {
 					isLinked = true;
