@@ -24,35 +24,77 @@ public class TeacherService {
     private final MemberRepository memberRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
-    
+
     // 강사 신청
     public ResponseEntity<String> applyForTeacher(TeacherDto teacherDto) {
         try {
-        	
-	            // 저장
-	            logger.info("강사 정보: {}", teacherDto.toString());
-	            
-	            // 회원 정보 확인
-	            Member member = memberRepository.findById(teacherDto.getId())
-	                    .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
-	
-	            // Teacher 엔티티 생성 및 설정
-	            Teacher teacher = new Teacher();
-	            teacher.setMember(member);
-	            teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
-	            teacher.setTeacher_category(teacherDto.getTeacherCategory());
-	            teacher.setSnsAddress(teacherDto.getSnsAddress());
-	            teacher.setCarrer(teacherDto.getCareer());
-	            teacher.setCareerStartYear(teacherDto.getCareerStartYear());
-	            teacher.setCareerEndYear(teacherDto.getCareerEndYear());
-	            teacher.setLicenseName(teacherDto.getLicenseName());
-            
-                // 회원 정보를 데이터베이스에 저장
-                teacherRepository.save(teacher);
-                return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다");
-            }
-         
+            logger.info("강사 정보: {}", teacherDto.toString());
+
+            // 회원 정보 확인
+            Member member = memberRepository.findById(teacherDto.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+            // Teacher 엔티티 생성 및 설정
+            Teacher teacher = new Teacher();
+          
+            teacher.setMember(member);
+            teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
+            teacher.setTeacher_category(teacherDto.getTeacherCategory());
+            teacher.setSnsAddress(teacherDto.getSnsAddress());
+            teacher.setCareer(teacherDto.getCareer());
+            teacher.setCareerStartYear(teacherDto.getCareerStartYear());
+            teacher.setCareerEndYear(teacherDto.getCareerEndYear());
+            teacher.setLicenseName(teacherDto.getLicenseName());
+            teacher.setTeachAbleCategory(teacherDto.getTeachAbleCategory());
+
+            // 회원 정보를 데이터베이스에 저장
+            teacherRepository.save(teacher);
+            return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다");
+        }
+    }
+
+    // 강사 정보 조회
+    public TeacherDto getTeacherInfo(String userId) {
+        Teacher teacher = teacherRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setAffiliatedOrganization(teacher.getAffiliatedOrganization());
+        teacherDto.setTeacherCategory(teacher.getTeacher_category());
+        teacherDto.setSnsAddress(teacher.getSnsAddress());
+        teacherDto.setCareer(teacher.getCareer());
+        teacherDto.setCareerStartYear(teacher.getCareerStartYear());
+        teacherDto.setCareerEndYear(teacher.getCareerEndYear());
+        teacherDto.setLicenseName(teacher.getLicenseName());
+        teacherDto.setTeachAbleCategory(teacher.getTeachAbleCategory());
+
+        return teacherDto;
+    }
+    
+    // 강사 정보 업데이트
+    public void updateTeacherInfo(String id, TeacherDto teacherDto) {
+    	Teacher teacher = teacherRepository.findById(id)
+    			.orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+    	
+    	teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
+        teacher.setTeacher_category(teacherDto.getTeacherCategory());
+        teacher.setSnsAddress(teacherDto.getSnsAddress());
+        teacher.setCareer(teacherDto.getCareer());
+        teacher.setCareerStartYear(teacherDto.getCareerStartYear());
+        teacher.setCareerEndYear(teacherDto.getCareerEndYear());
+        teacher.setLicenseName(teacherDto.getLicenseName());
+        teacher.setTeachAbleCategory(teacherDto.getTeachAbleCategory());
+
+        teacherRepository.save(teacher);
+    }
+    
+ // 강사 정보 삭제
+    public void deleteTeacherInfo(String id) {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+
+        teacherRepository.delete(teacher);
     }
 }

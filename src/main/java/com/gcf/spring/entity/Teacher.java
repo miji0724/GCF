@@ -2,8 +2,14 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import com.gcf.spring.constant.TeacherState;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -35,7 +41,7 @@ public class Teacher {
     private List<String> teacher_category;
 
     @NotNull(message = "주요 이력은 필수 입력 값입니다.")
-    private String carrer;
+    private String career;
     @NotNull(message = "주요 이력 시작일은 필수 입력 값입니다.")
     private String careerStartYear;
     @NotNull(message = "주요 이력 종료일은 필수 입력 값입니다.")
@@ -50,18 +56,12 @@ public class Teacher {
 	@Column(name = "license_name")
 	private String licenseName;
 	
-	@Override
-	public String toString() {
-	    return "Teacher{" +
-	            "id='" + id + '\'' +
-	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
-	            ", teacherCategory='" + teacher_category + '\'' +
-	            ", snsAddress='" + snsAddress + '\'' +
-	            ", career='" + carrer + '\'' +
-	            ", careerStartYear=" + careerStartYear +
-	            ", careerEndYear=" + careerEndYear +
-	            ", licenseName='" + licenseName + '\'' +
-	            '}';
-	}
+    @Column(name = "teach_able_category")
+    private String teachAbleCategory;
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "TeacherState", nullable = false)
+    private TeacherState teacherState = TeacherState.승인대기;
+
 
 }
