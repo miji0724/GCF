@@ -65,7 +65,7 @@ public class BannerService {
 				}
 			}
 		}
-		attachmentService.deleteUnlinkedFiles();
+		//attachmentService.deleteUnlinkedFiles();
 		return "배너 데이터가 성공적으로 업데이트되었습니다.";
 	}
 }

@@ -195,6 +195,7 @@ function ManageLecOnDetail() {
                     <div className='lecOnDetail_area'>
                         <div className='lecOnDetail_left'>
                             <ul>
+                                <li>* 강의 제목</li>
                                 <li>* 강사 이름</li>
                                 <li>* 휴대폰 번호</li>
                                 <li>전화번호</li>
@@ -212,6 +213,7 @@ function ManageLecOnDetail() {
                         </div>
                         <div className='lecOnDetail_right'>
                             <ul>
+                                <li> <input type='text' id='lecOnDetail_lecTitle'/></li>
                                 <li> <input type='text' id='lecOnDetail_name' /></li>
                                 <li> <input type="text" id='lecOnDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
                                 <li> <input type="text" id='lecOnDetail_landNum' maxLength="11" /> </li>

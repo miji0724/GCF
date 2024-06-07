@@ -61,31 +61,31 @@ function ManageLecOffDetail() {
         setSelectedRecruitEndDate(rSelection.endDate);
     };
 
-// State for managing 'introduceEdu' input sets
-const [eduInputs, setEduInputs] = useState([{ id: 1 }]);
+    // State for managing 'introduceEdu' input sets
+    const [eduInputs, setEduInputs] = useState([{ id: 1 }]);
 
-// State for managing 'introduceTeach' input sets
-const [teachInputs, setTeachInputs] = useState([{ id: 1 }]);
+    // State for managing 'introduceTeach' input sets
+    const [teachInputs, setTeachInputs] = useState([{ id: 1 }]);
 
-// Function to add a new 'introduceEdu' input set
-const handleAddEduInput = () => {
-    setEduInputs([...eduInputs, { id: eduInputs.length + 1 }]);
-};
+    // Function to add a new 'introduceEdu' input set
+    const handleAddEduInput = () => {
+        setEduInputs([...eduInputs, { id: eduInputs.length + 1 }]);
+    };
 
-// Function to remove an 'introduceEdu' input set
-const handleRemoveEduInput = (id) => {
-    setEduInputs(eduInputs.filter(input => input.id !== id));
-};
+    // Function to remove an 'introduceEdu' input set
+    const handleRemoveEduInput = (id) => {
+        setEduInputs(eduInputs.filter(input => input.id !== id));
+    };
 
-// Function to add a new 'introduceTeach' input set
-const handleAddTeachInput = () => {
-    setTeachInputs([...teachInputs, { id: teachInputs.length + 1 }]);
-};
+    // Function to add a new 'introduceTeach' input set
+    const handleAddTeachInput = () => {
+        setTeachInputs([...teachInputs, { id: teachInputs.length + 1 }]);
+    };
 
-// Function to remove an 'introduceTeach' input set
-const handleRemoveTeachInput = (id) => {
-    setTeachInputs(teachInputs.filter(input => input.id !== id));
-};
+    // Function to remove an 'introduceTeach' input set
+    const handleRemoveTeachInput = (id) => {
+        setTeachInputs(teachInputs.filter(input => input.id !== id));
+    };
 
     return (
         <body>
@@ -96,6 +96,7 @@ const handleRemoveTeachInput = (id) => {
                     <div className='lecOffDetail_area'>
                         <div className='lecOffDetail_left'>
                             <ul>
+                                <li>* 강의 제목</li>
                                 <li>* 강사 이름</li>
                                 <li>* 휴대폰 번호</li>
                                 <li>전화번호</li>
@@ -119,22 +120,21 @@ const handleRemoveTeachInput = (id) => {
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li>&nbsp;</li>
+                                <li className="marginTop10">&nbsp;</li>
+                                <li className="marginTop25">&nbsp;</li>
                                 <li>* 모집기간</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
                                 <li>&nbsp;</li>
-                                <li>&nbsp;</li>
-                                <li>* 참가료</li>
-                                <li>문의 전화번호</li>
+                                <li >&nbsp;</li>
+                                <li className="marginTop25">* 참가료</li>
+                                <li>모집 안내</li>
                             </ul>
                         </div>
                         <div className='lecOffDetail_right'>
                             <ul>
+                                <li> <input type='text' id='lecOffDetail_lecTitle' /></li>
                                 <li> <input type='text' id='lecOffDetail_name' /></li>
                                 <li> <input type="text" id='lecOffDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
                                 <li> <input type="text" id='lecOffDetail_landNum' maxLength="11" /> </li>
@@ -205,14 +205,9 @@ const handleRemoveTeachInput = (id) => {
                                 </div>
 
                                 <li>
-                                    <select id='lecOffDetail_lecField'>{/*문학 미술 음악 무용 영상 연극 영화 국악 건축 출판 만화*/}
-
-                                        <option value='art'>미술</option>
-                                        <option value='science'>과학</option>
-                                        <option value='music'>음악</option>
-                                        <option value='design'>디자인</option>
+                                    <select id='lecOffDetail_lecField'>{/*체험 교육*/}
+                                        <option value='experience'>체험</option>
                                         <option value='education'>교육</option>
-                                        <option value='etc'>기타</option>
                                     </select>
                                 </li>
                                 <li>
@@ -234,15 +229,13 @@ const handleRemoveTeachInput = (id) => {
                                         <li>&nbsp;</li>
                                         <li>&nbsp;</li>
                                         <li>&nbsp;</li>
-                                        <li>&nbsp;</li>
-                                        <li>&nbsp;</li>
-                                        <li>&nbsp;</li>
+                                        <li className="marginTop10">&nbsp;</li>
+                                        <li className="marginTop10">&nbsp;</li>
+                                        <li className="marginTop10">&nbsp;</li>
                                         <li className="marginTop10">*운영요일</li>
                                         <li>*운영시간</li>
                                         <li>*신청가능인원</li>
-                                        <li>*대상</li>
                                         <li>*상세프로그램명</li>
-                                        <li>비고</li>
                                     </ul>
                                     <ul>
                                         <li>
@@ -297,14 +290,7 @@ const handleRemoveTeachInput = (id) => {
                                                 <option value='satur'>토</option>
                                             </select>
                                         </li>
-                                        <li>
-                                            <div className="lecOffDetail_targetRadioWrapper">
-                                                <input type='radio' name='target' value='adult' /> 성인
-                                                <input type='radio' name='target' value='child' /> 어린이
-                                            </div>
-                                        </li>
                                         <li> <input type='text' id='lecOffDetail_progDetailName' /></li>
-                                        <li> <input type='text' id='lecOffDetail_note' /></li>
                                     </ul>
                                 </li>
                                 <li className="rCalendar">
@@ -315,12 +301,12 @@ const handleRemoveTeachInput = (id) => {
                                 </li>
                                 <li>
                                     <div className="lecOffDetail_costWrapper">
-                                        <input type='radio' name='cost' value='O' /> 프로그램별 상이
-                                        <input type='radio' name='cost' value='X' /> X
+                                        <input type='radio' name='cost' value='O' /> 프로그램별상이
+                                        <input type='radio' name='cost' value='X' /> 무료
                                         <p>※ 참가료 소요 시 각 비고란에 직접 안내 필요</p>
                                     </div>
                                 </li>
-                                <li> <input type='text' id='lecOffDetail_contactNum' maxLength="11" /></li>
+                                <li> <textarea className='lecOffDetail_contactInfo'></textarea></li>
                             </ul>
                         </div>
                     </div>

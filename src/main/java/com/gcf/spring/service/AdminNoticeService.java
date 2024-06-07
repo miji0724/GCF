@@ -65,7 +65,7 @@ public class AdminNoticeService {
         List<Attachment> attachments = handleAttachments(existingNotice, files);
         existingNotice.setAttachments(attachments);
         
-        attachmentService.deleteUnlinkedFiles();
+        //attachmentService.deleteUnlinkedFiles();
         
         return adminNoticeRepository.save(existingNotice);
     }
@@ -101,7 +101,7 @@ public class AdminNoticeService {
     	        Notice notice = optionalNotice.get();
     	        List<Attachment> attachments = notice.getAttachments();
     	        adminNoticeRepository.deleteById(id);
-    	        attachmentService.deleteUnlinkedFiles();
+    	        //attachmentService.deleteUnlinkedFiles();
     	        return true;
     	    } else {
     	        return false;
