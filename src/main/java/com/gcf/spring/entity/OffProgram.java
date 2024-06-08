@@ -26,11 +26,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OffProgram {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "off_program_number", nullable = false)
-    private Integer offProgramNumber; //프로그램 번호
+    @Column(name = "id", nullable = false)
+    private Integer id; //프로그램 번호
 
     @Column(name = "off_program_name", nullable = false)
     private String offProgramName; //프로그램명
@@ -93,7 +92,7 @@ public class OffProgram {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher; // 강사 ID
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "poster_id")
     private Attachment poster; //프로그램 포스터 정보
 
@@ -106,7 +105,6 @@ public class OffProgram {
     
     public static OffProgram createOffProgram(OffProgramDto off_programDto){
         OffProgram offProgram = new OffProgram();
-        offProgram.setOffProgramNumber(off_programDto.getOffProgramNumber());
         offProgram.setOffProgramName(off_programDto.getOffProgramName());
         offProgram.setOffProgramDetailName(off_programDto.getOffProgramDetailName());
         offProgram.setApplication_info(off_programDto.getApplication_info());

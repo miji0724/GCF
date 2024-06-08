@@ -1,6 +1,5 @@
 package com.gcf.spring.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,22 +12,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="OnBookMark")
+@Table(name="off_book_mark")
 @Getter
 @Setter
 @ToString
-public class OnBookMark {
+public class OffBookMark {
 	
-	//id
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    
+
     @OneToOne
     @JoinColumn(name = "member", referencedColumnName = "id")
     private Member member;
     
     @OneToOne
-    @JoinColumn(name = "onProgram", referencedColumnName = "id")
-    private OnProgram onProgram;
+    @JoinColumn(name = "offProgram", referencedColumnName = "id")
+    private OffProgram offProgram;
 }

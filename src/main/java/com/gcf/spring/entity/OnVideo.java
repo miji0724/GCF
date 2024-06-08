@@ -22,9 +22,9 @@ public class OnVideo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Integer videoId;
+	private Integer id;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "on_program_number")
 	private OnProgram onProgram;
 	

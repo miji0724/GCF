@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gcf.spring.entity.BannerOne;
 
-public interface BannerOneRepository extends JpaRepository<BannerOne, Long> {
+public interface BannerOneRepository extends JpaRepository<BannerOne, Integer> {
 
 }

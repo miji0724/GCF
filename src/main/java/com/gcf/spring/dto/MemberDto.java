@@ -8,8 +8,12 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gcf.spring.constant.Role;
+import com.gcf.spring.entity.OffProgram;
+import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.Teacher;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -81,4 +85,8 @@ public class MemberDto {
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime createdAt;
+	
+    private List<OffProgram> offProgramBookMark;
+	
+    private List<OnProgram> onProgramBookMark;
 }

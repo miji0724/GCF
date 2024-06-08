@@ -1,4 +1,4 @@
-package com.gcf.spring.dto;
+package com.gcf.spring.dto.bannerdto;
 
 import java.util.List;
 

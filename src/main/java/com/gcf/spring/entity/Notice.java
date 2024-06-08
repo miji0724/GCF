@@ -61,7 +61,7 @@ public class Notice {
     private Integer views = 0;
 
     //공지사항 첨부파일
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments;
     
     // 생성 시간 자동 설정

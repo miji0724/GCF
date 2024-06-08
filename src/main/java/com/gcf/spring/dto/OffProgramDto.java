@@ -23,7 +23,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OffProgramDto {
 
-	    private Integer offProgramNumber; //프로그램 번호
 	    private String offProgramName; //프로그램명
 	    private String offProgramDetailName; //프로그램 상세명
 	    private String application_info; //프로그램 소개

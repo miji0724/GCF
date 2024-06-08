@@ -61,7 +61,7 @@ public class OffProgramRepositoryTest {
 
     	offProgramRepository.save(offProgram);
 
-        OffProgram savedOffProgram = offProgramRepository.findById(offProgram.getOffProgramNumber()).orElse(null);
+        OffProgram savedOffProgram = offProgramRepository.findById(offProgram.getId()).orElse(null);
         assert savedOffProgram != null;
         assert savedOffProgram.getOffProgramName().equals("프로그램명");
         // 필요한 경우 다른 필드도 확인할 수 있습니다.

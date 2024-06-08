@@ -6,7 +6,9 @@ import java.util.List;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Comment;
 import com.gcf.spring.entity.OnVideo;
+import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
+import com.gcf.spring.entity.TeacherInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,8 +31,8 @@ public class OnProgramDto {
 	private String onlineCategory; // 프로그램 카테고리
 	private String programType; // 프로그램 타입 (온라인/오프라인 구분)
 	private Attachment poster; // 포스터 정보
-	private List<Attachment> programInfosAttachment; // 교육 소개 파일
-	private List<Attachment> teacherInfosAttachment; // 강사 소개 파일
+	private List<ProgramInfo> programInfos; // 교육 소개 파일
+	private List<TeacherInfo> teacherInfos; // 강사 소개 파일
 	private List<Comment> comments; // 댓글 리스트
 	private List<OnVideo> videos; // 비디오 리스트
 }

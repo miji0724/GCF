@@ -2,6 +2,7 @@ package com.gcf.spring.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,26 +45,28 @@ public class Attachment {
 	private BannerTwo bannerTwo;
 
 	@ManyToOne(optional = true)
-	@JoinColumn(name = "noticeId", referencedColumnName = "id")
+	@JoinColumn(name = "notice_id", referencedColumnName = "id")
 	@JsonIgnore
 	private Notice notice;
-
-	@OneToOne(mappedBy = "poster", optional = true)
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "off_poster_id", referencedColumnName = "id")
 	private OffProgram offProgramPoster;
-
-	@OneToOne(mappedBy = "poster", optional = true)
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "on_poster_id", referencedColumnName = "id")
 	private OnProgram onProgramPoster;
 
 	@ManyToOne(optional = true)
-	@JoinColumn(name = "on_program_info_id")
+	@JoinColumn(name = "program_info_id", referencedColumnName = "id")
 	private ProgramInfo programInfo;
 
 	@ManyToOne(optional = true)
-	@JoinColumn(name = "on_program_teacher_info_id")
+	@JoinColumn(name = "teacher_info_id", referencedColumnName = "id")
 	private TeacherInfo programTeacherInfo;
 
 	@ManyToOne(optional = true)
-	@JoinColumn(name="on_video_id")
+	@JoinColumn(name="on_video_id", referencedColumnName = "id")
 	private OnVideo onVideo;
 
 }

@@ -36,7 +36,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comm_num", nullable = false)
-    private int commentNumber; 
+    private Integer id; 
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -46,7 +46,7 @@ public class Comment {
     private String content;
 
     @JoinColumn(name = "post_id", nullable = false)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private OnProgram postId;
 
     // 댓글 작성 날짜
@@ -64,7 +64,7 @@ public class Comment {
     private boolean isDeleted = false;
 
     // 답글 기능을 위한 부모 댓글
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 

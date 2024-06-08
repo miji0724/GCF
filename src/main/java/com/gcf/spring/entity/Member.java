@@ -15,6 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -86,6 +88,14 @@ public class Member {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+	
+	@OneToMany
+    @JoinColumn(name = "offline_bookmark")
+    private List<OffBookMark> offProgramBookMark;
+	
+	@OneToMany
+    @JoinColumn(name = "online_bookmark")
+    private List<OnBookMark> onProgramBookMark;
 	
 	public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
 		Member member = new Member();

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class AttachmentDto {
 	@NotNull
-	private Long id;
+	private Integer id;
 
 	@NotBlank
 	private String original_name;
