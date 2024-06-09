@@ -1,45 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import SideMenu from './ManageSideMenu';
-import './ManageLecOnDetail.css';
+import './ManageLecOnAppDetail.css';
 
-function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isParent }) {
-    const [text, setText] = useState('');
-    const [file, setFile] = useState(null);
-    const [onLecInfo, setOnLecInfo] = useState({
-        onProgramName: '',
-        operatingStartDay: '',
-        views: 0,
-        likesCount: 0,
-        onlineCategory: '',
-        programType: '',
-        poster: {
-            original_name:'',
-            file_name:'',
-            file_path:'',
-            parent:'',
-        },
-        programInfos: [],
-        teacherInfos: [],
-        comments: [],
-        videos: [],
-        teacher: {
-            member:{
-                name:'',
-                phone_number:'',
-                tel_number:'',
-                email:'',
-            }
-        }
-    });
-    
-    const handleTextChange = (e) => {
-        setText(e.target.value);
-    };
-
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-    };
-
+function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isParent, text, onTextChange, file, onFileChange }) {
     return (
         <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "500px", height: "40px", marginTop: "10px" }}>
             {isParent && (
@@ -47,7 +11,7 @@ function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isPa
                     {/* 상위 항목 */}
                     <p>{name}</p>
                     <p style={{ marginRight: "10px" }}>강</p>
-                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "370px" }} />
+                    <input type="text" value={text} onChange={(e) => onTextChange(id, e.target.value)} style={{ marginRight: "10px", width: "370px" }} />
                     <button onClick={onAddSubItem} style={{
                         marginRight: "10px"
                         , width: "30px"
@@ -66,15 +30,17 @@ function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isPa
                 <>
                     {/* 하위 항목 */}
                     <p style={{ marginLeft: "5px", marginRight: "5px", width: "50px" }}>{name}</p>
-                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "300px" }} />
-                    <input type="file" onChange={handleFileChange} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} />
+                    <input type="text" value={text} onChange={(e) => onTextChange(id, e.target.value)} style={{ marginRight: "10px", width: "300px" }} />
+                    <input type="file" onChange={(e) => onFileChange(id, e.target.files[0])} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} />
                 </>
             )}
         </div>
     );
 }
 
-function ManageLecOnDetail() {
+function ManageLecOnAppDetail() {
+    const location = useLocation();
+    const detailData = location.state?.detailData || {}; // 받은 데이터를 가져옴
 
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -109,6 +75,36 @@ function ManageLecOnDetail() {
     const [parentCounter, setParentCounter] = useState(1);
     const [subCounters, setSubCounters] = useState({}); // 각 상위 항목의 하위 항목 카운터를 저장하는 객체
 
+    const [onLecInfo, setOnLecInfo] = useState({
+        teacher: '',
+        teacherName: '',
+        programName: '',
+        operatingStartDay: '',
+        views: 0,
+        likesCount: 0,
+        category: '',
+        programType: '',
+        poster: {
+            original_name: '',
+            file_name: '',
+            file_path: '',
+            parent: '',
+        },
+        approvalState: '',
+        programInfos: [],
+        teacherInfos: [],
+        comments: [],
+        videos: [],
+    });
+
+    useEffect(() => {
+        // 받은 데이터를 상태에 삽입
+        if (detailData) {
+            setOnLecInfo(detailData);
+            setPhoneNumber(autoHypenPhone(detailData.phoneNumber || ''));
+        }
+    }, [detailData]);
+
     useEffect(() => {
         // 초기 상위 항목 추가
         handleAddItem();
@@ -121,6 +117,8 @@ function ManageLecOnDetail() {
                 id: newItemId,
                 name: `${newItemId}`,
                 subItems: [],
+                text: '',
+                file: null,
             };
             return [...prevItems, newItem];
         });
@@ -132,6 +130,8 @@ function ManageLecOnDetail() {
         const newSubItem = {
             id: `${parentId}-${newSubItemId}`, // 부모 항목 ID와 하위 항목 일련번호를 조합하여 생성
             name: `${parentId}-${newSubItemId}`,
+            text: '',
+            file: null,
         };
         const updatedItems = items.map(item => {
             if (item.id === parentId) {
@@ -183,6 +183,23 @@ function ManageLecOnDetail() {
             });
         }
     };
+
+    const handleTextChange = (id, value) => {
+        setItems(prevItems =>
+            prevItems.map(item =>
+                item.id === id ? { ...item, text: value } : item
+            )
+        );
+    };
+
+    const handleFileChange = (id, file) => {
+        setItems(prevItems =>
+            prevItems.map(item =>
+                item.id === id ? { ...item, file } : item
+            )
+        );
+    };
+
     // State for managing 'introduceEdu' input sets
     const [eduInputs, setEduInputs] = useState([{ id: 1 }]);
 
@@ -208,15 +225,12 @@ function ManageLecOnDetail() {
     const handleRemoveTeachInput = (id) => {
         setTeachInputs(teachInputs.filter(input => input.id !== id));
     };
-
-
-
     return (
         <body>
             <div className='lecOnDetail_container'>
                 <SideMenu />
                 <div className='lecOnDetail'>
-                    <p>강의 상세정보(온라인)</p>
+                    <p>강의 검토 페이지(온라인)</p>
                     <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                     <div className='lecOnDetail_area'>
                         <div className='lecOnDetail_left'>
@@ -239,7 +253,7 @@ function ManageLecOnDetail() {
                         </div>
                         <div className='lecOnDetail_right'>
                             <ul>
-                                <li> <input type='text' id='lecOnDetail_lecTitle'/></li>
+                                <li> <input type='text' id='lecOnDetail_lecTitle' /></li>
                                 <li> <input type='text' id='lecOnDetail_name' /></li>
                                 <li> <input type="text" id='lecOnDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
                                 <li> <input type="text" id='lecOnDetail_landNum' maxLength="11" /> </li>
@@ -381,4 +395,4 @@ function ManageLecOnDetail() {
     );
 }
 
-export default ManageLecOnDetail;
+export default ManageLecOnAppDetail;

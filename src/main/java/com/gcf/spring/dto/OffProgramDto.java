@@ -22,7 +22,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OffProgramDto {
 	private Teacher teacher; // 강사 ID
-	private String teacherName;
 	private String programName; // 프로그램명
 	private String programDetailName; // 프로그램 상세명
 	private String application_info; // 프로그램 소개

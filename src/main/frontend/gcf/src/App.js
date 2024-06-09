@@ -23,6 +23,8 @@ import ManageLecturePage from './pages/manage/ManageLecturePage';
 import ManageLecAppPage from './pages/manage/ManageLecAppPage';
 import ManageLecOnDetailPage from './pages/manage/ManageLecOnDetailPage';
 import ManageLecOffDetailPage from './pages/manage/ManageLecOffDetailPage';
+import ManageLecOnAppDetailPage from './pages/manage/ManageLecOnAppDetailPage';
+import ManageLecOffAppDetailPage from './pages/manage/ManageLecOffAppDetailPage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -60,6 +62,8 @@ function App() {
                     <Route path="/manage/lecapp" element={<ManageLecAppPage />} />
                     <Route path="/manage/lecondetail" element={<ManageLecOnDetailPage />} />
                     <Route path="/manage/lecoffdetail" element={<ManageLecOffDetailPage />} />
+                    <Route path="/manage/leconappdetail" element={<ManageLecOnAppDetailPage />} />
+                    <Route path="/manage/lecoffappdetail" element={<ManageLecOffAppDetailPage />} />
                 </Routes>
             </Router>
         </div>

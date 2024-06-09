@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import SideMenu from './ManageSideMenu';
-import './ManageLecOffDetail.css';
+import './ManageLecOffAppDetail.css';
 import { DateRangePicker } from 'react-date-range';
 import 'react-calendar/dist/Calendar.css';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import 'react-time-picker/dist/TimePicker.css';
 
-function ManageLecOffDetail() {
+function ManageLecOffAppDetail() {
 
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -89,13 +89,13 @@ function ManageLecOffDetail() {
 
     return (
         <body>
-            <div className='lecOffDetail_container'>
+            <div className='lecOffAppDetail_container'>
                 <SideMenu />
-                <div className='lecOffDetail'>
+                <div className='lecOffAppDetail'>
                     <p>강의 상세정보(오프라인)</p>
                     <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
-                    <div className='lecOffDetail_area'>
-                        <div className='lecOffDetail_left'>
+                    <div className='lecOffAppDetail_area'>
+                        <div className='lecOffAppDetail_left'>
                             <ul>
                                 <li>* 강의 제목</li>
                                 <li>* 강사 이름</li>
@@ -133,28 +133,24 @@ function ManageLecOffDetail() {
                                 <li>모집 안내</li>
                             </ul>
                         </div>
-                        <div className='lecOffDetail_right'>
+                        <div className='lecOffAppDetail_right'>
                             <ul>
-                                <li> <input type='text' id='lecOffDetail_lecTitle' /></li>
-                                <li> <input type='text' id='lecOffDetail_name' /></li>
-                                <li> <input type="text" id='lecOffDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
-                                <li> <input type="text" id='lecOffDetail_landNum' maxLength="11" /> </li>
+                                <li> <input type='text' id='lecOffAppDetail_lecTitle' /></li>
+                                <li> <input type='text' id='lecOffAppDetail_name' /></li>
+                                <li> <input type="text" id='lecOffAppDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
+                                <li> <input type="text" id='lecOffAppDetail_landNum' maxLength="11" /> </li>
                                 <li>
-                                    <input type='text' id='lecOffDetail_emailId' />
+                                    <input type='text' id='lecOffAppDetail_emailId' />
                                     &nbsp;@&nbsp;
-                                    <input type='text' id='lecOffDetail_emailAddr' />
-                                    <select id='lecOffDetail_email_dropdown'>
-                                        <option value="direct_input">직접입력</option>
-                                        <option value="naver_input">naver.com</option>
-                                    </select>
+                                    <input type='text' id='lecOffAppDetail_emailAddr' />
                                 </li>
-                                <li><input type='file' id='lecOffDetail_poster_attachment' /></li>
+                                <li><input type='file' id='lecOffAppDetail_poster_attachment' /></li>
                                 <div className='introduceEdu_buttonAlign'>
                                     <div className='introduceEdu_area'>
                                         {eduInputs.map(input => (
                                             <div key={input.id} className='introduceEdu_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOffDetail_introduceEdu_detail_${input.id}`} />
+                                                    <input type='text' id={`lecOffAppDetail_introduceEdu_detail_${input.id}`} />
                                                     <button onClick={() => handleRemoveEduInput(input.id)} style={{
                                                         width: "30px"
                                                         , height: "30px"
@@ -163,7 +159,7 @@ function ManageLecOffDetail() {
                                                     }}>-</button>
                                                 </li>
                                                 <li>
-                                                    <input type='file' className='introduceEdu_attachment' id={`lecOffDetail_introduceEdu_attachment_${input.id}`} />
+                                                    <input type='file' className='introduceEdu_attachment' id={`lecOffAppDetail_introduceEdu_attachment_${input.id}`} />
                                                 </li>
                                             </div>
                                         ))}
@@ -182,7 +178,7 @@ function ManageLecOffDetail() {
                                         {teachInputs.map(input => (
                                             <div key={input.id} className='introduceTeach_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOffDetail_introduceTeach_detail_${input.id}`} />
+                                                    <input type='text' id={`lecOffAppDetail_introduceTeach_detail_${input.id}`} />
                                                     <button onClick={() => handleRemoveTeachInput(input.id)} style={{
                                                         width: "30px"
                                                         , height: "30px"
@@ -191,7 +187,7 @@ function ManageLecOffDetail() {
                                                     }}>-</button>
                                                 </li>
                                                 <li>
-                                                    <input type='file' className='introduceTeach_attachment' id={`lecOffDetail_introduceTeach_attachment_${input.id}`} />
+                                                    <input type='file' className='introduceTeach_attachment' id={`lecOffAppDetail_introduceTeach_attachment_${input.id}`} />
                                                 </li>
                                             </div>
                                         ))}
@@ -206,7 +202,7 @@ function ManageLecOffDetail() {
                                 </div>
 
                                 <li>
-                                    <select id='lecOffDetail_lecField'>{/*체험 교육*/}
+                                    <select id='lecOffAppDetail_lecField'>{/*체험 교육*/}
                                         <option value='experience'>체험</option>
                                         <option value='education'>교육</option>
                                     </select>
@@ -224,7 +220,7 @@ function ManageLecOffDetail() {
                                         {/* 다른 장소들에 대한 옵션 추가 */}
                                     </select>
                                 </li>
-                                <li className='lecOffDetail_program'>
+                                <li className='lecOffAppDetail_program'>
                                     <ul>
                                         <li>*운영기간</li>
                                         <li>&nbsp;</li>
@@ -251,7 +247,7 @@ function ManageLecOffDetail() {
                                         </li>
 
                                         <li>
-                                            <select id='lecOffDetail_dayoftheWeek'>{/*일 월 화 수 목 금 토*/}
+                                            <select id='lecOffAppDetail_dayoftheWeek'>{/*일 월 화 수 목 금 토*/}
 
                                                 <option value='sun'>일</option>
                                                 <option value='mon'>월</option>
@@ -291,7 +287,7 @@ function ManageLecOffDetail() {
                                                 <option value='satur'>토</option>
                                             </select>
                                         </li>
-                                        <li> <input type='text' id='lecOffDetail_progDetailName' /></li>
+                                        <li> <input type='text' id='lecOffAppDetail_progDetailName' /></li>
                                     </ul>
                                 </li>
                                 <li className="rCalendar">
@@ -301,19 +297,19 @@ function ManageLecOffDetail() {
                                     />
                                 </li>
                                 <li>
-                                    <div className="lecOffDetail_costWrapper">
+                                    <div className="lecOffAppDetail_costWrapper">
                                         <input type='radio' name='cost' value='O' /> 프로그램별상이
                                         <input type='radio' name='cost' value='X' /> 무료
                                         <p>※ 참가료 소요 시 각 비고란에 직접 안내 필요</p>
                                     </div>
                                 </li>
-                                <li> <textarea className='lecOffDetail_contactInfo'></textarea></li>
+                                <li> <textarea className='lecOffAppDetail_contactInfo'></textarea></li>
                             </ul>
                         </div>
                     </div>
-                    <div className='lecOffDetail_button_area'>
-                        <button id='lecOffDetail_confirm'>수정</button>
-                        <button id='lecOffDetail_delete'>삭제</button>
+                    <div className='lecOffAppDetail_button_area'>
+                        <button id='lecOffAppDetail_confirm'>수정</button>
+                        <button id='lecOffAppDetail_delete'>삭제</button>
                     </div>
                 </div>
             </div>
@@ -321,4 +317,4 @@ function ManageLecOffDetail() {
     );
 }
 
-export default ManageLecOffDetail;
+export default ManageLecOffAppDetail;

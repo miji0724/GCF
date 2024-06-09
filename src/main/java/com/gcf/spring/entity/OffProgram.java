@@ -35,9 +35,6 @@ public class OffProgram {
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
 	private Teacher teacher; // 강사 ID
 
-	@Column(name = "teacher_name")
-	private String TeacherName;
-
 	@Column(name = "off_program_name", nullable = false)
 	private String programName; // 프로그램명
 
@@ -112,7 +109,6 @@ public class OffProgram {
 		OffProgram offProgram = new OffProgram();
 		offProgram.setProgramName(off_programDto.getProgramName());
 		offProgram.setTeacher(off_programDto.getTeacher());
-		offProgram.setTeacherName(off_programDto.getTeacherName());
 		offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
 		offProgram.setApplication_info(off_programDto.getApplication_info());
 		offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());

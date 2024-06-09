@@ -57,7 +57,6 @@ public class OffProgramRepositoryTest {
 			Teacher teacher = teacherRepository.findTeacherById("test1");
 
 			offProgramDto.setTeacher(teacher);
-			offProgramDto.setTeacherName(teacher.getMember().getName());
 			offProgramDto.setPoster(null);
 
 			OffProgram offProgram = OffProgram.createOffProgram(offProgramDto);

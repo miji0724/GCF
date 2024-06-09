@@ -3,14 +3,7 @@ import axios from 'axios';
 import './ManageLecApp.css';
 import SideMenu from './ManageSideMenu';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
-
-function lecOnDetailGo() {
-    window.location.href = '/manage/lecondetail';
-}
-
-function lecOffDetailGo() {
-    window.location.href = '/manage/lecoffdetail';
-}
+import { useNavigate } from 'react-router-dom';
 
 function ManageLecApp() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,24 +11,28 @@ function ManageLecApp() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('lecApp_name');
     const [lecInfo, setLecInfo] = useState([]);
-    
+    const navigate = useNavigate();
+
     useEffect(() => {
-        // 온라인 강의 정보 가져오기
+        // Fetch data from the server
         const fetchOnLecInfo = axios.get('/manage/getPendingApprovalOnPrograms');
-        // 오프라인 강의 정보 가져오기
         const fetchOffLecInfo = axios.get('/manage/getPendingApprovalOffPrograms');
 
         Promise.all([fetchOnLecInfo, fetchOffLecInfo])
             .then((responses) => {
                 const [onLecResponse, offLecResponse] = responses;
-                // 온라인과 오프라인 데이터를 합침
                 const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
+
+                // Sort the combinedLecInfo array by the application date
+                combinedLecInfo.sort((a, b) => new Date(a.operatingStartDay) - new Date(b.operatingStartDay));
+
+                // Set the sorted data in the state
                 setLecInfo(combinedLecInfo);
+
                 console.log(combinedLecInfo);
             })
             .catch(error => {
                 console.error('Error fetching lecture information:', error);
-                console.log(fetchOnLecInfo);
             });
     }, []);
 
@@ -48,6 +45,16 @@ function ManageLecApp() {
         }
         return false;
     });
+
+    const lecOnDetailGo = (item) => {
+        // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
+        navigate('/manage/leconappdetail', { state: { detailData: item } }); // 선택한 항목의 데이터를 함께 전달
+    };
+
+    const lecOffDetailGo = (item) => {
+        // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
+        navigate('/manage/lecoffappdetail', { state: { detailData: item } }); // 선택한 항목의 데이터를 함께 전달
+    };
 
     const handleSearchChange = event => {
         setSearchTerm(event.target.value);
@@ -108,8 +115,8 @@ function ManageLecApp() {
                         <tbody>
                             {currentItems.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.id}</td>
-                                    <td>{item.teacherName}</td>
+                                    <td>{item.teacher.id}</td>
+                                    <td>{item.teacher.member.name}</td>
                                     <td>{item.programName}</td>
                                     <td>{item.programType}</td>
                                     <td>{item.category}</td>

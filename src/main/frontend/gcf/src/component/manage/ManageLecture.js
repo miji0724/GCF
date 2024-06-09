@@ -118,8 +118,8 @@ function ManageLecture() {
                         <tbody>
                             {currentItems.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.id}</td>
-                                    <td>{item.teacherName}</td>
+                                    <td>{item.teacher.id}</td>
+                                    <td>{item.teacher.member.name}</td>
                                     <td>{item.programName}</td>
                                     <td>{item.programType}</td>
                                     <td>{item.category}</td>

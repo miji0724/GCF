@@ -1,0 +1,174 @@
+.lecOnAppDetail_container {
+    display: flex;
+    height: 100%;
+}
+
+.lecOnAppDetail_container ul {
+    list-style-type: none;
+}
+
+.lecOnAppDetail {
+    flex: 0.8;
+    background-color: #ffffff;
+    text-align: center;
+    font-family: "Noto Sans KR", sans-serif;
+    
+}
+
+.lecOnAppDetail button{
+    border: none;
+    height: 30px;
+    line-height: 30px;
+}
+
+.lecOnAppDetail>p {
+    margin-top:30px;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.lecOnAppDetail_area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    max-height: 95%;
+    overflow-y: auto;
+}
+
+.lecOnAppDetail_area li {
+    line-height: 45px;
+    height:45px;
+    
+}
+
+.lecOnAppDetail_left>ul>li {
+    text-align: right;
+}
+
+.lecOnAppDetail_right>ul>li {
+    text-align: left;
+}
+
+.lecOnAppDetail input,
+.lecOnAppDetail select {
+    border-style: none;
+    background-color: #ededed;
+    height: 30px;
+    text-align: center;
+    line-height: 24px;
+}
+
+#lecOnAppDetail_poster_attachment,
+#lecOnAppDetail_introduceEdu_attachment1,
+#lecOnAppDetail_introduceEdu_attachment2,
+#lecOnAppDetail_introduceTeach_attachment1,
+#lecOnAppDetail_introduceTeach_attachment2 {
+    width: 180px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#lecOnAppDetail_emailId {
+    width: 120px;
+}
+
+#lecOnAppDetail_email_dropdown {
+    margin-left: 10px;
+}
+
+#lecOnAppDetail_emailAddr {
+    width: 180px;
+}
+
+#lecOnAppDetail_lecField {
+    width: 173px;
+    text-align: center;
+}
+
+.introduceEdu_buttonAlign,
+.introduceTeach_buttonAlign{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.lecOnAppDetail .introduceEdu_area,
+.lecOnAppDetail .introduceTeach_area{
+    max-height: 130px; /* 최대 높이 설정 */
+    min-height: 130px; 
+    width:500px;
+    overflow-y: auto;
+    margin-bottom: 5px;
+    background-color: #fafafa;
+}
+
+.introduceEdu_flexArea,
+.introduceTeach_flexArea{
+    display: flex;
+    flex-direction: row;
+}
+
+.lecOnAppDetail button{
+    width:30px;
+    height: 30px;
+}
+
+#lecOnAppDetail_introduceEdu_detail,
+#lecOnAppDetail_introduceTeach_detail {
+    width: 300px;
+    height: 55px;
+    margin-top: 12px;
+    background-color: #ededed;
+    border: none;
+    resize: none;
+}
+
+.trainList {
+    display: flex;
+    flex-direction: row;
+}
+
+.trainList p{
+    margin-top: 15px;
+}
+
+.trainList_area {
+    display: flex;
+    flex-direction: column;
+}
+
+.education-item-wrapper {
+    background-color: #AECCF2;
+    padding: 10px 20px;
+}
+
+.sub-education-item-wrapper {
+    background-color: #CDDFF5;
+    padding: 3px 5px;
+    margin: 0px;
+}
+
+.trainList_right {
+    display: flex;
+    flex-direction: row;
+}
+
+.lecOnAppDetail_button_area {
+    margin:10px;
+}
+
+
+#lecOnAppDetail_confirm {
+    background-color: #AECCF2;
+}
+
+#lecOnAppDetail_delete {
+    background-color: #FF8585;
+}
+
+.lecOnAppDetail_button_area button {
+    border-radius: 10px;
+    width: 100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight: 600;
+}

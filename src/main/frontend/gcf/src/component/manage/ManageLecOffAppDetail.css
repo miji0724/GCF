@@ -1,0 +1,247 @@
+.lecOffAppDetail_container
+{
+    display: flex;
+    height:100%;
+}
+
+.lecOffAppDetail_container ul{
+    list-style-type: none;
+}
+
+.lecOffAppDetail
+{
+    flex:0.8;
+    background-color: #ffffff;
+    text-align: center;
+    font-family: "Noto Sans KR", sans-serif;  
+    
+}
+
+.lecOffAppDetail input{
+    line-height: 24px;
+}
+
+.lecOffAppDetail button
+{
+    border: none;
+    height: 30px;
+    margin-left: 10px;
+    line-height: 30px;
+}
+
+.lecOffAppDetail_textArea{
+    height: 90px;
+}
+
+.lecOffAppDetail > p{
+    margin-top:30px;
+    font-size: 30px;
+    font-weight:800;
+}
+
+.lecOffAppDetail_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.lecOffAppDetail_area > .lecOffAppDetail_right > ul > li,
+.lecOffAppDetail_area > .lecOffAppDetail_left > ul > li{
+    line-height: 45px;
+    flex: 1 1 auto;
+}
+
+.lecOffAppDetail_textarea{
+    height: 90px;
+}
+
+.lecOffAppDetail_left > ul > li{
+    text-align: right;
+}
+
+.lecOffAppDetail_right > ul > li{
+    text-align: left;
+}
+
+.lecOffAppDetail input
+{
+    border-style: none;
+    background-color: #ededed;
+    height: 30px;
+    text-align: center;
+}
+
+.lecOffAppDetail select{
+    border-style: none;
+    background-color: #ededed;
+    text-align:center;
+}
+
+.lecOffAppDetail .introduceEdu_area,
+.lecOffAppDetail .introduceTeach_area{
+    max-height: 130px;
+    min-height: 130px;  /* 최대 높이 설정 */
+    width:500px;
+    overflow-y: auto;
+    margin: 10px 0;
+    background-color: #fafafa;
+}
+
+.lecOffAppDetail .introduceEdu_buttonAlign,
+.lecOffAppDetail .introduceTeach_buttonAlign {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.lecOffAppDetail .introduceEdu_flexArea,
+.lecOffAppDetail .introduceTeach_flexArea{
+    height: 45px;
+}
+
+#lecOffAppDetail_emailId{
+    width:120px;
+}
+
+#lecOffAppDetail_email_dropdown{
+    margin-left : 10px;
+}
+
+#lecOffAppDetail_emailAddr{
+    width:180px;
+}
+
+#lecOffAppDetail_lecField{
+    width:173px;
+    text-align: center;
+}
+
+#lecOffAppDetail_introduceEdu_detail,
+#lecOffAppDetail_introduceTeach_detail{
+    width:300px;
+    height:55px;
+    margin-top: 12px;
+    background-color: #ededed;
+    border:none;
+    resize:none;
+}
+
+.introduceEdu_attachment,
+.introduceTeach_attachment{
+    width:200px;
+}
+
+.introduceEdu_flexArea,
+.introduceTeach_flexArea{
+    display:flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.lecOffAppDetail_program{
+    background-color: #AECCF2;
+    display:flex;
+    flex-direction: row;
+    padding:10px 20px 10px 0px;
+}
+
+.lecOffAppDetail_program > ul{
+    padding-left: 20px;
+}
+
+/* 달력 원본 코드 수정 */
+
+.lecOffAppDetail .rdrCalendarWrapper{
+    width:360px;
+    background-color: #ededed;
+}
+
+.lecOffAppDetail  .rdrDay{
+    width :38px;
+}
+
+.lecOffAppDetail  .rdrWeekDays{
+    width: 340px;
+    display: flex;
+    justify-content: center;
+}
+
+.lecOffAppDetail .rdrDefinedRangesWrapper,
+.lecOffAppDetail .rdrDateDisplayWrapper {
+    display: none;
+}
+
+.lecOffAppDetail .rdrMonthAndYearPickers > .rdrMonthPicker > select{
+    padding:0px 10px 0px 0px;
+}
+
+.lecOffAppDetail .rdrMonthAndYearPickers > .rdrYearPicker > select{
+    padding:0px 30px 0px 10px;
+}
+
+.lecOffAppDetail .rdrDays{
+    width:380px;
+}
+
+.lecOffAppDetail .rdrMonth{
+    width:360px;
+}
+
+/* 달력 원본 코드 수정 */
+
+.oCalendar{
+    margin-bottom: 20px;
+}
+
+.rCalendar{
+    margin-top:20px;
+}
+
+.lecOffAppDetail_targetRadioWrapper,
+.lecOffAppDetail_costWrapper{
+    display:flex;
+    align-items: center;
+}
+
+#lecOffAppDetail_progDetailName,
+#lecOffAppDetail_note{
+    width:348px;
+}
+
+.lecOffAppDetail_costWrapper{
+    height:40px;
+    margin-bottom:5px;
+}
+
+.lecOffAppDetail_costWrapper > p{
+    font-size: 10px;
+    margin:0 0 0 20px;
+}
+
+.lecOffAppDetail_contactInfo{
+    width:500px;
+    height:200px;
+}
+
+#lecOffAppDetail_confirm{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #AECCF2;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+
+#lecOffAppDetail_delete{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    background-color: #FF8585;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+

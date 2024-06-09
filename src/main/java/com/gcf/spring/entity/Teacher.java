@@ -2,7 +2,6 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
@@ -14,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -34,7 +32,6 @@ public class Teacher {
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")
-    @JsonIgnore
     private Member member;
     
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")

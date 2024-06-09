@@ -76,9 +76,6 @@ public class Member {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
-	@OneToOne(mappedBy = "member")
-    private Teacher teacher;
-	
 	//회원가입 날짜
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

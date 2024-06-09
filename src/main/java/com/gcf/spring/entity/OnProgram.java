@@ -33,9 +33,6 @@ public class OnProgram {
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
 	private Teacher teacher; // 강사 ID
 
-	@Column(name = "teacher_name")
-	private String teacherName;
-
 	@Column(name = "on_program_name", nullable = false)
 	private String programName; // 프로그램 이름
 
@@ -76,7 +73,6 @@ public class OnProgram {
 	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 		OnProgram onProgram = new OnProgram();
 		onProgram.setTeacher(on_programDto.getTeacher());
-		onProgram.setTeacherName(on_programDto.getTeacherName());
 		onProgram.setProgramName(on_programDto.getProgramName());
 		onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
 		onProgram.setViews(on_programDto.getViews());

@@ -40,7 +40,6 @@ public class OnProgramRepositoryTest {
 			Teacher teacher = teacherRepository.findTeacherById("test1");
 
 			onProgramDto.setTeacher(teacher);
-			onProgramDto.setTeacherName(teacher.getMember().getName());
 			onProgramDto.setProgramName("프로그램명 " + i);
 			onProgramDto.setOperatingStartDay(LocalDate.now());
 			onProgramDto.setViews(0);
