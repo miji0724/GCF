@@ -1,6 +1,7 @@
 package com.gcf.spring.dto;
 
 import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,8 @@ public class TeacherDto {
     private String careerStartYear;
     private String careerEndYear;
     private String licenseName;
+    private String teachAbleCategory;
+    private String teacherState;
     
 	@Override
 	public String toString() {

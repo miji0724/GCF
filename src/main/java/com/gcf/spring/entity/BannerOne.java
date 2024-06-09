@@ -1,6 +1,7 @@
 package com.gcf.spring.entity;
 
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,25 +11,21 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@Table(name="OnBookMark")
+@Table(name = "bannerOne")
 @Getter
 @Setter
-@ToString
-public class OnBookMark {
-	
-	//id
+public class BannerOne {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @OneToOne
-    @JoinColumn(name = "member", referencedColumnName = "id")
-    private Member member;
-    
-    @OneToOne
-    @JoinColumn(name = "onProgram", referencedColumnName = "id")
-    private OnProgram onProgram;
+
+    @Column
+    private String url;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "attachment_id", referencedColumnName = "id")
+    private Attachment attachment;
 }

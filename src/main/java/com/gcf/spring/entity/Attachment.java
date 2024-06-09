@@ -14,45 +14,58 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="attachment")
+@Table(name = "attachment")
 @Getter
 @Setter
 public class Attachment {
-    
-	//id
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
-    //파일 원본 이름
-    @Column
-    private String original_name;
-    
-    //고유 번호 + 원본 이름
-    @Column
-    private String file_name;
-    
-    //파일 저장 경로
-    @Column
-    private String file_path;
-    
-    //공지사항 참조(null 허용)
-    @ManyToOne
-    @JoinColumn(name = "noticeId", referencedColumnName = "id")
-    @JsonIgnore
-    private Notice noticeId; 
-    
-    
-    //파일이 속한 엔티티
-    @Column
-    private String parent;
-    
-    @ManyToOne
-    @JoinColumn(name = "off_program_id")
-    private OffProgram offProgram; // 연관된 오프라인 프로그램
 
-    @ManyToOne
-    @JoinColumn(name = "on_program_id")
-    private OnProgram onProgram; // 연관된 온라인 프로그램
-    
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+
+	@Column
+	private String original_name;
+
+	@Column
+	private String file_name;
+
+	@Column(columnDefinition = "VARCHAR(500)")
+	private String file_path;
+
+	@Column
+	private String parent;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "banner_one_id", referencedColumnName = "id")
+	private BannerOne bannerOne;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "banner_two_id", referencedColumnName = "id")
+	private BannerTwo bannerTwo;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "notice_id", referencedColumnName = "id")
+	@JsonIgnore
+	private Notice notice;
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "off_poster_id", referencedColumnName = "id")
+	private OffProgram offProgramPoster;
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "on_poster_id", referencedColumnName = "id")
+	private OnProgram onProgramPoster;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "program_info_id", referencedColumnName = "id")
+	private ProgramInfo programInfo;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "teacher_info_id", referencedColumnName = "id")
+	private TeacherInfo programTeacherInfo;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name="on_video_id", referencedColumnName = "id")
+	private OnVideo onVideo;
+
 }
