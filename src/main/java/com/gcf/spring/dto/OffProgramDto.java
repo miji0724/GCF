@@ -35,8 +35,8 @@ public class OffProgramDto {
 	private LocalTime endTime; // 프로그램 종료 시간
 	private Integer maxParticipants; // 프로그램 정원 수
 	private Integer currentParticipants = 0; // 프로그램 신청 현황 0명
-	private String ApplicationState; // 접수중, 접수마감
-	private String ApprovalState; // 승인, 미승인, 승인대기
+	private String applicationState; // 접수중, 접수마감
+	private String approvalState; // 승인, 미승인, 승인대기
 	private Day_of_week dayOfWeek; // 프로그램 요일
 	private Integer views = 0; // 프로그램 조회 수
 	private Integer likesCount = 0; // 프로그램 좋아요 수

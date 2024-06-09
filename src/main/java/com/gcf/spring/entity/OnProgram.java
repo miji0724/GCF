@@ -59,7 +59,7 @@ public class OnProgram {
 	private Attachment poster; // 포스터 정보
 	
 	@Column(nullable = false)
-	private String ApprovalState; // 승인, 미승인, 승인대기
+	private String approvalState; // 승인, 미승인, 승인대기
 
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<ProgramInfo> programInfos;
