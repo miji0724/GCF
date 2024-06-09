@@ -23,6 +23,7 @@ import jakarta.transaction.Transactional;
 
 @SpringBootTest
 public class OnProgramRepositoryTest {
+
 	@Autowired
 	private OnProgramRepository onProgramRepository;
 
@@ -32,125 +33,130 @@ public class OnProgramRepositoryTest {
 	@Test
 	@Transactional
 	@Rollback(false)
-	public void testInsertOffProgram() {
-		OnProgramDto onProgramDto = new OnProgramDto();
+	public void testInsertOffPrograms() {
+		for (int i = 1; i <= 30; i++) {
+			OnProgramDto onProgramDto = new OnProgramDto();
 
-		Teacher teacher = teacherRepository.findTeacherById("test1");
-		
-		onProgramDto.setTeacher(teacher);
-		
-		onProgramDto.setOnProgramName("프로그램명");
-		onProgramDto.setOperatingStartDay(LocalDate.now());
-		onProgramDto.setViews(0);
-		onProgramDto.setLikesCount(0);
-		onProgramDto.setOnlineCategory("음악");
-		onProgramDto.setProgramType("온라인");
+			Teacher teacher = teacherRepository.findTeacherById("test1");
 
-		Attachment poster = new Attachment();
+			onProgramDto.setTeacher(teacher);
+			onProgramDto.setTeacherName(teacher.getMember().getName());
+			onProgramDto.setProgramName("프로그램명 " + i);
+			onProgramDto.setOperatingStartDay(LocalDate.now());
+			onProgramDto.setViews(0);
+			onProgramDto.setLikesCount(0);
+			onProgramDto.setOnlineCategory("음악");
+			onProgramDto.setProgramType("온라인");
 
-		poster.setOriginal_name("포스터 원본 이름");
-		poster.setFile_name("포스터 생성 이름");
-		poster.setFile_path("포스터 파일경로");
-		poster.setParent("online_poster");
+			System.out.println("teacher.getMember() = "+teacher.getMember());
+			System.out.println("teacher.getMember().getName() = "+teacher.getMember().getName());
+			
+			Attachment poster = new Attachment();
 
-		onProgramDto.setPoster(poster);
+			poster.setOriginal_name("포스터 원본 이름" + i);
+			poster.setFile_name("포스터 생성 이름" + i);
+			poster.setFile_path("포스터 파일경로" + i);
+			poster.setParent("online_poster" + i);
 
-		ProgramInfo programInfo1 = new ProgramInfo();
-		programInfo1.setDescription("교육소개1");
+			onProgramDto.setPoster(poster);
 
-		Attachment desfile1 = new Attachment();
-		desfile1.setOriginal_name("교육소개 이미지 원본이름 1");
-		desfile1.setFile_name("교육소개 생성 이름 1");
-		desfile1.setFile_path("교육소개 파일경로 1");
-		desfile1.setParent("online_program_info");
+			ProgramInfo programInfo1 = new ProgramInfo();
+			programInfo1.setDescription("교육소개1" + i);
 
-		programInfo1.setAttachment(desfile1);
+			Attachment desfile1 = new Attachment();
+			desfile1.setOriginal_name("교육소개 이미지 원본이름 1" + i);
+			desfile1.setFile_name("교육소개 생성 이름 1" + i);
+			desfile1.setFile_path("교육소개 파일경로 1" + i);
+			desfile1.setParent("online_program_info");
 
-		ProgramInfo programInfo2 = new ProgramInfo();
-		programInfo2.setDescription("교육소개2");
+			programInfo1.setAttachment(desfile1);
 
-		Attachment desfile2 = new Attachment();
-		desfile2.setOriginal_name("교육소개 이미지 원본이름 2");
-		desfile2.setFile_name("교육소개 생성 이름 2");
-		desfile2.setFile_path("교육소개 파일경로 2");
-		desfile2.setParent("online_program_info");
+			ProgramInfo programInfo2 = new ProgramInfo();
+			programInfo2.setDescription("교육소개2" + i);
 
-		programInfo2.setAttachment(desfile2);
+			Attachment desfile2 = new Attachment();
+			desfile2.setOriginal_name("교육소개 이미지 원본이름 2" + i);
+			desfile2.setFile_name("교육소개 생성 이름 2" + i);
+			desfile2.setFile_path("교육소개 파일경로 2" + i);
+			desfile2.setParent("online_program_info");
 
-		List<ProgramInfo> deslist = new ArrayList<>();
-		deslist.add(programInfo1);
-		deslist.add(programInfo2);
+			programInfo2.setAttachment(desfile2);
 
-		onProgramDto.setProgramInfos(deslist); // 강의 정보
+			List<ProgramInfo> deslist = new ArrayList<>();
+			deslist.add(programInfo1);
+			deslist.add(programInfo2);
 
-		TeacherInfo teacherInfo1 = new TeacherInfo();
-		teacherInfo1.setDescription("강사소개1");
+			onProgramDto.setProgramInfos(deslist); // 강의 정보
 
-		Attachment teafile1 = new Attachment();
-		teafile1.setOriginal_name("강사소개 이미지 원본이름 1");
-		teafile1.setFile_name("강사소개 생성 이름 1");
-		teafile1.setFile_path("강사소개 파일경로 1");
-		teafile1.setParent("online_teacher_info");
+			TeacherInfo teacherInfo1 = new TeacherInfo();
+			teacherInfo1.setDescription("강사소개1" + i);
 
-		teacherInfo1.setAttachment(teafile1);
+			Attachment teafile1 = new Attachment();
+			teafile1.setOriginal_name("강사소개 이미지 원본이름 1" + i);
+			teafile1.setFile_name("강사소개 생성 이름 1" + i);
+			teafile1.setFile_path("강사소개 파일경로 1" + i);
+			teafile1.setParent("online_teacher_info");
 
-		TeacherInfo teacherInfo2 = new TeacherInfo();
-		teacherInfo2.setDescription("강사소개2");
+			teacherInfo1.setAttachment(teafile1);
 
-		Attachment teafile2 = new Attachment();
-		teafile2.setOriginal_name("강사소개 이미지 원본이름 2");
-		teafile2.setFile_name("강사소개 생성 이름 2");
-		teafile2.setFile_path("강사소개 파일경로 2");
-		teafile2.setParent("online_teacher_info");
+			TeacherInfo teacherInfo2 = new TeacherInfo();
+			teacherInfo2.setDescription("강사소개2" + i);
 
-		teacherInfo2.setAttachment(teafile2);
+			Attachment teafile2 = new Attachment();
+			teafile2.setOriginal_name("강사소개 이미지 원본이름 2" + i);
+			teafile2.setFile_name("강사소개 생성 이름 2" + i);
+			teafile2.setFile_path("강사소개 파일경로 2" + i);
+			teafile2.setParent("online_teacher_info");
 
-		List<TeacherInfo> tealist = new ArrayList<>();
-		tealist.add(teacherInfo1);
-		tealist.add(teacherInfo2);
+			teacherInfo2.setAttachment(teafile2);
 
-		onProgramDto.setTeacherInfos(tealist); // 강사 정보
+			List<TeacherInfo> tealist = new ArrayList<>();
+			tealist.add(teacherInfo1);
+			tealist.add(teacherInfo2);
 
-		onProgramDto.setComments(null); // 댓글
+			onProgramDto.setTeacherInfos(tealist); // 강사 정보
 
-		OnVideo onegang = new OnVideo();
+			onProgramDto.setComments(null); // 댓글
 
-		onegang.setVideoInfoIndex("1강");
-		onegang.setVideoInfoDetail("1강입니다.");
-		onegang.setAttachment(null);
+			OnVideo onegang = new OnVideo();
 
-		OnVideo onebyone = new OnVideo();
+			onegang.setVideoInfoIndex("1강");
+			onegang.setVideoInfoDetail("1강입니다.");
+			onegang.setAttachment(null);
 
-		onebyone.setVideoInfoIndex("1-1");
-		onebyone.setVideoInfoDetail("1-1 입니다.");
+			OnVideo onebyone = new OnVideo();
 
-		Attachment onebyonevid = new Attachment();
+			onebyone.setVideoInfoIndex("1-1");
+			onebyone.setVideoInfoDetail("1-1 입니다.");
 
-		onebyonevid.setOriginal_name("1-1 동영상 원본 이름");
-		onebyonevid.setFile_name("1-1 동영상 생성 이름");
-		onebyonevid.setFile_path("1-1 동영상 파일경로");
-		onebyonevid.setParent("online_video");
+			Attachment onebyonevid = new Attachment();
 
-		OnVideo twogang = new OnVideo();
+			onebyonevid.setOriginal_name("1-1 동영상 원본 이름");
+			onebyonevid.setFile_name("1-1 동영상 생성 이름");
+			onebyonevid.setFile_path("1-1 동영상 파일경로");
+			onebyonevid.setParent("online_video");
 
-		twogang.setVideoInfoIndex("1강");
-		twogang.setVideoInfoDetail("1강입니다.");
-		twogang.setAttachment(null);
+			OnVideo twogang = new OnVideo();
 
-		ArrayList<OnVideo> videos = new ArrayList<>();
+			twogang.setVideoInfoIndex("1강");
+			twogang.setVideoInfoDetail("1강입니다.");
+			twogang.setAttachment(null);
 
-		videos.add(onegang);
-		videos.add(onebyone);
-		videos.add(twogang);
+			ArrayList<OnVideo> videos = new ArrayList<>();
 
-		onProgramDto.setVideos(videos); // 비디오 리스트
+			videos.add(onegang);
+			videos.add(onebyone);
+			videos.add(twogang);
 
-		OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
+			onProgramDto.setVideos(videos); // 비디오 리스트
 
-		onProgramRepository.save(onProgram);
+			OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
 
-		OnProgram savedOnProgram = onProgramRepository.findById(onProgram.getId()).orElse(null);
-		assert savedOnProgram != null;
-		assert savedOnProgram.getOnProgramName().equals("프로그램명");
+			onProgramRepository.save(onProgram);
+
+			OnProgram savedOnProgram = onProgramRepository.findById(onProgram.getId()).orElse(null);
+			assert savedOnProgram != null;
+			assert savedOnProgram.getProgramName().equals("프로그램명 " + i);
+		}
 	}
 }

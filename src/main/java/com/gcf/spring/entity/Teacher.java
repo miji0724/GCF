@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class Teacher {
     @JoinColumn(name = "id")
     @JsonIgnore
     private Member member;
-
+    
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
     private List<String> teacher_category;
 

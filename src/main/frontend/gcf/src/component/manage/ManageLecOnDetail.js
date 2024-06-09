@@ -5,7 +5,32 @@ import './ManageLecOnDetail.css';
 function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isParent }) {
     const [text, setText] = useState('');
     const [file, setFile] = useState(null);
-
+    const [lecInfo, setLecInfo] = useState({
+        onProgramName: '',
+        operatingStartDay: '',
+        views: 0,
+        likesCount: 0,
+        onlineCategory: '',
+        programType: '',
+        poster: {
+            original_name:'',
+            file_name:'',
+            file_path:'',
+            parent:'',
+        },
+        programInfos: [],
+        teacherInfos: [],
+        comments: [],
+        videos: [],
+        teacher: {
+            member:{
+                name:'',
+                phone_number:'',
+                tel_number:'',
+                email:'',
+            }
+        }
+    });
     const handleTextChange = (e) => {
         setText(e.target.value);
     };
@@ -221,10 +246,6 @@ function ManageLecOnDetail() {
                                     <input type='text' id='lecOnDetail_emailId' />
                                     &nbsp;@&nbsp;
                                     <input type='text' id='lecOnDetail_emailAddr' />
-                                    <select id='lecOnDetail_email_dropdown'>
-                                        <option value="direct_input">직접입력</option>
-                                        <option value="naver_input">naver.com</option>
-                                    </select>
                                 </li>
                                 <li><input type='file' id='lecOnDetail_poster_attachment' /></li>
 

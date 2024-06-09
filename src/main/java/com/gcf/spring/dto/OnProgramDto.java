@@ -23,8 +23,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnProgramDto {
 	private Teacher teacher;
-	private Integer onProgramNumber; // 프로그램 번호
-	private String onProgramName; // 프로그램 이름
+	private String teacherName;
+	private Integer programNumber; // 프로그램 번호
+	private String programName; // 프로그램 이름
 	private LocalDate operatingStartDay; // 업로드 날짜
 	private Integer views = 0; // 조회수
 	private Integer likesCount = 0; // 좋아요 수
