@@ -57,6 +57,9 @@ public class OnProgram {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "poster_id", referencedColumnName = "id")
 	private Attachment poster; // 포스터 정보
+	
+	@Column(nullable = false)
+	private String ApprovalState; // 승인, 미승인, 승인대기
 
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<ProgramInfo> programInfos;
@@ -69,7 +72,7 @@ public class OnProgram {
 
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<OnVideo> videos; // 비디오 리스트
-
+	
 	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 		OnProgram onProgram = new OnProgram();
 		onProgram.setTeacher(on_programDto.getTeacher());
@@ -84,6 +87,7 @@ public class OnProgram {
 		onProgram.setTeacherInfos(on_programDto.getTeacherInfos());
 		onProgram.setPoster(on_programDto.getPoster());
 		onProgram.setComments(on_programDto.getComments());
+		onProgram.setApprovalState(on_programDto.getApprovalState());
 		return onProgram;
 
 	}

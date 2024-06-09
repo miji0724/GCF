@@ -20,11 +20,21 @@ public class ProgramController {
 
     @GetMapping("/manage/getOnLecInfo")
     public List<OnProgram> getOnPrograms() {
-        return programService.getAllOnPrograms();
+        return programService.getAllApprovedOnPrograms();
     }
 
     @GetMapping("/manage/getOffLecInfo")
     public List<OffProgram> getOffPrograms() {
-        return programService.getAllOffPrograms();
+        return programService.getAllApprovedOffPrograms();
+    }
+    
+    @GetMapping("/manage/getPendingApprovalOnPrograms")
+    public List<OnProgram> getPendingApprovalOnPrograms() {
+        return programService.getAllPendingApprovalOnPrograms();
+    }
+
+    @GetMapping("/manage/getPendingApprovalOffPrograms")
+    public List<OffProgram> getPendingApprovalOffPrograms() {
+        return programService.getAllPendingApprovalOffPrograms();
     }
 }

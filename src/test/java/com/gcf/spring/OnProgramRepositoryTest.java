@@ -149,6 +149,8 @@ public class OnProgramRepositoryTest {
 			videos.add(twogang);
 
 			onProgramDto.setVideos(videos); // 비디오 리스트
+			
+			onProgramDto.setApprovalState("승인대기");
 
 			OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
 

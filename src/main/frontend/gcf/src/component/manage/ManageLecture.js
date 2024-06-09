@@ -1,7 +1,7 @@
 import './ManageLecture.css';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SideMenu from './ManageSideMenu';
-import items from './TestItems/LectureItems';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
 
 function lecOnDetailGo() {
@@ -18,33 +18,38 @@ function ManageLecture() {
     const [itemsPerPage] = useState(15); // 페이지 당 게시글 수
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
     const [searchType, setSearchType] = useState('lecture_name'); // 검색 기준 상태 추가
+    const [lecInfo, setLecInfo] = useState([]);
 
-    // URL 매개변수에서 teacherName 추출하여 검색어로 사용
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const teacherName = urlParams.get('teacherName');
-        if (teacherName) {
-            setSearchTerm(teacherName);
-        }
+        // 온라인 강의 정보 가져오기
+        const fetchOnLecInfo = axios.get('/manage/getOnLecInfo');
+        // 오프라인 강의 정보 가져오기
+        const fetchOffLecInfo = axios.get('/manage/getOffLecInfo');
+
+        Promise.all([fetchOnLecInfo, fetchOffLecInfo])
+            .then((responses) => {
+                const [onLecResponse, offLecResponse] = responses;
+                // 온라인과 오프라인 데이터를 합침
+                const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
+                setLecInfo(combinedLecInfo);
+                console.log(combinedLecInfo);
+            })
+            .catch(error => {
+                console.error('Error fetching lecture information:', error);
+                console.log(fetchOnLecInfo);
+            });
     }, []);
 
-    // 검색 필터링
-    const filteredItems = items.filter(item => {
-        // 검색어가 비어있으면 모든 아이템을 보여줌
+    const filteredItems = lecInfo.filter(item => {
         if (searchTerm === '') return true;
-        // 선택한 검색 기준에 따라 검색 수행
-        if (searchType === 'lecture_name') {
-            return item.lecture_name.toLowerCase().includes(searchTerm.toLowerCase());
-        } else if (searchType === 'lecture_lecRegistDate') {
-            return item.lecture_lecRegistDate.toLowerCase().includes(searchTerm.toLowerCase());
+        if (searchType === 'lecApp_name') {
+            return item.lecApp_name.toLowerCase().includes(searchTerm.toLowerCase());
+        } else if (searchType === 'lecApp_lecAppDate') {
+            return item.lecApp_lecAppDate.toLowerCase().includes(searchTerm.toLowerCase());
         }
         return false;
     });
 
-    // 현재 페이지의 게시글 범위 계산
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
     // 페이지 번호 계산
     const pageNumbers = [];
@@ -73,6 +78,11 @@ function ManageLecture() {
         }
     };
 
+    // 현재 페이지의 게시글 범위 계산
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
     // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
     const isFirstGroup = currentPage <= 5;
 
@@ -96,8 +106,8 @@ function ManageLecture() {
                     <table className='lecture_table'>
                         <thead>
                             <tr>
-                                <th className='lecture_id'>번호</th>
-                                <th className='lecture_name'>강사</th>
+                                <th className='lecture_id'>아이디</th>
+                                <th className='lecture_name'>강사이름</th>
                                 <th className='lecture_title'>제목</th>
                                 <th className='lecture_type'>온/오프라인</th>
                                 <th className='lecture_category'>카테고리</th>
@@ -108,12 +118,12 @@ function ManageLecture() {
                         <tbody>
                             {currentItems.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.lecture_id}</td>
-                                    <td>{item.lecture_name}</td>
-                                    <td>{item.lecture_title}</td>
-                                    <td>{item.lecture_type}</td>
-                                    <td>{item.lecture_category}</td>
-                                    <td>{item.lecture_lecRegistDate}</td>
+                                    <td>{item.id}</td>
+                                    <td>{item.teacherName}</td>
+                                    <td>{item.programName}</td>
+                                    <td>{item.programType}</td>
+                                    <td>{item.category}</td>
+                                    <td>{item.operatingStartDay.join('-')}</td>
                                     <td><button onClick={() => handleInfoButtonClick(item.lecture_type)}>정보</button></td>
                                 </tr>
                             ))}

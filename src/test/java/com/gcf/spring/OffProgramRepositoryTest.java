@@ -44,13 +44,15 @@ public class OffProgramRepositoryTest {
 			offProgramDto.setStartTime(LocalTime.of(9, 0));
 			offProgramDto.setEndTime(LocalTime.of(12, 0));
 			offProgramDto.setMaxParticipants(20);
-			offProgramDto.setState("모집중");
+			offProgramDto.setApplicationState("접수중");
+			offProgramDto.setApprovalState("승인대기");
 			offProgramDto.setDayOfWeek(Day_of_week.월요일);
 			offProgramDto.setViews(0);
 			offProgramDto.setLikesCount(0);
 			offProgramDto.setOfflineCategory("교육");
 			offProgramDto.setPlaceName("월곶생활문화센터");
 			offProgramDto.setProgramType("오프라인");
+			
 
 			Teacher teacher = teacherRepository.findTeacherById("test1");
 

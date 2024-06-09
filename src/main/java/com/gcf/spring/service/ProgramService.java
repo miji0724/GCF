@@ -1,6 +1,7 @@
 package com.gcf.spring.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,24 +21,38 @@ public class ProgramService {
     @Autowired
     private OffProgramRepository offProgramRepository;
 
-    public List<OnProgram> getAllOnPrograms() {
-        List<OnProgram> onPrograms = onProgramRepository.findAll();
-        // 온라인 프로그램의 강사 이름 설정
-        for (OnProgram onProgram : onPrograms) {
+    public List<OnProgram> getAllApprovedOnPrograms() {
+        List<OnProgram> approvedOnPrograms = onProgramRepository.findAllByApprovalState("승인");
+        // 승인된 온라인 프로그램의 강사 이름 설정
+        for (OnProgram onProgram : approvedOnPrograms) {
             setTeacherName(onProgram);
         }
-        return onPrograms;
+        return approvedOnPrograms;
     }
 
-    public List<OffProgram> getAllOffPrograms() {
-        List<OffProgram> offPrograms = offProgramRepository.findAll();
-        // 오프라인 프로그램의 강사 이름 설정
-        for (OffProgram offProgram : offPrograms) {
+    public List<OffProgram> getAllApprovedOffPrograms() {
+        List<OffProgram> approvedOffPrograms = offProgramRepository.findAllByApprovalState("승인");
+        // 승인된 오프라인 프로그램의 강사 이름 설정
+        for (OffProgram offProgram : approvedOffPrograms) {
             setTeacherName(offProgram);
         }
-        return offPrograms;
+        return approvedOffPrograms;
     }
 
+    public List<OnProgram> getAllPendingApprovalOnPrograms() {
+        return onProgramRepository.findAllByApprovalState("승인대기")
+                .stream()
+                .peek(this::setTeacherName) // 각 프로그램의 강사 이름 설정
+                .collect(Collectors.toList());
+    }
+
+    public List<OffProgram> getAllPendingApprovalOffPrograms() {
+        return offProgramRepository.findAllByApprovalState("승인대기")
+                .stream()
+                .peek(this::setTeacherName) // 각 프로그램의 강사 이름 설정
+                .collect(Collectors.toList());
+    }
+    
     private void setTeacherName(OnProgram onProgram) {
         Teacher teacher = onProgram.getTeacher();
         if (teacher != null && teacher.getMember() != null) {

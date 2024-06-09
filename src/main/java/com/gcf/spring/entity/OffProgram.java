@@ -75,7 +75,10 @@ public class OffProgram {
 	private Integer currentParticipants = 0; // 프로그램 신청 현황 0명
 
 	@Column(name = "state", nullable = false)
-	private String state; // 프로그램 상태
+	private String applicationState; // 접수중, 접수마감
+	
+	@Column(nullable = false)
+	private String approvalState; // 승인대기, 승인, 미승인
 
 	@Column(name = "day_of_week", nullable = false)
 	private Day_of_week dayOfWeek; // 프로그램 요일
@@ -94,7 +97,7 @@ public class OffProgram {
 
 	@Column(nullable = false)
 	private String programType; // 프로그램 온/오프라인 구분
-
+	
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "poster_id")
 	private Attachment poster; // 프로그램 포스터 정보
@@ -121,18 +124,19 @@ public class OffProgram {
 		offProgram.setEndTime(off_programDto.getEndTime());
 		offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
 		offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
-		offProgram.setState(off_programDto.getState());
+		offProgram.setApplicationState(off_programDto.getApplicationState());
+		offProgram.setApprovalState(off_programDto.getApprovalState());
 		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
 		offProgram.setViews(off_programDto.getViews());
 		offProgram.setLikesCount(off_programDto.getLikesCount());
 		offProgram.setCategory(off_programDto.getOfflineCategory());
 		offProgram.setPlaceName(off_programDto.getPlaceName());
 		offProgram.setProgramType(off_programDto.getProgramType());
-
+				
+		
 		offProgram.setPoster(null);
 		offProgram.setProgramInfos(null);
 		offProgram.setTeacherInfos(null);
 		return offProgram;
-
 	}
 }

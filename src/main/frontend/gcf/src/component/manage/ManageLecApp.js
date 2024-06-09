@@ -21,9 +21,9 @@ function ManageLecApp() {
     
     useEffect(() => {
         // 온라인 강의 정보 가져오기
-        const fetchOnLecInfo = axios.get('/manage/getOnLecInfo');
+        const fetchOnLecInfo = axios.get('/manage/getPendingApprovalOnPrograms');
         // 오프라인 강의 정보 가져오기
-        const fetchOffLecInfo = axios.get('/manage/getOffLecInfo');
+        const fetchOffLecInfo = axios.get('/manage/getPendingApprovalOffPrograms');
 
         Promise.all([fetchOnLecInfo, fetchOffLecInfo])
             .then((responses) => {
@@ -35,6 +35,7 @@ function ManageLecApp() {
             })
             .catch(error => {
                 console.error('Error fetching lecture information:', error);
+                console.log(fetchOnLecInfo);
             });
     }, []);
 
