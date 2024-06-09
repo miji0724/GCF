@@ -47,6 +47,7 @@ public class TeacherService {
 	            teacher.setCareerEndYear(teacherDto.getCareerEndYear());
 	            teacher.setLicenseName(teacherDto.getLicenseName());
             
+	            
                 // 회원 정보를 데이터베이스에 저장
                 teacherRepository.save(teacher);
                 return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
