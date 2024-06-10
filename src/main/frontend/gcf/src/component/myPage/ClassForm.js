@@ -401,40 +401,7 @@ function ClassForm() {
                                     <div><ManageLecOnDetail /></div>
                                 </div>
                             )}
-
-                            <h4>모집 기간 선택</h4>
-                            <DateRangePicker
-                                onChange={(ranges) => {
-                                    const { selection } = ranges;
-                                    PeriodsetOfflineLocationStartDate(selection.startDate);
-                                    PeriodsetOfflineLocationEndDate(selection.endDate);
-                                }}
-                                ranges={[{ startDate: PeriodofflineLocationStartDate, endDate: PeriodofflineLocationEndDate, key: 'selection' }]}
-                            />
-                            <div>
-                                <p>모집 기간: {PeriodofflineLocationStartDate.toLocaleDateString()} - {PeriodofflineLocationEndDate.toLocaleDateString()}</p>
-                            </div>
-
-                            <div className='recruitmentInfo'>
-                                <label htmlFor='recruitmentInfo'>모집 안내:</label>
-                                <textarea
-                                    id='recruitmentInfo'
-                                    name='recruitmentInfo'
-                                    rows='4'
-                                    cols='50'
-                                    placeholder='모집 안내를 입력해주세요.'
-                                ></textarea>
-                            </div>
-
-                            <div className='programFee'>
-                                <label htmlFor='programFee'>참가료:</label>
-                                <select value={programFee} onChange={handleProgramFeeChange}>
-                                    <option value="무료">무료</option>
-                                    <option value="프로그램별 상이">프로그램별</option>
-                                    {/* 다른 옵션 추가 가능 */}
-                                </select>
-                            </div>
-
+                     
                             <div className="subtitle">
                                 {/* 서브 타이틀 내용 생략 */}
                             </div>
