@@ -47,7 +47,7 @@ public class BannerService {
 					bannerOne.setUrl(bannerInput.getLink());
 
 					if (attachment != null) {
-						attachment.setBannerOne(bannerOne);
+//						attachment.setBannerOne(bannerOne);
 						bannerOne.setAttachment(attachment);
 					}
 
@@ -57,7 +57,7 @@ public class BannerService {
 					bannerTwo.setUrl(bannerInput.getLink());
 
 					if (attachment != null) {
-						attachment.setBannerTwo(bannerTwo);
+//						attachment.setBannerTwo(bannerTwo);
 						bannerTwo.setAttachment(attachment);
 					}
 

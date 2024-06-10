@@ -67,7 +67,7 @@ public class AttachmentService {
 
 			// 첨부 파일 정보를 notice 객체에 추가
 			Attachment attachment = new Attachment();
-			attachment.setNotice(notice);
+//			attachment.setNotice(notice);
 			attachment.setOriginal_name(originalFileName);
 			attachment.setFile_name(fileInFolder);
 			attachment.setFile_path(fileUrl);

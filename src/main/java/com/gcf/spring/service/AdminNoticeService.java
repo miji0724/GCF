@@ -58,7 +58,7 @@ public class AdminNoticeService {
         Notice existingNotice = adminNoticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Notice not found with id: " + id));
         
-        attachmentRepository.deleteAllByNotice(existingNotice);
+//        attachmentRepository.deleteAllByNotice(existingNotice);
         
         // 공지 업데이트
         updateNoticeFields(existingNotice, noticeDto);
