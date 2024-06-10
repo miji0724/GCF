@@ -73,10 +73,10 @@ public class OffProgram {
 	private Integer currentParticipants = 0; // 프로그램 신청 현황 0명
 
 	@Column(name = "state", nullable = false)
-	private String applicationState; // 접수중, 접수마감
+	private String applicationState = "접수중"; // 접수중, 접수마감
 	
 	@Column(nullable = false)
-	private String approvalState; // 승인대기, 승인, 미승인
+	private String approvalState = "승인대기"; // 승인대기, 승인, 미승인
 
 	@Column(name = "day_of_week", nullable = false)
 	private Day_of_week dayOfWeek; // 프로그램 요일

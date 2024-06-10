@@ -1,5 +1,7 @@
 package com.gcf.spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,8 +26,9 @@ public class OnVideo {
 	@Column
 	private Integer id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "on_program_number")
+	@ManyToOne
+    @JoinColumn(name = "on_program_id")
+    @JsonIgnore
 	private OnProgram onProgram;
 	
 	@Column

@@ -163,6 +163,10 @@ public class OnProgramRepositoryTest {
             for (TeacherInfo ti : onProgram.getTeacherInfos()) {
                 ti.setOnProgram(onProgram);
             }
+            
+            for (OnVideo vi : onProgram.getVideos()) {
+            	vi.setOnProgram(onProgram);
+            }
 
             onProgramRepository.save(onProgram);
 

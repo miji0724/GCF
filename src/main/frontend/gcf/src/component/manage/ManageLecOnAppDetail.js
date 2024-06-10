@@ -4,26 +4,26 @@ import SideMenu from './ManageSideMenu';
 import './ManageLecOnAppDetail.css';
 
 function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isParent, text, onTextChange, file, onFileChange }) {
+    
     return (
         <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "500px", height: "40px", marginTop: "10px" }}>
             {isParent && (
                 <>
                     {/* 상위 항목 */}
-                    <p>{name}</p>
-                    <p style={{ marginRight: "10px" }}>강</p>
+                    <p style={{ marginRight: "10px" }}>{name}</p>
                     <input type="text" value={text} onChange={(e) => onTextChange(id, e.target.value)} style={{ marginRight: "10px", width: "370px" }} />
                     <button onClick={onAddSubItem} style={{
-                        marginRight: "10px"
-                        , width: "30px"
-                        , height: "30px"
-                        , backgroundColor: "#EDEDED"
-                    }}>+</button>{/* 하위 추가 */}
+                        marginRight: "10px",
+                        width: "30px",
+                        height: "30px",
+                        backgroundColor: "#EDEDED"
+                    }} readOnly>+</button>{/* 하위 추가 */}
                     <button onClick={onDeleteSubItem} style={{
-                        width: "30px"
-                        , height: "30px"
-                        , marginRight: "10px"
-                        , backgroundColor: "#FF8585"
-                    }}>-</button>{/* 하위 제거 */}
+                        width: "30px",
+                        height: "30px",
+                        marginRight: "10px",
+                        backgroundColor: "#FF8585"
+                    }} readOnly>-</button>{/* 하위 제거 */}
                 </>
             )}
             {!isParent && (
@@ -31,7 +31,7 @@ function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isPa
                     {/* 하위 항목 */}
                     <p style={{ marginLeft: "5px", marginRight: "5px", width: "50px" }}>{name}</p>
                     <input type="text" value={text} onChange={(e) => onTextChange(id, e.target.value)} style={{ marginRight: "10px", width: "300px" }} />
-                    <input type="file" onChange={(e) => onFileChange(id, e.target.files[0])} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} />
+                    <input type="text"value={text} onChange={(e) => onTextChange(id, e.target.value)} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} />
                 </>
             )}
         </div>
@@ -39,7 +39,6 @@ function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isPa
 }
 
 function ManageLecOnAppDetail() {
-
     const location = useLocation();
     const item = location.state.item;
 
@@ -74,9 +73,49 @@ function ManageLecOnAppDetail() {
         teacherInfos: [],
         comments: [],
         videos: [],
-
     });
 
+    useEffect(() => {
+        if (item) {
+            setOnLecInfo(item);
+            setItems(item.videos.map((video, index) => ({
+                id: video.videoInfoIndex,
+                name: video.videoInfoIndex,
+                subItems: video.subItems && video.subItems.length > 0 ? video.subItems.map((subItem, subIndex) => ({
+                    id: subItem.videoInfoIndex,
+                    name: subItem.videoInfoIndex,
+                    text: subItem.videoInfoDetail,
+                    file: subItem.attachment.original_name,
+                })) : [],
+                text: video.videoInfoDetail,
+                file: null,
+            })));
+    
+            // Initialize parentCounter and subCounters
+            let parentCounter = item.videos.length + 1;
+            let subCounters = {};
+    
+            item.videos.forEach((video, index) => {
+                // Check if video has subItems
+                if (video.subItems && video.subItems.length > 0) {
+                    // Count subItems within each video
+                    let subItemCounter = video.attachment ? 1 : 0;
+                    video.subItems.forEach(subItem => {
+                        if (subItem.attachment) {
+                            subItemCounter++;
+                        }
+                    });
+    
+                    // Set subCounter for each parent item
+                    subCounters[index + 1] = subItemCounter;
+                }
+            });
+    
+            setParentCounter(parentCounter);
+            setSubCounters(subCounters);
+        }
+    }, [item]);
+    
     const handleAddItem = useCallback(() => {
         setItems(prevItems => {
             const newItemId = parentCounter;
@@ -93,27 +132,33 @@ function ManageLecOnAppDetail() {
     }, [parentCounter]);
 
     const handleAddSubItem = (parentId) => {
-        const newSubItemId = (subCounters[parentId] || 0) + 1; // 현재 하위 항목의 카운터
-        const newSubItem = {
-            id: `${parentId}-${newSubItemId}`, // 부모 항목 ID와 하위 항목 일련번호를 조합하여 생성
-            name: `${parentId}-${newSubItemId}`,
-            text: '',
-            file: null,
-        };
-        const updatedItems = items.map(item => {
-            if (item.id === parentId) {
-                return {
-                    ...item,
-                    subItems: [...item.subItems, newSubItem],
-                };
-            }
-            return item;
-        });
-        setItems(updatedItems);
-        setSubCounters({
-            ...subCounters,
-            [parentId]: newSubItemId,
-        });
+        const parentItem = items.find(item => item.id === parentId);
+    
+        if (parentItem) {
+            const newSubItemId = (subCounters[parentId] || 0) + 1; // 현재 하위 항목의 카운터
+            const newSubItem = {
+                id: `${parentId}-${newSubItemId}`, // 부모 항목 ID와 하위 항목 일련번호를 조합하여 생성
+                name: `${parentId}-${newSubItemId}`,
+                text: '',
+                file: null, // 파일을 null로 설정하여 새로운 하위 항목에는 파일이 없음을 지정
+            };
+    
+            const updatedItems = items.map(item => {
+                if (item.id === parentId) {
+                    return {
+                        ...item,
+                        subItems: [...item.subItems, newSubItem],
+                    };
+                }
+                return item;
+            });
+    
+            setItems(updatedItems);
+            setSubCounters({
+                ...subCounters,
+                [parentId]: newSubItemId,
+            });
+        }
     };
 
     const handleDeleteItem = () => {
@@ -176,13 +221,14 @@ function ManageLecOnAppDetail() {
     const handleRemoveTeachInput = (id) => {
         setTeachInputs(teachInputs.filter(input => input.id !== id));
     };
+
     return (
         <body>
             <div className='lecOnAppDetail_container'>
                 <SideMenu />
                 <div className='lecOnAppDetail'>
                     <p>강의 검토 페이지(온라인)</p>
-                    <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
+                    <a className='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                     <div className='lecOnAppDetail_area'>
                         <div className='lecOnAppDetail_left'>
                             <ul>
@@ -203,29 +249,20 @@ function ManageLecOnAppDetail() {
                         </div>
                         <div className='lecOnAppDetail_right'>
                             <ul>
-                                <li> <input type='text' id='lecOnAppDetail_lecTitle' value={item.programName} /></li>
-                                <li> <input type='text' id='lecOnAppDetail_name' value={item.teacher.member.name} /></li>
-                                <li> <input type="text" id='lecOnAppDetail_phoneNum' maxLength="13" value={item.teacher.member.phone_number} /></li>
-                                <li> <input type="text" id='lecOnAppDetail_landNum' maxLength="11" value={item.teacher.member.tel_number} /> </li>
-                                
-                                <li><input type='file' id='lecOnAppDetail_poster_attachment' /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecTitle' value={item.programName} readOnly /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecTeacher' value={item.teacher.member.name} readOnly /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecPhoneNum' value={item.teacher.member.phone_number} readOnly /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecTelNum' value={item.teacher.member.tel_number} readOnly /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecBannerPoster' value={item.poster.file_name} readOnly /></li>
 
                                 <div className='introduceEdu_buttonAlign'>
                                     <div className='introduceEdu_area'>
-                                        {eduInputs.map(input => (
+                                        {eduInputs.map((input, index) => (
                                             <div key={input.id} className='introduceEdu_flexArea'>
-                                                <li>
-                                                    <input type='text' id={`lecOnAppDetail_introduceEdu_detail_${input.id}`} />
-                                                    <button onClick={() => handleRemoveEduInput(input.id)} style={{
-                                                        width: "30px"
-                                                        , height: "30px"
-                                                        , backgroundColor: "#FF8585"
-                                                        , margin: "0 10px"
-                                                    }}>-</button>
-                                                </li>
-                                                <li>
-                                                    <input type='file' className='introduceEdu_attachment' id={`lecOnAppDetail_introduceEdu_attachment_${input.id}`} />
-                                                </li>
+                                                <li> <input type='text' id='lecOnAppDetail_lecIntroduce' defaultValue={item.programInfos[index]?.description} /></li>
+                                                {eduInputs.length > 1 && (
+                                                    <button onClick={() => handleRemoveEduInput(input.id)}>-</button>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
@@ -237,23 +274,14 @@ function ManageLecOnAppDetail() {
                                         , backgroundColor: "#EDEDED"
                                     }}>+</button>
                                 </div>
-
                                 <div className='introduceTeach_buttonAlign'>
                                     <div className='introduceTeach_area'>
-                                        {teachInputs.map(input => (
+                                        {teachInputs.map((input, index) => (
                                             <div key={input.id} className='introduceTeach_flexArea'>
-                                                <li>
-                                                    <input type='text' id={`lecOnAppDetail_introduceTeach_detail_${input.id}`} />
-                                                    <button onClick={() => handleRemoveTeachInput(input.id)} style={{
-                                                        width: "30px"
-                                                        , height: "30px"
-                                                        , backgroundColor: "#FF8585"
-                                                        , margin: "0 10px"
-                                                    }}>-</button>
-                                                </li>
-                                                <li>
-                                                    <input type='file' className='introduceTeach_attachment' id={`lecOnAppDetail_introduceTeach_attachment_${input.id}`} />
-                                                </li>
+                                                <li> <input type='text' id='lecOnAppDetail_lecIntroduce' defaultValue={item.teacherInfos[index]?.description} /></li>
+                                                {teachInputs.length > 1 && (
+                                                    <button onClick={() => handleRemoveTeachInput(input.id)}>-</button>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
@@ -265,31 +293,37 @@ function ManageLecOnAppDetail() {
                                         , backgroundColor: "#EDEDED"
                                     }}>+</button>
                                 </div>
-
-                                <li>
-                                    <select id='lecOnAppDetail_lecField'>{/*문학 미술 음악 무용 영상 연극 영화 국악 건축 출판 만화*/}
-
-                                        <option value='art'>미술</option>
-                                        <option value='science'>과학</option>
-                                        <option value='music'>음악</option>
-                                        <option value='design'>디자인</option>
-                                        <option value='education'>교육</option>
-                                        <option value='etc'>기타</option>
-                                    </select>
-                                </li>
+                                <li> <input type='text' id='lecOnAppDetail_lecCategory' value={item.category} readOnly /></li>
                                 <li>
                                     <div className='trainList'>
                                         <div className='trainList_area'>
-                                            {items.map(item => (
+                                            {items.map((item, index) => (
                                                 <div className='trainList_left' >
                                                     <div key={item.id} className="education-item-wrapper">
                                                         <EducationItem
+                                                            key={item.id}
                                                             id={item.id}
                                                             name={item.name}
                                                             onDelete={() => handleDeleteItem(item.id)}
                                                             onAddSubItem={() => handleAddSubItem(item.id)}
                                                             onDeleteSubItem={() => handleDeleteSubItem(item.id)}
                                                             isParent={true}
+                                                            text={item.text}
+                                                            onTextChange={(id, value) => {
+                                                                setItems(prevItems =>
+                                                                    prevItems.map(item =>
+                                                                        item.id === id ? { ...item, text: value } : item
+                                                                    )
+                                                                );
+                                                            }}
+                                                            file={item.file}
+                                                            onFileChange={(id, file) => {
+                                                                setItems(prevItems =>
+                                                                    prevItems.map(item =>
+                                                                        item.id === id ? { ...item, file: file } : item
+                                                                    )
+                                                                );
+                                                            }}
                                                         />
                                                         {item.subItems.map(subItem => (
                                                             <div key={subItem.id} className="sub-education-item-wrapper">
@@ -314,7 +348,7 @@ function ManageLecOnAppDetail() {
                                                 , display: "flex"
                                                 , alignItems: "center"
                                                 , justifyContent: "center"
-                                            }}>+</button>
+                                            }} readOnly>+</button>
 
                                             <button onClick={handleDeleteItem} style={{
                                                 float: "right"
@@ -324,7 +358,8 @@ function ManageLecOnAppDetail() {
                                                 , display: "flex"
                                                 , alignItems: "center"
                                                 , justifyContent: "center"
-                                            }}>-</button>
+
+                                            }} readOnly>-</button>
                                         </div>
                                     </div>
                                 </li>

@@ -67,10 +67,10 @@ public class OnProgram {
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TeacherInfo> teacherInfos; 
 
-	@OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments; // 댓글 리스트
 
-	@OneToMany(mappedBy = "onProgram", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OnVideo> videos; // 비디오 리스트
 
 	public static OnProgram createOnProgram(OnProgramDto on_programDto) {

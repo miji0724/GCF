@@ -105,6 +105,13 @@
 .introduceTeach_flexArea{
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.introduceEdu_flexArea input,
+.introduceTeach_flexArea input{
+    width:440px;
 }
 
 .lecOnAppDetail button{
