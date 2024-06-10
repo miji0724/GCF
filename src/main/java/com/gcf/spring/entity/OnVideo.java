@@ -7,25 +7,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "bannerTwo")
+@Table(name = "on_video")
 @Getter
 @Setter
-public class BannerTwo {
+public class OnVideo {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
+	private Integer id;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "on_program_number")
+	private OnProgram onProgram;
+	
+	@Column
+	private String videoInfoIndex;
+	
+	@Column
+	private String videoInfoDetail;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column
-    private String url;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "attachment_id", referencedColumnName = "id")
     private Attachment attachment;
 }

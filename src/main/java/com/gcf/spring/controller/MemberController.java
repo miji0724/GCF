@@ -66,35 +66,35 @@ public class MemberController {
         }
     }
 
-    // 아이디 찾기
-    @PostMapping("/member/findId")
-    public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
-        try {
-            String foundId = memberService.findId(memberDto);
-            if (foundId != null) {
-                return ResponseEntity.ok(foundId);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
-        }
-    }
-
-    // 비밀번호 찾기
-    @PostMapping("/member/findPw")
-    public ResponseEntity<String> findPw(@RequestBody MemberDto memberDto) {
-        try {
-            String foundPw = memberService.findPw(memberDto);
-            if (foundPw != null) {
-                return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 회원이거나 잘못 입력된 정보입니다.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
-        }
-    }
+//    // 아이디 찾기
+//    @PostMapping("/member/findId")
+//    public ResponseEntity<String> findId(@RequestBody MemberDto memberDto) {
+//        try {
+//            String foundId = memberService.findId(memberDto);
+//            if (foundId != null) {
+//                return ResponseEntity.ok(foundId);
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+//        }
+//    }
+//
+//    // 비밀번호 찾기
+//    @PostMapping("/member/findPw")
+//    public ResponseEntity<String> findPw(@RequestBody MemberDto memberDto) {
+//        try {
+//            String foundPw = memberService.findPw(memberDto);
+//            if (foundPw != null) {
+//                return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 회원이거나 잘못 입력된 정보입니다.");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+//        }
+//    }
     
  // 비밀번호 인증
     @PostMapping("/member/authentication")
@@ -137,7 +137,7 @@ public class MemberController {
             memberDto.setEmail(member.getEmail());
             memberDto.setBirth(member.getBirth());
             memberDto.setPhone_number(member.getPhone_number());
-            memberDto.setTelNumber(member.getTelNumber());
+            memberDto.setTel_number(member.getTel_number());
             memberDto.setAddress(member.getAddress());
             memberDto.setDetail_address(member.getDetail_address());
             memberDto.setEmail_agreement(member.getEmail_agreement());

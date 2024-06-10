@@ -115,20 +115,20 @@ public class MemberService implements UserDetailsService {
         }
     }
     
-    public String findId(MemberDto memberDto) {
-        Optional<Member> foundIdMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
-        if (foundIdMember.isPresent()) {
-            Member member = foundIdMember.get();
-            System.out.println(member);
-            
-            String findId = member.getId();
-            System.out.println(findId);
-            
-            return findId;
-        } else {
-            return null;
-        }
-    }
+//    public String findId(MemberDto memberDto) {
+//        Optional<Member> foundIdMember = memberRepository.findIdByNameAndEmail(memberDto.getName(), memberDto.getEmail());
+//        if (foundIdMember.isPresent()) {
+//            Member member = foundIdMember.get();
+//            System.out.println(member);
+//            
+//            String findId = member.getId();
+//            System.out.println(findId);
+//            
+//            return findId;
+//        } else {
+//            return null;
+//        }
+//    }
     
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int PASSWORD_LENGTH = 10;
@@ -144,23 +144,23 @@ public class MemberService implements UserDetailsService {
 
     
     
-    public String findPw(MemberDto memberDto) {
-        Optional<Member> foundPwMember = memberRepository.findIdByIdAndEmail(memberDto.getId(), memberDto.getEmail());
-        if (foundPwMember.isPresent()) {
-            Member member = foundPwMember.get();
-
-            String tempPassword = generateTempPassword();
-         
-            // 여기서 임시 비밀번호를 데이터베이스에 저장하는 로직을 추가합니다.
-            String encodedPassword = passwordEncoder.encode(tempPassword);
-            member.setPassword(encodedPassword);
-            memberRepository.save(member);
-
-            return member.getEmail();
-        } else {
-            return null;
-        }
-    }
+//    public String findPw(MemberDto memberDto) {
+//        Optional<Member> foundPwMember = memberRepository.findIdByIdAndEmail(memberDto.getId(), memberDto.getEmail());
+//        if (foundPwMember.isPresent()) {
+//            Member member = foundPwMember.get();
+//
+//            String tempPassword = generateTempPassword();
+//         
+//            // 여기서 임시 비밀번호를 데이터베이스에 저장하는 로직을 추가합니다.
+//            String encodedPassword = passwordEncoder.encode(tempPassword);
+//            member.setPassword(encodedPassword);
+//            memberRepository.save(member);
+//
+//            return member.getEmail();
+//        } else {
+//            return null;
+//        }
+//    }
     
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
@@ -186,7 +186,7 @@ public class MemberService implements UserDetailsService {
             }
             member.setBirth(memberDto.getBirth());
             member.setPhone_number(memberDto.getPhone_number());
-            member.setTelNumber(memberDto.getTelNumber());
+            member.setTel_number(memberDto.getTel_number());
             member.setEmail(memberDto.getEmail());
             member.setAddress(memberDto.getAddress());
             member.setDetail_address(memberDto.getDetail_address());
