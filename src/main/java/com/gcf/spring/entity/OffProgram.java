@@ -131,17 +131,8 @@ public class OffProgram {
 	    offProgram.setPlaceName(off_programDto.getPlaceName());
 	    offProgram.setProgramType(off_programDto.getProgramType());
 	    offProgram.setPoster(off_programDto.getPoster());
-	    List<ProgramInfo> programInfosList = new ArrayList<>();
-	    if (off_programDto.getProgramInfos() != null) {
-	        programInfosList.addAll(off_programDto.getProgramInfos());
-	    }
-	    offProgram.setProgramInfos(programInfosList);
-
-	    List<TeacherInfo> teacherInfosList = new ArrayList<>();
-	    if (off_programDto.getTeacherInfos() != null) {
-	        teacherInfosList.addAll(off_programDto.getTeacherInfos());
-	    }
-	    offProgram.setTeacherInfos(teacherInfosList);
+	    offProgram.setProgramInfos(off_programDto.getProgramInfos());
+	    offProgram.setTeacherInfos(off_programDto.getTeacherInfos());
 	    return offProgram;
 	}
 

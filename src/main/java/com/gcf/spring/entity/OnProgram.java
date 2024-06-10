@@ -61,61 +61,35 @@ public class OnProgram {
 	private String approvalState; // 승인, 미승인, 승인대기
 
 
-    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<ProgramInfo> programInfos;
 
-    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<TeacherInfo> teacherInfos; 
 
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
 	private List<Comment> comments; // 댓글 리스트
 
-	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<OnVideo> videos; // 비디오 리스트
 
-	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
-		OnProgram onProgram = new OnProgram();
-		onProgram.setTeacher(on_programDto.getTeacher());
-		onProgram.setProgramName(on_programDto.getProgramName());
-		onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
-		onProgram.setViews(on_programDto.getViews());
-		onProgram.setLikesCount(on_programDto.getLikesCount());
-		onProgram.setCategory(on_programDto.getCategory());
-		onProgram.setProgramType(on_programDto.getProgramType());
-
-		// Null 체크를 추가하여 안전하게 처리
-		List<ProgramInfo> programInfosList = new ArrayList<>();
-		if (on_programDto.getProgramInfos() != null) {
-			programInfosList.addAll(on_programDto.getProgramInfos());
-		}
-		onProgram.setProgramInfos(programInfosList);
-
-		List<TeacherInfo> teacherInfosList = new ArrayList<>();
-		if (on_programDto.getTeacherInfos() != null) {
-			teacherInfosList.addAll(on_programDto.getTeacherInfos());
-		}
-		onProgram.setTeacherInfos(teacherInfosList);
-
-		onProgram.setPoster(on_programDto.getPoster());
-
-		// Null 체크 추가
-		List<Comment> commentsList = new ArrayList<>();
-		if (on_programDto.getComments() != null) {
-			commentsList.addAll(on_programDto.getComments());
-		}
-		onProgram.setComments(commentsList);
-
-		onProgram.setApprovalState(on_programDto.getApprovalState());
-
-		// Null 체크 추가
-		List<OnVideo> videosList = new ArrayList<>();
-		if (on_programDto.getVideos() != null) {
-			videosList.addAll(on_programDto.getVideos());
-		}
-		onProgram.setVideos(videosList);
-
-		return onProgram;
-	}
+	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
+	        OnProgram onProgram = new OnProgram();
+	        onProgram.setTeacher(on_programDto.getTeacher());
+	        onProgram.setProgramName(on_programDto.getProgramName());
+	        onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
+	        onProgram.setViews(on_programDto.getViews());
+	        onProgram.setLikesCount(on_programDto.getLikesCount());
+	        onProgram.setCategory(on_programDto.getCategory()); // 필드명 변경
+	        onProgram.setProgramType(on_programDto.getProgramType());
+	        onProgram.setProgramInfos(on_programDto.getProgramInfos());
+	        onProgram.setTeacherInfos(on_programDto.getTeacherInfos());
+	        onProgram.setComments(on_programDto.getComments());
+	        onProgram.setVideos(on_programDto.getVideos());
+	        onProgram.setPoster(on_programDto.getPoster());
+	        onProgram.setApprovalState(on_programDto.getApprovalState());
+	        return onProgram;
+	    }
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();

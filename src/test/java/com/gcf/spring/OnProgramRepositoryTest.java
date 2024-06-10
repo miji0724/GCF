@@ -134,16 +134,8 @@ public class OnProgramRepositoryTest {
             onebyone.setAttachment(onebyonevid);
 
             OnVideo twogang = new OnVideo();
-            twogang.setVideoInfoIndex("1강");
-            twogang.setVideoInfoDetail("1강입니다.");
-
-            Attachment twogangvid = new Attachment();
-            twogangvid.setOriginal_name("1강 동영상 원본 이름");
-            twogangvid.setFile_name("1강 동영상 생성 이름");
-            twogangvid.setFile_path("1강 동영상 파일경로");
-            twogangvid.setParent("online_video");
-
-            twogang.setAttachment(twogangvid);
+            twogang.setVideoInfoIndex("2강");
+            twogang.setVideoInfoDetail("2강입니다.");
 
             videos.add(onegang);
             videos.add(onebyone);
