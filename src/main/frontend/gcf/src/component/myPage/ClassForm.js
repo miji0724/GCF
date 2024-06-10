@@ -158,42 +158,73 @@ function ClassForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        
-        const formData = {
-            teacher: null, // 필요 시 설정
-            programName: CName,
-            programDetailName: programNames.join(", "), // 예시로 콤마로 구분된 문자열로 합침
-            application_info: certificationFields.map(field => field.certification).join(", "),
-            applicationStartDate: PeriodofflineLocationStartDate,
-            applicationEndDate: PeriodofflineLocationEndDate,
-            operatingStartDay: offlineLocationStartDate,
-            operatingEndDay: offlineLocationEndDate,
-            participationFee: programFee,
-            startTime: startHour,
-            endTime: endHour,
-            maxParticipants: parseInt(numberOfApplicants, 10),
-            currentParticipants: 0,
-            applicationState: "접수중",
-            approvalState: "승인대기",
-            dayOfWeek: selectedDay,
-            views: 0,
-            likesCount: 0,
-            offlineCategory: offlineProgramType,
-            placeName: selectedLocation,
-            programType: offlineEducation ? "오프라인" : onlineEducation ? "온라인" : "", // programType 설정
-            poster: null,
-            teacherInfos: []
-        };
 
-        axios.post('/api/offProgram', formData)
-            .then(response => {
-                console.log(response.data);
-                alert("프로그램이 성공적으로 등록되었습니다.");
-            })
-            .catch(error => {
-                console.error(error);
-                alert("프로그램 등록 중 오류가 발생했습니다.");
-            });
+        let formData = {};
+
+        if (onlineEducation) {
+            formData = {
+                teacher: null, // 필요 시 설정
+                programName: CName,
+                operatingStartDay: offlineLocationStartDate,
+                views: 0,
+                likesCount: 0,
+                category: "온라인",
+                programType: "온라인",
+                poster: null,
+                approvalState: "승인대기",
+                programInfos: [],
+                teacherInfos: [],
+                comments: [],
+                videos: []
+            };
+            
+            axios.post('/api/onProgram', formData)
+                .then(response => {
+                    console.log(response.data);
+                    alert("온라인 프로그램이 성공적으로 등록되었습니다.");
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
+                });
+
+        } else if (offlineEducation) {
+            formData = {
+                teacher: null, // 필요 시 설정
+                programName: CName,
+                programDetailName: programNames.join(", "), // 예시로 콤마로 구분된 문자열로 합침
+                application_info: certificationFields.map(field => field.certification).join(", "),
+                applicationStartDate: PeriodofflineLocationStartDate,
+                applicationEndDate: PeriodofflineLocationEndDate,
+                operatingStartDay: offlineLocationStartDate,
+                operatingEndDay: offlineLocationEndDate,
+                participationFee: programFee,
+                startTime: startHour,
+                endTime: endHour,
+                maxParticipants: parseInt(numberOfApplicants, 10),
+                currentParticipants: 0,
+                applicationState: "접수중",
+                approvalState: "승인대기",
+                dayOfWeek: selectedDay,
+                views: 0,
+                likesCount: 0,
+                offlineCategory: offlineProgramType,
+                placeName: selectedLocation,
+                programType: "오프라인",
+                poster: null,
+                teacherInfos: []
+            };
+            
+            axios.post('/api/offProgram', formData)
+                .then(response => {
+                    console.log(response.data);
+                    alert("오프라인 프로그램이 성공적으로 등록되었습니다.");
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("오프라인 프로그램 등록 중 오류가 발생했습니다.");
+                });
+        }
     };
 
     return (
