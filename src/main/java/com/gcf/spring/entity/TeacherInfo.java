@@ -1,6 +1,17 @@
 package com.gcf.spring.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,9 +34,11 @@ public class TeacherInfo {
 
 	@ManyToOne
 	@JoinColumn(name = "on_program_id", referencedColumnName = "id")
+	@JsonIgnore
 	private OnProgram onProgram; // 연관된 오프라인 프로그램
 
 	@ManyToOne
 	@JoinColumn(name = "off_program_id", referencedColumnName = "id")
+	@JsonIgnore
 	private OffProgram offProgram; // 연관된 오프라인 프로그램
 }
