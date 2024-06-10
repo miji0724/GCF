@@ -1,5 +1,7 @@
 package com.gcf.spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +23,13 @@ public class ProgramInfo {
     @JoinColumn(name = "attachment_id", referencedColumnName = "id")
     private Attachment attachment; // 첨부파일
     
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "on_program_id", referencedColumnName = "id")
-    private OnProgram onProgram; // 연관된 오프라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "on_program_id")
+    @JsonIgnore
+    private OnProgram onProgram;
     
-    @ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "off_program_id", referencedColumnName = "id")
-	private OffProgram offProgram; // 연관된 오프라인 프로그램
+    @ManyToOne
+    @JoinColumn(name = "off_program_id")
+    @JsonIgnore
+    private OffProgram offProgram; // 연관된 오프라인 프로그램
 }

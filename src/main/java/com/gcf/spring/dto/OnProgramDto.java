@@ -23,12 +23,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnProgramDto {
 	private Teacher teacher;
-	private Integer programNumber; // 프로그램 번호
 	private String programName; // 프로그램 이름
 	private LocalDate operatingStartDay; // 업로드 날짜
-	private Integer views = 0; // 조회수
-	private Integer likesCount = 0; // 좋아요 수
-	private String onlineCategory; // 프로그램 카테고리
+	private Integer views; // 조회수
+	private Integer likesCount; // 좋아요 수
+	private String category; // 프로그램 카테고리
 	private String programType; // 프로그램 타입 (온라인/오프라인 구분)
 	private Attachment poster; // 포스터 정보
 	private String approvalState; //승인, 미승인, 승인대기

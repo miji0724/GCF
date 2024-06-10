@@ -157,12 +157,14 @@
 }
 
 
-#lecOnAppDetail_confirm {
+#lecOnAppDetail_approval {
     background-color: #AECCF2;
+    margin:10px;
 }
 
-#lecOnAppDetail_delete {
+#lecOnAppDetail_notApproval {
     background-color: #FF8585;
+    margin:10px;
 }
 
 .lecOnAppDetail_button_area button {

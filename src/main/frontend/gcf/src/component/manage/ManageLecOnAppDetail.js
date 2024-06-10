@@ -39,47 +39,26 @@ function EducationItem({ id, name, onDelete, onAddSubItem, onDeleteSubItem, isPa
 }
 
 function ManageLecOnAppDetail() {
+
     const location = useLocation();
-    const detailData = location.state?.detailData || {}; // 받은 데이터를 가져옴
-
-    const [phoneNumber, setPhoneNumber] = useState('');
-
-    const autoHypenPhone = (str) => {
-        str = str.replace(/[^0-9]/g, '');
-        let tmp = '';
-        if (str.length < 4) {
-            return str;
-        } else if (str.length < 7) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3);
-            return tmp;
-        } else if (str.length < 11) {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 3) + '-';
-            tmp += str.substr(6);
-            return tmp;
-        } else {
-            tmp += str.substr(0, 3) + '-';
-            tmp += str.substr(3, 4) + '-';
-            tmp += str.substr(7);
-            return tmp;
-        }
-    };
-
-    const handlePhoneNumberChange = (event) => {
-        const value = event.target.value;
-        setPhoneNumber(autoHypenPhone(value));
-    };
+    const item = location.state.item;
 
     const [items, setItems] = useState([]);
     const [parentCounter, setParentCounter] = useState(1);
     const [subCounters, setSubCounters] = useState({}); // 각 상위 항목의 하위 항목 카운터를 저장하는 객체
 
+    const [emailId, setEmailId] = useState('');
+    const [emailDomain, setEmailDomain] = useState('');
+
     const [onLecInfo, setOnLecInfo] = useState({
-        teacher: '',
-        teacherName: '',
         programName: '',
-        operatingStartDay: '',
+        teacher: {
+            member: {
+                name: '',
+                phone_number: '',
+                tel_number: '',
+            }
+        },
         views: 0,
         likesCount: 0,
         category: '',
@@ -95,20 +74,8 @@ function ManageLecOnAppDetail() {
         teacherInfos: [],
         comments: [],
         videos: [],
+
     });
-
-    useEffect(() => {
-        // 받은 데이터를 상태에 삽입
-        if (detailData) {
-            setOnLecInfo(detailData);
-            setPhoneNumber(autoHypenPhone(detailData.phoneNumber || ''));
-        }
-    }, [detailData]);
-
-    useEffect(() => {
-        // 초기 상위 항목 추가
-        handleAddItem();
-    }, []);
 
     const handleAddItem = useCallback(() => {
         setItems(prevItems => {
@@ -184,22 +151,6 @@ function ManageLecOnAppDetail() {
         }
     };
 
-    const handleTextChange = (id, value) => {
-        setItems(prevItems =>
-            prevItems.map(item =>
-                item.id === id ? { ...item, text: value } : item
-            )
-        );
-    };
-
-    const handleFileChange = (id, file) => {
-        setItems(prevItems =>
-            prevItems.map(item =>
-                item.id === id ? { ...item, file } : item
-            )
-        );
-    };
-
     // State for managing 'introduceEdu' input sets
     const [eduInputs, setEduInputs] = useState([{ id: 1 }]);
 
@@ -227,19 +178,18 @@ function ManageLecOnAppDetail() {
     };
     return (
         <body>
-            <div className='lecOnDetail_container'>
+            <div className='lecOnAppDetail_container'>
                 <SideMenu />
-                <div className='lecOnDetail'>
+                <div className='lecOnAppDetail'>
                     <p>강의 검토 페이지(온라인)</p>
                     <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
-                    <div className='lecOnDetail_area'>
-                        <div className='lecOnDetail_left'>
+                    <div className='lecOnAppDetail_area'>
+                        <div className='lecOnAppDetail_left'>
                             <ul>
                                 <li>* 강의 제목</li>
                                 <li>* 강사 이름</li>
                                 <li>* 휴대폰 번호</li>
                                 <li>전화번호</li>
-                                <li>* 강사 이메일</li>
                                 <li>* 교육 배너 포스터</li>
                                 <li>* 교육 소개</li>
                                 <li>&nbsp;</li>
@@ -251,25 +201,21 @@ function ManageLecOnAppDetail() {
                                 <li>* 교육목록</li>
                             </ul>
                         </div>
-                        <div className='lecOnDetail_right'>
+                        <div className='lecOnAppDetail_right'>
                             <ul>
-                                <li> <input type='text' id='lecOnDetail_lecTitle' /></li>
-                                <li> <input type='text' id='lecOnDetail_name' /></li>
-                                <li> <input type="text" id='lecOnDetail_phoneNum' maxLength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
-                                <li> <input type="text" id='lecOnDetail_landNum' maxLength="11" /> </li>
-                                <li>
-                                    <input type='text' id='lecOnDetail_emailId' />
-                                    &nbsp;@&nbsp;
-                                    <input type='text' id='lecOnDetail_emailAddr' />
-                                </li>
-                                <li><input type='file' id='lecOnDetail_poster_attachment' /></li>
+                                <li> <input type='text' id='lecOnAppDetail_lecTitle' value={item.programName} /></li>
+                                <li> <input type='text' id='lecOnAppDetail_name' value={item.teacher.member.name} /></li>
+                                <li> <input type="text" id='lecOnAppDetail_phoneNum' maxLength="13" value={item.teacher.member.phone_number} /></li>
+                                <li> <input type="text" id='lecOnAppDetail_landNum' maxLength="11" value={item.teacher.member.tel_number} /> </li>
+                                
+                                <li><input type='file' id='lecOnAppDetail_poster_attachment' /></li>
 
                                 <div className='introduceEdu_buttonAlign'>
                                     <div className='introduceEdu_area'>
                                         {eduInputs.map(input => (
                                             <div key={input.id} className='introduceEdu_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOnDetail_introduceEdu_detail_${input.id}`} />
+                                                    <input type='text' id={`lecOnAppDetail_introduceEdu_detail_${input.id}`} />
                                                     <button onClick={() => handleRemoveEduInput(input.id)} style={{
                                                         width: "30px"
                                                         , height: "30px"
@@ -278,7 +224,7 @@ function ManageLecOnAppDetail() {
                                                     }}>-</button>
                                                 </li>
                                                 <li>
-                                                    <input type='file' className='introduceEdu_attachment' id={`lecOnDetail_introduceEdu_attachment_${input.id}`} />
+                                                    <input type='file' className='introduceEdu_attachment' id={`lecOnAppDetail_introduceEdu_attachment_${input.id}`} />
                                                 </li>
                                             </div>
                                         ))}
@@ -297,7 +243,7 @@ function ManageLecOnAppDetail() {
                                         {teachInputs.map(input => (
                                             <div key={input.id} className='introduceTeach_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOnDetail_introduceTeach_detail_${input.id}`} />
+                                                    <input type='text' id={`lecOnAppDetail_introduceTeach_detail_${input.id}`} />
                                                     <button onClick={() => handleRemoveTeachInput(input.id)} style={{
                                                         width: "30px"
                                                         , height: "30px"
@@ -306,7 +252,7 @@ function ManageLecOnAppDetail() {
                                                     }}>-</button>
                                                 </li>
                                                 <li>
-                                                    <input type='file' className='introduceTeach_attachment' id={`lecOnDetail_introduceTeach_attachment_${input.id}`} />
+                                                    <input type='file' className='introduceTeach_attachment' id={`lecOnAppDetail_introduceTeach_attachment_${input.id}`} />
                                                 </li>
                                             </div>
                                         ))}
@@ -321,7 +267,7 @@ function ManageLecOnAppDetail() {
                                 </div>
 
                                 <li>
-                                    <select id='lecOnDetail_lecField'>{/*문학 미술 음악 무용 영상 연극 영화 국악 건축 출판 만화*/}
+                                    <select id='lecOnAppDetail_lecField'>{/*문학 미술 음악 무용 영상 연극 영화 국악 건축 출판 만화*/}
 
                                         <option value='art'>미술</option>
                                         <option value='science'>과학</option>
@@ -385,9 +331,9 @@ function ManageLecOnAppDetail() {
                             </ul>
                         </div>
                     </div>
-                    <div className='lecOnDetail_button_area'>
-                        <button id='lecOnDetail_confirm'>수정</button>
-                        <button id='lecOnDetail_delete'>삭제</button>
+                    <div className='lecOnAppDetail_button_area'>
+                        <button id='lecOnAppDetail_approval'>승인</button>
+                        <button id='lecOnAppDetail_notApproval'>미승인</button>
                     </div>
                 </div>
             </div>

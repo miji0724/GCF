@@ -1,6 +1,7 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gcf.spring.dto.OnProgramDto;
@@ -8,6 +9,7 @@ import com.gcf.spring.dto.OnProgramDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -54,22 +56,23 @@ public class OnProgram {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "poster_id", referencedColumnName = "id")
 	private Attachment poster; // 포스터 정보
-	
+
 	@Column(nullable = false)
 	private String approvalState; // 승인, 미승인, 승인대기
 
-	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
-	private List<ProgramInfo> programInfos;
 
-	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
-	private List<TeacherInfo> teacherInfos;
+    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramInfo> programInfos;
 
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeacherInfo> teacherInfos; 
+
+	@OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
 	private List<Comment> comments; // 댓글 리스트
 
-	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "onProgram", fetch = FetchType.EAGER)
 	private List<OnVideo> videos; // 비디오 리스트
-	
+
 	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 		OnProgram onProgram = new OnProgram();
 		onProgram.setTeacher(on_programDto.getTeacher());
@@ -77,14 +80,58 @@ public class OnProgram {
 		onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
 		onProgram.setViews(on_programDto.getViews());
 		onProgram.setLikesCount(on_programDto.getLikesCount());
-		onProgram.setCategory(on_programDto.getOnlineCategory());
+		onProgram.setCategory(on_programDto.getCategory());
 		onProgram.setProgramType(on_programDto.getProgramType());
-		onProgram.setProgramInfos(on_programDto.getProgramInfos());
-		onProgram.setTeacherInfos(on_programDto.getTeacherInfos());
-		onProgram.setPoster(on_programDto.getPoster());
-		onProgram.setComments(on_programDto.getComments());
-		onProgram.setApprovalState(on_programDto.getApprovalState());
-		return onProgram;
 
+		// Null 체크를 추가하여 안전하게 처리
+		List<ProgramInfo> programInfosList = new ArrayList<>();
+		if (on_programDto.getProgramInfos() != null) {
+			programInfosList.addAll(on_programDto.getProgramInfos());
+		}
+		onProgram.setProgramInfos(programInfosList);
+
+		List<TeacherInfo> teacherInfosList = new ArrayList<>();
+		if (on_programDto.getTeacherInfos() != null) {
+			teacherInfosList.addAll(on_programDto.getTeacherInfos());
+		}
+		onProgram.setTeacherInfos(teacherInfosList);
+
+		onProgram.setPoster(on_programDto.getPoster());
+
+		// Null 체크 추가
+		List<Comment> commentsList = new ArrayList<>();
+		if (on_programDto.getComments() != null) {
+			commentsList.addAll(on_programDto.getComments());
+		}
+		onProgram.setComments(commentsList);
+
+		onProgram.setApprovalState(on_programDto.getApprovalState());
+
+		// Null 체크 추가
+		List<OnVideo> videosList = new ArrayList<>();
+		if (on_programDto.getVideos() != null) {
+			videosList.addAll(on_programDto.getVideos());
+		}
+		onProgram.setVideos(videosList);
+
+		return onProgram;
+	}
+
+	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
+		OnProgramDto dto = new OnProgramDto();
+		dto.setTeacher(onProgram.getTeacher());
+		dto.setProgramName(onProgram.getProgramName());
+		dto.setOperatingStartDay(onProgram.getOperatingStartDay());
+		dto.setViews(onProgram.getViews());
+		dto.setLikesCount(onProgram.getLikesCount());
+		dto.setCategory(onProgram.getCategory());
+		dto.setProgramType(onProgram.getProgramType());
+		dto.setProgramInfos(onProgram.getProgramInfos());
+		dto.setTeacherInfos(onProgram.getTeacherInfos());
+		dto.setPoster(onProgram.getPoster());
+		dto.setComments(onProgram.getComments());
+		dto.setApprovalState(onProgram.getApprovalState());
+		dto.setVideos(onProgram.getVideos());
+		return dto;
 	}
 }

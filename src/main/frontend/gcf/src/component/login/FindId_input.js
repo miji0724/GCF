@@ -1,39 +1,39 @@
 import './FindId_input.css';
 import { useState } from 'react';
+import axios from 'axios';
 
-const FindId_input = ({ handleButtonClick }) => {
+const FindId_input = ({ onIdChange, onIdChangeError }) => {
+    const [FindIdForm, setFindIdForm] = useState({
+        name: '',
+        email: '',
+    });
 
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const handleFindId = (e) => {
+        e.preventDefault();
 
-    const autoHypenPhone = (str) => {
-        str = str.replace(/[^0-9]/g, '');
-        let tmp = '';
-        if (str.length < 4) {
-          return str;
-        } else if (str.length < 7) {
-          tmp += str.substr(0, 3) + '-';
-          tmp += str.substr(3);
-          return tmp;
-        } else if (str.length < 11) {
-          tmp += str.substr(0, 3) + '-';
-          tmp += str.substr(3, 3) + '-';
-          tmp += str.substr(6);
-          return tmp;
-        } else {
-          tmp += str.substr(0, 3) + '-';
-          tmp += str.substr(3, 4) + '-';
-          tmp += str.substr(7);
-          return tmp;
+        if (!FindIdForm.name || !FindIdForm.email) {
+          alert('이름과 이메일을 입력해주세요.');
+          return;
         }
-    };
 
-    const handlePhoneNumberChange = (event) => {
-        const value = event.target.value;
-        setPhoneNumber(autoHypenPhone(value));
-    };
-
-    const handleClick = (componentNumber) => {
-      handleButtonClick(componentNumber);
+        axios
+            .post('/member/findId', FindIdForm)
+            .then((response) => {
+                if (response.status === 200) {
+                    alert('인증에 성공하였습니다.');
+                    const id = response.data;
+                    onIdChange(id, FindIdForm.name);
+                }
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 404) {
+                    console.log(FindIdForm);
+                    alert('존재하지 않는 회원이거나 잘못 입력된 정보입니다.');
+                    onIdChangeError();
+                } else {
+                    alert('오류가 발생했습니다.');
+                }
+            });
     };
 
     return (
@@ -42,15 +42,27 @@ const FindId_input = ({ handleButtonClick }) => {
             <div className="line"></div>
             <div id="findId_input_INFO">
                 <ul>
-                    <li><input placeholder='이름 입력' /></li>
-                    <li><input type="text" name="cellPhone" id="cellPhone" placeholder="휴대전화번호 입력" maxlength="13" value={phoneNumber} onChange={handlePhoneNumberChange} /></li>
-                    <li><input placeholder='이메일 입력("@" 포함)' /></li>
+                    <li>
+                        <input
+                            placeholder="이름 입력"
+                            value={FindIdForm.name}
+                            onChange={(e) => setFindIdForm({ ...FindIdForm, name: e.target.value })}
+                        />
+                    </li>
+                    <li>
+                        <input
+                            placeholder='이메일 입력("@" 포함)'
+                            value={FindIdForm.email}
+                            onChange={(e) => setFindIdForm({ ...FindIdForm, email: e.target.value })}
+                        />
+                    </li>
                 </ul>
-                <button type="submit" id="findId_btn" onClick={() => handleClick(1)}>아이디 찾기</button>
-                <button type="submit" onClick={() => handleClick(2)}>존재하지 않는 회원</button>
+                <button type="submit" id="findId_btn" onClick={handleFindId}>
+                    아이디 찾기
+                </button>
             </div>
         </div>
     );
-}
+};
 
 export default FindId_input;

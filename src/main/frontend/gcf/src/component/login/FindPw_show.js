@@ -1,8 +1,6 @@
 import './FindPw_show.css'
 
-const FindPw_show = () => {
-
-    const str = "✔\n\njava1234@project.com 으로\n임시 비밀번호를 발송하였습니다." ;
+const FindPw_show = ({email}) => {
 
     return (
         <div className="findPw_show">
@@ -10,7 +8,7 @@ const FindPw_show = () => {
             <div className="line"></div>
             <div id="findPw_show_id">
                 <div className="show_pw">
-                    {str}
+                    ✔<br /><br />{email} 로 <br />임시 비밀번호를 발송하였습니다.
                 </div>
                 <button type="submit" id="go_login"><a href="/login">로그인 하러가기</a></button>
             </div>

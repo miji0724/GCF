@@ -2,13 +2,18 @@ import './Header.css';
 import logo from '../img/logo.png';
 import search from '../img/search.png';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Header = () =>  {
+const Header = ({ isLoggedIn, onLogout }) =>  {
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
 
+  const navigate = useNavigate();
+  
+  const gotoOnlineListCategory = (category) => {
+    navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
+  };
 
   return (
     <header>
@@ -17,12 +22,17 @@ const Header = () =>  {
           <a href="/"><img src={logo} alt="Logo" /></a>
         </div>
         <div className="member_btns">
-          <div ><a href="/login">로그인</a> |
-               <a href="/signUp">회원가입</a> |
-               <a href="/MyAuthentication">마이페이지 인증</a> |
-               <a href="/MyPage">마이페이지</a>|
-               <a href="/manage">관리자 페이지</a>
-               </div> 
+          {isLoggedIn ? (
+            <>
+              <a onClick={onLogout}>로그아웃</a> |
+              <a href="/MyAuthentication">마이페이지</a>
+            </>
+          ) : (
+            <>
+              <a href="/login">로그인</a> |
+              <a href="/signUp">회원가입</a>
+            </>
+          )}
         </div>
       </div>
       <nav className="navigation">
@@ -30,51 +40,48 @@ const Header = () =>  {
           <li onMouseEnter={() => setIsActive(true)} 
               onMouseLeave={() => setIsActive(false)} 
           >
-            <a href="#">오프라인 교육/체험
-              {isActive && (
-                <ul className="dropdown">
-                  <li><a href="/schedule">이달의 일정</a></li>
-                  <li><a href="#">프로그램 신청</a></li>
-                </ul>
-              )}
-            </a>
+            <Link to="/OfflineList">오프라인 교육/체험</Link>
+            {isActive && (
+              <ul className="dropdown">
+                <li><Link to="/schedule">이달의 일정</Link></li>
+                <li><Link to="/OfflineList">프로그램 신청</Link></li>
+              </ul>
+            )}
           </li>
-          <li onMouseEnter={() => setIsActive2(true)} 
+          <li onMouseEnter={() => setIsActive2(true)}
               onMouseLeave={() => setIsActive2(false)}>
-            <a href="#">
-              온라인 교육
-              {isActive2 && (
-                <ul className="dropdown">
-                  <li><a href="#">음악</a></li>
-                  <li><a href="#">미술</a></li>
-                  <li><a href="#">과학</a></li>
-                  <li><a href="#">디자인</a></li>
-                  <li><a href="#">교육</a></li>
-                  <li><a href="#">기타</a></li>
-                </ul>
-              )}
-            </a>
+            <Link to="/OnlineList">온라인 교육</Link>
+            {isActive2 && (
+              <ul className="dropdown">
+                <li><a onClick={() => gotoOnlineListCategory('음악')}>음악</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('미술')}>미술</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('과학')}>과학</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('디자인')}>디자인</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('교육')}>교육</a></li>
+                <li><a onClick={() => gotoOnlineListCategory('기타')}>기타</a></li>
+              </ul>
+            )}
           </li>
           <li><a href="/notice">공지사항</a></li>
           <li onMouseEnter={() => setIsActive3(true)} 
               onMouseLeave={() => setIsActive3(false)}
           >
-            <a href="/map">
+            <Link to="/map/김포아트홀">
               찾아오시는 길
               {isActive3 && (
                 <ul className="dropdown">
-                  <li><a>김포 아트홀</a></li>
-                  <li><a>김포 아트빌리지 한옥마을</a></li>
-                  <li><a>김포아트빌리지</a></li>
-                  <li><a>통진두레 문화센터</a></li>
-                  <li><a>김포국제조각공원</a></li>
-                  <li><a>월곶생활문화센터</a></li>
-                  <li><a>김포평화문화관</a></li>
-                  <li><a>작은미술관 보구곶</a></li>
-                  <li><a>애기봉평화생태공원</a></li>
+                  <li><Link to="/map/김포아트홀">김포아트홀</Link></li>
+                  <li><Link to="/map/김포아트빌리지%20한옥마을">김포아트빌리지 한옥마을</Link></li>
+                  <li><Link to="/map/김포아트빌리지">김포아트빌리지</Link></li>
+                  <li><Link to="/map/통진두레%20문화센터">통진두레 문화센터</Link></li>
+                  <li><Link to="/map/김포국제조각공원">김포국제조각공원</Link></li>
+                  <li><Link to="/map/월곶생활문화센터">월곶생활문화센터</Link></li>
+                  <li><Link to="/map/김포평화문화관">김포평화문화관</Link></li>
+                  <li><Link to="/map/작은미술관%20보구곶">작은미술관 보구곶</Link></li>
+                  <li><Link to="/map/애기봉평화생태공원">애기봉평화생태공원</Link></li>
                 </ul>
               )}
-            </a>
+            </Link>
           </li>
           <li>
             <div className='search_bar'>

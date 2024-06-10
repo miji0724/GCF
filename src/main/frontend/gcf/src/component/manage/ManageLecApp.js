@@ -48,12 +48,12 @@ function ManageLecApp() {
 
     const lecOnDetailGo = (item) => {
         // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
-        navigate('/manage/leconappdetail', { state: { detailData: item } }); // 선택한 항목의 데이터를 함께 전달
+        navigate('/manage/leconappdetail', { state: {item}  }); // 선택한 항목의 데이터를 함께 전달
     };
 
     const lecOffDetailGo = (item) => {
         // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
-        navigate('/manage/lecoffappdetail', { state: { detailData: item } }); // 선택한 항목의 데이터를 함께 전달
+        navigate('/manage/lecoffappdetail', { state: {item}  }); // 선택한 항목의 데이터를 함께 전달
     };
 
     const handleSearchChange = event => {
@@ -66,11 +66,11 @@ function ManageLecApp() {
         setCurrentPage(1);
     };
 
-    const handleInfoButtonClick = (type) => {
-        if (type === '온라인') {
-            lecOnDetailGo();
-        } else if (type === '오프라인') {
-            lecOffDetailGo();
+    const handleInfoButtonClick = (item) => {
+        if (item.programType === '온라인') {
+            lecOnDetailGo(item);
+        } else if (item.programType === '오프라인') {
+            lecOffDetailGo(item);
         }
     };
 
@@ -121,7 +121,7 @@ function ManageLecApp() {
                                     <td>{item.programType}</td>
                                     <td>{item.category}</td>
                                     <td>{item.operatingStartDay.join('-')}</td>
-                                    <td><button onClick={() => handleInfoButtonClick(item.programType)}>정보</button></td>
+                                    <td><button onClick={() => handleInfoButtonClick(item)}>정보</button></td>
                                 </tr>
                             ))}
                         </tbody>

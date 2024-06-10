@@ -2,6 +2,7 @@ package com.gcf.spring.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gcf.spring.constant.Day_of_week;
@@ -99,40 +100,80 @@ public class OffProgram {
 	@JoinColumn(name = "poster_id")
 	private Attachment poster; // 프로그램 포스터 정보
 
-	@OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL)
-	private List<ProgramInfo> programInfos; // 프로그램 소개
 
-	@OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL)
-	private List<TeacherInfo> teacherInfos; // 강사 소개
+    @OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramInfo> programInfos;
+
+    @OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeacherInfo> teacherInfos;
 
 	public static OffProgram createOffProgram(OffProgramDto off_programDto) {
-		OffProgram offProgram = new OffProgram();
-		offProgram.setProgramName(off_programDto.getProgramName());
-		offProgram.setTeacher(off_programDto.getTeacher());
-		offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
-		offProgram.setApplication_info(off_programDto.getApplication_info());
-		offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
-		offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
-		offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
-		offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
-		offProgram.setParticipationFee(off_programDto.getParticipationFee());
-		offProgram.setStartTime(off_programDto.getStartTime());
-		offProgram.setEndTime(off_programDto.getEndTime());
-		offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
-		offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
-		offProgram.setApplicationState(off_programDto.getApplicationState());
-		offProgram.setApprovalState(off_programDto.getApprovalState());
-		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
-		offProgram.setViews(off_programDto.getViews());
-		offProgram.setLikesCount(off_programDto.getLikesCount());
-		offProgram.setCategory(off_programDto.getOfflineCategory());
-		offProgram.setPlaceName(off_programDto.getPlaceName());
-		offProgram.setProgramType(off_programDto.getProgramType());
-				
-		
-		offProgram.setPoster(null);
-		offProgram.setProgramInfos(null);
-		offProgram.setTeacherInfos(null);
-		return offProgram;
+	    OffProgram offProgram = new OffProgram();
+	    offProgram.setProgramName(off_programDto.getProgramName());
+	    offProgram.setTeacher(off_programDto.getTeacher());
+	    offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
+	    offProgram.setApplication_info(off_programDto.getApplication_info());
+	    offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
+	    offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
+	    offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
+	    offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
+	    offProgram.setParticipationFee(off_programDto.getParticipationFee());
+	    offProgram.setStartTime(off_programDto.getStartTime());
+	    offProgram.setEndTime(off_programDto.getEndTime());
+	    offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
+	    offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
+	    offProgram.setApplicationState(off_programDto.getApplicationState());
+	    offProgram.setApprovalState(off_programDto.getApprovalState());
+	    offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
+	    offProgram.setViews(off_programDto.getViews());
+	    offProgram.setLikesCount(off_programDto.getLikesCount());
+	    offProgram.setCategory(off_programDto.getCategory());
+	    offProgram.setPlaceName(off_programDto.getPlaceName());
+	    offProgram.setProgramType(off_programDto.getProgramType());
+	    offProgram.setPoster(off_programDto.getPoster());
+	    List<ProgramInfo> programInfosList = new ArrayList<>();
+	    if (off_programDto.getProgramInfos() != null) {
+	        programInfosList.addAll(off_programDto.getProgramInfos());
+	    }
+	    offProgram.setProgramInfos(programInfosList);
+
+	    List<TeacherInfo> teacherInfosList = new ArrayList<>();
+	    if (off_programDto.getTeacherInfos() != null) {
+	        teacherInfosList.addAll(off_programDto.getTeacherInfos());
+	    }
+	    offProgram.setTeacherInfos(teacherInfosList);
+	    return offProgram;
 	}
+
+	
+	public static OffProgramDto convertToOffProgramDto(OffProgram offProgram) {
+	    OffProgramDto dto = new OffProgramDto();
+	    dto.setProgramName(offProgram.getProgramName());
+	    dto.setTeacher(offProgram.getTeacher());
+	    dto.setProgramDetailName(offProgram.getProgramDetailName());
+	    dto.setApplication_info(offProgram.getApplication_info());
+	    dto.setOperatingStartDay(offProgram.getOperatingStartDay());
+	    dto.setOperatingEndDay(offProgram.getOperatingEndDay());
+	    dto.setApplicationStartDate(offProgram.getApplicationStartDate());
+	    dto.setApplicationEndDate(offProgram.getApplicationEndDate());
+	    dto.setParticipationFee(offProgram.getParticipationFee());
+	    dto.setStartTime(offProgram.getStartTime());
+	    dto.setEndTime(offProgram.getEndTime());
+	    dto.setMaxParticipants(offProgram.getMaxParticipants());
+	    dto.setCurrentParticipants(offProgram.getCurrentParticipants());
+	    dto.setApplicationState(offProgram.getApplicationState());
+	    dto.setApprovalState(offProgram.getApprovalState());
+	    dto.setDayOfWeek(offProgram.getDayOfWeek());
+	    dto.setViews(offProgram.getViews());
+	    dto.setLikesCount(offProgram.getLikesCount());
+	    dto.setCategory(offProgram.getCategory());
+	    dto.setPlaceName(offProgram.getPlaceName());
+	    dto.setProgramType(offProgram.getProgramType());
+	    dto.setPoster(offProgram.getPoster());
+	    dto.setProgramInfos(offProgram.getProgramInfos());
+	    dto.setTeacherInfos(offProgram.getTeacherInfos());
+	    return dto;
+	}
+
+
 }

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gcf.spring.entity.OffProgram;
-import com.gcf.spring.entity.OnProgram;
+import com.gcf.spring.dto.OffProgramDto;
+import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.service.ProgramService;
 
 @RestController
@@ -19,22 +19,22 @@ public class ProgramController {
     private ProgramService programService;
 
     @GetMapping("/manage/getOnLecInfo")
-    public List<OnProgram> getOnPrograms() {
+    public List<OnProgramDto> getOnPrograms() {
         return programService.getAllApprovedOnPrograms();
     }
 
     @GetMapping("/manage/getOffLecInfo")
-    public List<OffProgram> getOffPrograms() {
+    public List<OffProgramDto> getOffPrograms() {
         return programService.getAllApprovedOffPrograms();
     }
     
     @GetMapping("/manage/getPendingApprovalOnPrograms")
-    public List<OnProgram> getPendingApprovalOnPrograms() {
+    public List<OnProgramDto> getPendingApprovalOnPrograms() {
         return programService.getAllPendingApprovalOnPrograms();
     }
 
     @GetMapping("/manage/getPendingApprovalOffPrograms")
-    public List<OffProgram> getPendingApprovalOffPrograms() {
+    public List<OffProgramDto> getPendingApprovalOffPrograms() {
         return programService.getAllPendingApprovalOffPrograms();
     }
 }
