@@ -6,9 +6,9 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import 'react-time-picker/dist/TimePicker.css';
 import ManageLecOnDetail from "./ManageLecOnDetail";
+import axios from 'axios'; // axios import
 
 function ClassForm() {
-
     const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [certificationFiles, setCertificationFiles] = useState([]);
@@ -27,8 +27,9 @@ function ClassForm() {
     const [PeriodofflineLocationEndDate, PeriodsetOfflineLocationEndDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState("");
     const [numberOfApplicants, setNumberOfApplicants] = useState("");
-    const [offlineProgramType, setOfflineProgramType] = useState(""); // New state for offline program type
-    
+    const [offlineProgramType, setOfflineProgramType] = useState("");
+    const [programNames, setProgramNames] = useState([""]);
+    const [CName, setCName] = useState('');
 
     const handleAddCertificationField = () => {
         const newCertificationFields = [...certificationFields, { certification: '' }];
@@ -103,10 +104,16 @@ function ClassForm() {
     };
 
     const handleOnlineEducationChange = (event) => {
+        if (event.target.checked) {
+            setOfflineEducation(false); // 오프라인 체크 해제
+        }
         setOnlineEducation(event.target.checked);
     };
 
     const handleOfflineEducationChange = (event) => {
+        if (event.target.checked) {
+            setOnlineEducation(false); // 온라인 체크 해제
+        }
         setOfflineEducation(event.target.checked);
     };
 
@@ -117,8 +124,6 @@ function ClassForm() {
     const handleProgramFeeChange = (event) => {
         setProgramFee(event.target.value);
     };
-
-    const [programNames, setProgramNames] = useState([""]);
 
     const addProgramName = () => {
         setProgramNames([...programNames, ""]);
@@ -136,15 +141,12 @@ function ClassForm() {
         setProgramNames(newProgramNames);
     };
 
-    const [CName, setCName] = useState('');
-
     const handleCNameChange = (e) => {
         setCName(e.target.value);
     };
 
     const handleNumberOfApplicantsChange = (event) => {
         const { value } = event.target;
-        // 숫자만 입력되도록 정규식을 사용하여 유효성을 검사할 수 있습니다.
         if (/^\d*$/.test(value) || value === "") {
             setNumberOfApplicants(value);
         }
@@ -152,6 +154,46 @@ function ClassForm() {
 
     const handleOfflineProgramTypeChange = (event) => {
         setOfflineProgramType(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        
+        const formData = {
+            teacher: null, // 필요 시 설정
+            programName: CName,
+            programDetailName: programNames.join(", "), // 예시로 콤마로 구분된 문자열로 합침
+            application_info: certificationFields.map(field => field.certification).join(", "),
+            applicationStartDate: PeriodofflineLocationStartDate,
+            applicationEndDate: PeriodofflineLocationEndDate,
+            operatingStartDay: offlineLocationStartDate,
+            operatingEndDay: offlineLocationEndDate,
+            participationFee: programFee,
+            startTime: startHour,
+            endTime: endHour,
+            maxParticipants: parseInt(numberOfApplicants, 10),
+            currentParticipants: 0,
+            applicationState: "접수중",
+            approvalState: "승인대기",
+            dayOfWeek: selectedDay,
+            views: 0,
+            likesCount: 0,
+            offlineCategory: offlineProgramType,
+            placeName: selectedLocation,
+            programType: offlineEducation ? "오프라인" : onlineEducation ? "온라인" : "", // programType 설정
+            poster: null,
+            teacherInfos: []
+        };
+
+        axios.post('/api/offProgram', formData)
+            .then(response => {
+                console.log(response.data);
+                alert("프로그램이 성공적으로 등록되었습니다.");
+            })
+            .catch(error => {
+                console.error(error);
+                alert("프로그램 등록 중 오류가 발생했습니다.");
+            });
     };
 
     return (
@@ -162,10 +204,7 @@ function ClassForm() {
                         <div className='ClassFState'>강의 등록 신청서</div>
                     </div>
                     <div className="whiteBox">
-
-                        <form>
-                            <h4>강의정보</h4>
-
+                        <form onSubmit={handleSubmit}>
                             <div>
                                 <label>
                                     <input
@@ -221,7 +260,6 @@ function ClassForm() {
                                 ))}
                             </div>
 
-                            {/* 강의 가능 분야 입력란 */}
                             <div className='TeachInfoGroup'>
                                 <label htmlFor='teachingSubjects'>강사 소개:</label>
                                 {teachingSubjectFields.map((field, index) => (
@@ -242,145 +280,128 @@ function ClassForm() {
                                         )}
                                     </div>
                                 ))}
-
-                                {/* 교육 배너 포스터 입력란 */}
-                                <div className='BannerInfoGroup'>
-                                    <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                    {bannerFields.map((field, index) => (
-                                        <div key={index} className="BannerSubjectField">
-                                            <input
-                                                type="file"
-                                                onChange={(event) => handleBannerFileChange(event, index)}
-                                            />
-                                            {index !== 0 && (
-                                                <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
-                                            )}
-                                        </div>
-                                    ))}
-
-                                </div>
-
-                                {/* 교육 배너 포스터 입력란 */}
                             </div>
 
-
-                            <div className="OnlineLec">
-                                <h4>온라인 강의</h4>
-                                <h7>온라인 교육 체크시</h7>
-                                <div><ManageLecOnDetail /></div>
-                            </div>
-
-                            <div style={{ display: "flex" }}>
-
-                                {/* 드롭다운 메뉴 */}
-                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                    {/* 오프라인 프로그램 선택 드롭다운 메뉴 */}
-                                    <div style={{ marginBottom: "20px" }}>
-                                        <h4>오프라인 프로그램 선택</h4>
-                                        <select value={offlineProgramType} onChange={handleOfflineProgramTypeChange}>
-                                            <option value="Education">교육</option>
-                                            <option value="Experience">체험</option>
-                                        </select>
-                                    </div>
-
-                                    {/* 장소 선택 드롭다운 메뉴 */}
-                                    <div style={{ marginBottom: "20px" }}>
-                                        <h4>오프라인 장소 선택</h4>
-                                        <h7>오프라인 교육 체크시</h7>
-                                        <select value={selectedLocation} onChange={handleLocationChange}>
-                                            <option value="김포아트빌리지">김포아트빌리지</option>
-                                            <option value="통진두레문화센터">통진두레문화센터</option>
-                                            <option value="김포국제조각공원">김포국제조각공원</option>
-                                            <option value="월곶생활문화센터">월곶생활문화센터</option>
-                                            <option value="김포평화문화관">김포평화문화관</option>
-                                            <option value="작은미술관 보구곶">작은미술관 보구곶</option>
-                                            <option value="애기봉평화생태공원">애기봉평화생태공원</option>
-                                            {/* 다른 장소들에 대한 옵션 추가 */}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {/* 날짜 선택 캘린더 */}
-                                <div>
-                                    <h5>날짜 선택</h5>
-                                    <DateRangePicker
-                                        onChange={(ranges) => {
-                                            const { selection } = ranges;
-                                            setOfflineLocationStartDate(selection.startDate);
-                                            setOfflineLocationEndDate(selection.endDate);
-                                        }}
-                                        ranges={[{ startDate: offlineLocationStartDate, endDate: offlineLocationEndDate, key: 'selection' }]}
-                                    />
-                                    <p>선택된 날짜: {offlineLocationStartDate.toLocaleDateString()} - {offlineLocationEndDate.toLocaleDateString()}</p>
-                                    <p>선택된 시간: {startHour} - {endHour}</p>
-                                </div>
-
-                                <div style={{ marginRight: "20px" }}>
-                                    <h4>Start</h4>
-                                    <select value={startHour} onChange={(e) => setStartHour(e.target.value)}>
-                                        {[...Array(17)].map((_, index) => {
-                                            const hour = index + 6;
-                                            const formattedHour = hour.toString().padStart(2, '0');
-                                            return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
-                                        })}
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <h4>End</h4>
-                                    <select value={endHour} onChange={(e) => setEndHour(e.target.value)}>
-                                        {[...Array(17)].map((_, index) => {
-                                            const hour = index + 7;
-                                            const formattedHour = hour.toString().padStart(2, '0');
-                                            return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                            </div>
-
-                            {/* 운영 요일 선택 */}
-                            <div>
-                                강의 운영 요일:
-                                <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)}>
-                                    <option value="">운영 요일 선택</option>
-                                    <option value="월요일">월요일</option>
-                                    <option value="화요일">화요일</option>
-                                    <option value="수요일">수요일</option>
-                                    <option value="목요일">목요일</option>
-                                    <option value="금요일">금요일</option>
-                                    <option value="토요일">토요일</option>
-                                    <option value="일요일">일요일</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                {/* 상세프로그램명 입력 인풋들 */}
-                                상세프로그램명 입력:
-                                {programNames.map((programName, index) => (
-                                    <div key={index}>
+                            <div className='BannerInfoGroup'>
+                                <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
+                                {bannerFields.map((field, index) => (
+                                    <div key={index} className="BannerSubjectField">
                                         <input
-                                            type="text"
-                                            value={programName}
-                                            placeholder="프로그램명"
-                                            onChange={(e) => handleProgramNameChange(index, e.target.value)}
+                                            type="file"
+                                            onChange={(event) => handleBannerFileChange(event, index)}
                                         />
+                                        {index !== 0 && (
+                                            <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
+                                        )}
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="persons">
-                                <label htmlFor="numberOfApplicants">신청 인원:</label>
-                                <input
-                                    type="text"
-                                    id="numberOfApplicants"
-                                    name="numberOfApplicants"
-                                    placeholder="신청 인원 입력"
-                                    value={numberOfApplicants}
-                                    onChange={handleNumberOfApplicantsChange}
-                                />
-                            </div>
+                            {offlineEducation && (
+                                <>
+                                    <div style={{ display: "flex", flexDirection: "column" }}>
+                                        <div style={{ marginBottom: "20px" }}>
+                                            <h4>오프라인 프로그램 선택</h4>
+                                            <select value={offlineProgramType} onChange={handleOfflineProgramTypeChange}>
+                                                <option value="Education">교육</option>
+                                                <option value="Experience">체험</option>
+                                            </select>
+                                        </div>
+                                        <div style={{ marginBottom: "20px" }}>
+                                            <h4>오프라인 장소 선택</h4>
+                                            <h7>오프라인 교육 체크시</h7>
+                                            <select value={selectedLocation} onChange={handleLocationChange}>
+                                                <option value="김포아트빌리지">김포아트빌리지</option>
+                                                <option value="통진두레문화센터">통진두레문화센터</option>
+                                                <option value="김포국제조각공원">김포국제조각공원</option>
+                                                <option value="월곶생활문화센터">월곶생활문화센터</option>
+                                                <option value="김포평화문화관">김포평화문화관</option>
+                                                <option value="작은미술관 보구곶">작은미술관 보구곶</option>
+                                                <option value="애기봉평화생태공원">애기봉평화생태공원</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5>날짜 선택</h5>
+                                        <DateRangePicker
+                                            onChange={(ranges) => {
+                                                const { selection } = ranges;
+                                                setOfflineLocationStartDate(selection.startDate);
+                                                setOfflineLocationEndDate(selection.endDate);
+                                            }}
+                                            ranges={[{ startDate: offlineLocationStartDate, endDate: offlineLocationEndDate, key: 'selection' }]}
+                                        />
+                                        <p>선택된 날짜: {offlineLocationStartDate.toLocaleDateString()} - {offlineLocationEndDate.toLocaleDateString()}</p>
+                                        <p>선택된 시간: {startHour} - {endHour}</p>
+                                    </div>
+                                    <div style={{ marginRight: "20px" }}>
+                                        <h4>Start</h4>
+                                        <select value={startHour} onChange={(e) => setStartHour(e.target.value)}>
+                                            {[...Array(17)].map((_, index) => {
+                                                const hour = index + 6;
+                                                const formattedHour = hour.toString().padStart(2, '0');
+                                                return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <h4>End</h4>
+                                        <select value={endHour} onChange={(e) => setEndHour(e.target.value)}>
+                                            {[...Array(17)].map((_, index) => {
+                                                const hour = index + 7;
+                                                const formattedHour = hour.toString().padStart(2, '0');
+                                                return <option key={hour} value={`${formattedHour}:00`}>{`${formattedHour}:00`}</option>;
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        강의 운영 요일:
+                                        <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)}>
+                                            <option value="">운영 요일 선택</option>
+                                            <option value="월요일">월요일</option>
+                                            <option value="화요일">화요일</option>
+                                            <option value="수요일">수요일</option>
+                                            <option value="목요일">목요일</option>
+                                            <option value="금요일">금요일</option>
+                                            <option value="토요일">토요일</option>
+                                            <option value="일요일">일요일</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        상세프로그램명 입력:
+                                        {programNames.map((programName, index) => (
+                                            <div key={index}>
+                                                <input
+                                                    type="text"
+                                                    value={programName}
+                                                    placeholder="프로그램명"
+                                                    onChange={(e) => handleProgramNameChange(index, e.target.value)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="persons">
+                                        <label htmlFor="numberOfApplicants">신청 인원:</label>
+                                        <input
+                                            type="text"
+                                            id="numberOfApplicants"
+                                            name="numberOfApplicants"
+                                            placeholder="신청 인원 입력"
+                                            value={numberOfApplicants}
+                                            onChange={handleNumberOfApplicantsChange}
+                                        />
+                                    </div>
+                                </>
+                            )}
 
-                            {/* 달력으로 모집 기간 선택 */}
+                            {onlineEducation && (
+                                <div className="OnlineLec">
+                                    <h4>온라인 강의</h4>
+                                    <h7>온라인 교육 체크시</h7>
+                                    <div><ManageLecOnDetail /></div>
+                                </div>
+                            )}
+
                             <h4>모집 기간 선택</h4>
                             <DateRangePicker
                                 onChange={(ranges) => {
@@ -391,11 +412,9 @@ function ClassForm() {
                                 ranges={[{ startDate: PeriodofflineLocationStartDate, endDate: PeriodofflineLocationEndDate, key: 'selection' }]}
                             />
                             <div>
-                                {/* 선택된 모집 기간 출력 */}
                                 <p>모집 기간: {PeriodofflineLocationStartDate.toLocaleDateString()} - {PeriodofflineLocationEndDate.toLocaleDateString()}</p>
                             </div>
 
-                            {/* 모집 안내 입력란 */}
                             <div className='recruitmentInfo'>
                                 <label htmlFor='recruitmentInfo'>모집 안내:</label>
                                 <textarea
@@ -407,7 +426,6 @@ function ClassForm() {
                                 ></textarea>
                             </div>
 
-                            {/* 참가료 입력 드롭다운 */}
                             <div className='programFee'>
                                 <label htmlFor='programFee'>참가료:</label>
                                 <select value={programFee} onChange={handleProgramFeeChange}>
@@ -457,6 +475,8 @@ function ClassForm() {
                             <div className='formGroup'>
                                 <button type='submit'>신청하기</button>
                             </div>
+
+                            
                         </form>
                     </div>
                 </div>
