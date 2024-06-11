@@ -9,11 +9,8 @@ import ManageLecOnDetail from "./ManageLecOnDetail";
 import axios from 'axios'; // axios import
 
 function ClassForm() {
-    const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
-    const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
-    const [certificationFiles, setCertificationFiles] = useState([]);
-    const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
-    const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
+    
+    const [bannerFiles, setBannerFiles] = useState([]);
     const [selectedItem, setSelectedItem] = useState("");
     const [onlineEducation, setOnlineEducation] = useState(false);
     const [offlineEducation, setOfflineEducation] = useState(false);
@@ -31,7 +28,15 @@ function ClassForm() {
     const [programNames, setProgramNames] = useState([""]);
     const [CName, setCName] = useState('');
     const [applicationInfo, setApplicationInfo] = useState(''); // 추가
+
     const [teacherId, setTeacherId] = useState(''); // 추가
+
+    const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
+    const [certificationFiles, setCertificationFiles] = useState([]);
+    
+    const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
+    const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
+    
 
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
@@ -116,12 +121,16 @@ function ClassForm() {
     const handleAddCertificationField = () => {
         const newCertificationFields = [...certificationFields, { certification: '' }];
         setCertificationFields(newCertificationFields);
+        setCertificationFiles([...certificationFiles, null]);
     };
 
     const handleRemoveCertificationField = (index) => {
         const newCertificationFields = [...certificationFields];
         newCertificationFields.splice(index, 1);
         setCertificationFields(newCertificationFields);
+        const newCertificationFiles = [...certificationFiles];
+        newCertificationFiles.splice(index, 1);
+        setCertificationFiles(newCertificationFiles);
     };
 
     const handleCertificationChange = (event, index) => {
@@ -134,12 +143,16 @@ function ClassForm() {
     const handleAddTeachingSubjectField = () => {
         const newTeachingSubjectFields = [...teachingSubjectFields, { subject: '' }];
         setTeachingSubjectFields(newTeachingSubjectFields);
+        setTeachingSubjectFiles([...teachingSubjectFiles, null]);
     };
 
     const handleRemoveTeachingSubjectField = (index) => {
         const newTeachingSubjectFields = [...teachingSubjectFields];
         newTeachingSubjectFields.splice(index, 1);
         setTeachingSubjectFields(newTeachingSubjectFields);
+        const newTeachingSubjectFiles = [...teachingSubjectFiles];
+        newTeachingSubjectFiles.splice(index, 1);
+        setTeachingSubjectFiles(newTeachingSubjectFiles);
     };
 
     const handleTeachingSubjectChange = (event, index) => {
@@ -165,20 +178,20 @@ function ClassForm() {
 
     const handleBannerFileChange = (event, index) => {
         const file = event.target.files[0];
-        const newBannerFields = [...bannerFields];
-        newBannerFields[index].file = file;
-        setBannerFields(newBannerFields);
+        const newBannerFiles = [...bannerFiles];
+        newBannerFiles[index] = file;
+        setBannerFiles(newBannerFiles);
     };
 
     const handleAddBannerField = () => {
-        const newBannerFields = [...bannerFields, { subject: '', file: null }];
-        setBannerFields(newBannerFields);
+        const newBannerFiles = [...bannerFiles, null];
+        setBannerFiles(newBannerFiles);
     };
 
     const handleRemoveBannerField = (index) => {
-        const newBannerFields = [...bannerFields];
-        newBannerFields.splice(index, 1);
-        setBannerFields(newBannerFields);
+        const newBannerFiles = [...bannerFiles];
+        newBannerFiles.splice(index, 1);
+        setBannerFiles(newBannerFiles);
     };
 
     const handleDropdownChange = (event) => {
@@ -242,74 +255,148 @@ function ClassForm() {
         setApplicationInfo(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        let formData = {};
+        const formData = new FormData();
 
         if (onlineEducation) {
-            formData = {
-                teacher: { id: teacherId }, // 세션으로부터 가져온 사용자 ID 사용
-                programName: CName,
-                operatingStartDay: offlineLocationStartDate,
-                views: 0,
-                likesCount: 0,
-                category: "온라인",
-                programType: "온라인",
-                poster: null,
-                approvalState: "승인대기",
-                programInfos: [],
-                teacherInfos: [],
-                comments: [],
-                videos: []
-            };
 
-            axios.post('/api/onProgram', formData)
-                .then(response => {
-                    console.log(response.data);
-                    alert("온라인 프로그램이 성공적으로 등록되었습니다.");
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
+            const programInfo = new FormData();
+
+            
+            Array.from(certificationFields).forEach((data, index) => {
+                programInfo.append('description', data);
+              });
+            
+
+            // 리스트로 파일 보내는 코드 
+            Array.from(certificationFiles).forEach((file, index) => {
+                programInfo.append('files', file);
+              });
+
+            try {
+                const response = await axios.post('/api/onProgram/info', {"files" : certificationFiles}, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 });
+                console.log(response.data + " @@@@@@@@@@@@@@");
+            } catch (error) {
+                console.error(error);
+            }
 
+            const teacherInfo = new FormData();
+            teacherInfo.append('attachment', teachingSubjectFiles[0]);
+            teacherInfo.append('description', teachingSubjectFields[0]);
+
+
+
+            formData.append('teacherId', teacherId);
+            formData.append('programName', CName);
+            formData.append('operatingStartDay', offlineLocationStartDate);
+            formData.append('views', 0);
+            formData.append('likesCount', 0);
+            formData.append('category', "온라인");
+            formData.append('programType', "온라인");
+            formData.append('poster', null);
+            formData.append('approvalState', "승인대기");
+            formData.append('programInfos', []);
+            formData.append('teacherInfos', []);
+            formData.append('comments', []);
+            formData.append('videos', []);
+
+            // // Add certification files
+            // certificationFiles.forEach((file, index) => {
+            //     if (file) {
+            //         formData.append(`certificationFiles[${index}]`, file);
+            //     }
+            // });
+
+            // // Add teaching subject files
+            // teachingSubjectFiles.forEach((file, index) => {
+            //     if (file) {
+            //         formData.append(`teachingSubjectFiles[${index}]`, file);
+            //     }
+            // });
+
+            // Add banner files
+            bannerFiles.forEach((file, index) => {
+                if (file) {
+                    formData.append(`bannerFiles[${index}]`, file);
+                }
+            });
+
+            try {
+                const response = await axios.post('/api/onProgram', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log(response.data);
+                alert("온라인 프로그램이 성공적으로 등록되었습니다.");
+            } catch (error) {
+                console.error(error);
+                alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
+            }
         } else if (offlineEducation) {
-            formData = {
-                teacher: { id: teacherId }, // 세션으로부터 가져온 사용자 ID 사용
-                programName: CName,
-                programDetailName: programNames.join(", "), // 예시로 콤마로 구분된 문자열로 합침
-                application_info: applicationInfo, // 수정된 부분
-                applicationStartDate: PeriodofflineLocationStartDate,
-                applicationEndDate: PeriodofflineLocationEndDate,
-                operatingStartDay: offlineLocationStartDate,
-                operatingEndDay: offlineLocationEndDate,
-                participationFee: programFee,
-                startTime: startHour,
-                endTime: endHour,
-                maxParticipants: parseInt(numberOfApplicants, 10),
-                currentParticipants: 0,
-                applicationState: "접수중",
-                approvalState: "승인대기",
-                dayOfWeek: selectedDay,
-                views: 0,
-                likesCount: 0,
-                offlineCategory: offlineProgramType,
-                placeName: selectedLocation,
-                programType: "오프라인",
-                poster: null,
-                teacherInfos: []
-            };
+            formData.append('teacherId', teacherId);
+            formData.append('programName', CName);
+            formData.append('programDetailName', programNames.join(", "));
+            formData.append('application_info', applicationInfo);
+            formData.append('applicationStartDate', PeriodofflineLocationStartDate);
+            formData.append('applicationEndDate', PeriodofflineLocationEndDate);
+            formData.append('operatingStartDay', offlineLocationStartDate);
+            formData.append('operatingEndDay', offlineLocationEndDate);
+            formData.append('participationFee', programFee);
+            formData.append('startTime', startHour);
+            formData.append('endTime', endHour);
+            formData.append('maxParticipants', parseInt(numberOfApplicants, 10));
+            formData.append('currentParticipants', 0);
+            formData.append('applicationState', "접수중");
+            formData.append('approvalState', "승인대기");
+            formData.append('dayOfWeek', selectedDay);
+            formData.append('views', 0);
+            formData.append('likesCount', 0);
+            formData.append('offlineCategory', offlineProgramType);
+            formData.append('placeName', selectedLocation);
+            formData.append('programType', "오프라인");
+            formData.append('poster', null);
+            formData.append('teacherInfos', []);
 
-            axios.post('/api/offProgram', formData)
-                .then(response => {
-                    console.log(response.data);
-                    alert("오프라인 프로그램이 성공적으로 등록되었습니다.");
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("오프라인 프로그램 등록 중 오류가 발생했습니다.");
+            // // Add certification files
+            // certificationFiles.forEach((file, index) => {
+            //     if (file) {
+            //         formData.append(`certificationFiles[${index}]`, file);
+            //     }
+            // });
+
+            // // Add teaching subject files
+            // teachingSubjectFiles.forEach((file, index) => {
+            //     if (file) {
+            //         formData.append(`teachingSubjectFiles[${index}]`, file);
+            //     }
+            // });
+
+            // Add banner files
+            bannerFiles.forEach((file, index) => {
+                if (file) {
+                    formData.append(`bannerFiles[${index}]`, file);
+                }
+            });
+
+            try {
+                const response = await axios.post('/api/offProgram', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 });
+                console.log(response.data);
+                alert("오프라인 프로그램이 성공적으로 등록되었습니다.");
+            } catch (error) {
+                console.error(error);
+                alert("오프라인 프로그램 등록 중 오류가 발생했습니다.");
+            }
         }
     };
 
@@ -403,7 +490,7 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFields.map((field, index) => (
+                                        {bannerFiles.map((file, index) => (
                                             <div key={index} className="BannerSubjectField">
                                                 <input
                                                     type="file"
@@ -611,7 +698,7 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFields.map((field, index) => (
+                                        {bannerFiles.map((file, index) => (
                                             <div key={index} className="BannerSubjectField">
                                                 <input
                                                     type="file"
