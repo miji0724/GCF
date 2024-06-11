@@ -1,9 +1,11 @@
 package com.gcf.spring.repository;
 
+import com.gcf.spring.entity.TeacherInfo;
+import com.gcf.spring.entity.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.gcf.spring.entity.TeacherInfo;
+import java.util.List;
 
-public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Integer>{
-
+public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Integer> {
+    List<TeacherInfo> findByTeacher(Teacher teacher);
 }

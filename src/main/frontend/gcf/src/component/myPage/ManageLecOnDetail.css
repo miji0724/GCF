@@ -130,6 +130,23 @@
     font-weight:600;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
+.lecOnDetail_area {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.trainList {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './ClassForm.css';
 import 'react-calendar/dist/Calendar.css';
 import { DateRangePicker } from 'react-date-range';
@@ -30,6 +30,88 @@ function ClassForm() {
     const [offlineProgramType, setOfflineProgramType] = useState("");
     const [programNames, setProgramNames] = useState([""]);
     const [CName, setCName] = useState('');
+    const [applicationInfo, setApplicationInfo] = useState(''); // 추가
+    const [teacherId, setTeacherId] = useState(''); // 추가
+
+    const [offPrograms, setOffPrograms] = useState([]);
+    const [onPrograms, setOnPrograms] = useState([]);
+
+    const parseFieldArray = (data = '', fieldName) => {
+        return data ? data.split(',').map(item => ({ [fieldName]: item })) : [{ [fieldName]: '' }];
+    };
+
+    // 오프라인 프로그램 데이터를 불러오는 함수
+    const fetchOffPrograms = async () => {
+        try {
+            const response = await axios.get('/api/offProgram');
+            setOffPrograms(response.data);
+            if (response.data.length > 0 && offlineEducation) {
+                const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
+                fillOfflineProgramFields(program);
+            }
+        } catch (error) {
+            console.error("오프라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
+        }
+    };
+
+    // 온라인 프로그램 데이터를 불러오는 함수
+    const fetchOnPrograms = async () => {
+        try {
+            const response = await axios.get('/api/onProgram');
+            setOnPrograms(response.data);
+            if (response.data.length > 0 && onlineEducation) {
+                const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
+                fillOnlineProgramFields(program);
+            }
+        } catch (error) {
+            console.error("온라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
+        }
+    };
+
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('/member/myinfo', { withCredentials: true });
+            setTeacherId(response.data.id);
+        } catch (error) {
+            console.error("사용자 데이터를 불러오는 중 오류가 발생했습니다.", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        if (offlineEducation) {
+            fetchOffPrograms();
+        }
+        if (onlineEducation) {
+            fetchOnPrograms();
+        }
+    }, [offlineEducation, onlineEducation]);
+
+    const fillOfflineProgramFields = (program) => {
+        setCName(program.programName);
+        setProgramNames(program.programDetailName ? program.programDetailName.split(", ") : [""]);
+        setCertificationFields(program.application_info ? parseFieldArray(program.application_info, 'certification') : [{ certification: '' }]);
+        setApplicationInfo(program.application_info);
+        PeriodsetOfflineLocationStartDate(new Date(program.applicationStartDate));
+        PeriodsetOfflineLocationEndDate(new Date(program.applicationEndDate));
+        setOfflineLocationStartDate(new Date(program.operatingStartDay));
+        setOfflineLocationEndDate(new Date(program.operatingEndDay));
+        setProgramFee(program.participationFee);
+        setStartHour(program.startTime);
+        setEndHour(program.endTime);
+        setNumberOfApplicants(program.maxParticipants.toString());
+        setSelectedDay(program.dayOfWeek);
+        setSelectedLocation(program.placeName);
+        setOfflineProgramType(program.offlineCategory);
+    };
+
+    const fillOnlineProgramFields = (program) => {
+        setCName(program.programName);
+        // 필요한 필드 채우기
+    };
 
     const handleAddCertificationField = () => {
         const newCertificationFields = [...certificationFields, { certification: '' }];
@@ -156,6 +238,10 @@ function ClassForm() {
         setOfflineProgramType(event.target.value);
     };
 
+    const handleApplicationInfoChange = (event) => {
+        setApplicationInfo(event.target.value);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -163,7 +249,7 @@ function ClassForm() {
 
         if (onlineEducation) {
             formData = {
-                teacher: null, // 필요 시 설정
+                teacher: { id: teacherId }, // 세션으로부터 가져온 사용자 ID 사용
                 programName: CName,
                 operatingStartDay: offlineLocationStartDate,
                 views: 0,
@@ -177,7 +263,7 @@ function ClassForm() {
                 comments: [],
                 videos: []
             };
-            
+
             axios.post('/api/onProgram', formData)
                 .then(response => {
                     console.log(response.data);
@@ -190,10 +276,10 @@ function ClassForm() {
 
         } else if (offlineEducation) {
             formData = {
-                teacher: null, // 필요 시 설정
+                teacher: { id: teacherId }, // 세션으로부터 가져온 사용자 ID 사용
                 programName: CName,
                 programDetailName: programNames.join(", "), // 예시로 콤마로 구분된 문자열로 합침
-                application_info: certificationFields.map(field => field.certification).join(", "),
+                application_info: applicationInfo, // 수정된 부분
                 applicationStartDate: PeriodofflineLocationStartDate,
                 applicationEndDate: PeriodofflineLocationEndDate,
                 operatingStartDay: offlineLocationStartDate,
@@ -214,7 +300,7 @@ function ClassForm() {
                 poster: null,
                 teacherInfos: []
             };
-            
+
             axios.post('/api/offProgram', formData)
                 .then(response => {
                     console.log(response.data);
@@ -256,86 +342,86 @@ function ClassForm() {
                                 </label>
                             </div>
 
-                            <div className="ClassName">
-                                <label htmlFor="CName">프로그래명 이름:</label>
-                                <input
-                                    type="text"
-                                    id="CName"
-                                    name="CName"
-                                    placeholder="프로그래명 이름 입력"
-                                    value={CName}
-                                    onChange={handleCNameChange}
-                                />
-                            </div>
-
-                            <div className='InfoGroup'>
-                                <label htmlFor='Info'>교육 소개:</label>
-                                {certificationFields.map((field, index) => (
-                                    <div key={index} className="certificationField">
-                                        <input
-                                            type='text'
-                                            placeholder="교육 소개"
-                                            value={field.certification}
-                                            onChange={(event) => handleCertificationChange(event, index)}
-                                        />
-                                        <input
-                                            type="file"
-                                            onChange={(event) => handleCertificationFileChange(event, index)}
-                                        />
-                                        {index === 0 ? (
-                                            <button type='button' onClick={handleAddCertificationField}>+</button>
-                                        ) : (
-                                            <button type='button' onClick={() => handleRemoveCertificationField(index)}>-</button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className='TeachInfoGroup'>
-                                <label htmlFor='teachingSubjects'>강사 소개:</label>
-                                {teachingSubjectFields.map((field, index) => (
-                                    <div key={index} className="teachingSubjectField">
-                                        <input
-                                            type='text'
-                                            value={field.subject}
-                                            onChange={(event) => handleTeachingSubjectChange(event, index)}
-                                        />
-                                        <input
-                                            type="file"
-                                            onChange={(event) => handleTeachingSubjectFileChange(event, index)}
-                                        />
-                                        {index === 0 ? (
-                                            <button type='button' onClick={handleAddTeachingSubjectField}>+</button>
-                                        ) : (
-                                            <button type='button' onClick={() => handleRemoveTeachingSubjectField(index)}>-</button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className='BannerInfoGroup'>
-                                <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                {bannerFields.map((field, index) => (
-                                    <div key={index} className="BannerSubjectField">
-                                        <input
-                                            type="file"
-                                            onChange={(event) => handleBannerFileChange(event, index)}
-                                        />
-                                        {index !== 0 && (
-                                            <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-
                             {offlineEducation && (
                                 <>
+                                    <div className="ClassName">
+                                        <label htmlFor="CName">프로그래명 이름:</label>
+                                        <input
+                                            type="text"
+                                            id="CName"
+                                            name="CName"
+                                            placeholder="프로그래명 이름 입력"
+                                            value={CName}
+                                            onChange={handleCNameChange}
+                                        />
+                                    </div>
+
+                                    <div className='InfoGroup'>
+                                        <label htmlFor='Info'>교육 소개:</label>
+                                        {certificationFields.map((field, index) => (
+                                            <div key={index} className="certificationField">
+                                                <input
+                                                    type='text'
+                                                    placeholder="교육 소개"
+                                                    value={field.certification}
+                                                    onChange={(event) => handleCertificationChange(event, index)}
+                                                />
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleCertificationFileChange(event, index)}
+                                                />
+                                                {index === 0 ? (
+                                                    <button type='button' onClick={handleAddCertificationField}>+</button>
+                                                ) : (
+                                                    <button type='button' onClick={() => handleRemoveCertificationField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className='TeachInfoGroup'>
+                                        <label htmlFor='teachingSubjects'>강사 소개:</label>
+                                        {teachingSubjectFields.map((field, index) => (
+                                            <div key={index} className="teachingSubjectField">
+                                                <input
+                                                    type='text'
+                                                    value={applicationInfo} // 수정된 부분
+                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                />
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleTeachingSubjectFileChange(event, index)}
+                                                />
+                                                {index === 0 ? (
+                                                    <button type='button' onClick={handleAddTeachingSubjectField}>+</button>
+                                                ) : (
+                                                    <button type='button' onClick={() => handleRemoveTeachingSubjectField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className='BannerInfoGroup'>
+                                        <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
+                                        {bannerFields.map((field, index) => (
+                                            <div key={index} className="BannerSubjectField">
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleBannerFileChange(event, index)}
+                                                />
+                                                {index !== 0 && (
+                                                    <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
                                     <div style={{ display: "flex", flexDirection: "column" }}>
                                         <div style={{ marginBottom: "20px" }}>
                                             <h4>오프라인 프로그램 선택</h4>
                                             <select value={offlineProgramType} onChange={handleOfflineProgramTypeChange}>
-                                                <option value="Education">교육</option>
-                                                <option value="Experience">체험</option>
+                                                <option value="교육">교육</option>
+                                                <option value="체험">체험</option>
                                             </select>
                                         </div>
                                         <div style={{ marginBottom: "20px" }}>
@@ -422,17 +508,129 @@ function ClassForm() {
                                             onChange={handleNumberOfApplicantsChange}
                                         />
                                     </div>
+
+                                    {/* 달력으로 모집 기간 선택 */}
+                                    <h4>모집 기간 선택</h4>
+                                    <DateRangePicker
+                                        onChange={(ranges) => {
+                                            const { selection } = ranges;
+                                            PeriodsetOfflineLocationStartDate(selection.startDate);
+                                            PeriodsetOfflineLocationEndDate(selection.endDate);
+                                        }}
+                                        ranges={[{ startDate: PeriodofflineLocationStartDate, endDate: PeriodofflineLocationEndDate, key: 'selection' }]}
+                                    />
+                                    <div>
+                                        {/* 선택된 모집 기간 출력 */}
+                                        <p>모집 기간: {PeriodofflineLocationStartDate.toLocaleDateString()} - {PeriodofflineLocationEndDate.toLocaleDateString()}</p>
+                                    </div>
+
+                                    {/* 모집 안내 입력란 */}
+                                    <div className='recruitmentInfo'>
+                                        <label htmlFor='recruitmentInfo'>모집 안내:</label>
+                                        <textarea
+                                            id='recruitmentInfo'
+                                            name='recruitmentInfo'
+                                            rows='4'
+                                            cols='50'
+                                            placeholder='모집 안내를 입력해주세요.'
+                                            value={applicationInfo} // 수정된 부분
+                                            onChange={handleApplicationInfoChange} // 수정된 부분
+                                        ></textarea>
+                                    </div>
+
+                                    {/* 참가료 입력 드롭다운 */}
+                                    <div className='programFee'>
+                                        <label htmlFor='programFee'>참가료:</label>
+                                        <select value={programFee} onChange={handleProgramFeeChange}>
+                                            <option value="무료">무료</option>
+                                            <option value="프로그램별 상이">프로그램별</option>
+                                            {/* 다른 옵션 추가 가능 */}
+                                        </select>
+                                    </div>
                                 </>
                             )}
 
                             {onlineEducation && (
-                                <div className="OnlineLec">
-                                    <h4>온라인 강의</h4>
-                                    <h7>온라인 교육 체크시</h7>
-                                    <div><ManageLecOnDetail /></div>
-                                </div>
+                                <>
+                                    <div className="ClassName">
+                                        <label htmlFor="CName">프로그래명 이름:</label>
+                                        <input
+                                            type="text"
+                                            id="CName"
+                                            name="CName"
+                                            placeholder="프로그래명 이름 입력"
+                                            value={CName}
+                                            onChange={handleCNameChange}
+                                        />
+                                    </div>
+
+                                    <div className='InfoGroup'>
+                                        <label htmlFor='Info'>교육 소개:</label>
+                                        {certificationFields.map((field, index) => (
+                                            <div key={index} className="certificationField">
+                                                <input
+                                                    type='text'
+                                                    placeholder="교육 소개"
+                                                    value={field.certification}
+                                                    onChange={(event) => handleCertificationChange(event, index)}
+                                                />
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleCertificationFileChange(event, index)}
+                                                />
+                                                {index === 0 ? (
+                                                    <button type='button' onClick={handleAddCertificationField}>+</button>
+                                                ) : (
+                                                    <button type='button' onClick={() => handleRemoveCertificationField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className='TeachInfoGroup'>
+                                        <label htmlFor='teachingSubjects'>강사 소개:</label>
+                                        {teachingSubjectFields.map((field, index) => (
+                                            <div key={index} className="teachingSubjectField">
+                                                <input
+                                                    type='text'
+                                                    value={applicationInfo} // 수정된 부분
+                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                />
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleTeachingSubjectFileChange(event, index)}
+                                                />
+                                                {index === 0 ? (
+                                                    <button type='button' onClick={handleAddTeachingSubjectField}>+</button>
+                                                ) : (
+                                                    <button type='button' onClick={() => handleRemoveTeachingSubjectField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className='BannerInfoGroup'>
+                                        <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
+                                        {bannerFields.map((field, index) => (
+                                            <div key={index} className="BannerSubjectField">
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleBannerFileChange(event, index)}
+                                                />
+                                                {index !== 0 && (
+                                                    <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="OnlineLec">
+                                        <h4>온라인 강의</h4>
+                                        <div><ManageLecOnDetail /></div>
+                                    </div>
+                                </>
                             )}
-                     
+
                             <div className="subtitle">
                                 {/* 서브 타이틀 내용 생략 */}
                             </div>
@@ -454,8 +652,8 @@ function ClassForm() {
                                         <div className="agreement_title">* 개인정보 수집 및 이용 동의</div>
                                         <div className="agreement_content2">이용약관 내용</div>
                                         개인정보 수집 및 이용 목적에 동의하시겠습니까?&nbsp;&nbsp;
-                                        <input type="checkbox" className="checkbox" name="agreement" id="agreement1" />
-                                        <label htmlFor="agreement1"></label>
+                                        <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
+                                        <label htmlFor="agreement2"></label>
                                     </div>
                                 </div>
                             </div>
@@ -474,7 +672,6 @@ function ClassForm() {
                                 <button type='submit'>신청하기</button>
                             </div>
 
-                            
                         </form>
                     </div>
                 </div>

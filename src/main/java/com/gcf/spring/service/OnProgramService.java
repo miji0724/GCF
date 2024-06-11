@@ -2,9 +2,11 @@ package com.gcf.spring.service;
 
 import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.OnProgram;
+import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.repository.OnProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class OnProgramService {
@@ -12,10 +14,13 @@ public class OnProgramService {
     @Autowired
     private OnProgramRepository onProgramRepository;
 
-    public OnProgram createOnProgram(OnProgramDto onProgramDto) {
+    public OnProgram createOnProgram(OnProgramDto onProgramDto, Teacher teacher) {
         OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
+        onProgram.setTeacher(teacher); // Teacher 설정
         return onProgramRepository.save(onProgram);
     }
 
-    // 추가적인 서비스 메서드가 필요하면 여기에 작성할 수 있습니다.
+    public List<OnProgram> getAllOnPrograms() {
+        return onProgramRepository.findAll();
+    }
 }

@@ -95,6 +95,10 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
 
-        teacherRepository.delete(teacher);
+        teacherRepository.delete(teacher); 
+    }
+    
+    public Teacher findById(String id) {
+        return teacherRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid teacher Id: " + id));
     }
 }

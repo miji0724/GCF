@@ -27,6 +27,10 @@ public class TeacherInfo {
 
 	@Column(name = "description")
 	private String description;
+	
+	@ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "attachment_id", referencedColumnName = "id")

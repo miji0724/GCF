@@ -42,7 +42,7 @@ public class OffProgram {
 	private String programDetailName; // 프로그램 상세명
 
 	@Column(name = "application_info")
-	private String application_info; // 프로그램 소개
+	private String application_info; // 모집안내 
 
 	@Column(name = "application_start_date", nullable = false)
 	private LocalDate applicationStartDate; // 프로그램 모집 시작일
