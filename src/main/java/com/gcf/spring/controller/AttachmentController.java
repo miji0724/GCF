@@ -31,7 +31,7 @@ public class AttachmentController {
     @PostMapping("/upload/onProgram")
     public AttachmentDto uploadOnProgramFile(@RequestParam("file") MultipartFile file, @RequestParam("programId") String programId) {
         OnProgram onProgram = onProgramService.getOnProgramById(Integer.parseInt(programId));
-        Attachment attachment = attachmentService.uploadOnProgramFile(file, onProgram);
+        Attachment attachment = attachmentService.uploadOnProgramFile(file);
         if (attachment != null) {
             return new AttachmentDto(attachment.getId(), attachment.getOriginal_name(), attachment.getFile_name(), attachment.getFile_path(), null, "onProgram");
         }

@@ -34,7 +34,7 @@ public class OnProgramService {
         return onProgramRepository.findById(id).orElse(null);
     }
 
-	public ProgramInfo insertProgramInfo(ProgramInfo info) {
-		return programInfoRepository.save(info);
+	public List<ProgramInfo> insertProgramInfo(List<ProgramInfo> programInfos) {
+		return programInfoRepository.saveAll(programInfos);
 	}
 }

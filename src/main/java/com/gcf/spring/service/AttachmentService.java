@@ -86,7 +86,7 @@ public class AttachmentService {
         }
     }
 
-    public Attachment uploadOnProgramFile(MultipartFile file, OnProgram onProgram) {
+    public Attachment uploadOnProgramFile(MultipartFile file) {
         try {
             String originalFileName = file.getOriginalFilename();
             String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
