@@ -22,6 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OnProgramDto {
+	private Integer id;
 	private Teacher teacher;
 	private String programName; // 프로그램 이름
 	private LocalDate operatingStartDay; // 업로드 날짜

@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gcf.spring.dto.bannerdto.BannerModulesWrapper;
+import com.gcf.spring.dto.BannerModulesWrapper;
 import com.gcf.spring.service.BannerService;
 
 @RestController

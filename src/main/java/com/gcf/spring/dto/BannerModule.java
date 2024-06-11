@@ -1,6 +1,6 @@
-package com.gcf.spring.dto.bannerdto;
+package com.gcf.spring.dto;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BannerInput {
-	private MultipartFile attachment;
-	private String link;
+public class BannerModule {
+	private String entityId;
+	private List<BannerInput> inputs;
+
 }

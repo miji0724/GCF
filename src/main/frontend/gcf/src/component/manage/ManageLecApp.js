@@ -11,10 +11,16 @@ function ManageLecApp() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('lecApp_name');
     const [lecInfo, setLecInfo] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch data from the server
+        fetchLectures();
+    }, []);
+
+    const fetchLectures = async () => {
+        setLoading(true);
         const fetchOnLecInfo = axios.get('/manage/getPendingApprovalOnPrograms');
         const fetchOffLecInfo = axios.get('/manage/getPendingApprovalOffPrograms');
 
@@ -23,28 +29,60 @@ function ManageLecApp() {
                 const [onLecResponse, offLecResponse] = responses;
                 const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
 
-                // Sort the combinedLecInfo array by the application date
                 combinedLecInfo.sort((a, b) => new Date(a.operatingStartDay) - new Date(b.operatingStartDay));
 
-                // Set the sorted data in the state
                 setLecInfo(combinedLecInfo);
-
                 console.log(combinedLecInfo);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching lecture information:', error);
+                console.log(fetchOnLecInfo);
+                setLoading(false);
             });
-    }, []);
+    };
 
-    const filteredItems = lecInfo.filter(item => {
-        if (searchTerm === '') return true;
-        if (searchType === 'lecApp_name') {
-            return item.lecApp_name.toLowerCase().includes(searchTerm.toLowerCase());
-        } else if (searchType === 'lecApp_lecAppDate') {
-            return item.lecApp_lecAppDate.toLowerCase().includes(searchTerm.toLowerCase());
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const fetchOnLecInfo = axios.get('/manage/getSearchPendingApprovalOnPrograms', {
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+
+            const fetchOffLecInfo = axios.get('/manage/getSearchPendingApprovalOffPrograms',{
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+
+            Promise.all([fetchOnLecInfo, fetchOffLecInfo])
+            .then((responses) => {
+                const [onLecResponse, offLecResponse] = responses;
+                const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
+
+                combinedLecInfo.sort((a, b) => new Date(a.operatingStartDay) - new Date(b.operatingStartDay));
+
+                setLecInfo(combinedLecInfo);
+                setCurrentPage(1);
+                console.log(combinedLecInfo);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching lecture information:', error);
+                console.log(fetchOnLecInfo);
+                setLoading(false);
+            });
+        } catch (error) {
+            setError(error);
+            setLoading(false);
         }
-        return false;
-    });
+    };
+
+    const filteredItems = lecInfo;
 
     const lecOnDetailGo = (item) => {
         // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
@@ -74,9 +112,15 @@ function ManageLecApp() {
         }
     };
 
+    const handleKeyPress = event => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(filteredItems) ? filteredItems.slice(indexOfFirstItem, indexOfLastItem) : [];
 
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
@@ -94,12 +138,22 @@ function ManageLecApp() {
                 <div className='lecApp_search'>
                     <select className='lecApp_search_dropdown' onChange={handleSearchTypeChange}>
                         <option value="lecApp_name">이름</option>
-                        <option value="lecApp_lecAppDate">강의 신청 날짜</option>
+                        <option value="lecApp_id">아이디</option>
                     </select>
-                    <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
-                    <button className='lecApp_search_button'>검색</button>
+                    <input
+                        type="text"
+                        placeholder="검색어를 입력하세요"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyPress}
+                    /><button className='lecApp_search_button'>검색</button>
                 </div>
                 <div className='lecApp_area'>
+                {loading ? (
+                        <p>로딩 중...</p>
+                    ) : error ? (
+                        <p>오류 발생: {error.message}</p>
+                    ) : (
                     <table className='lecApp_table'>
                         <thead>
                             <tr>
@@ -126,6 +180,7 @@ function ManageLecApp() {
                             ))}
                         </tbody>
                     </table>
+                    )}
                     <ul className='pagination'>
                         {!isFirstGroup && (
                             <li className='page-item'>

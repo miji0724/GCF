@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SideMenu from './ManageSideMenu';
 import './ManageLecOnAppDetail.css';
+import axios from 'axios'
 
-function EducationItem({ name, text, file}) {
-    // 강의 이름 형식을 통해 isParent 설정
+function EducationItem({ name, text, file }) {
+    
     const isParent = !name.includes('-');
 
     return (
@@ -12,14 +13,14 @@ function EducationItem({ name, text, file}) {
             {isParent && (
                 <>
                     <p style={{ marginRight: "10px" }}>{name}</p>
-                    <input type="text" value={text} style={{ marginRight: "10px", width: "370px" }} readOnly/>
+                    <input type="text" value={text} style={{ marginRight: "10px", width: "370px" }} readOnly />
                 </>
             )}
             {!isParent && (
                 <>
                     <p style={{ marginLeft: "5px", marginRight: "5px", width: "50px" }} >{name}</p>
-                    <input type="text" value={text} style={{ marginRight: "10px", width: "300px" }} readOnly/>
-                    <input type="text" value={file} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} readOnly/>
+                    <input type="text" value={text} style={{ marginRight: "10px", width: "300px" }} readOnly />
+                    <input type="text" value={file} style={{ backgroundColor: "rgba(0, 0, 0, 0)" }} readOnly />
                 </>
             )}
         </div>
@@ -36,6 +37,7 @@ function ManageLecOnAppDetail() {
     const { item } = state || {};
 
     const [onLecInfo, setOnLecInfo] = useState({
+        id: '',
         programName: '',
         operatingStartDay: '',
         views: 0,
@@ -136,8 +138,39 @@ function ManageLecOnAppDetail() {
         }));
     };
 
-    const [eduInputs, setEduInputs] = useState([{ id: 1 }]);
-    const [teachInputs, setTeachInputs] = useState([{ id: 1 }]);
+    // 승인
+    const sendApprovalRequest = () => {
+        axios.put(`/manage/onProgramApproval`, onLecInfo.id, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                alert('강의 신청을 승인하였습니다.');
+                navigate(-1);
+            })
+            .catch(error => {
+                console.error('There was a problem with your axios operation:', error);
+                // 오류 처리 로직을 추가할 수 있습니다.
+            });
+    };
+
+    // 미승인
+    const sendNotApprovalRequest = () => {
+        axios.put(`/manage/onProgramNotApproval`, onLecInfo.id, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                alert('강의 신청을 미승인하였습니다.');
+                navigate(-1);
+            })
+            .catch(error => {
+                console.error('There was a problem with your axios operation:', error);
+                // 오류 처리 로직을 추가할 수 있습니다.
+            });
+    };
 
     return (
         <body>
@@ -167,26 +200,36 @@ function ManageLecOnAppDetail() {
                         </div>
                         <div className='lecOnAppDetail_right'>
                             <ul>
-                                <li> <input type='text' id='lecOnAppDetail_onProgramName' value={onLecInfo.programName} onChange={handleChange} readOnly/></li>
-                                <li> <input type='text' id='lecOnAppDetail_teacher_name' value={onLecInfo.teacher.member.name} onChange={handleChange} readOnly/></li>
-                                <li> <input type="text" id='lecOnAppDetail_teacher_phone_number' maxLength="13" value={onLecInfo.teacher.member.phone_number} onChange={handleChange} readOnly/></li>
-                                <li> <input type="text" id='lecOnAppDetail_teacher_tel_number' maxLength="11" value={onLecInfo.teacher.member.tel_number} onChange={handleChange} readOnly/> </li>
+                                <li> <input type='text' id='lecOnAppDetail_onProgramName' value={onLecInfo.programName} onChange={handleChange} readOnly /></li>
+                                <li> <input type='text' id='lecOnAppDetail_teacher_name' value={onLecInfo.teacher.member.name} onChange={handleChange} readOnly /></li>
+                                <li> <input type="text" id='lecOnAppDetail_teacher_phone_number' maxLength="13" value={onLecInfo.teacher.member.phone_number} onChange={handleChange} readOnly /></li>
+                                <li> <input type="text" id='lecOnAppDetail_teacher_tel_number' maxLength="11" value={onLecInfo.teacher.member.tel_number} onChange={handleChange} readOnly /> </li>
                                 <li>
-                                    <input type='text' id='lecOnAppDetail_teacher_emailId' value={onLecInfo.teacher.member.email.split('@')[0]} onChange={handleChange} readOnly/>
+                                    <input type='text' id='lecOnAppDetail_teacher_emailId' value={onLecInfo.teacher.member.email.split('@')[0]} onChange={handleChange} readOnly />
                                     &nbsp;@&nbsp;
-                                    <input type='text' id='lecOnAppDetail_teacher_emailAddr' value={onLecInfo.teacher.member.email.split('@')[1]} onChange={handleChange} readOnly/>
+                                    <input type='text' id='lecOnAppDetail_teacher_emailAddr' value={onLecInfo.teacher.member.email.split('@')[1]} onChange={handleChange} readOnly />
                                 </li>
-                                <li><input type='text' id='lecOnAppDetail_poster_attachment' value={onLecInfo.poster.original_name} readOnly/></li>
+                                <li><input type='text' id='lecOnAppDetail_poster_attachment' value={onLecInfo.poster.original_name} readOnly /></li>
 
                                 <div className='introduceEdu_buttonAlign'>
                                     <div className='introduceEdu_area'>
-                                        {eduInputs.map(input => (
-                                            <div key={input.id} className='introduceEdu_flexArea'>
+                                        {onLecInfo.programInfos.map((programInfo, index) => (
+                                            <div key={index} className='introduceEdu_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOnAppDetail_introduceEdu_detail_${input.id}`} value={onLecInfo.programInfos[input.id - 1].description} onChange={handleChange} readOnly/>
+                                                    <input
+                                                        type='text'
+                                                        id={`lecOnAppDetail_introduceEdu_detail_${index}`}
+                                                        value={programInfo.description}
+                                                        readOnly
+                                                    />
                                                 </li>
                                                 <li>
-                                                    <input type='text' value={onLecInfo.programInfos[input.id - 1].attachment.original_name} id={`lecOnAppDetail_introduceEdu_attachment_${input.id}`} readOnly/>
+                                                    <input
+                                                        type='text'
+                                                        value={programInfo.attachment.original_name}
+                                                        id={`lecOnAppDetail_introduceEdu_attachment_${index}`}
+                                                        readOnly
+                                                    />
                                                 </li>
                                             </div>
                                         ))}
@@ -195,13 +238,23 @@ function ManageLecOnAppDetail() {
 
                                 <div className='introduceTeach_buttonAlign'>
                                     <div className='introduceTeach_area'>
-                                        {teachInputs.map(input => (
-                                            <div key={input.id} className='introduceTeach_flexArea'>
+                                        {onLecInfo.teacherInfos.map((teacherInfo, index) => (
+                                            <div key={index} className='introduceTeach_flexArea'>
                                                 <li>
-                                                    <input type='text' id={`lecOnAppDetail_introduceTeach_detail_${input.id}`} value={onLecInfo.teacherInfos[input.id - 1].description} onChange={handleChange} readOnly/>
+                                                    <input
+                                                        type='text'
+                                                        id={`lecOnAppDetail_introduceTeach_detail_${index}`}
+                                                        value={teacherInfo.description}
+                                                        readOnly
+                                                    />
                                                 </li>
                                                 <li>
-                                                    <input type='text' value={onLecInfo.teacherInfos[input.id - 1].attachment.original_name} id={`lecOnAppDetail_introduceTeach_attachment_${input.id}`} readOnly/>
+                                                    <input
+                                                        type='text'
+                                                        value={teacherInfo.attachment.original_name}
+                                                        id={`lecOnAppDetail_introduceTeach_attachment_${index}`}
+                                                        readOnly
+                                                    />
                                                 </li>
                                             </div>
                                         ))}
@@ -242,8 +295,8 @@ function ManageLecOnAppDetail() {
                         </div>
                     </div>
                     <div className='lecOnAppDetail_button_area'>
-                        <button id='lecOnAppDetail_approval'>승인</button>
-                        <button id='lecOnAppDetail_notApproval'>미승인</button>
+                        <button id='lecOnAppDetail_approval' onClick={sendApprovalRequest}>승인</button>
+                        <button id='lecOnAppDetail_notApproval' onClick={sendNotApprovalRequest}>미승인</button>
                     </div>
                 </div>
             </div>

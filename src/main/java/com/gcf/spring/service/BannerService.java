@@ -3,9 +3,9 @@ package com.gcf.spring.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gcf.spring.dto.bannerdto.BannerInput;
-import com.gcf.spring.dto.bannerdto.BannerModule;
-import com.gcf.spring.dto.bannerdto.BannerModulesWrapper;
+import com.gcf.spring.dto.BannerInput;
+import com.gcf.spring.dto.BannerModule;
+import com.gcf.spring.dto.BannerModulesWrapper;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.BannerOne;
 import com.gcf.spring.entity.BannerTwo;

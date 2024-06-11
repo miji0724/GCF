@@ -75,6 +75,7 @@ public class OnProgram {
 
 	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 	        OnProgram onProgram = new OnProgram();
+	        onProgram.setId(on_programDto.getId());
 	        onProgram.setTeacher(on_programDto.getTeacher());
 	        onProgram.setProgramName(on_programDto.getProgramName());
 	        onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
@@ -93,6 +94,7 @@ public class OnProgram {
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();
+		dto.setId(onProgram.getId());
 		dto.setTeacher(onProgram.getTeacher());
 		dto.setProgramName(onProgram.getProgramName());
 		dto.setOperatingStartDay(onProgram.getOperatingStartDay());

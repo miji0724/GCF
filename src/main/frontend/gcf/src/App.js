@@ -28,7 +28,6 @@ import ManageLecOnAppDetailPage from './pages/manage/ManageLecOnAppDetailPage';
 import ManageLecOffAppDetailPage from './pages/manage/ManageLecOffAppDetailPage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
 function App() {
     return (
         <div className="App">

@@ -22,22 +22,13 @@ function ManageMember() {
     const fetchMembers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8090/manage/getAll');
+            const response = await axios.get('/manage/getAllMembers');
             setMembers(response.data);
             setLoading(false);
         } catch (error) {
             setError(error);
             setLoading(false);
         }
-    };
-
-    const formatPhoneNumber = (phoneNumber) => {
-        const cleaned = ('' + phoneNumber).replace(/\D/g, '');
-        const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
-        if (match) {
-            return `${match[1]}-${match[2]}-${match[3]}`;
-        }
-        return phoneNumber;
     };
 
     const handleSearch = async () => {
@@ -58,6 +49,14 @@ function ManageMember() {
         }
     };
 
+    const formatPhoneNumber = (phoneNumber) => {
+        const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+        if (match) {
+            return `${match[1]}-${match[2]}-${match[3]}`;
+        }
+        return phoneNumber;
+    };
     const filteredItems = members;
 
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -83,12 +82,12 @@ function ManageMember() {
         }
     };
 
-    const isFirstGroup = currentPage <= 5;
-    const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
-
     const handleMemberDetail = (member) => {
         navigate('/manage/memDetail', { state: { member } });
     };
+    
+    const isFirstGroup = currentPage <= 5;
+    const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
 
     return (
         <div className='member_container'>

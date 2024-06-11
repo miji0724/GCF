@@ -3,14 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SideMenu from './ManageSideMenu';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
-
-function lecOnDetailGo() {
-    window.location.href = '/manage/lecondetail';
-}
-
-function lecOffDetailGo() {
-    window.location.href = '/manage/lecoffdetail';
-}
+import { useNavigate } from 'react-router-dom';
 
 function ManageLecture() {
     // 게시글과 페이지 관련 상태
@@ -19,74 +12,130 @@ function ManageLecture() {
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
     const [searchType, setSearchType] = useState('lecture_name'); // 검색 기준 상태 추가
     const [lecInfo, setLecInfo] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // 온라인 강의 정보 가져오기
-        const fetchOnLecInfo = axios.get('/manage/getOnLecInfo');
-        // 오프라인 강의 정보 가져오기
-        const fetchOffLecInfo = axios.get('/manage/getOffLecInfo');
+        fetchLectures();
+    }, []);
+
+    const fetchLectures = async () => {
+        setLoading(true);
+        const fetchOnLecInfo = axios.get('/manage/getOnPrograms');
+        const fetchOffLecInfo = axios.get('/manage/getOffPrograms');
 
         Promise.all([fetchOnLecInfo, fetchOffLecInfo])
             .then((responses) => {
                 const [onLecResponse, offLecResponse] = responses;
-                // 온라인과 오프라인 데이터를 합침
                 const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
+
+                combinedLecInfo.sort((a, b) => new Date(a.operatingStartDay) - new Date(b.operatingStartDay));
+
                 setLecInfo(combinedLecInfo);
                 console.log(combinedLecInfo);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching lecture information:', error);
                 console.log(fetchOnLecInfo);
+                setLoading(false);
             });
-    }, []);
+    };
 
-    const filteredItems = lecInfo.filter(item => {
-        if (searchTerm === '') return true;
-        if (searchType === 'lecApp_name') {
-            return item.lecApp_name.toLowerCase().includes(searchTerm.toLowerCase());
-        } else if (searchType === 'lecApp_lecAppDate') {
-            return item.lecApp_lecAppDate.toLowerCase().includes(searchTerm.toLowerCase());
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const fetchOnLecInfo = axios.get('/manage/getSearchOnPrograms', {
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+
+            const fetchOffLecInfo = axios.get('/manage/getSearchOffPrograms',{
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+
+            Promise.all([fetchOnLecInfo, fetchOffLecInfo])
+            .then((responses) => {
+                const [onLecResponse, offLecResponse] = responses;
+                const combinedLecInfo = [...onLecResponse.data, ...offLecResponse.data];
+
+                combinedLecInfo.sort((a, b) => new Date(a.operatingStartDay) - new Date(b.operatingStartDay));
+
+                setLecInfo(combinedLecInfo);
+                console.log(combinedLecInfo);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching lecture information:', error);
+                console.log(fetchOnLecInfo);
+                setLoading(false);
+            });
+        } catch (error) {
+            setError(error);
+            setLoading(false);
         }
-        return false;
-    });
+    };
 
+    const filteredItems = lecInfo;
 
-    // 페이지 번호 계산
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
+    const lecOnDetailGo = (item) => {
+        // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
+        navigate('/manage/lecondetail', { state: {item}  }); // 선택한 항목의 데이터를 함께 전달
+    };
+
+    const lecOffDetailGo = (item) => {
+        // 선택한 항목의 데이터를 URL 쿼리 매개변수로 전달하여 상세 페이지로 이동
+        navigate('/manage/lecoffdetail', { state: {item}  }); // 선택한 항목의 데이터를 함께 전달
+    };
 
     // 검색어 업데이트 함수
     const handleSearchChange = event => {
+        setSearchTerm('');
         setSearchTerm(event.target.value);
         setCurrentPage(1); // 검색어가 변경될 때 첫 페이지로 이동
+        
     };
 
     // 검색 기준 업데이트 함수
     const handleSearchTypeChange = event => {
+        setSearchType('');
         setSearchType(event.target.value);
         setCurrentPage(1); // 검색 기준이 변경될 때 첫 페이지로 이동
     };
 
     // 함수 선택
-    const handleInfoButtonClick = (lecture_type) => {
-        if (lecture_type === '온라인') {
-            lecOnDetailGo();
-        } else if (lecture_type === '오프라인') {
-            lecOffDetailGo();
+    const handleInfoButtonClick = (item) => {
+        if (item.programType === '온라인') {
+            lecOnDetailGo(item);
+        } else if (item.programType === '오프라인') {
+            lecOffDetailGo(item);
         }
     };
+
+    const handleKeyPress = event => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
 
     // 현재 페이지의 게시글 범위 계산
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(filteredItems) ? filteredItems.slice(indexOfFirstItem, indexOfLastItem) : [];
 
-    // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
     const isFirstGroup = currentPage <= 5;
-
-    // 현재 페이지 그룹이 마지막 페이지 그룹인지 확인
     const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
 
     return (
@@ -97,12 +146,22 @@ function ManageLecture() {
                 <div className='lecture_search'>
                     <select className='lecture_search_dropdown' onChange={handleSearchTypeChange}>
                         <option value="lecture_name">이름</option>
-                        <option value="lecture_lecRegistDate">강의 등록 날짜</option>
+                        <option value="lecture_id">아이디</option>
                     </select>
-                    <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
-                    <button className='lecture_search_button'>검색</button>
+                    <input
+                        type="text"
+                        placeholder="검색어를 입력하세요"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyPress}
+                    /><button className='lecture_search_button'>검색</button>
                 </div>
                 <div className='lecture_area'>
+                {loading ? (
+                        <p>로딩 중...</p>
+                    ) : error ? (
+                        <p>오류 발생: {error.message}</p>
+                    ) : (
                     <table className='lecture_table'>
                         <thead>
                             <tr>
@@ -124,12 +183,12 @@ function ManageLecture() {
                                     <td>{item.programType}</td>
                                     <td>{item.category}</td>
                                     <td>{item.operatingStartDay.join('-')}</td>
-                                    <td><button onClick={() => handleInfoButtonClick(item.lecture_type)}>정보</button></td>
+                                    <td><button onClick={() => handleInfoButtonClick(item)}>정보</button></td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    {/* 페이징 */}
+                    )}
                     <ul className='pagination'>
                         {!isFirstGroup && (
                             <li className='page-item'>

@@ -223,7 +223,7 @@
     height:200px;
 }
 
-#lecOffAppDetail_confirm{
+#lecOffAppDetail_approval {
     margin-right: 20px;
     margin-bottom: 30px;
     background-color: #AECCF2;
@@ -234,7 +234,7 @@
     font-weight:600;
 }
 
-#lecOffAppDetail_delete{
+#lecOffAppDetail_notApproval {
     margin-left: 20px;
     margin-bottom: 30px;
     background-color: #FF8585;
@@ -244,4 +244,3 @@
     font-size: 25px;
     font-weight:600;
 }
-

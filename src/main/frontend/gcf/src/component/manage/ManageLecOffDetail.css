@@ -223,17 +223,6 @@
     height:200px;
 }
 
-#lecOffDetail_confirm{
-    margin-right: 20px;
-    margin-bottom: 30px;
-    background-color: #AECCF2;
-    border-radius: 10px;
-    width:100px;
-    height: 50px;
-    font-size: 25px;
-    font-weight:600;
-}
-
 #lecOffDetail_delete{
     margin-left: 20px;
     margin-bottom: 30px;

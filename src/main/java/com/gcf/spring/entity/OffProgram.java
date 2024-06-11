@@ -43,7 +43,7 @@ public class OffProgram {
 	private String programDetailName; // 프로그램 상세명
 
 	@Column(name = "application_info")
-	private String application_info; // 프로그램 소개
+	private String application_info; // 모집 안내
 
 	@Column(name = "application_start_date", nullable = false)
 	private LocalDate applicationStartDate; // 프로그램 모집 시작일
@@ -109,6 +109,7 @@ public class OffProgram {
 
 	public static OffProgram createOffProgram(OffProgramDto off_programDto) {
 	    OffProgram offProgram = new OffProgram();
+	    offProgram.setId(off_programDto.getId());
 	    offProgram.setProgramName(off_programDto.getProgramName());
 	    offProgram.setTeacher(off_programDto.getTeacher());
 	    offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
@@ -139,6 +140,7 @@ public class OffProgram {
 	
 	public static OffProgramDto convertToOffProgramDto(OffProgram offProgram) {
 	    OffProgramDto dto = new OffProgramDto();
+	    dto.setId(offProgram.getId());
 	    dto.setProgramName(offProgram.getProgramName());
 	    dto.setTeacher(offProgram.getTeacher());
 	    dto.setProgramDetailName(offProgram.getProgramDetailName());

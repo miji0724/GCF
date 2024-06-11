@@ -27,7 +27,7 @@ public class MemberController {
 	@Autowired
 	private MemberRepository memberRepository;
 	
-	@GetMapping("/manage/getAll")
+	@GetMapping("/manage/getAllMembers")
 	public List<Member> getAllMembers(){
 		return memberService.getAllMembers();
 	}
@@ -46,6 +46,8 @@ public class MemberController {
         }
         return List.of(); // 빈 리스트 반환
     }
+	
+	
 	
 //    @GetMapping("/checkId")
 //    public ResponseEntity<String> checkId(@RequestParam("id") String id) {
