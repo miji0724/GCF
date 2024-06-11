@@ -258,53 +258,42 @@ function ClassForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData();
+        // const formData = new FormData();
+        let formData = {};
 
         if (onlineEducation) {
-
-            const programInfo = new FormData();
-
-            
-            Array.from(certificationFields).forEach((data, index) => {
-                programInfo.append('description', data);
-              });
-            
-
-            // 리스트로 파일 보내는 코드 
-            Array.from(certificationFiles).forEach((file, index) => {
-                programInfo.append('files', file);
-              });
-
-            try {
-                const response = await axios.post('/api/onProgram/info', {"files" : certificationFiles}, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " @@@@@@@@@@@@@@");
-            } catch (error) {
-                console.error(error);
-            }
-
             const teacherInfo = new FormData();
             teacherInfo.append('attachment', teachingSubjectFiles[0]);
             teacherInfo.append('description', teachingSubjectFields[0]);
 
-
-
-            formData.append('teacherId', teacherId);
-            formData.append('programName', CName);
-            formData.append('operatingStartDay', offlineLocationStartDate);
-            formData.append('views', 0);
-            formData.append('likesCount', 0);
-            formData.append('category', "온라인");
-            formData.append('programType', "온라인");
-            formData.append('poster', null);
-            formData.append('approvalState', "승인대기");
-            formData.append('programInfos', []);
-            formData.append('teacherInfos', []);
-            formData.append('comments', []);
-            formData.append('videos', []);
+            formData = {
+                'teacherId': teacherId,
+                'programName': CName,
+                'operatingStartDay': offlineLocationStartDate,
+                'views': 0,
+                'likesCount': 0,
+                'category': "온라인",
+                'programType': "온라인",
+                'poster': null,
+                'approvalState': "승인대기",
+                'programInfos': [],
+                'teacherInfos': [],
+                'comments': [],
+                'videos': [],
+            }
+            // formData.append('teacherId', teacherId);
+            // formData.append('programName', CName);
+            // formData.append('operatingStartDay', offlineLocationStartDate);
+            // formData.append('views', 0);
+            // formData.append('likesCount', 0);
+            // formData.append('category', "온라인");
+            // formData.append('programType', "온라인");
+            // formData.append('poster', null);
+            // formData.append('approvalState', "승인대기");
+            // formData.append('programInfos', []);
+            // formData.append('teacherInfos', []);
+            // formData.append('comments', []);
+            // formData.append('videos', []);
 
             // // Add certification files
             // certificationFiles.forEach((file, index) => {
@@ -321,24 +310,45 @@ function ClassForm() {
             // });
 
             // Add banner files
-            bannerFiles.forEach((file, index) => {
-                if (file) {
-                    formData.append(`bannerFiles[${index}]`, file);
-                }
-            });
+            // bannerFiles.forEach((file, index) => {
+            //     if (file) {
+            //         formData.append(`bannerFiles[${index}]`, file);
+            //     }
+            // });
+            let id = 0;
+            try {
+                const response = await axios.post('/api/onProgram', formData);
+                console.log(response.data);
+                id = response.data.id;
+            } catch (error) {
+                console.error(error);
+                
+            }
+
+            const programInfo = new FormData();
+            programInfo.append("id", id);
+            Array.from(certificationFields).forEach((data, index) => {
+                programInfo.append('descriptions', data);
+              });
+            Array.from(certificationFiles).forEach((file, index) => {
+                programInfo.append('files', file);
+              });
 
             try {
-                const response = await axios.post('/api/onProgram', formData, {
+                const response = await axios.post('/api/onProgram/info', programInfo, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log(response.data);
+                console.log(response.data + " @@@@@@@@@@@@@@");
+                
                 alert("온라인 프로그램이 성공적으로 등록되었습니다.");
             } catch (error) {
                 console.error(error);
                 alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
             }
+
+
         } else if (offlineEducation) {
             formData.append('teacherId', teacherId);
             formData.append('programName', CName);

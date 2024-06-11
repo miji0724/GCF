@@ -19,7 +19,6 @@ public class GoogleCloudStorageConfig {
                 new ClassPathResource("project-gcf-424105-d1392a5ef44a.json").getInputStream());
 
         // Storage 인스턴스를 생성합니다.
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        return storage;
+        return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
     }
 }
