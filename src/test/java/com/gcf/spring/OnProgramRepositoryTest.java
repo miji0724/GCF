@@ -92,7 +92,7 @@ public class OnProgramRepositoryTest {
             Attachment teafile1 = new Attachment();
             teafile1.setOriginal_name("강사소개 이미지 원본이름 1" + i);
             teafile1.setFile_name("강사소개 생성 이름 1" + i);
-            teafile1.setFile_path("강사소개 파일경로 1" + i);
+            teafile1.setFile_path("https://storage.googleapis.com/gcf_attachment_storage_bucket/banner/0784a15e-fb64-4b2e-8888-bb652497359d_%EB%B3%B4%EA%B5%AC%EA%B3%B6.jpg");
             teafile1.setParent("online_teacher_info");
 
             teacherInfo1.setAttachment(teafile1);

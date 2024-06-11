@@ -181,3 +181,9 @@
     font-size: 25px;
     font-weight: 600;
 }
+
+.introduceTeach_flexArea{
+    display:flex;
+    list-style-type: none;
+    justify-content: center;
+}

@@ -5,7 +5,7 @@ import './ManageLecOnAppDetail.css';
 import axios from 'axios'
 
 function EducationItem({ name, text, file }) {
-    
+
     const isParent = !name.includes('-');
 
     return (
@@ -231,6 +231,7 @@ function ManageLecOnAppDetail() {
                                                         readOnly
                                                     />
                                                 </li>
+                                                <img src={programInfo.attachment.file_path} />
                                             </div>
                                         ))}
                                     </div>
@@ -255,6 +256,9 @@ function ManageLecOnAppDetail() {
                                                         id={`lecOnAppDetail_introduceTeach_attachment_${index}`}
                                                         readOnly
                                                     />
+                                                </li>
+                                                <li>
+                                                    <img src={teacherInfo.attachment.file_path} />
                                                 </li>
                                             </div>
                                         ))}
@@ -298,6 +302,14 @@ function ManageLecOnAppDetail() {
                         <button id='lecOnAppDetail_approval' onClick={sendApprovalRequest}>승인</button>
                         <button id='lecOnAppDetail_notApproval' onClick={sendNotApprovalRequest}>미승인</button>
                     </div>
+                    {onLecInfo.teacherInfos.map((teacherInfo, index) => (
+                        <div key={index} className='introduceTeach_flexArea'>
+                            
+                            <li>
+                                <img src={teacherInfo.attachment.file_path} />
+                            </li>
+                        </div>
+                    ))}
                 </div>
             </div>
         </body>

@@ -1,6 +1,7 @@
 package com.gcf.spring.config;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class AdminAccountConfig {
 		admin.setMail_agreement(true);
 		admin.setMarried(true);
 		admin.setHasChildren(true);
+		admin.setCreatedAt(LocalDateTime.now());
 		admin.setRole(Role.ADMIN);
 		
 		List<String> interests = new ArrayList<>();
