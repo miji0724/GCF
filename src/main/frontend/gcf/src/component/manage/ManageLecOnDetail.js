@@ -286,6 +286,16 @@ function ManageLecOnDetail() {
                     <div className='lecOnDetail_button_area'>
                         <button id='lecOnDetail_delete' onClick={deleteOnProgram}>삭제</button>
                     </div>
+                    {onLecInfo.teacherInfos.map((teacherInfo, index) => (
+                        <div key={index} className='introduceTeach_imgArea'>
+                            <img src={teacherInfo.attachment.file_path} />
+                        </div>
+                    ))}
+                    {onLecInfo.programInfos.map((programInfo, index) => (
+                        <div key={index} className='introduceTeach_imgArea'>
+                            <img src={programInfo.attachment.file_path} />
+                        </div>
+                    ))}
                 </div>
             </div>
         </body>

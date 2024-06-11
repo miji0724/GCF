@@ -231,7 +231,6 @@ function ManageLecOnAppDetail() {
                                                         readOnly
                                                     />
                                                 </li>
-                                                <img src={programInfo.attachment.file_path} />
                                             </div>
                                         ))}
                                     </div>
@@ -256,9 +255,6 @@ function ManageLecOnAppDetail() {
                                                         id={`lecOnAppDetail_introduceTeach_attachment_${index}`}
                                                         readOnly
                                                     />
-                                                </li>
-                                                <li>
-                                                    <img src={teacherInfo.attachment.file_path} />
                                                 </li>
                                             </div>
                                         ))}
@@ -303,11 +299,13 @@ function ManageLecOnAppDetail() {
                         <button id='lecOnAppDetail_notApproval' onClick={sendNotApprovalRequest}>미승인</button>
                     </div>
                     {onLecInfo.teacherInfos.map((teacherInfo, index) => (
-                        <div key={index} className='introduceTeach_flexArea'>
-                            
-                            <li>
-                                <img src={teacherInfo.attachment.file_path} />
-                            </li>
+                        <div key={index} className='introduceTeach_imgArea'>
+                            <img src={teacherInfo.attachment.file_path} />
+                        </div>
+                    ))}
+                    {onLecInfo.programInfos.map((programInfo, index) => (
+                        <div key={index} className='introduceTeach_imgArea'>
+                            <img src={programInfo.attachment.file_path} />
                         </div>
                     ))}
                 </div>
