@@ -120,8 +120,8 @@ function ManageNoticeWrite() {
                 <a className='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                 <div className='noticewrite_area'>
                     {error && <div className="error">{error}</div>}
-                    <div className='noticewrite_title'>
-                        <p>제목</p>
+                    <div className='noticewrite_titleArea'>
+                        <p id='noticewrite_title'>제목</p>
                         <input type='text' value={title} onChange={handleTitleChange} />
                     </div>
                     <div className='noticewrite_detail'>
@@ -136,17 +136,17 @@ function ManageNoticeWrite() {
                             {attachments.map((file, index) => (
                                 <div key={index} className='custom_file_input'>
                                     <label>
-                                        <span>{file ? file.name : '파일 선택'}</span>
+                                        <span id='noticeWrite_attachChoice'>{file ? file.name : '파일 선택'}</span>
                                         <input
                                             type='file'
                                             style={{ display: 'none' }}
                                             onChange={e => handleFileChange(index, e)}
                                         />
                                     </label>
-                                    <button onClick={() => removeInput(index)}>삭제</button>
+                                    <button id='noticeWrite_attachDelete' onClick={() => removeInput(index)}>삭제</button>
                                 </div>
                             ))}
-                            <button onClick={addInput}>첨부파일 추가</button>
+                            <button id='noticeWrite_attachAdd' onClick={addInput}>첨부파일 추가</button>
                         </div>
                     </div>
                     <div className='noticewrite_button_area'>

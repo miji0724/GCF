@@ -10,7 +10,7 @@
 
 .lecOffDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;  
@@ -36,7 +36,7 @@
 .lecOffDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .lecOffDetail_area{
@@ -234,3 +234,8 @@
     font-weight:600;
 }
 
+.introduceTeach_attArea{
+    display:flex;
+    list-style-type: none;
+    justify-content: center;
+}

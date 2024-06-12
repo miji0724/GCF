@@ -8,7 +8,7 @@
 }
 
 .lecOnAppDetail {
-    flex: 0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;
@@ -24,7 +24,7 @@
 .lecOnAppDetail>p {
     margin-top:30px;
     font-size: 30px;
-    font-weight: 800;
+    font-weight:500;
 }
 
 .lecOnAppDetail_area {
@@ -166,12 +166,12 @@
 
 #lecOnAppDetail_approval {
     background-color: #AECCF2;
-    margin:10px;
+    margin : 10px 20px;
 }
 
 #lecOnAppDetail_notApproval {
     background-color: #FF8585;
-    margin:10px;
+    margin : 10px 20px;
 }
 
 .lecOnAppDetail_button_area button {
@@ -182,7 +182,7 @@
     font-weight: 600;
 }
 
-.introduceTeach_imgArea{
+.introduceTeach_attArea{
     display:flex;
     list-style-type: none;
     justify-content: center;

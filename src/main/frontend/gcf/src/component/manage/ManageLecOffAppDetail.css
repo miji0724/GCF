@@ -10,7 +10,7 @@
 
 .lecOffAppDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;  
@@ -36,7 +36,7 @@
 .lecOffAppDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .lecOffAppDetail_area{
@@ -243,4 +243,11 @@
     height: 50px;
     font-size: 25px;
     font-weight:600;
+}
+
+
+.introduceTeach_attArea{
+    display:flex;
+    list-style-type: none;
+    justify-content: center;
 }

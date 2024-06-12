@@ -4,7 +4,7 @@
 }
 
 .banner {
-    flex: 0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     display: flex;
@@ -17,7 +17,8 @@
 .banner>p {
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
+    
 }
 
 .banner_area {
