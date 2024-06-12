@@ -143,44 +143,53 @@ function ManageTeachAppDetail() {
             <SideMenu />
             <div className='teachAppDetail'>
                 <p>강사회원 상세정보</p>
+                <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                 <div className='teachAppDetail_area'>
                     <div className='teachAppDetail_left'>
                         <ul>
                             <li>* 이름</li>
                             <li>* 생년월일</li>
-                            <li>* 휴대폰 번호 </li>
+                            <li>* 휴대폰 번호</li>
                             <li>전화번호</li>
-                            <li>이메일</li>
-                            <li>주소</li>
+                            <li>* 이메일</li>
+                            <li>* 주소</li>
                             <li>상세주소</li>
                             <li>소속기관</li>
-                            <li>강의 분야</li>
-                            <li>SNS 주소</li>
-                            <li>주요 이력</li>
-                            <li>자격증</li>
-                            <li>강의 가능 분야</li>
+                            <li>SNS주소</li>
+                            <li>* 강의분야</li>
+                            <li>&nbsp;</li>
+                            <li>* 주요이력</li>
+                            <li>&nbsp;</li>
+                            <li className='marginTop10'>&nbsp;</li>
+                            <li className='marginTop10'>자격증</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li className='marginTop10'>강의가능분야</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
                         </ul>
                     </div>
                     <div className='teachAppDetail_right'>
                         <ul>
-                            <li><input type='text' id='teachAppDetail_name' value={teacherInfo.name || ''}  disabled /></li>
+                            <li><input type='text' id='teachAppDetail_name' value={teacherInfo.name || ''} disabled /></li>
                             <li className='teachAppDetail_birth_container'>
-                                <input type='date' id='teachAppDetail_birth_detail' value={teacherInfo.birth || ''}  disabled />
+                                <input type='date' id='teachAppDetail_birth_detail' value={teacherInfo.birth || ''} disabled />
                             </li>
-                            <li><input type="text" id='teachAppDetail_phoneNum' maxLength="13" value={teacherInfo.phone_number || ''}  disabled /></li>
-                            <li><input type="text" id='teachAppDetail_telNum' maxLength="11" value={teacherInfo.tel_number || ''}  disabled /></li>
+                            <li><input type="text" id='teachAppDetail_phoneNum' maxLength="13" value={teacherInfo.phone_number || ''} disabled /></li>
+                            <li><input type="text" id='teachAppDetail_telNum' maxLength="11" value={teacherInfo.tel_number || ''} disabled /></li>
                             <li>
-                                <input type='text' id='teachAppDetail_emailId' value={teacherInfo.email_id || ''}  disabled />
+                                <input type='text' id='teachAppDetail_emailId' value={teacherInfo.email_id || ''} disabled />
                                 &nbsp;@&nbsp;
-                                <input type='text' id='teachAppDetail_emailAddr' value={teacherInfo.email_domain || ''}  disabled />
+                                <input type='text' id='teachAppDetail_emailAddr' value={teacherInfo.email_domain || ''} disabled />
                             </li>
-                            <li><input type='text' id='teachAppDetail_addr' value={teacherInfo.address || ''}  disabled /></li>
-                            <li><input type='text' id='teachAppDetail_addrD' value={teacherInfo.detail_address || ''}  disabled /></li>
-                            <li><input type='text' id='teachAppDetail_organizaion' value={teacherInfo.affiliatedOrganization || ''}  disabled /></li>
+                            <li><input type='text' id='teachAppDetail_addr' value={teacherInfo.address || ''} disabled /></li>
+                            <li><input type='text' id='teachAppDetail_addrD' value={teacherInfo.detail_address || ''} disabled /></li>
+                            <li><input type='text' id='teachAppDetail_organizaion' value={teacherInfo.affiliatedOrganization || ''} disabled /></li>
+                            <li><input type='text' id='teachAppDetail_sns' value={teacherInfo.snsAddress || ''} onChange={(e) => handleInputChange(e, 'sns_address')} disabled /></li>
                             <li>
-                                <div className='Detail_category'>
+                                <div className='teachApp_detail_category_area'>
                                     {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
-                                        <label key={index}>
+                                        <label key={index} className="teachApp_detail_category_label">
                                             <input
                                                 type="checkbox"
                                                 name='teachAppDetail_lec'
@@ -194,7 +203,6 @@ function ManageTeachAppDetail() {
                                     ))}
                                 </div>
                             </li>
-                            <li><input type='text' id='teachAppDetail_sns' value={teacherInfo.snsAddress || ''} onChange={(e) => handleInputChange(e, 'sns_address')} disabled /></li>
                             <li>
                                 <div className='mainCareer_area'>
                                     {careerInputs.map((input) => (

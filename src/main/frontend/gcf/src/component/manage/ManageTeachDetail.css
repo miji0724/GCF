@@ -10,15 +10,16 @@
 
 .teachDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
+    font-family: "Noto Sans KR", sans-serif;  
 }
 
 .teachDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .teachDetail_area{
@@ -98,14 +99,17 @@
     width:100px;
 }
 
-.Detail_category{
+.teach_detail_category_area{
     display:flex;
     flex-direction: row;
+    width:500px;
+    flex-wrap: wrap;
 }
 
-.teacher_category{
+.teach_detail_category_label{
     display:flex;
     align-items: center;
+    flex: 1 1 10%;
 }
 
 .mainCareer_buttonAlign button,
@@ -132,6 +136,8 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .teachDetail .mainCareer_buttonAlign,

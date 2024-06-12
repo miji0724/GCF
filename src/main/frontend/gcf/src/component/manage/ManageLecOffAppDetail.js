@@ -342,6 +342,9 @@ function ManageLecOffAppDetail() {
                         <button id='lecOffAppDetail_approval' onClick={sendApprovalRequest}>승인</button>
                         <button id='lecOffAppDetail_notApproval' onClick={sendNotApprovalRequest}>미승인</button>
                     </div>
+                    <div className='introduceTeach_imgArea'>
+                        <img src={offLecInfo.poster.file_path} />
+                    </div>
                     {offLecInfo.teacherInfos.map((teacherInfo, index) => (
                         <div key={index} className='introduceTeach_imgArea'>
                             <img src={teacherInfo.attachment.file_path} />
