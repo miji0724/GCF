@@ -9,8 +9,8 @@ import axios from 'axios'; // axios import
 
 function ClassForm() {
 
-    const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
-    const [bannerFiles, setBannerFiles] = useState([null]); // Add this line
+    const [bannerFile, setBannerFile] = useState(null);
+    const [id, setId] = useState(1);
     const [selectedItem, setSelectedItem] = useState("");
     const [onlineEducation, setOnlineEducation] = useState(false);
     const [offlineEducation, setOfflineEducation] = useState(false);
@@ -185,22 +185,19 @@ function ClassForm() {
         setTeachingSubjectFiles(newTeachingSubjectFiles);
     };
 
-    const handleBannerFileChange = (event, index) => {
-        const file = event.target.files[0];
-        const newBannerFiles = [...bannerFiles];
-        newBannerFiles[index] = file;
-        setBannerFiles(newBannerFiles);
+    const handleBannerFileChange = (event) => {
+        setBannerFile(event.target.files[0]);
     };
 
     const handleAddBannerField = () => {
-        const newBannerFiles = [...bannerFiles, null];
-        setBannerFiles(newBannerFiles);
+        const newBannerFiles = [...bannerFile, null];
+        setBannerFile(newBannerFiles);
     };
 
     const handleRemoveBannerField = (index) => {
-        const newBannerFiles = [...bannerFiles];
-        newBannerFiles.splice(index, 1);
-        setBannerFiles(newBannerFiles);
+        const newBannerFile = [...bannerFile];
+        newBannerFile.splice(index, 1);
+        setBannerFile(newBannerFile);
     };
 
     const handleVideoInfoChange = (event, index) => {
@@ -336,14 +333,14 @@ function ClassForm() {
 
             formData = {
                 'teacher': {},
-                'teacherId':teacherId,
+                'teacherId': teacherId,
                 'programName': CName,
                 'operatingStartDay': offlineLocationStartDate,
                 'views': 0,
                 'likesCount': 0,
                 'category': "온라인",
                 'programType': "온라인",
-                'poster': null,
+                'poster': bannerFile,
                 'approvalState': "승인대기",
                 'programInfos': [],
                 'teacherInfos': [],
@@ -354,13 +351,29 @@ function ClassForm() {
             let id = 0;
             try {
                 console.log(teacherId);
-                const response = await axios.post('/api/onProgram',  formData, {
+                const response = await axios.post('/api/onProgram', formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 console.log(response.data);
                 id = response.data.id;
+            } catch (error) {
+                console.error(error);
+            }
+
+            const posterData = new FormData();
+            posterData.append('poster', bannerFile);
+            console.log(bannerFile);
+
+            try {
+                console.log(teacherId);
+                const response = await axios.post('/api/onProgram/poster',  posterData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -372,6 +385,7 @@ function ClassForm() {
             });
             Array.from(certificationFiles).forEach((file, index) => {
                 programInfo.append('files', file);
+                console.log(file);
             });
 
             try {
@@ -405,23 +419,45 @@ function ClassForm() {
                 console.error(error);
             }
 
+            // const posterInfoData = new FormData();
+            // posterInfoData.append("id", id);
+            // posterInfoData.append("file", bannerFile);
+
+            // try {
+            //     const response = await axios.post('/api/onProgram/onposter', bannerFile, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     });
+            //     console.log(response.data + "***************");
+            // } catch (error) {
+            //     console.error('Error uploading file:', error);
+            // }
+
+
             const videoInfoData = new FormData();
             videoInfoData.append("id", id);
+
             videoInfoFields.forEach((data, index) => {
                 videoInfoData.append('videoinfodetails', data.videoInfoDetail);
-                videoInfoData.append('videoinfoindex', data.lectureNumber); // lectureNumber를 추가
-                videoInfoData.append('files', ' '); // 파일을 추가
+                videoInfoData.append('videoinfoindex', data.lectureNumber);
+
+                // 만약 파일이 없다면 빈 Blob 추가
+                videoInfoData.append('files', data.videoFile || new Blob());
+
                 // 각 하위 항목에 대해 FormData에 추가
                 data.subFields.forEach(subField => {
                     videoInfoData.append('videoinfodetails', subField.videoInfoDetail);
-                    videoInfoData.append('videoinfoindex', `${data.lectureNumber}-${subField.subLectureNumber}`); // lectureNumber-subLectureNumber를 추가
-                    videoInfoData.append('files', subField.videoFile); // 파일을 추가
+                    videoInfoData.append('videoinfoindex', `${data.lectureNumber}-${subField.subLectureNumber}`);
+
+                    // 만약 파일이 없다면 빈 Blob 추가
+                    videoInfoData.append('files', subField.videoFile || new Blob());
                 });
             });
 
-            for (var pair of videoInfoData.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
-            }
+            // for (var pair of videoInfoData.entries()) {
+            //     console.log(pair[0] + ', ' + pair[1]);
+            // }
 
             try {
                 const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
@@ -461,9 +497,9 @@ function ClassForm() {
             formData.append('poster', null);
             formData.append('teacherInfos', []);
 
-            bannerFiles.forEach((file, index) => {
+            bannerFile.forEach((file, index) => {
                 if (file) {
-                    formData.append(`bannerFiles[${index}]`, file);
+                    formData.append(`bannerFile[${index}]`, file);
                 }
             });
 
@@ -514,12 +550,12 @@ function ClassForm() {
                             {offlineEducation && (
                                 <>
                                     <div className="ClassName">
-                                        <label htmlFor="CName">프로그래명 이름:</label>
+                                        <label htmlFor="CName">프로그램명 이름:</label>
                                         <input
                                             type="text"
                                             id="CName"
                                             name="CName"
-                                            placeholder="프로그래명 이름 입력"
+                                            placeholder="프로그램명 이름 입력"
                                             value={CName}
                                             onChange={handleCNameChange}
                                         />
@@ -572,17 +608,10 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFields.map((field, index) => (
-                                            <div key={index} className="BannerSubjectField">
-                                                <input
-                                                    type="file"
-                                                    onChange={(event) => handleBannerFileChange(event, index)}
-                                                />
-                                                {index !== 0 && (
-                                                    <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
-                                                )}
-                                            </div>
-                                        ))}
+                                        <input
+                                            type="file"
+                                            onChange={handleBannerFileChange}
+                                        />
                                     </div>
 
                                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -722,12 +751,12 @@ function ClassForm() {
                             {onlineEducation && (
                                 <>
                                     <div className="ClassName">
-                                        <label htmlFor="CName">프로그래명 이름:</label>
+                                        <label htmlFor="CName">프로그램명 이름:</label>
                                         <input
                                             type="text"
                                             id="CName"
                                             name="CName"
-                                            placeholder="프로그래명 이름 입력"
+                                            placeholder="프로그램명 이름 입력"
                                             value={CName}
                                             onChange={handleCNameChange}
                                         />
@@ -780,17 +809,10 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFiles.map((file, index) => (
-                                            <div key={index} className="BannerSubjectField">
-                                                <input
-                                                    type="file"
-                                                    onChange={(event) => handleBannerFileChange(event, index)}
-                                                />
-                                                {index !== 0 && (
-                                                    <button type='button' onClick={() => handleRemoveBannerField(index)}>-</button>
-                                                )}
-                                            </div>
-                                        ))}
+                                        <input
+                                            type="file"
+                                            onChange={handleBannerFileChange}
+                                        />
                                     </div>
 
                                     <div className="OnlineLec">

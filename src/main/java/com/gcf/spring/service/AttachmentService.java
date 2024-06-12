@@ -90,7 +90,7 @@ public class AttachmentService {
         try {
             String originalFileName = file.getOriginalFilename();
             String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
-
+            
             // UUID를 사용하여 고유한 파일 이름 생성
             String uniqueID = UUID.randomUUID().toString();
 
@@ -128,9 +128,14 @@ public class AttachmentService {
             attachment.setFile_path(fileUrl);
             attachment.setParent("onProgram");
 
+            System.out.println("originalFileName : " + originalFileName);
+            System.out.println("fileInFolder : " + fileInFolder);
+            System.out.println("fileUrl : " + fileUrl);
             // 데이터베이스에 첨부 파일 정보 저장
             attachmentRepository.save(attachment);
 
+            System.out.println("attachment : " + attachment);
+            
             return attachment;
         } catch (IOException e) {
             e.printStackTrace();
