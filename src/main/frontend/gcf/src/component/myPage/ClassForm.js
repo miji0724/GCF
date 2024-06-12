@@ -5,7 +5,6 @@ import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import 'react-time-picker/dist/TimePicker.css';
-import ManageLecOnDetail from "./ManageLecOnDetail";
 import axios from 'axios'; // axios import
 
 function ClassForm() {
@@ -38,7 +37,15 @@ function ClassForm() {
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
 
-    const [videoInfoFields, setVideoInfoFields] = useState([{ videoInfoDetail: '', file: null }]);
+    const [videoInfoFields, setVideoInfoFields] = useState([
+        {
+            lectureNumber: '1',
+            videoInfoDetail: '',
+            subFields: [
+                { subLectureNumber: '1', videoInfoDetail: '', videoFile: null }
+            ]
+        }
+    ]);
 
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
@@ -196,28 +203,63 @@ function ClassForm() {
         setBannerFiles(newBannerFiles);
     };
 
-    const handleAddVideoInfoField = () => {
-        const newVideoInfoFields = [...videoInfoFields, { videoInfoDetail: '', file: null }];
+    const handleVideoInfoChange = (event, index) => {
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].videoInfoDetail = event.target.value;
         setVideoInfoFields(newVideoInfoFields);
     };
 
-    const handleRemoveVideoInfoField = (index) => {
+    const handleSubVideoInfoChange = (event, index, subIndex) => {
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].subFields[subIndex].videoInfoDetail = event.target.value;
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
+    const handleVideoFileChange = (event, index, subIndex) => {
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].subFields[subIndex].videoFile = event.target.files[0];
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
+    const handleAddVideoField = () => {
+        setVideoInfoFields([
+            ...videoInfoFields,
+            {
+                lectureNumber: String(videoInfoFields.length + 1),
+                videoInfoDetail: '',
+                subFields: [
+                    { subLectureNumber: '1', videoInfoDetail: '', videoFile: null }
+                ]
+            }
+        ]);
+    };
+
+    const handleRemoveVideoField = (index) => {
         const newVideoInfoFields = [...videoInfoFields];
         newVideoInfoFields.splice(index, 1);
+        // 삭제된 강 뒤에 있는 강들의 순서를 조정
+        for (let i = index; i < newVideoInfoFields.length; i++) {
+            newVideoInfoFields[i].lectureNumber = String(i + 1);
+        }
+        setVideoInfoFields(newVideoInfoFields);
+    };
+    const handleAddSubVideoField = (index) => {
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].subFields.push({
+            subLectureNumber: String(newVideoInfoFields[index].subFields.length + 1),
+            videoInfoDetail: '',
+            videoFile: null
+        });
         setVideoInfoFields(newVideoInfoFields);
     };
 
-    const handleVideoInfoChange = (event, index) => {
-        const { value } = event.target;
+    const handleRemoveSubVideoField = (index, subIndex) => {
         const newVideoInfoFields = [...videoInfoFields];
-        newVideoInfoFields[index].videoInfoDetail = value;
-        setVideoInfoFields(newVideoInfoFields);
-    };
-
-    const handleVideoFileChange = (event, index) => {
-        const files = event.target.files;
-        const newVideoInfoFields = [...videoInfoFields];
-        newVideoInfoFields[index].file = files[0];
+        newVideoInfoFields[index].subFields.splice(subIndex, 1);
+        // 삭제된 하위 강 뒤에 있는 하위 강들의 순서를 조정
+        for (let i = subIndex; i < newVideoInfoFields[index].subFields.length; i++) {
+            newVideoInfoFields[index].subFields[i].subLectureNumber = String(i + 1);
+        }
         setVideoInfoFields(newVideoInfoFields);
     };
 
@@ -293,7 +335,8 @@ function ClassForm() {
             teacherInfo.append('description', teachingSubjectFields[0]);
 
             formData = {
-                'teacherId': teacherId,
+                'teacher': {},
+                'teacherId':teacherId,
                 'programName': CName,
                 'operatingStartDay': offlineLocationStartDate,
                 'views': 0,
@@ -310,7 +353,12 @@ function ClassForm() {
 
             let id = 0;
             try {
-                const response = await axios.post('/api/onProgram', formData);
+                console.log(teacherId);
+                const response = await axios.post('/api/onProgram',  formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
                 console.log(response.data);
                 id = response.data.id;
             } catch (error) {
@@ -320,14 +368,14 @@ function ClassForm() {
             const programInfo = new FormData();
             programInfo.append("id", id);
             Array.from(certificationFields).forEach((data, index) => {
-                programInfo.append('descriptions', data);
+                programInfo.append('descriptions', data.certification);
             });
             Array.from(certificationFiles).forEach((file, index) => {
                 programInfo.append('files', file);
             });
 
             try {
-                const response = await axios.post('/api/onProgram/info', programInfo, {
+                const response = await axios.post('/api/onProgram/onprograminfo', programInfo, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -359,12 +407,21 @@ function ClassForm() {
 
             const videoInfoData = new FormData();
             videoInfoData.append("id", id);
-            Array.from(videoInfoFields).forEach((data, index) => {
+            videoInfoFields.forEach((data, index) => {
                 videoInfoData.append('videoinfodetails', data.videoInfoDetail);
+                videoInfoData.append('videoinfoindex', data.lectureNumber); // lectureNumber를 추가
+                videoInfoData.append('files', ' '); // 파일을 추가
+                // 각 하위 항목에 대해 FormData에 추가
+                data.subFields.forEach(subField => {
+                    videoInfoData.append('videoinfodetails', subField.videoInfoDetail);
+                    videoInfoData.append('videoinfoindex', `${data.lectureNumber}-${subField.subLectureNumber}`); // lectureNumber-subLectureNumber를 추가
+                    videoInfoData.append('files', subField.videoFile); // 파일을 추가
+                });
             });
-            Array.from(videoInfoFields).forEach((file, index) => {
-                videoInfoData.append('files', file.file);
-            });
+
+            for (var pair of videoInfoData.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
 
             try {
                 const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
@@ -738,30 +795,38 @@ function ClassForm() {
 
                                     <div className="OnlineLec">
                                         <h4>온라인 강의</h4>
-                                        <div><ManageLecOnDetail /></div>
-                                    </div>
-
-                                    <div className='VideoInfoGroup'>
-                                        <label htmlFor='videoInfo'>비디오 정보:</label>
-                                        {videoInfoFields.map((field, index) => (
-                                            <div key={index} className="videoInfoField">
-                                                <input
-                                                    type='text'
-                                                    placeholder="비디오 정보"
-                                                    value={field.videoInfoDetail}
-                                                    onChange={(event) => handleVideoInfoChange(event, index)}
-                                                />
-                                                <input
-                                                    type="file"
-                                                    onChange={(event) => handleVideoFileChange(event, index)}
-                                                />
-                                                {index === 0 ? (
-                                                    <button type='button' onClick={handleAddVideoInfoField}>+</button>
-                                                ) : (
-                                                    <button type='button' onClick={() => handleRemoveVideoInfoField(index)}>-</button>
-                                                )}
-                                            </div>
-                                        ))}
+                                        <div>
+                                            {videoInfoFields.map((field, index) => (
+                                                <div key={index} className="videoInfoField">
+                                                    <p>{field.lectureNumber}강</p>
+                                                    <input
+                                                        type='text'
+                                                        placeholder="강의 제목"
+                                                        value={field.videoInfoDetail}
+                                                        onChange={(event) => handleVideoInfoChange(event, index)}
+                                                    />
+                                                    <button type='button' onClick={() => handleRemoveVideoField(index)}>-</button>
+                                                    {field.subFields.map((subField, subIndex) => (
+                                                        <div key={subIndex} style={{ marginLeft: "10px" }} className="subVideoInfoField">
+                                                            <p>{field.lectureNumber}-{subField.subLectureNumber}</p>
+                                                            <input
+                                                                type='text'
+                                                                placeholder="하위 강의 제목"
+                                                                value={subField.videoInfoDetail}
+                                                                onChange={(event) => handleSubVideoInfoChange(event, index, subIndex)}
+                                                            />
+                                                            <input
+                                                                type="file"
+                                                                onChange={(event) => handleVideoFileChange(event, index, subIndex)}
+                                                            />
+                                                            <button type='button' onClick={() => handleRemoveSubVideoField(index, subIndex)}>-</button>
+                                                        </div>
+                                                    ))}
+                                                    <button type='button' onClick={() => handleAddSubVideoField(index)}>+</button>
+                                                </div>
+                                            ))}
+                                            <button type='button' onClick={handleAddVideoField}>+ 비디오 추가</button>
+                                        </div>
                                     </div>
                                 </>
                             )}

@@ -39,12 +39,12 @@ public class OnProgramController {
 
     @PostMapping
     public ResponseEntity<OnProgram> createOnProgram(@RequestBody OnProgramDto onProgramDto) {
-        Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
+    	Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
         OnProgram createdOnProgram = onProgramService.createOnProgram(onProgramDto, teacher);
         return ResponseEntity.ok(createdOnProgram);
     }
     
-    @PostMapping("/info")
+    @PostMapping("/onprograminfo")
     public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
                                                   @RequestParam("descriptions") List<String> descriptions,
                                                   @RequestParam("id") Integer id) {
@@ -91,24 +91,38 @@ public class OnProgramController {
     
     @PostMapping("/onvideo")
     public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
-    										   @RequestParam("videoinfodetails") List<String> videoinfodetails,
-    										   @RequestParam("id") Integer id) {
-    	int i = 0;
-    	List<OnVideo> onVideos = new ArrayList<>();
-    	OnProgram onProgram = onProgramService.getOnProgramById(id);
-    	for (String videoinfodetail : videoinfodetails) {
-    		Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
-    		OnVideo onVideo = new OnVideo();
-    		onVideo.setAttachment(attachment);
-    		onVideo.setVideoInfoDetail(videoinfodetail);
-    		onVideo.setOnProgram(onProgram);
-    		onVideos.add(onVideo);
-            i++;
+                                               @RequestParam("videoinfodetails") List<String> videoinfodetails,
+                                               @RequestParam("videoinfoindex") List<String> videoinfoindexes,
+                                               @RequestParam("id") Integer id) {
+    	for (MultipartFile file : files) {
+    	    System.out.println(file);
     	}
-    	onProgramService.insertOnVideo(onVideos);
     	
-    	return ResponseEntity.ok(null);	
+        List<OnVideo> onVideos = new ArrayList<>();
+        OnProgram onProgram = onProgramService.getOnProgramById(id);
+
+        for (int i = 0; i < videoinfoindexes.size(); i++) {
+            Attachment attachment = null; // 파일 업로드 전에 변수를 null로 초기화
+
+            // 파일이 첨부되었는지 확인
+            if (files != null && !files.isEmpty() && i < files.size()) {
+                attachment = attachmentService.uploadOnProgramFile(files.get(i));
+            }
+            OnVideo onVideo = new OnVideo();
+            
+            String videoinfodetail = videoinfodetails.get(i);
+            onVideo.setAttachment(attachment);
+            onVideo.setVideoInfoIndex(videoinfoindexes.get(i)); // 인덱스에 맞게 videoinfoindex 가져오기
+            onVideo.setVideoInfoDetail(videoinfodetail);
+            onVideo.setOnProgram(onProgram);
+            onVideos.add(onVideo);
+        }
+
+        onProgramService.insertOnVideo(onVideos);
+
+        return ResponseEntity.ok(null);
     }
+
     
     @GetMapping
     public ResponseEntity<List<OnProgram>> getAllOnPrograms() {
