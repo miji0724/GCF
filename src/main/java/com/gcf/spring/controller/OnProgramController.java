@@ -91,23 +91,28 @@ public class OnProgramController {
     
     @PostMapping("/onvideo")
     public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
-    										   @RequestParam("videoinfodetails") List<String> videoinfodetails,
-    										   @RequestParam("id") Integer id) {
-    	int i = 0;
-    	List<OnVideo> onVideos = new ArrayList<>();
-    	OnProgram onProgram = onProgramService.getOnProgramById(id);
-    	for (String videoinfodetail : videoinfodetails) {
-    		Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
-    		OnVideo onVideo = new OnVideo();
-    		onVideo.setAttachment(attachment);
-    		onVideo.setVideoInfoDetail(videoinfodetail);
-    		onVideo.setOnProgram(onProgram);
-    		onVideos.add(onVideo);
-            i++;
-    	}
-    	onProgramService.insertOnVideo(onVideos);
-    	
-    	return ResponseEntity.ok(null);	
+                                               @RequestParam("videoinfodetails") List<String> videoinfodetails,
+                                               @RequestParam("videoInfoIndex") List<String> videoInfoIndex,
+                                               @RequestParam("id") Integer id) {
+        List<OnVideo> onVideos = new ArrayList<>();
+        OnProgram onProgram = onProgramService.getOnProgramById(id);
+
+        for (int i = 0; i < videoinfodetails.size(); i++) {
+            String videoinfodetail = videoinfodetails.get(i);
+            String index = videoInfoIndex.get(i); // 인덱스 값 받기
+
+            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
+            OnVideo onVideo = new OnVideo();
+            onVideo.setAttachment(attachment);
+            onVideo.setVideoInfoDetail(videoinfodetail);
+            onVideo.setVideoInfoIndex(index.toString()); // 인덱스를 String으로 변환하여 설정
+            onVideo.setOnProgram(onProgram);
+            onVideos.add(onVideo);
+        }
+
+        onProgramService.insertOnVideo(onVideos);
+
+        return ResponseEntity.ok(null);	
     }
     
     @GetMapping

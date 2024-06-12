@@ -28,7 +28,6 @@ import lombok.Setter;
 public class OnProgram {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
 	private Integer id; // 프로그램 번호
 
 	@ManyToOne
@@ -67,8 +66,8 @@ public class OnProgram {
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<TeacherInfo> teacherInfos; 
 
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
-	private List<Comment> comments; // 댓글 리스트
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<OnVideo> videos; // 비디오 리스트

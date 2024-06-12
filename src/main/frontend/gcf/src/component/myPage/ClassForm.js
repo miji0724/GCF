@@ -1,15 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import './ClassForm.css';
 import 'react-calendar/dist/Calendar.css';
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import 'react-time-picker/dist/TimePicker.css';
-import ManageLecOnDetail from "./ManageLecOnDetail";
 import axios from 'axios'; // axios import
 
-function ClassForm() {
+function VideoItem({ id, name, onAddSubItem, onDeleteSubItem, onAttachFile, onVideoInfoChange, isParent }) {
+    const [text, setText] = useState('');
 
+    const handleTextChange = (e) => {
+        setText(e.target.value);
+        onVideoInfoChange(id, e.target.value);
+    };
+
+    return (
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "100%", height: "40px", marginTop: "10px" }}>
+            {isParent && (
+                <>
+                    <p style={{ margin: "0 10px 0 0" }}>{name}</p>
+                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "370px" }} />
+                    <button type="button" onClick={onAddSubItem} style={{ marginRight: "10px", width: "30px", height: "30px", backgroundColor: "#EDEDED" }}>+</button>
+                    <button type="button" onClick={() => onDeleteSubItem(id)} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
+                </>
+            )}
+            {!isParent && (
+                <>
+                    <p style={{ margin: "0 5px 0 5px", width: "50px" }}>{name}</p>
+                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "230px" }} />
+                    <input type="file" onChange={(e) => onAttachFile(e, id)} style={{ display: 'none' }} id={`file-input-${id}`} />
+                    <label htmlFor={`file-input-${id}`} style={{ marginRight: "10px", width: "70px", height: "30px", backgroundColor: "#EDEDED", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>파일 선택</label>
+                    <button type="button" onClick={() => onDeleteSubItem(id)} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
+                </>
+            )}
+        </div>
+    );
+}
+
+function ClassForm() {
     const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
     const [bannerFiles, setBannerFiles] = useState([null]); // Add this line
     const [selectedItem, setSelectedItem] = useState("");
@@ -38,7 +66,11 @@ function ClassForm() {
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
 
-    const [videoInfoFields, setVideoInfoFields] = useState([{ videoInfoDetail: '', file: null }]);
+    const [videoInfos, setVideoInfos] = useState({});
+    const [videoFiles, setVideoFiles] = useState({});
+    const [videoItems, setVideoItems] = useState([]);
+    const [parentCounter, setParentCounter] = useState(1);
+    const [subCounters, setSubCounters] = useState({});
 
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
@@ -96,6 +128,10 @@ function ClassForm() {
             fetchOnPrograms();
         }
     }, [offlineEducation, onlineEducation]);
+
+    useEffect(() => {
+        handleAddVideoItem();
+    }, []);
 
     const fillOfflineProgramFields = (program) => {
         setCName(program.programName);
@@ -196,29 +232,83 @@ function ClassForm() {
         setBannerFiles(newBannerFiles);
     };
 
-    const handleAddVideoInfoField = () => {
-        const newVideoInfoFields = [...videoInfoFields, { videoInfoDetail: '', file: null }];
-        setVideoInfoFields(newVideoInfoFields);
+    const handleAddVideoItem = () => {
+        const newItemId = videoItems.length + 1;
+        const newItem = {
+            id: newItemId,
+            name: `${newItemId}강`,
+            subItems: [],
+        };
+        setVideoItems([...videoItems, newItem]);
+        setParentCounter(newItemId + 1);
     };
 
-    const handleRemoveVideoInfoField = (index) => {
-        const newVideoInfoFields = [...videoInfoFields];
-        newVideoInfoFields.splice(index, 1);
-        setVideoInfoFields(newVideoInfoFields);
+    const handleAddSubItem = (parentId) => {
+        const newSubItemId = (subCounters[parentId] || 0) + 1;
+        const newSubItem = {
+            id: `${parentId}-${newSubItemId}`,
+            name: `${parentId}-${newSubItemId}`,
+        };
+        const updatedItems = videoItems.map(item => {
+            if (item.id === parentId) {
+                return {
+                    ...item,
+                    subItems: [...item.subItems, newSubItem],
+                };
+            }
+            return item;
+        });
+        setVideoItems(updatedItems);
+        setSubCounters({
+            ...subCounters,
+            [parentId]: newSubItemId,
+        });
     };
 
-    const handleVideoInfoChange = (event, index) => {
-        const { value } = event.target;
-        const newVideoInfoFields = [...videoInfoFields];
-        newVideoInfoFields[index].videoInfoDetail = value;
-        setVideoInfoFields(newVideoInfoFields);
+    const handleDeleteSubItem = (id) => {
+        const updatedItems = videoItems.map(item => {
+            if (item.id === id) {
+                const newSubItems = item.subItems.slice(0, -1);
+                return {
+                    ...item,
+                    subItems: newSubItems,
+                };
+            }
+            return item;
+        });
+        setVideoItems(updatedItems);
+        const maxId = Math.max(...updatedItems.find(item => item.id === id).subItems.map(subItem => parseInt(subItem.id.split('-')[1])));
+        setSubCounters({
+            ...subCounters,
+            [id]: maxId - 1,
+        });
+        if (subCounters[id] < 1) {
+            setSubCounters({
+                ...subCounters,
+                [id]: 0,
+            });
+        }
     };
 
-    const handleVideoFileChange = (event, index) => {
-        const files = event.target.files;
-        const newVideoInfoFields = [...videoInfoFields];
-        newVideoInfoFields[index].file = files[0];
-        setVideoInfoFields(newVideoInfoFields);
+    const handleDeleteParentItem = (parentId) => {
+        const updatedItems = videoItems.filter(item => item.id !== parentId);
+        setVideoItems(updatedItems);
+        setParentCounter(updatedItems.length + 1);
+    };
+
+    const handleAttachFile = (event, id) => {
+        const file = event.target.files[0];
+        setVideoFiles(prevFiles => ({
+            ...prevFiles,
+            [id]: file
+        }));
+    };
+
+    const handleVideoInfoChangeItem = (id, value) => {
+        setVideoInfos(prevInfos => ({
+            ...prevInfos,
+            [id]: value
+        }));
     };
 
     const handleDropdownChange = (event) => {
@@ -359,11 +449,11 @@ function ClassForm() {
 
             const videoInfoData = new FormData();
             videoInfoData.append("id", id);
-            Array.from(videoInfoFields).forEach((data, index) => {
-                videoInfoData.append('videoinfodetails', data.videoInfoDetail);
+            Object.entries(videoInfos).forEach(([key, value]) => {
+                videoInfoData.append('videoinfodetails', value);
             });
-            Array.from(videoInfoFields).forEach((file, index) => {
-                videoInfoData.append('files', file.file);
+            Object.entries(videoFiles).forEach(([key, file]) => {
+                videoInfoData.append('files', file);
             });
 
             try {
@@ -738,31 +828,38 @@ function ClassForm() {
 
                                     <div className="OnlineLec">
                                         <h4>온라인 강의</h4>
-                                        <div><ManageLecOnDetail /></div>
+                                        <div>
+                                            {videoItems.map(item => (
+                                                <div key={item.id} className="education-item-wrapper">
+                                                    <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>-</button>
+                                                    <button type="button" onClick={handleAddVideoItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+</button>
+
+                                                    <VideoItem
+                                                        id={item.id}
+                                                        name={item.name}
+                                                        onAddSubItem={() => handleAddSubItem(item.id)}
+                                                        onDeleteSubItem={handleDeleteParentItem}
+                                                        onAttachFile={handleAttachFile}
+                                                        onVideoInfoChange={handleVideoInfoChangeItem}
+                                                        isParent={true}
+                                                    />
+                                                    {item.subItems.map(subItem => (
+                                                        <VideoItem
+                                                            key={subItem.id}
+                                                            id={subItem.id}
+                                                            name={subItem.name}
+                                                            onDeleteSubItem={handleDeleteSubItem}
+                                                            onAddSubItem={() => handleAddSubItem(item.id)}
+                                                            onAttachFile={handleAttachFile}
+                                                            onVideoInfoChange={handleVideoInfoChangeItem}
+                                                            isParent={false}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
-                                    <div className='VideoInfoGroup'>
-                                        <label htmlFor='videoInfo'>비디오 정보:</label>
-                                        {videoInfoFields.map((field, index) => (
-                                            <div key={index} className="videoInfoField">
-                                                <input
-                                                    type='text'
-                                                    placeholder="비디오 정보"
-                                                    value={field.videoInfoDetail}
-                                                    onChange={(event) => handleVideoInfoChange(event, index)}
-                                                />
-                                                <input
-                                                    type="file"
-                                                    onChange={(event) => handleVideoFileChange(event, index)}
-                                                />
-                                                {index === 0 ? (
-                                                    <button type='button' onClick={handleAddVideoInfoField}>+</button>
-                                                ) : (
-                                                    <button type='button' onClick={() => handleRemoveVideoInfoField(index)}>-</button>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
                                 </>
                             )}
 
