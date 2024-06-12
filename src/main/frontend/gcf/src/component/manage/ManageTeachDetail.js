@@ -215,7 +215,6 @@ function ManageTeachDetail() {
             <SideMenu />
             <div className='teachDetail'>
                 <p>강사회원 상세정보</p>
-                <a class='back_button' href='javascript:history.back()'>목록으로 돌아가기 &gt;</a>
                 <div className='teachDetail_area'>
                     <div className='teachDetail_left'>
                         <ul>
@@ -227,9 +226,8 @@ function ManageTeachDetail() {
                             <li>* 주소</li>
                             <li>상세주소</li>
                             <li>소속기관</li>
-                            <li>SNS주소</li>
                             <li>* 강의분야</li>
-                            <li>&nbsp;</li>
+                            <li>SNS주소</li>
                             <li>* 주요이력</li>
                             <li>&nbsp;</li>
                             <li className='marginTop10'>&nbsp;</li>
@@ -299,7 +297,6 @@ function ManageTeachDetail() {
                                 <input
                                     type='text'
                                     name='address'
-                                    id='teachDetail_addr'
                                     value={teacherInfo.address}
                                     onChange={(e) => handleInputChange(e, 'address')}
                                     disabled={!isEditing}
@@ -309,7 +306,6 @@ function ManageTeachDetail() {
                                 <input
                                     type='text'
                                     name='detail_address'
-                                    id='teachDetail_addrD'
                                     value={teacherInfo.detail_address}
                                     onChange={(e) => handleInputChange(e, 'detail_address')}
                                     disabled={!isEditing}
@@ -334,9 +330,9 @@ function ManageTeachDetail() {
                                 />
                             </li>
                             <li>
-                                <div className='teach_detail_category_area'>
+                                <div className='Detail_category'>
                                     {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
-                                        <label key={index} className="teach_detail_category_label">
+                                        <label key={index} className="teacher_category">
                                             <input
                                                 type="checkbox"
                                                 name='teacherCategory'

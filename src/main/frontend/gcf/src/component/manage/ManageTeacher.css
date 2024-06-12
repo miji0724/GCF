@@ -6,7 +6,7 @@
 
 .teacher
 {
-    flex: 0.85;
+    flex:0.8;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;  
@@ -15,7 +15,7 @@
 .teacher > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:500;
+    font-weight:800;
 }
 
 .teacher_search{
@@ -33,7 +33,6 @@
     border: none;
     border-radius: 5px;
     background-color: #AECCF2;
-    cursor: pointer;
 }
 
 .teacher_search_button{

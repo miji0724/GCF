@@ -247,7 +247,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 />
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='radio'
                                     id='email_agreement'
@@ -265,7 +265,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 /> 비동의
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='radio'
                                     id='message_agreement'
@@ -283,7 +283,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 /> 비동의
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='radio'
                                     id='mail_agreement'
@@ -301,7 +301,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 /> 비동의
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='checkbox'
                                     id='음악'
@@ -338,7 +338,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 /> 디자인
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='radio'
                                     id='married'
@@ -356,7 +356,7 @@ function ManageMemDetail() {
                                     disabled={!isEditing}
                                 /> 비동의
                             </li>
-                            <li className='manage_choiceArea'>
+                            <li>
                                 <input
                                     type='radio'
                                     id='hasChildren'

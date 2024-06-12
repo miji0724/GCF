@@ -128,7 +128,7 @@ public class OnProgramRepositoryTest {
             Attachment onebyonevid = new Attachment();
             onebyonevid.setOriginal_name("1-1 동영상 원본 이름");
             onebyonevid.setFile_name("1-1 동영상 생성 이름");
-            onebyonevid.setFile_path("https://storage.googleapis.com/gcf_attachment_storage_bucket/Online_mp4.mp4");
+            onebyonevid.setFile_path("1-1 동영상 파일경로");
             onebyonevid.setParent("online_video");
 
             onebyone.setAttachment(onebyonevid);

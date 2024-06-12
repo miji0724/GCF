@@ -343,23 +343,14 @@ function ManageLecOffAppDetail() {
                         <button id='lecOffAppDetail_notApproval' onClick={sendNotApprovalRequest}>미승인</button>
                     </div>
                     {offLecInfo.teacherInfos.map((teacherInfo, index) => (
-                        <div key={index} className='introduceTeach_attArea'>
+                        <div key={index} className='introduceTeach_imgArea'>
                             <img src={teacherInfo.attachment.file_path} />
                         </div>
                     ))}
                     {offLecInfo.programInfos.map((programInfo, index) => (
-                        <div key={index} className='introduceTeach_attArea'>
+                        <div key={index} className='introduceTeach_imgArea'>
                             <img src={programInfo.attachment.file_path} />
                         </div>
-                    ))}
-                    {offLecInfo.videos.map((video, index) => (
-                        video.attachment ? (
-                            <div key={index} className='introduceTeach_attArea'>
-                                <video controls width="500">
-                                    <source src={video.attachment.file_path} type="video/mp4" />
-                                </video>
-                            </div>
-                        ) : null
                     ))}
                 </div>
             </div>

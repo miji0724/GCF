@@ -30,8 +30,7 @@ function ManageNotice() {
     useEffect(() => {
         axios.get('http://localhost:8090/manage/notices')
             .then(response => {
-                const sortedNotices = response.data
-                    .sort((a, b) => b.id - a.id); // ID 값으로 내림차순 정렬
+                const sortedNotices = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setNotices(sortedNotices);
             })
             .catch(error => {
@@ -52,6 +51,7 @@ function ManageNotice() {
         }
     };
 
+    // 기존 코드에 parseAttachmentsData 함수 추가
     const handleEdit = (id) => {
         axios.get(`http://localhost:8090/manage/notices/${id}`)
             .then(response => {

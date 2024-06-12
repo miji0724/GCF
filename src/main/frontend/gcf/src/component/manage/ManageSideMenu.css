@@ -2,7 +2,7 @@
 {
     font-family: "Noto Sans KR", sans-serif;
     display: flex;
-    flex:0.15;
+    flex:0.2;
     justify-content: center;
     min-width: 230px;
     min-height: 100vh;
@@ -30,18 +30,3 @@
     padding:0px;
     cursor: pointer;
 }
-
-.sidemenu_button {
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 10px;
-    transition:
-    background-color 0.5s ease,
-    font-weight 0.5s ease; /* 배경색과 글씨 굵기가 서서히 변하도록 설정 */
-  }
-  
-  .sidemenu_button:hover {
-    background-color: #AECCF2;
-    font-weight: bold; /* 마우스를 올렸을 때 글씨 굵기 */
-  }
-  
