@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.gcf.spring.constant.Day_of_week;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Teacher;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OffProgramDto {
+	private String teacherId;
 	private Teacher teacher; // 강사 ID
 	private String programName; // 프로그램명
 	private String programDetailName; // 프로그램 상세명
@@ -42,7 +45,7 @@ public class OffProgramDto {
 	private String offlineCategory; // 프로그램 카테고리(교육, 체험)
 	private String placeName; // 프로그램 장소명
 	private String programType; // 프로그램 온/오프라인 구분
-	
+	private List<MultipartFile> certificationFiles;
 	
 	private Attachment poster; // 프로그램 포스터 정보
 	private List<TeacherInfo> teacherInfos; // 강사 소개

@@ -205,7 +205,7 @@ const MyPageSignUpForm = () => {
                                     <li>
                                         <input 
                                             htmlFor='birthDate'
-                                            type='date' 
+                                            type='localdate' 
                                             id='birthDate' 
                                             name='birthDate' 
                                             value={birthDate} 

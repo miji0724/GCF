@@ -9,8 +9,9 @@ import ManageLecOnDetail from "./ManageLecOnDetail";
 import axios from 'axios'; // axios import
 
 function ClassForm() {
-    
-    const [bannerFiles, setBannerFiles] = useState([]);
+
+    const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
+    const [bannerFiles, setBannerFiles] = useState([null]); // Add this line
     const [selectedItem, setSelectedItem] = useState("");
     const [onlineEducation, setOnlineEducation] = useState(false);
     const [offlineEducation, setOfflineEducation] = useState(false);
@@ -33,10 +34,11 @@ function ClassForm() {
 
     const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
     const [certificationFiles, setCertificationFiles] = useState([]);
-    
+
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
-    
+
+    const [videoInfoFields, setVideoInfoFields] = useState([{ videoInfoDetail: '', file: null }]);
 
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
@@ -194,6 +196,31 @@ function ClassForm() {
         setBannerFiles(newBannerFiles);
     };
 
+    const handleAddVideoInfoField = () => {
+        const newVideoInfoFields = [...videoInfoFields, { videoInfoDetail: '', file: null }];
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
+    const handleRemoveVideoInfoField = (index) => {
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields.splice(index, 1);
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
+    const handleVideoInfoChange = (event, index) => {
+        const { value } = event.target;
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].videoInfoDetail = value;
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
+    const handleVideoFileChange = (event, index) => {
+        const files = event.target.files;
+        const newVideoInfoFields = [...videoInfoFields];
+        newVideoInfoFields[index].file = files[0];
+        setVideoInfoFields(newVideoInfoFields);
+    };
+
     const handleDropdownChange = (event) => {
         setSelectedItem(event.target.value);
     };
@@ -258,7 +285,6 @@ function ClassForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // const formData = new FormData();
         let formData = {};
 
         if (onlineEducation) {
@@ -281,40 +307,7 @@ function ClassForm() {
                 'comments': [],
                 'videos': [],
             }
-            // formData.append('teacherId', teacherId);
-            // formData.append('programName', CName);
-            // formData.append('operatingStartDay', offlineLocationStartDate);
-            // formData.append('views', 0);
-            // formData.append('likesCount', 0);
-            // formData.append('category', "온라인");
-            // formData.append('programType', "온라인");
-            // formData.append('poster', null);
-            // formData.append('approvalState', "승인대기");
-            // formData.append('programInfos', []);
-            // formData.append('teacherInfos', []);
-            // formData.append('comments', []);
-            // formData.append('videos', []);
 
-            // // Add certification files
-            // certificationFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`certificationFiles[${index}]`, file);
-            //     }
-            // });
-
-            // // Add teaching subject files
-            // teachingSubjectFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`teachingSubjectFiles[${index}]`, file);
-            //     }
-            // });
-
-            // Add banner files
-            // bannerFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`bannerFiles[${index}]`, file);
-            //     }
-            // });
             let id = 0;
             try {
                 const response = await axios.post('/api/onProgram', formData);
@@ -322,17 +315,16 @@ function ClassForm() {
                 id = response.data.id;
             } catch (error) {
                 console.error(error);
-                
             }
 
             const programInfo = new FormData();
             programInfo.append("id", id);
             Array.from(certificationFields).forEach((data, index) => {
                 programInfo.append('descriptions', data);
-              });
+            });
             Array.from(certificationFiles).forEach((file, index) => {
                 programInfo.append('files', file);
-              });
+            });
 
             try {
                 const response = await axios.post('/api/onProgram/info', programInfo, {
@@ -341,13 +333,51 @@ function ClassForm() {
                     },
                 });
                 console.log(response.data + " @@@@@@@@@@@@@@");
-                
+            } catch (error) {
+                console.error(error);
+            }
+
+            const teacherInfoData = new FormData();
+            teacherInfoData.append("id", id);
+            Array.from(teachingSubjectFields).forEach((data, index) => {
+                teacherInfoData.append('descriptions', data.subject);
+            });
+            Array.from(teachingSubjectFiles).forEach((file, index) => {
+                teacherInfoData.append('files', file);
+            });
+
+            try {
+                const response = await axios.post('/api/onProgram/onteacherinfo', teacherInfoData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log(response.data + " #######");
+            } catch (error) {
+                console.error(error);
+            }
+
+            const videoInfoData = new FormData();
+            videoInfoData.append("id", id);
+            Array.from(videoInfoFields).forEach((data, index) => {
+                videoInfoData.append('videoinfodetails', data.videoInfoDetail);
+            });
+            Array.from(videoInfoFields).forEach((file, index) => {
+                videoInfoData.append('files', file.file);
+            });
+
+            try {
+                const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log(response.data + " $$$$$$$$");
                 alert("온라인 프로그램이 성공적으로 등록되었습니다.");
             } catch (error) {
                 console.error(error);
                 alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
             }
-
 
         } else if (offlineEducation) {
             formData.append('teacherId', teacherId);
@@ -374,21 +404,6 @@ function ClassForm() {
             formData.append('poster', null);
             formData.append('teacherInfos', []);
 
-            // // Add certification files
-            // certificationFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`certificationFiles[${index}]`, file);
-            //     }
-            // });
-
-            // // Add teaching subject files
-            // teachingSubjectFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`teachingSubjectFiles[${index}]`, file);
-            //     }
-            // });
-
-            // Add banner files
             bannerFiles.forEach((file, index) => {
                 if (file) {
                     formData.append(`bannerFiles[${index}]`, file);
@@ -482,8 +497,8 @@ function ClassForm() {
                                             <div key={index} className="teachingSubjectField">
                                                 <input
                                                     type='text'
-                                                    value={applicationInfo} // 수정된 부분
-                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                    value={field.subject} // 수정된 부분
+                                                    onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
@@ -500,7 +515,7 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFiles.map((file, index) => (
+                                        {bannerFields.map((field, index) => (
                                             <div key={index} className="BannerSubjectField">
                                                 <input
                                                     type="file"
@@ -690,8 +705,8 @@ function ClassForm() {
                                             <div key={index} className="teachingSubjectField">
                                                 <input
                                                     type='text'
-                                                    value={applicationInfo} // 수정된 부분
-                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                    value={field.subject} // 수정된 부분
+                                                    onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
@@ -724,6 +739,29 @@ function ClassForm() {
                                     <div className="OnlineLec">
                                         <h4>온라인 강의</h4>
                                         <div><ManageLecOnDetail /></div>
+                                    </div>
+
+                                    <div className='VideoInfoGroup'>
+                                        <label htmlFor='videoInfo'>비디오 정보:</label>
+                                        {videoInfoFields.map((field, index) => (
+                                            <div key={index} className="videoInfoField">
+                                                <input
+                                                    type='text'
+                                                    placeholder="비디오 정보"
+                                                    value={field.videoInfoDetail}
+                                                    onChange={(event) => handleVideoInfoChange(event, index)}
+                                                />
+                                                <input
+                                                    type="file"
+                                                    onChange={(event) => handleVideoFileChange(event, index)}
+                                                />
+                                                {index === 0 ? (
+                                                    <button type='button' onClick={handleAddVideoInfoField}>+</button>
+                                                ) : (
+                                                    <button type='button' onClick={() => handleRemoveVideoInfoField(index)}>-</button>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </>
                             )}

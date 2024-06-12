@@ -318,7 +318,7 @@ function TeacherForm() {
                         <div className='formDate'>
                             <label htmlFor='birthDate'>생년월일:</label>
                             <input
-                                type='date'
+                                type='localdate'
                                 id='birthDate'
                                 name='birthDate'
                                 value={birthDate}

@@ -41,7 +41,7 @@ public class AttachmentController {
     @PostMapping("/upload/offProgram")
     public AttachmentDto uploadOffProgramFile(@RequestParam("file") MultipartFile file, @RequestParam("programId") String programId) {
         OffProgram offProgram = offProgramService.getOffProgramById(Integer.parseInt(programId));
-        Attachment attachment = attachmentService.uploadOffProgramFile(file, offProgram);
+        Attachment attachment = attachmentService.uploadOffProgramFile(file);
         if (attachment != null) {
             return new AttachmentDto(attachment.getId(), attachment.getOriginal_name(), attachment.getFile_name(), attachment.getFile_path(), null, "offProgram");
         }
