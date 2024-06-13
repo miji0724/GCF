@@ -1,10 +1,9 @@
 import './Header.css';
 import logo from '../img/logo.png';
-import search from '../img/search.png';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Header = ({ isLoggedIn, onLogout, userId, name }) =>  {
+const Header = ({ isLoggedIn, onLogout, userId}) =>  {
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
@@ -92,10 +91,16 @@ const Header = ({ isLoggedIn, onLogout, userId, name }) =>  {
             </Link>
           </li>
           <li>
-            <div className='search_bar'>
-              <input />
-              <button className="submit" type="submit"><img src={search} alt="Search" /></button>
+            {isLoggedIn && (
+            <div className='hello'>
+              "{userId}" 님 안녕하세요! 🌷
             </div>
+            )}
+            {!isLoggedIn && (
+            <div className='hello'>
+              반가워요 🙌
+            </div>
+            )}
           </li>
         </ul>
       </nav>

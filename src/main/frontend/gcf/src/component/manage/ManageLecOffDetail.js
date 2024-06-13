@@ -31,8 +31,8 @@ function ManageLecOffDetail() {
             file_path: '',
             parent: '',
         },
-        programInfos: [],
-        teacherInfos: [],
+        programInfos: [], // 배열로 초기화
+        teacherInfos: [], // 배열로 초기화
         category: '',
         placeName: '',
         programType: '',
@@ -333,24 +333,15 @@ function ManageLecOffDetail() {
                     <div className='introduceTeach_imgArea'>
                         <img src={offLecInfo.poster.file_path} />
                     </div>
-                    {offLecInfo.teacherInfos.map((teacherInfo, index) => (
+                    {offLecInfo.teacherInfos && offLecInfo.teacherInfos.map((teacherInfo, index) => (
                         <div key={index} className='introduceTeach_attArea'>
                             <img src={teacherInfo.attachment.file_path} />
                         </div>
                     ))}
-                    {offLecInfo.programInfos.map((programInfo, index) => (
+                    {offLecInfo.programInfos && offLecInfo.programInfos.map((programInfo, index) => (
                         <div key={index} className='introduceTeach_attArea'>
                             <img src={programInfo.attachment.file_path} />
                         </div>
-                    ))}
-                    {offLecInfo.videos.map((video, index) => (
-                        video.attachment ? (
-                            <div key={index} className='introduceTeach_attArea'>
-                                <video controls width="500">
-                                    <source src={video.attachment.file_path} type="video/mp4" />
-                                </video>
-                            </div>
-                        ) : null
                     ))}
                 </div>
             </div>

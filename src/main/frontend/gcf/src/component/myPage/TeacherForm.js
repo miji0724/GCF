@@ -16,7 +16,8 @@ function TeacherForm() {
         careerStartYear: '',
         careerEndYear: '',
         licenseName: '',
-        teachAbleCategory: ''
+        teachAbleCategory: '',
+        teacherState: '승인대기'  // 기본값 설정
     });
     const [userData, setUserData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -32,15 +33,15 @@ function TeacherForm() {
                 if (teacherResponse.data) {
                     setTeacherData({
                         ...teacherResponse.data,
-                        id: userResponse.data.id,  // 여기에 userResponse.data.id 설정
+                        id: userResponse.data.id,
+                        teacherState: teacherResponse.data.teacherState // teacherState 값 설정
                     });
-                    // 초기 history, certification, teaching subject 필드 설정
                     setHistoryFields(parseFieldArray(teacherResponse.data.career, teacherResponse.data.careerStartYear, teacherResponse.data.careerEndYear));
                     setCertificationFields(parseSingleFieldArray(teacherResponse.data.licenseName, 'certification'));
                     setTeachingSubjectFields(parseSingleFieldArray(teacherResponse.data.teachAbleCategory, 'subject'));
                 } else {
                     setTeacherData({
-                        id: userResponse.data.id,  // 여기에 userResponse.data.id 설정
+                        id: userResponse.data.id,
                         affiliatedOrganization: '',
                         teacherCategory: [],
                         snsAddress: '',
@@ -48,7 +49,8 @@ function TeacherForm() {
                         careerStartYear: '',
                         careerEndYear: '',
                         licenseName: '',
-                        teachAbleCategory: ''
+                        teachAbleCategory: '',
+                        teacherState: '승인대기' // 기본값 설정
                     });
                 }
             } catch (error) {
@@ -200,7 +202,8 @@ function TeacherForm() {
                 careerStartYear: '',
                 careerEndYear: '',
                 licenseName: '',
-                teachAbleCategory: ''
+                teachAbleCategory: '',
+                teacherState: '승인대기'
             });
             alert('삭제가 완료되었습니다.');
         } catch (error) {
@@ -215,7 +218,7 @@ function TeacherForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const teacherData = {
+        const updatedTeacherData = {
             id: userData.id,
             affiliatedOrganization: event.target.affiliation.value,
             teacherCategory: Array.from(event.target.field).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value),
@@ -224,11 +227,12 @@ function TeacherForm() {
             careerStartYear: historyFields.map(field => field.startDate).join(','),
             careerEndYear: historyFields.map(field => field.endDate).join(','),
             licenseName: certificationFields.map(field => field.certification).join(','),
-            teachAbleCategory: teachingSubjectFields.map(field => field.subject).join(',')
+            teachAbleCategory: teachingSubjectFields.map(field => field.subject).join(','),
+            teacherState: teacherData.teacherState // 추가된 부분
         };
 
         try {
-            await axios.post('/teacher/apply', teacherData, { withCredentials: true });
+            await axios.post('/teacher/apply', updatedTeacherData, { withCredentials: true });
             alert('신청이 완료되었습니다.');
         } catch (error) {
             console.error('Error submitting teacher application:', error);
@@ -236,14 +240,29 @@ function TeacherForm() {
         }
     };
 
+    const getTeacherStateValues = (state) => {
+        switch (state) {
+            case '승인':
+                return { 승인: 1, 미승인: 0, 승인대기: 0 };
+            case '미승인':
+                return { 승인: 0, 미승인: 1, 승인대기: 0 };
+            case '승인대기':
+                return { 승인: 0, 미승인: 0, 승인대기: 1 };
+            default:
+                return { 승인: 0, 미승인: 0, 승인대기: 0 };
+        }
+    };
+
+    const teacherStateValues = getTeacherStateValues(teacherData.teacherState);
+
     return (
         <div className='All'>
             <div className="Ma">
                 <div className='ClassState'>강사 등록 신청서</div>
                 <div className="ClassMenuContainer">
-                    <div className="menu-item">승인</div>
-                    <div className="menu-item">미승인</div>
-                    <div className="menu-item">승인대기</div>
+                    <div className="menu-item">승인 {teacherStateValues.승인}</div>
+                    <div className="menu-item">미승인 {teacherStateValues.미승인}</div>
+                    <div className="menu-item">승인대기 {teacherStateValues.승인대기}</div>
                 </div>
                 <div className='TeacherFormContainer'>
                     <h2>기본정보</h2>
@@ -264,7 +283,7 @@ function TeacherForm() {
                                 type='text'
                                 id='id'
                                 name='id'
-                                value={teacherData.id || userData.id}  // 여기에 userData.id 추가
+                                value={teacherData.id || userData.id}
                                 readOnly
                             />
                         </div>
