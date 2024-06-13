@@ -2,6 +2,8 @@ package com.gcf.spring.dto;
 
 import java.util.List;
 
+import com.gcf.spring.constant.TeacherState;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,19 +21,20 @@ public class TeacherDto {
     private String careerEndYear;
     private String licenseName;
     private String teachAbleCategory;
-    private String teacherState;
+    private TeacherState teacherState; // 변경된 부분
     
-	@Override
-	public String toString() {
-	    return "Teacher{" +
-	            "id='" + id + '\'' +
-	            ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
-	            ", teacherCategory='" + teacherCategory + '\'' +
-	            ", snsAddress='" + snsAddress + '\'' +
-	            ", career='" + career + '\'' +
-	            ", careerStartYear=" + careerStartYear +
-	            ", careerEndYear=" + careerEndYear +
-	            ", licenseName='" + licenseName + '\'' +
-	            '}';
-	}
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id='" + id + '\'' +
+                ", affiliatedOrganization='" + affiliatedOrganization + '\'' +
+                ", teacherCategory='" + teacherCategory + '\'' +
+                ", snsAddress='" + snsAddress + '\'' +
+                ", career='" + career + '\'' +
+                ", careerStartYear=" + careerStartYear +
+                ", careerEndYear=" + careerEndYear +
+                ", licenseName='" + licenseName + '\'' +
+                ", teacherState='" + teacherState + '\'' +
+                '}';
+    }
 }
