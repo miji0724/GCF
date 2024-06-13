@@ -16,13 +16,13 @@
 }
 
 .OnlineLec {
-  max-width: 950px; 
-  height: 400px; 
+  max-width: 950px;
+  height: 400px;
   overflow-y: auto;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
 
-.ClassFormContainer label{
+.ClassFormContainer label {
   display: block;
   margin-bottom: 5px;
 }
@@ -31,26 +31,26 @@
 .ClassEmail,
 .ClassNumber,
 .ClassHNumber {
-margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .ClassFormContainer input[type='text'],
 .ClassFormContainer input[type='email'],
 .ClassFormContainer input[type='tel'] {
-width: 25%;
-padding: 8px;
-border: 1px solid #ccc;
-border-radius: 4px;
-box-sizing: border-box;
+  width: 25%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .ClassFormContainer h1 {
-font-size: 9px;
-margin-top: 5px;
-color: black;
+  font-size: 9px;
+  margin-top: 5px;
+  color: black;
 }
 
-.All > div {
+.All>div {
   margin-bottom: 20px;
 }
 
@@ -85,19 +85,6 @@ color: black;
   align-items: center;
   margin-bottom: 10px;
 }
-
-.certificationField input[type='text'] {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.certificationField input[type='file'] {
-  margin-left: 10px;
-}
-
 
 .certificationField button {
   margin-left: 10px;
@@ -154,40 +141,137 @@ color: black;
   padding-bottom: 30px;
 }
 
+.persons {
+  border-bottom: 1px solid black;
+  padding-bottom: 30px;
+  margin-bottom: 10px;
+}
+
 .ClassFContainer {
-display: flex;
-flex-direction: column;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ClassFState {
-background-color: white;
-display: flex;
-width: 100%; /* 가로폭 100% 설정 */
-padding: 10px;
-border-radius: 10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-margin-bottom: 20px;
-font-size: 28px; /* 글씨 크기 */
-font-weight: bold; /* 글씨 두껍게 */
-margin-left: 0%; /* 왼쪽 여백 추가 */
-text-align: center; /* 가운데 정렬 */
-justify-content: center; /* 가로 방향 가운데 정렬 */
-align-items: center; /* 세로 방향 가운데 정렬 */
+  background-color: white;
+  display: flex;
+  width: 100%;
+  /* 가로폭 100% 설정 */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  font-size: 28px;
+  /* 글씨 크기 */
+  font-weight: bold;
+  /* 글씨 두껍게 */
+  margin-left: 0%;
+  /* 왼쪽 여백 추가 */
+  text-align: center;
+  /* 가운데 정렬 */
+  justify-content: center;
+  /* 가로 방향 가운데 정렬 */
+  align-items: center;
+  /* 세로 방향 가운데 정렬 */
 }
 
 
 .All .rdrCalendarWrapper {
-border: 1px solid #000; /* 검은색 테두리 추가 */
-padding: 10px; /* 테두리 주변에 적절한 여백 추가 */
+  border: 1px solid #000;
+  /* 검은색 테두리 추가 */
+  padding: 10px;
+  /* 테두리 주변에 적절한 여백 추가 */
 }
 
 .rdrDefinedRangesWrapper {
-border: 1px solid #000;
-padding: 10px;
+  border: 1px solid #000;
+  padding: 10px;
 }
 
 .whiteBox {
-border-radius: 10px;
-margin-top: 27px;
+  border-radius: 10px;
+  margin-top: 27px;
+}
+
+.videoInfoField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+}
+
+.subVideoInfoField {
+  display: flex;
+  margin: 0 0 10px 10px;
+  align-items: center;
+}
+
+.videoHField {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.video_addButton {
+  display: flex;
+  justify-content: center;
+}
+
+.video_indexField {
+  margin: 0 10px;
+}
+
+#video_detailArea {
+  width: 500px;
+}
+
+#video_subDetailArea {
+  width: 250px;
+}
+
+#video_attachArea {
+  width: 200px;
+}
+
+#video_bigPlusButton {
+  border: none;
+  border: 1px solid #ccc;
+  height: 30px;
+  background-color: #AECCF2;
+}
+
+#video_plusButton {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border: 1px solid #ccc;
+  background-color: #AECCF2;
+}
+
+#video_removeButton {
+  border: 1px solid #ccc;
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  background-color: #FF8585;
+}
+
+#CName {
+  width: 621px;
+}
+
+#teachInfo_textBox {
+  width: 400px;
+}
+
+#teachInfo_fileBox {
+  width: 170px;
+}
+
+.classForm_buttonArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 18px;
 }

@@ -4,7 +4,7 @@
 }
 
 .banner {
-    flex: 0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     display: flex;
@@ -15,8 +15,10 @@
 }
 
 .banner>p {
+    margin-top:30px;
     font-size: 30px;
-    font-weight: 800;
+    font-weight:500;
+    
 }
 
 .banner_area {
@@ -24,7 +26,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-around;
-    flex: 1;
+    
 }
 
 .banner_item {
@@ -133,4 +135,26 @@
 
 .plus {
     background-color: #EDEDED;
+}
+
+.banner_confirm{
+    margin:50px 20px;
+    border-radius: 10px;
+    border:none;
+    width:150px;
+    height: 75px;
+    background-color: #AECCF2;
+    text-align: center;
+    font-size: 30px;
+}
+
+.banner_cancel{
+    margin:50px 20px;
+    border-radius: 10px;
+    border:none;
+    width:150px;
+    height: 75px;
+    background-color: #FF8585;
+    text-align: center;
+    font-size: 30px;
 }

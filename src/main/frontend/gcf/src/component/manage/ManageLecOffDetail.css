@@ -10,7 +10,7 @@
 
 .lecOffDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;  
@@ -36,7 +36,7 @@
 .lecOffDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .lecOffDetail_area{
@@ -74,6 +74,7 @@
 .lecOffDetail select{
     border-style: none;
     background-color: #ededed;
+    text-align:center;
 }
 
 .lecOffDetail .introduceEdu_area,
@@ -125,6 +126,18 @@
     resize:none;
 }
 
+.introduceEdu_attachment,
+.introduceTeach_attachment{
+    width:200px;
+}
+
+.introduceEdu_flexArea,
+.introduceTeach_flexArea{
+    display:flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 .lecOffDetail_program{
     background-color: #AECCF2;
     display:flex;
@@ -170,6 +183,10 @@
     width:380px;
 }
 
+.lecOffDetail .rdrMonth{
+    width:360px;
+}
+
 /* 달력 원본 코드 수정 */
 
 .oCalendar{
@@ -192,25 +209,18 @@
 }
 
 .lecOffDetail_costWrapper{
-    height:30px;
+    height:40px;
     margin-bottom:5px;
 }
 
 .lecOffDetail_costWrapper > p{
     font-size: 10px;
-    margin-left: 20px;
+    margin:0 0 0 20px;
 }
 
-
-#lecOffDetail_confirm{
-    margin-right: 20px;
-    margin-bottom: 30px;
-    background-color: #AECCF2;
-    border-radius: 10px;
-    width:100px;
-    height: 50px;
-    font-size: 25px;
-    font-weight:600;
+.lecOffDetail_contactInfo{
+    width:500px;
+    height:200px;
 }
 
 #lecOffDetail_delete{
@@ -224,6 +234,8 @@
     font-weight:600;
 }
 
-.marginTop25{
-    margin-top: 25px;
+.introduceTeach_attArea{
+    display:flex;
+    list-style-type: none;
+    justify-content: center;
 }

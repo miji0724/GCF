@@ -6,9 +6,7 @@ import Footer from '../../component/Footer';
 const Schedule = () => {
     return (
         <div className="schedule">
-            <Header />
             <ScheduleForm />
-            <Footer />
         </div>
     );
 }

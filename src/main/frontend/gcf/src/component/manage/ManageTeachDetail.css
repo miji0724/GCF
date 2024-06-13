@@ -10,15 +10,16 @@
 
 .teachDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
+    font-family: "Noto Sans KR", sans-serif;  
 }
 
 .teachDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .teachDetail_area{
@@ -49,12 +50,6 @@
     text-align: left;
 }
 
-.teachDetail_birth_container,
-.teachDetail_radio_area{
-    display: flex;
-    align-items: center;
-}
-
 .teachDetail_radio_area{
     margin-left: 10px;
 }
@@ -63,36 +58,12 @@
     width:185px;
 }
 
-#teachDetail_email_dropdown{
-    margin-left : 10px;
-}
-
 #teachDetail_emailId{
     width:120px;
 }
 
 #teachDetail_emailAddr{
     width:180px;
-}
-
-.teachDetail_zipArea{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin:8px 0;
-}
-
-#teachDetail_zipCheck{
-    padding: 0px;
-    margin-left: 10px;
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 30px;
-}
-
-#teachDetail_zip{
-    width:70px;
 }
 
 #teachDetail_addr,
@@ -105,26 +76,56 @@
     text-align: center;
 }
 
+.teachDetail_checkboxArea{
+    display:flex;
+}
+
+.teachDetail_checkboxDetailArea{
+    display:flex;
+    align-items: center;
+}
+
 .mainCareer_detail{
     width:200px;
     margin-right: 20px;
+}
+
+.License,
+.teachAble{
+    width:400px;
 }
 
 .mainCareer_flexArea input[type='number'] {
     width:100px;
 }
 
+.teach_detail_category_area{
+    display:flex;
+    flex-direction: row;
+    width:500px;
+    flex-wrap: wrap;
+}
+
+.teach_detail_category_label{
+    display:flex;
+    align-items: center;
+    flex: 1 1 10%;
+}
+
 .mainCareer_buttonAlign button,
-.sCertifi_buttonAlign button,
+.License_buttonAlign button,
 .teachAble_buttonAlign button{
     width:30px;
     height:30px;
     margin-left: 10px;
     border:none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .teachDetail .mainCareer_area,
-.teachDetail .sCertifi_area,
+.teachDetail .License_area,
 .teachDetail .teachAble_area{
     max-height: 130px;
     min-height: 130px;  /* 최대 높이 설정 */
@@ -132,30 +133,36 @@
     overflow-y: auto;
     margin: 10px 0;
     background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .teachDetail .mainCareer_buttonAlign,
-.teachDetail .sCertifi_buttonAlign,
+.teachDetail .License_buttonAlign,
 .teachDetail .teachAble_buttonAlign {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 10px;
 }
 
 .teachDetail .mainCareer_flexArea,
-.teachDetail .sCertifi_flexArea,
+.teachDetail .License_flexArea,
 .teachDetail .teachAble_flexArea{
-    height: 45px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height:30px;
 }
 
-#teachDetail_sCertifi1_attachment,
-#teachDetail_sCertifi2_attachment,
-#teachDetail_sCertifi3_attachment{
-    width:180px;
-    background-color: rgba(0, 0, 0, 0);
+.mainCareer_endDate,
+.mainCareer_startDate{
+width:100px;
 }
-
-.sCertifi_flexArea input[type='text']{
+.License_flexArea input[type='text']{
     width:400px;
 }
 
@@ -182,9 +189,45 @@
     background-color: #FF8585;
 }
 
-.sCertifi_attachment_button{
+.License_attachment_button{
     height:30px;
     line-height: 30px;
     border: none;
     margin-right: 10px;
+}
+
+.teachDetail_confirmStartBtn{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #E8F8FF;
+    border-radius: 10px;
+    width:150px;
+    height: 75px;
+    font-size: 25px;
+    font-weight:600;
+    border:none;
+}
+
+.teachDetail_confirmBtn{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #AECCF2;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+    border:none;
+}
+
+.teachDetail_deleteBtn{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    background-color: #FF8585;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+    border:none;
 }

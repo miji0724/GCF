@@ -1,0 +1,6 @@
+.Offline_Post_List {
+    display: flex;
+    flex-direction: column;
+    background-color: #E8F8FF;
+    height: 100%;
+}

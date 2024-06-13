@@ -90,14 +90,32 @@ label {
 
 #email1 {
     width: 30%;
+    height: 30px;
 }
 
-#zipCode {
-    width: 20%;
+#email2 {
+    height: 30px;
 }
 
-#address, #detail_address {
-    width: 100%;
+.email {
+    display: flex;
+    flex-direction: row;
+}
+
+.zonecode {
+	display: flex;
+	flex-direction: row;
+}
+
+.zonecode_view {
+	border: 1px solid black;
+	width: 55px;
+	height: 30px;
+	padding: 3px;
+}
+
+.address {
+	margin-bottom: 10px;
 }
 
 .added_info {

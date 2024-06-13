@@ -13,10 +13,11 @@ const gotoHome = () => {
 function ManageHeader() {
     return (
         <header>
-            <div class="header_content">
+            <div className="header_content">
                 <div className="logo">
                     <img src={logo} alt="Logo" onClick={gotoManageHome} />
                 </div>
+                <p className="manage_title">관리자 페이지</p>
                 <div className="gotoHome" onClick={gotoHome}>
                     메인 페이지로 이동 &gt;
                 </div>

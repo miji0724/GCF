@@ -15,7 +15,7 @@
     width: 100%;
     padding: 0;
     margin-left: 30%;
-    padding-top: 5%;
+    padding-top: 7%;
 }
 
 #findId_input_INFO > ul > li > input {
@@ -29,6 +29,7 @@
     width: 30%;
     height: 20%;
     border-radius: 10px;
+    border: none;
     background-color: #7193D2;
     margin-left: 35%;
 }

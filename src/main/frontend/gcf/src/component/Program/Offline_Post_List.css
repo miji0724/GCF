@@ -1,0 +1,224 @@
+body {
+    background-color: #E8F8FF;
+}
+
+.Off-body-container {
+    padding: 70px 0 100px;
+
+}
+
+.filterBox {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 80%;
+    background-color: #F5F5DC;
+    padding: 10px;
+    margin: 0 auto;
+    }
+
+.filterSection {
+    margin-bottom: 10px;
+}
+
+.filterTitle {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.filterOptions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filterButton {
+    padding: 10px 20px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.filterButton.active {
+    background-color: #E8F3F7;
+    color: black;
+    font-weight: bold;
+}
+
+.Offline_poster-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+}
+
+.Offline_poster-card {
+    background: linear-gradient(120deg, skyblue 0%, white 100%);
+    border-radius: 15px;
+    color: #333;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    width: 300px;
+    transition: transform 0.2s;
+}
+
+.Offline_poster-card:hover {
+    transform: translateY(-5px);
+}
+
+.Offline_poster-image-container {
+    position: relative; /* 이미지 컨테이너를 상대적으로 위치시킴 */
+}
+
+.Offline_poster-image {
+    width: 100%; /* 이미지가 컨테이너에 맞도록 설정 */
+    height: auto;
+    display: block;
+}
+
+.Offline_DEADLINE_IMAGE {
+    position: absolute; /* 커버를 절대적으로 위치시킴 */
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.Offline_poster-details {
+    padding: 10px;
+}
+
+.Offline_poster-title {
+    font-size: 16px;
+    color: #333;
+    line-height: 20px;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.Offline_poster-dates, .Offline_poster-location {
+    font-size: 12px;
+    color: #666;
+}
+
+.Offline_poster-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.heart-icon {
+    cursor: pointer;
+    font-size: 24px;
+    color: red;
+}
+
+.like-count {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.Offline_views {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+}
+
+.Offline-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.Offline-pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+}
+
+.Offline-pagination button.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+.Offline_poster-status-receipt {
+    background-color: orange;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+.Offline_poster-status-closed {
+    background-color: gray;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+.Offline_poster-status-preparing {
+    background-color: black;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+.bookmark-icon {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: grey;
+}
+
+.bookmark-icon.active {
+    color: gold;
+}
+
+.bookmark-icon:hover {
+    color: black;
+}
+
+.Offline_poster-category {
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 5px 10px;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+.Offline_poster-category-Education {
+    background-color: orangered;
+    font-weight: bold;
+}
+
+.Offline_poster-category-Experience {
+    background-color: purple;
+    font-weight: bold;
+    color: white;
+}
+
+input[type="date"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

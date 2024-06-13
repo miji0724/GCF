@@ -1,220 +1,235 @@
-import './Body.css';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Carousel from './carousel/Carousel';
-import Carousel2 from './carousel/Carousel2';
-import banner1 from '../img/banner/배너1.jpg';
-import banner2 from '../img/banner/배너2.png';
-import banner3 from '../img/banner/배너3.png';
-import banner4 from '../img/banner/배너4.jpg';
-import banner5 from '../img/banner/배너5.jpg';
-import off_poster1 from '../img/off_poster/off_poster1.jpg';
-import off_poster2 from '../img/off_poster/off_poster2.jpg';
-import off_poster3 from '../img/off_poster/off_poster3.jpg';
-import off_poster4 from '../img/off_poster/off_poster4.jpg';
-import printing_3D from '../img/on_poster/3dPrinting.jpg';
-import illust from '../img/on_poster/Illust.jpg';
-import contentsDesign from '../img/on_poster/ContentsDesign.jpg';
-import contentsPlanning from '../img/on_poster/ContentsPlanning.jpg';
 import art from '../img/off_home_icon/art_icon.png';
 import science from '../img/off_home_icon/science_icon.png';
 import music from '../img/off_home_icon/music_icon.png';
 import design from '../img/off_home_icon/design_icon.png';
 import study from '../img/off_home_icon/study_icon.png';
 import etc from '../img/off_home_icon/etc_icon.png';
-import React, { useState } from 'react';
+import './Body.css';
 
-const Body = () => {
-    const images = [
-        banner1,
-        banner2,
-        banner3
-    ];
+const Body = ({ isLoggedIn }) => {
+    const [selectedOfflineProgram, setSelectedOfflineProgram] = useState(null);
+    const [selectedOnlineProgram, setSelectedOnlineProgram] = useState(null);
+    const [notices, setNotices] = useState([]);
+    const [banners1, setBanners1] = useState([]);
+    const [banners2, setBanners2] = useState([]);
+    const [offProgramsView, setOffProgramsView] = useState([]);
+    const [offProgramsNew, setOffProgramsNew] = useState([]);
+    const [onProgramsView, setOnProgramsView] = useState([]);
+    const [onProgramsNew, setOnProgramsNew] = useState([]);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
-    const images2 = [
-        banner4,
-        banner5,
-    ];
-
-    const [selectedProgram, setSelectedProgram] = useState(1);
-
-    const handleClick = (program) => {
-        setSelectedProgram(program);
+    const navigate = useNavigate();
+  
+    const gotoOnlineListCategory = (category) => {
+        navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
     };
+
+    const categoryClassMap = {
+        '미술': 'art',
+        '과학': 'science',
+        '음악': 'music',
+        '디자인': 'design',
+        '교육': 'study',
+        '기타': 'etc'
+    };
+
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const noticesResponse = await axios.get('/home/notices');
+                const sortedNotices = noticesResponse.data.slice(0, 4);
+                setNotices(sortedNotices);
+
+                const banners1Response = await axios.get('/banner/banner1');
+                const banners1Data = banners1Response.data.map(banner => ({
+                    filePath: banner.filePath,
+                    url: banner.url
+                }));
+                setBanners1(banners1Data);
+
+                const banners2Response = await axios.get('/banner/banner2');
+                const banners2Data = banners2Response.data.map(banner => ({
+                    filePath: banner.filePath,
+                    url: banner.url
+                }));
+                setBanners2(banners2Data);
+
+                const offProgramsViewResponse = await axios.get('/offProgram/views/top4');
+                setOffProgramsView(Array.isArray(offProgramsViewResponse.data) ? offProgramsViewResponse.data : []);
+
+                const offProgramsNewResponse = await axios.get('/offProgram/new/top4');
+                setOffProgramsNew(Array.isArray(offProgramsNewResponse.data) ? offProgramsNewResponse.data : []);
+
+                const onProgramsViewResponse = await axios.get('/onProgram/views/top4');
+                setOnProgramsView(Array.isArray(onProgramsViewResponse.data) ? onProgramsViewResponse.data : []);
+
+                const onProgramsNewResponse = await axios.get('/onProgram/new/top4');
+                setOnProgramsNew(Array.isArray(onProgramsNewResponse.data) ? onProgramsNewResponse.data : []);
+
+                setDataLoaded(true);
+            } catch (error) {
+                console.error('Failed to fetch data', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (dataLoaded && offProgramsNew.length > 0) {
+            setSelectedOfflineProgram(offProgramsNew[0]);
+        }
+    }, [dataLoaded, offProgramsNew]);
+
+    const handleAuthRedirect = (componentName) => {
+        window.location.href = `/MyAuthenticationForm?component=${componentName}`;
+    };
+
+    const handleClickNotice = async (id) => {
+        try {
+            await axios.put(`/notices/${id}/views`);
+            navigate(`/notice/${id}`);
+        } catch (error) {
+            console.error('Failed to increase notice views', error);
+        }
+    };
+
+    if (!dataLoaded) {
+        return null; // 데이터가 로드되지 않았을 때 아무것도 렌더링하지 않음
+    }
 
     return (
         <div className="body">
             <div className="banner01">
-                <Carousel className='banner' images={images} />
+                {banners1.length > 0 && <Carousel images={banners1} />}
             </div>
 
             <ul className="button_notice">
                 <li className="button01">
                     <a className="plan_button" href="/schedule">이달의 일정<div>⇀</div></a>
-                    <a className="teacher_button" href="#">강사 등록<div>⇀</div></a>
-                    <a className="issue_button" href="#">증명서 발급<div>⇀</div></a>
+                    {isLoggedIn ? (
+                        <a className="teacher_button" onClick={() => handleAuthRedirect('teacher_register')}>강사 등록<div>⇀</div></a>
+                    ) : (
+                        <a className="teacher_button" onClick={() => alert('로그인이 필요합니다.')}>강사 등록<div>⇀</div></a>
+                    )}
+                    {isLoggedIn ? (
+                        <a className="issue_button" onClick={() => handleAuthRedirect('certification')}>증명서 발급<div>⇀</div></a>
+                    ) : (
+                        <a className="issue_button" onClick={() => alert('로그인이 필요합니다.')}>증명서 발급<div>⇀</div></a>
+                    )}
                 </li>
                 <li className="notice_space">
-                    <li>
-                        <div>공지사항</div>
-                        <div><a href="/notice">더보기 →</a></div>
+                    <div>
+                        <span>공지사항</span>
+                        <span><a href="/notice">더보기 →</a></span>
+                    </div>
+                    {notices.map(notice => (
+                    <li key={notice.id} id='notice_content' onClick={() => handleClickNotice(notice.id)}>
+                        {notice.title}
                     </li>
-                    <li id='notice_content'>1번 공지사항입니다.</li>
-                    <li id='notice_content'>2번 공지사항입니다.</li>
-                    <li id='notice_content'>3번 공지사항입니다.</li>
-                    <li id='notice_content'>4번 공지사항입니다.</li>
+                    ))}
                 </li>
             </ul>
 
             <div className="popular">
                 <div id="home_title1">인기있는 오프라인 교육/체험</div>
                 <ul className="popular_poster">
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster1}/>
-                            <div className="off_category1">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster2}></img>
-                            <div className="off_category1">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster3}></img>
-                            <div className="off_category2">체험</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={off_poster4}></img>
-                            <div className="off_category2">체험</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
+                    {offProgramsView.map((programView, index) => (
+                        <li key={index}>
+                            <a href={`/offlineList/detail/${programView.programName}`}>
+                                <img src={programView.poster.file_path} alt={`Poster ${index + 1}`} />
+                                <div
+                                    className="off_category"
+                                    style={{
+                                        backgroundColor: programView.category === '교육' ? '#faf0ff' : '#daffd5'
+                                    }}
+                                >
+                                    {programView.category}
+                                </div>
+                                <div className="title1">{programView.programName}</div>
+                                <div className="date">{new Date(programView.operatingStartDay).toLocaleDateString()} ~ {new Date(programView.operatingEndDay).toLocaleDateString()}</div>
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </div>
 
             <div className="popular">
                 <div id="home_title1">인기있는 온라인 교육/체험</div>
                 <ul className="popular_poster">
-                    <li>
-                        <a href='#'>
-                            <img src={printing_3D}/>
-                            <div className="on_category1">디자인</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={illust}></img>
-                            <div className="on_category2">미술</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={contentsDesign}></img>
-                            <div className="on_category3">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href='#'>
-                            <img src={contentsPlanning}></img>
-                            <div className="on_category3">교육</div>
-                            <div className="title1">2024 프로그램 제목</div>
-                            <div className="date">2024.05.02~2024.05.14</div>
-                        </a>
-                    </li>
+                    {onProgramsView.map((program, index) => (
+                        <li key={index}>
+                            <a href={`/onlineList/detail/${program.programName}`}>
+                                <img src={program.poster.file_path} alt={`Poster ${index + 1}`} />
+                                <div className={`on_category ${categoryClassMap[program.category]}`}>
+                                    {program.category}
+                                </div>
+                                <div className="title1">{program.programName}</div>
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </div>
 
             <div className="banner02">
-                <Carousel2 className='banner' images={images2} />
+                {banners2.length > 0 && <Carousel images={banners2} />}
             </div>
 
             <div className="new">
                 <div className="home_title2">
                     <div>새로운 오프라인 교육/체험</div>
-                    <div className="title2" onClick={() => handleClick(1)}>모담골 노는 학당</div>
-                    <div className="title2" onClick={() => handleClick(2)}>2024 문화예술 프로그램</div>
-                    <div className="title2" onClick={() => handleClick(3)}>2024 가족이 있는 플리마켓</div>
-                    <div className="title2" onClick={() => handleClick(4)}>향기롭던 보구곶의 봄</div>
+                    {offProgramsNew.map((OffprogramNew, index) => (
+                        <div key={index} className="title2" onClick={() => {
+                            setSelectedOfflineProgram(OffprogramNew);
+                            setSelectedOnlineProgram(null); // Add this line to nullify the selected online program
+                        }}>{OffprogramNew.programName}</div>
+                    ))}
                     <div><a href="#">더보기 →</a></div>
                 </div>
-                <a href="#" className="new_center">
-                    {selectedProgram && <img src={selectedProgram === 1 ? off_poster1 :
-                                                selectedProgram === 2 ? off_poster2 :
-                                                selectedProgram === 3 ? off_poster3 :
-                                                selectedProgram === 4 ? off_poster4 :
-                                                "" }
-                                        />}
 
-                    {selectedProgram && selectedProgram === 1 ? <div className="title1">2024 모담골 노는 학당[한옥 마을 교육 프로그램]</div> :
-                                        selectedProgram === 2 ? <div className="title1">2024 문화예술 프로그램</div> :
-                                        selectedProgram === 3 ? <div className="title1">2024 가족이 있는 플리마켓</div> :
-                                        selectedProgram === 4 ? <div className="title1">향기롭던 보구곶의 봄[봄 전시 연계 프로그램]</div> : 
-                                        ""}
+                {selectedOfflineProgram && (
+                    <a className="new_center" href={`/offlineList/detail/${selectedOfflineProgram.programName}`}>
+                        {selectedOfflineProgram.poster && <img src={selectedOfflineProgram.poster.file_path} alt="Selected Program" />}
+                        <div className="title1">{selectedOfflineProgram.programName}</div>
+                        <div className="date">{new Date(selectedOfflineProgram.operatingStartDay).toLocaleDateString()} ~ {new Date(selectedOfflineProgram.operatingEndDay).toLocaleDateString()}</div>
+                    </a>
+                )}
 
-                    <div className="date">2024.05.02~2024.05.14</div>
-                </a>
+                {selectedOnlineProgram && (
+                    <a className="new_center" href={`/onlineList/detail/${selectedOnlineProgram.programName}`}>
+                        {selectedOnlineProgram.poster && <img src={selectedOnlineProgram.poster.file_path} alt="Selected Program" />}
+                        <div className="title1">{selectedOnlineProgram.programName}</div>
+                    </a>
+                )}
+
                 <div className="home_title3">
-                    <div>새로운 온라인 교육/체험</div>
-                    <div className="title2" onClick={() => handleClick(1)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(2)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(3)}>프로그램 제목</div>
-                    <div className="title2" onClick={() => handleClick(4)}>프로그램 제목</div>
-                    <div><a href="#">더보기 →</a></div>
+                        <div>새로운 온라인 교육/체험</div>
+                        {onProgramsNew.map((OnprogramNew, index) => (
+                            <div key={index} className="title2" onClick={() => {
+                                setSelectedOnlineProgram(OnprogramNew);
+                                setSelectedOfflineProgram(null); // Add this line to nullify the selected offline program
+                            }}>{OnprogramNew.programName}</div>
+                        ))}
                 </div>
             </div>
 
             <div className="online_category">
-                <div className="home_title4">
-                    온라인 교육
-                </div>
+                <div className="home_title4">온라인 교육</div>
                 <div className="icon">
-                    <a href='#'>
-                        <img src={art}></img>
-                        <text>미술</text>
-                    </a>
-                    <a href='#'>
-                        <img src={science}></img>
-                        <text>과학</text>
-                    </a>
-                    <a href='#'>
-                        <img src={music}></img>
-                        <text>음악</text>
-                    </a>
-                    <a href='#'>
-                        <img src={design}></img>
-                        <text>디자인</text>
-                    </a>
-                    <a href='#'>
-                        <img src={study}></img>
-                        <text>교육</text>
-                    </a>
-                    <a href='#'>
-                        <img src={etc}></img>
-                        <text>기타</text>
-                    </a>
+                    {[{src: art, label: '미술'}, {src: science, label: '과학'}, {src: music, label: '음악'}, {src: design, label: '디자인'}, {src: study, label: '교육'}, {src: etc, label: '기타'}].map((icon, index) => (
+                        <a key={index} onClick={() => gotoOnlineListCategory(icon.label)}>
+                            <img src={icon.src} alt={icon.label} />
+                            <span>{icon.label}</span>
+                        </a>
+                    ))}
                 </div>
             </div>
         </div>
-
-    
-        
-        
     );
 }
 

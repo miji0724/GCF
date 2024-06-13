@@ -6,16 +6,16 @@
 
 .memDetail
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
-    font-family: "Noto Sans KR", sans_serif;  
+    font-family: "Noto Sans KR", sans-serif;  
 }
 
 .memDetail > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .memDetail_area{
@@ -74,6 +74,10 @@
     margin:8px 0;
 }
 
+.manage_choiceArea{
+    display:flex;
+    align-items: center;
+}
 #memDetail_zipCheck{
     margin-left: 10px;
     height: 30px;
@@ -99,6 +103,17 @@
 #memDetail_addr,
 #memDetail_addrD{
     width:500px;
+}
+
+#memDetail_confirmStart{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #E8F8FF;
+    border-radius: 10px;
+    width:150px;
+    height: 75px;
+    font-size: 25px;
+    font-weight:600;
 }
 
 #memDetail_confirm{

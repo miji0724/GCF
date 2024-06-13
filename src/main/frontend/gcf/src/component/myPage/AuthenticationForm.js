@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './AuthenticationForm.css';
 
 function AuthenticationForm() {
   const [password, setPassword] = useState('');
-  // setIsLogin 변수는 사용하지 않으므로 제거합니다.
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Password:', password);
+    try {
+      const response = await axios.post('/member/authentication', { password }, { withCredentials: true });
+      if (response.status === 200) {
+        alert('본인확인이 완료됐습니다.');
+        const urlParams = new URLSearchParams(location.search);
+        const component = urlParams.get('component');
+        navigate(`/MyPage${component ? `?component=${component}` : ''}`);
+      } else {
+        alert('실패했습니다.');
+      }
+    } catch (error) {
+      alert('실패했습니다.');
+    }
   };
 
   return (

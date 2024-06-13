@@ -1,8 +1,6 @@
 import './FindId_show.css'
 
-const FindId_show = () => {
-
-    const str = "✔\n\n김자바님의 아이디는\njava****입니다." ;
+const FindId_show = ( { id, name } ) => {
 
     return (
         <div className="findId_show">
@@ -10,7 +8,7 @@ const FindId_show = () => {
             <div className="line"></div>
             <div id="findId_show_id">
                 <div className="show_id">
-                    {str}
+                    ✔<br/><br/>{name}님의 아이디는<br/>{id}입니다.
                 </div>
                 <button type="submit" id="go_login"><a href="/login">로그인 하러가기</a></button>
             </div>
