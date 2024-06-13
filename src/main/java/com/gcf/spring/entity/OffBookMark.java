@@ -29,4 +29,4 @@ public class OffBookMark {
     @OneToOne
     @JoinColumn(name = "offProgram", referencedColumnName = "id")
     private OffProgram offProgram;
-}
+} 
