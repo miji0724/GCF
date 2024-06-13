@@ -42,6 +42,8 @@ public class OffProgramController {
 		Teacher teacher = teacherService.findById(offProgramDto.getTeacherId());
 		OffProgram createdOffProgram = offProgramService.createOffProgram(offProgramDto, teacher);
 
+		System.out.println("createdOffProgram : " + createdOffProgram);
+		
 		return ResponseEntity.ok(createdOffProgram);
 	}
 
@@ -64,6 +66,9 @@ public class OffProgramController {
 		int i = 0;
 		List<ProgramInfo> programInfos = new ArrayList<>();
 		OffProgram offProgram = offProgramService.getOffProgramById(id);
+		
+		System.out.println("ididid : " + id);
+		System.out.println("offProgram : "+offProgram);
 		for (String description : descriptions) {
 			Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
 			ProgramInfo programInfo = new ProgramInfo();
@@ -74,6 +79,7 @@ public class OffProgramController {
 			i++;
 		}
 		offProgramService.insertProgramInfo(programInfos);
+		offProgram.setProgramInfos(programInfos);
 
 		return ResponseEntity.ok(null);
 	}
@@ -83,6 +89,9 @@ public class OffProgramController {
 			@RequestParam("descriptions") List<String> descriptions, @RequestParam("id") Integer id) {
 		int i = 0;
 		List<TeacherInfo> teacherInfos = new ArrayList<>();
+		
+		System.out.println(id);
+		
 		OffProgram offProgram = offProgramService.getOffProgramById(id);
 		for (String description : descriptions) {
 			Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
@@ -94,6 +103,9 @@ public class OffProgramController {
 			i++;
 		}
 		offProgramService.insertTeacherInfo(teacherInfos);
+		offProgram.setTeacherInfos(teacherInfos);
+		
+		System.out.println(offProgram.toString());
 
 		return ResponseEntity.ok(null);
 	}

@@ -41,7 +41,7 @@ public class OffProgramDto {
 	private Day_of_week dayOfWeek; // 프로그램 요일
 	private Integer views = 0; // 프로그램 조회 수
 	private Integer likesCount = 0; // 프로그램 좋아요 수
-	private String offlineCategory; // 프로그램 카테고리(교육, 체험)
+	private String category; // 프로그램 카테고리(교육, 체험)
 	private String placeName; // 프로그램 장소명
 	private String programType; // 프로그램 온/오프라인 구분
 	private Attachment poster; // 프로그램 포스터 정보

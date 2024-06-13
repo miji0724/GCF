@@ -50,6 +50,8 @@ function ClassForm() {
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
 
+    const [showAlert, setShowAlert] = useState(false);
+
     const parseFieldArray = (data = '', fieldName) => {
         return data ? data.split(',').map(item => ({ [fieldName]: item })) : [{ [fieldName]: '' }];
     };
@@ -334,57 +336,8 @@ function ClassForm() {
             const posterData = new FormData();
             posterData.append('poster', bannerFile);
 
-            try {
-                console.log(teacherId);
-                const response = await axios.post('/api/onProgram/poster', posterData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                console.log(response.data);
-                posterId = response.data.id;
-                console.log(posterId);
-            } catch (error) {
-                console.error(error);
-            }
-
-            const teacherInfo = new FormData();
-            teacherInfo.append('attachment', teachingSubjectFiles[0]);
-            teacherInfo.append('description', teachingSubjectFields[0]);
-
-            formData = {
-                'teacher': {},
-                'teacherId': teacherId,
-                'programName': CName,
-                'operatingStartDay': offlineLocationStartDate,
-                'views': 0,
-                'likesCount': 0,
-                'category': "온라인",
-                'programType': "온라인",
-                'poster': bannerFile,
-                'posterId': posterId,
-                'approvalState': "승인대기",
-                'programInfos': [],
-                'teacherInfos': [],
-                'comments': [],
-                'videos': [],
-            }
-
-            try {
-                console.log(teacherId);
-                const response = await axios.post('/api/onProgram', formData, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                console.log(response.data);
-                id = response.data.id;
-            } catch (error) {
-                console.error(error);
-            }
-
             const programInfo = new FormData();
-            programInfo.append("id", id);
+
             Array.from(certificationFields).forEach((data, index) => {
                 programInfo.append('descriptions', data.certification);
             });
@@ -393,39 +346,17 @@ function ClassForm() {
                 console.log(file);
             });
 
-            try {
-                const response = await axios.post('/api/onProgram/onprograminfo', programInfo, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " @@@@@@@@@@@@@@");
-            } catch (error) {
-                console.error(error);
-            }
+            const teacherInfo = new FormData();
 
-            const teacherInfoData = new FormData();
-            teacherInfoData.append("id", id);
             Array.from(teachingSubjectFields).forEach((data, index) => {
-                teacherInfoData.append('descriptions', data.subject);
+                teacherInfo.append('descriptions', data.subject);
             });
             Array.from(teachingSubjectFiles).forEach((file, index) => {
-                teacherInfoData.append('files', file);
+                teacherInfo.append('files', file);
             });
 
-            try {
-                const response = await axios.post('/api/onProgram/onteacherinfo', teacherInfoData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " #######");
-            } catch (error) {
-                console.error(error);
-            }
-
             const videoInfoData = new FormData();
-            videoInfoData.append("id", id);
+
 
             videoInfoFields.forEach((data, index) => {
                 videoInfoData.append('videoinfodetails', data.videoInfoDetail);
@@ -444,84 +375,114 @@ function ClassForm() {
                 });
             });
 
-            try {
-                const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " $$$$$$$$");
-                alert("온라인 프로그램이 성공적으로 등록되었습니다.");
-            } catch (error) {
-                console.error(error);
-                alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
+
+
+            if (!CName ||
+                !bannerFile ||
+                !programInfo ||
+                !teacherInfo) {
+
+                setShowAlert(true);
+                return;
+            } else {
+                setShowAlert(false);
+
+                try {
+                    console.log(teacherId);
+                    const response = await axios.post('/api/onProgram/poster', posterData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    console.log(response.data);
+                    posterId = response.data.id;
+                    console.log(posterId);
+                } catch (error) {
+                    console.error(error);
+                }
+
+                formData = {
+                    'teacher': {},
+                    'teacherId': teacherId,
+                    'programName': CName,
+                    'operatingStartDay': '',
+                    'views': 0,
+                    'likesCount': 0,
+                    'category': "온라인",
+                    'programType': "온라인",
+                    'poster': bannerFile,
+                    'posterId': posterId,
+                    'approvalState': "승인대기",
+                    'programInfos': [],
+                    'teacherInfos': [],
+                    'comments': [],
+                    'videos': [],
+                }
+
+                try {
+
+                    for (const [key, value] of Object.entries(formData)) {
+                        console.log(`${key}: ${value}`);
+                    }
+
+                    console.log(teacherId);
+                    console.log(posterId);
+
+                    const response = await axios.post('/api/onProgram', formData, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    console.log(response.data);
+                    id = response.data.id;
+                } catch (error) {
+                    console.error(error);
+                }
+
+                programInfo.append("id", id);
+                teacherInfo.append("id", id);
+                videoInfoData.append("id", id);
+
+                try {
+                    const response = await axios.post('/api/onProgram/onprograminfo', programInfo, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log(response.data + " @@@@@@@@@@@@@@");
+                } catch (error) {
+                    console.error(error);
+                }
+
+                try {
+                    const response = await axios.post('/api/onProgram/onteacherinfo', teacherInfo, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log(response.data + " #######");
+                } catch (error) {
+                    console.error(error);
+                }
+
+                try {
+                    const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log(response.data + " $$$$$$$$");
+                    alert("온라인 프로그램이 성공적으로 등록되었습니다.");
+                } catch (error) {
+                    console.error(error);
+                    alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
+                }
             }
-
         } else if (offlineEducation) {
-
             const posterData = new FormData();
             posterData.append('poster', bannerFile);
 
-            try {
-                console.log(teacherId);
-                const response = await axios.post('/api/offProgram/poster', posterData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                console.log(response.data);
-                posterId = response.data.id;
-                console.log(posterId);
-            } catch (error) {
-                console.error(error);
-            }
-
-            formData = {
-                'teacher': {},
-                'teacherId': teacherId,
-                'programName': CName,
-                'programDetailName': programName,
-                'application_info': applicationInfo,
-                'applicationStartDate': PeriodofflineLocationStartDate,
-                'applicationEndDate': PeriodofflineLocationEndDate,
-                'operatingStartDay': offlineLocationStartDate,
-                'operatingEndDay': offlineLocationEndDate,
-                'participationFee': programFee,
-                'startTime': startHour,
-                'endTime': endHour,
-                'maxParticipants': parseInt(numberOfApplicants, 10),
-                'currentParticipants': 0,
-                'applicationState': "접수중",
-                'approvalState': "승인대기",
-                'dayOfWeek': selectedDay,
-                'views': 0,
-                'likesCount': 0,
-                'offlineCategory': offlineProgramType,
-                'placeName': selectedLocation,
-                'programType': "오프라인",
-                'poster': null,
-                'posterId': posterId,
-                'programInfos': [],
-                'teacherInfos': [],
-            }
-
-            try {
-                console.log(teacherId);
-                
-                const response = await axios.post('/api/offProgram', formData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                console.log(response.data);
-                id = response.data.id;
-            } catch (error) {
-                console.error(error);
-            }
-
-
             const programInfo = new FormData();
-            programInfo.append("id", id);
             Array.from(certificationFields).forEach((data, index) => {
                 programInfo.append('descriptions', data.certification);
             });
@@ -530,38 +491,126 @@ function ClassForm() {
                 console.log(file);
             });
 
-            try {
-                console.log(id);
-                const response = await axios.post('/api/offProgram/offprograminfo', programInfo, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " @@@@@@@@@@@@@@");
-            } catch (error) {
-                console.error(error);
-            }
-
-            const teacherInfoData = new FormData();
-            teacherInfoData.append("id", id);
+            const teacherInfo = new FormData();
             Array.from(teachingSubjectFields).forEach((data, index) => {
-                teacherInfoData.append('descriptions', data.subject);
+                teacherInfo.append('descriptions', data.subject);
             });
             Array.from(teachingSubjectFiles).forEach((file, index) => {
-                teacherInfoData.append('files', file);
+                teacherInfo.append('files', file);
             });
 
-            try {
-                const response = await axios.post('/api/offProgram/offteacherinfo', teacherInfoData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data + " #######");
-                alert("오프라인 프로그램이 성공적으로 등록되었습니다.");
-            } catch (error) {
-                console.error(error);
-                alert("오프라인 프로그램 등록 중 오류가 발생했습니다.");
+
+            if (!CName ||
+                !programName ||
+                !applicationInfo ||
+                !selectedLocation ||
+                !numberOfApplicants ||
+                !programFee ||
+                !selectedLocation ||
+                !programInfo ||
+                !teacherInfo
+            ) {
+                setShowAlert(true);
+                return;
+            } else {
+                setShowAlert(false);
+
+                try {
+                    console.log(teacherId);
+                    const response = await axios.post('/api/offProgram/poster', posterData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    console.log(response.data);
+                    posterId = response.data.id;
+                    console.log(posterId);
+                } catch (error) {
+                    console.error(error);
+                }
+
+                formData = {
+                    'teacher': {},
+                    'teacherId': teacherId,
+                    'programName': CName,
+                    'programDetailName': programName,
+                    'application_info': applicationInfo,
+                    'applicationStartDate': PeriodofflineLocationStartDate,
+                    'applicationEndDate': PeriodofflineLocationEndDate,
+                    'operatingStartDay': offlineLocationStartDate,
+                    'operatingEndDay': offlineLocationEndDate,
+                    'participationFee': programFee,
+                    'startTime': startHour,
+                    'endTime': endHour,
+                    'maxParticipants': parseInt(numberOfApplicants, 10),
+                    'currentParticipants': 0,
+                    'applicationState': "접수중",
+                    'approvalState': "승인대기",
+                    'dayOfWeek': selectedDay,
+                    'views': 0,
+                    'likesCount': 0,
+                    'category': offlineProgramType,
+                    'placeName': selectedLocation,
+                    'programType': "오프라인",
+                    'poster': bannerFile,
+                    'posterId': posterId,
+                    'programInfos': [],
+                    'teacherInfos': [],
+                }
+
+                try {
+
+                    for (const [key, value] of Object.entries(formData)) {
+                        console.log(`${key}: ${value}`);
+                    }
+                    console.log(teacherId);
+
+                    const response = await axios.post('/api/offProgram', formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    id = response.data.id;
+                    console.log(response.data);
+                    console.log(id);
+                } catch (error) {
+                    console.error(error);
+                }
+
+                programInfo.append("id", id);
+                teacherInfo.append("id", id);
+
+                try {
+                    console.log(id);
+
+                    for (const [key, value] of Object.entries(programInfo)) {
+                        console.log(`${key}: ${value}`);
+                    }
+
+                    const response = await axios.post('/api/offProgram/offprograminfo', programInfo, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log(response.data + " @@@@@@@@@@@@@@");
+                } catch (error) {
+                    console.error(error);
+                }
+
+                try {
+                    const response = await axios.post('/api/offProgram/offteacherinfo', teacherInfo, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log(response.data + " #######");
+                    alert("오프라인 프로그램이 성공적으로 등록되었습니다.");
+                } catch (error) {
+                    console.error(error);
+                    alert("오프라인 프로그램 등록 중 오류가 발생했습니다.");
+                }
+
+
             }
         }
     };
@@ -598,7 +647,7 @@ function ClassForm() {
                             {offlineEducation && (
                                 <>
                                     <div className="ClassName">
-                                        <label htmlFor="CName">프로그램명 이름:</label>
+                                        <label id='classForm_cName' htmlFor="CName">프로그램명 이름:</label>
                                         <input
                                             type="text"
                                             id="CName"
@@ -617,10 +666,12 @@ function ClassForm() {
                                                     type='text'
                                                     placeholder="교육 소개"
                                                     value={field.certification}
+                                                    id='teachInfo_textBox'
                                                     onChange={(event) => handleCertificationChange(event, index)}
                                                 />
                                                 <input
                                                     type="file"
+                                                    id='teachInfo_fileBox'
                                                     onChange={(event) => handleCertificationFileChange(event, index)}
                                                 />
                                                 {index === 0 ? (
@@ -639,10 +690,12 @@ function ClassForm() {
                                                 <input
                                                     type='text'
                                                     value={field.subject} // 수정된 부분
+                                                    id='teachInfo_textBox'
                                                     onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
+                                                    id='teachInfo_fileBox'
                                                     onChange={(event) => handleTeachingSubjectFileChange(event, index)}
                                                 />
                                                 {index === 0 ? (
@@ -666,14 +719,15 @@ function ClassForm() {
                                         <div style={{ marginBottom: "20px" }}>
                                             <h4>오프라인 프로그램 선택</h4>
                                             <select value={offlineProgramType} onChange={handleOfflineProgramTypeChange}>
+                                                <option value="">선택</option>
                                                 <option value="교육">교육</option>
                                                 <option value="체험">체험</option>
                                             </select>
                                         </div>
                                         <div style={{ marginBottom: "20px" }}>
                                             <h4>오프라인 장소 선택</h4>
-                                            <h7>오프라인 교육 체크시</h7>
                                             <select value={selectedLocation} onChange={handleLocationChange}>
+                                                <option value="">장소선택</option>
                                                 <option value="김포아트빌리지">김포아트빌리지</option>
                                                 <option value="통진두레문화센터">통진두레문화센터</option>
                                                 <option value="김포국제조각공원">김포국제조각공원</option>
@@ -695,7 +749,6 @@ function ClassForm() {
                                             ranges={[{ startDate: offlineLocationStartDate, endDate: offlineLocationEndDate, key: 'selection' }]}
                                         />
                                         <p>선택된 날짜: {offlineLocationStartDate.toLocaleDateString()} - {offlineLocationEndDate.toLocaleDateString()}</p>
-                                        <p>선택된 시간: {startHour} - {endHour}</p>
                                     </div>
                                     <div style={{ marginRight: "20px" }}>
                                         <h4>Start</h4>
@@ -720,7 +773,7 @@ function ClassForm() {
                                     <div>
                                         강의 운영 요일:
                                         <select value={selectedDay} onChange={handleSelectedDayChange}>
-                                            <option value="">운영 요일 선택</option>
+                                            <option value="">선택</option>
                                             <option value="월요일">월요일</option>
                                             <option value="화요일">화요일</option>
                                             <option value="수요일">수요일</option>
@@ -786,18 +839,20 @@ function ClassForm() {
                                     <div className='programFee'>
                                         <label htmlFor='programFee'>참가료:</label>
                                         <select value={programFee} onChange={handleProgramFeeChange}>
+                                            <option value="">비용선택</option>
                                             <option value="무료">무료</option>
                                             <option value="프로그램별 상이">프로그램별</option>
                                             {/* 다른 옵션 추가 가능 */}
                                         </select>
                                     </div>
+
                                 </>
                             )}
 
                             {onlineEducation && (
                                 <>
                                     <div className="ClassName">
-                                        <label htmlFor="CName">프로그램명 이름:</label>
+                                        <label id='classForm_cName' htmlFor="CName">프로그램명 이름:</label>
                                         <input
                                             type="text"
                                             id="CName"
@@ -816,10 +871,12 @@ function ClassForm() {
                                                     type='text'
                                                     placeholder="교육 소개"
                                                     value={field.certification}
+                                                    id='teachInfo_textBox'
                                                     onChange={(event) => handleCertificationChange(event, index)}
                                                 />
                                                 <input
                                                     type="file"
+                                                    id='teachInfo_fileBox'
                                                     onChange={(event) => handleCertificationFileChange(event, index)}
                                                 />
                                                 {index === 0 ? (
@@ -838,10 +895,12 @@ function ClassForm() {
                                                 <input
                                                     type='text'
                                                     value={field.subject} // 수정된 부분
+                                                    id='teachInfo_textBox'
                                                     onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
+                                                    id='teachInfo_fileBox'
                                                     onChange={(event) => handleTeachingSubjectFileChange(event, index)}
                                                 />
                                                 {index === 0 ? (
@@ -866,34 +925,41 @@ function ClassForm() {
                                         <div>
                                             {videoInfoFields.map((field, index) => (
                                                 <div key={index} className="videoInfoField">
-                                                    <p>{field.lectureNumber}강</p>
-                                                    <input
-                                                        type='text'
-                                                        placeholder="강의 제목"
-                                                        value={field.videoInfoDetail}
-                                                        onChange={(event) => handleVideoInfoChange(event, index)}
-                                                    />
-                                                    <button type='button' onClick={() => handleRemoveVideoField(index)}>-</button>
+                                                    <div className="videoHField">
+                                                        <p className="video_indexField">{field.lectureNumber}강</p>
+                                                        <input
+                                                            type='text'
+                                                            id='video_detailArea'
+                                                            placeholder="강의 제목"
+                                                            value={field.videoInfoDetail}
+                                                            onChange={(event) => handleVideoInfoChange(event, index)}
+                                                        />
+                                                        <button type='button' id="video_removeButton" onClick={() => handleRemoveVideoField(index)}>-</button>
+                                                    </div>
                                                     {field.subFields.map((subField, subIndex) => (
-                                                        <div key={subIndex} style={{ marginLeft: "10px" }} className="subVideoInfoField">
-                                                            <p>{field.lectureNumber}-{subField.subLectureNumber}</p>
+                                                        <div key={subIndex} style={{}} className="subVideoInfoField">
+                                                            <p className="video_indexField">{field.lectureNumber}-{subField.subLectureNumber}</p>
                                                             <input
                                                                 type='text'
+                                                                id='video_subDetailArea'
                                                                 placeholder="하위 강의 제목"
                                                                 value={subField.videoInfoDetail}
                                                                 onChange={(event) => handleSubVideoInfoChange(event, index, subIndex)}
                                                             />
                                                             <input
                                                                 type="file"
+                                                                id='video_attachArea'
                                                                 onChange={(event) => handleVideoFileChange(event, index, subIndex)}
                                                             />
-                                                            <button type='button' onClick={() => handleRemoveSubVideoField(index, subIndex)}>-</button>
+                                                            <button type='button' id="video_plusButton" onClick={() => handleAddSubVideoField(index)}>+</button>
+                                                            <button type='button' id="video_removeButton" onClick={() => handleRemoveSubVideoField(index, subIndex)}>-</button>
                                                         </div>
                                                     ))}
-                                                    <button type='button' onClick={() => handleAddSubVideoField(index)}>+</button>
                                                 </div>
                                             ))}
-                                            <button type='button' onClick={handleAddVideoField}>+ 비디오 추가</button>
+                                            <div className="video_addButton">
+                                                <button type='button' id="video_bigPlusButton" onClick={handleAddVideoField}>+ 비디오 추가</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </>
@@ -926,6 +992,7 @@ function ClassForm() {
                                 </div>
                             </div>
 
+                            <div className="classForm_buttonArea">
                             <div className='validation'>
                                 <button type='button'>확인</button>
                             </div>
@@ -935,7 +1002,8 @@ function ClassForm() {
                             <div className='delete'>
                                 <button type='button'>삭제</button>
                             </div>
-
+                            </div>
+                            {showAlert && <p style={{ color: 'red' }}>모든 필드를 입력해주세요.</p>}
                             <div className='formGroup'>
                                 <button type='submit'>신청하기</button>
                             </div>

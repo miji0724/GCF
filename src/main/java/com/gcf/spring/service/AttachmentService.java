@@ -132,11 +132,20 @@ public class AttachmentService {
             System.out.println("fileInFolder : " + fileInFolder);
             System.out.println("fileUrl : " + fileUrl);
             // 데이터베이스에 첨부 파일 정보 저장
-            attachmentRepository.save(attachment);
-
-            System.out.println("attachment : " + attachment);
             
-            return attachment;
+            Attachment savedAttachment = attachmentRepository.save(attachment);
+
+            // 출력을 위한 추가 정보
+            System.out.println("Attachment Details:");
+            System.out.println(" - Original Name: " + savedAttachment.getOriginal_name());
+            System.out.println(" - File Name: " + savedAttachment.getFile_name());
+            System.out.println(" - File Path: " + savedAttachment.getFile_path());
+            System.out.println(" - Parent: " + savedAttachment.getParent());
+            System.out.println(" - ID: " + savedAttachment.getId()); // 예시로 ID 출력
+
+            
+            
+            return savedAttachment;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

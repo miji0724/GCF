@@ -54,6 +54,11 @@ public class OnProgramController {
 	@PostMapping("/poster")
 	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
 
+		System.out.println("Poster Information:");
+		System.out.println("Name: " + poster.getOriginalFilename());
+		System.out.println("Content Type: " + poster.getContentType());
+		System.out.println("Size: " + poster.getSize() + " bytes");
+
 		if (poster.isEmpty()) {
 			// 포스터가 비어 있는 경우 처리
 			return ResponseEntity.badRequest().build();
@@ -70,6 +75,7 @@ public class OnProgramController {
 		int i = 0;
 		List<ProgramInfo> programInfos = new ArrayList<>();
 		OnProgram onProgram = onProgramService.getOnProgramById(id);
+		System.out.println("Program , onProgram : " + onProgram);
 		for (String description : descriptions) {
 			Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
 			ProgramInfo programInfo = new ProgramInfo();
@@ -80,6 +86,7 @@ public class OnProgramController {
 			i++;
 		}
 		onProgramService.insertProgramInfo(programInfos);
+		onProgram.setProgramInfos(programInfos);
 
 		return ResponseEntity.ok(null);
 	}
@@ -90,6 +97,7 @@ public class OnProgramController {
 		int i = 0;
 		List<TeacherInfo> teacherInfos = new ArrayList<>();
 		OnProgram onProgram = onProgramService.getOnProgramById(id);
+		System.out.println("Teacher , onProgram : " + onProgram);
 		for (String description : descriptions) {
 			Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
 			TeacherInfo teacherInfo = new TeacherInfo();
@@ -100,6 +108,7 @@ public class OnProgramController {
 			i++;
 		}
 		onProgramService.insertTeacherInfo(teacherInfos);
+		onProgram.setTeacherInfos(teacherInfos);
 
 		return ResponseEntity.ok(null);
 	}
@@ -132,8 +141,10 @@ public class OnProgramController {
 			onVideo.setOnProgram(onProgram);
 			onVideos.add(onVideo);
 		}
-
 		onProgramService.insertOnVideo(onVideos);
+		onProgram.setVideos(onVideos);
+
+		System.out.println(onProgram.toString());
 
 		return ResponseEntity.ok(null);
 	}

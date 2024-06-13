@@ -38,14 +38,16 @@ public class OffProgramService {
     public OffProgram createOffProgram(OffProgramDto offProgramDto, Teacher teacher) {
         OffProgram offProgram = OffProgram.createOffProgram(offProgramDto);
         System.out.println("teacher : "+teacher);
+        
         offProgram.setTeacher(teacher); // Teacher 설정
+        
         Optional<Attachment> optionalAttachment = attachmentRepository.findById(offProgramDto.getPosterId());
-        System.out.println("offProgramDto : "+offProgramDto);
         if (optionalAttachment.isPresent()) {
 			Attachment attachment = optionalAttachment.get();
 			offProgram.setPoster(attachment);
 		}
-		
+        System.out.println("offProgramDto : "+offProgramDto);
+        
         return offProgramRepository.save(offProgram);
     }
 

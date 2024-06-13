@@ -125,14 +125,43 @@ public class OffProgram {
 		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
 		offProgram.setViews(off_programDto.getViews());
 		offProgram.setLikesCount(off_programDto.getLikesCount());
-		offProgram.setCategory(off_programDto.getOfflineCategory());
+		offProgram.setCategory(off_programDto.getCategory());
 		offProgram.setPlaceName(off_programDto.getPlaceName());
 		offProgram.setProgramType(off_programDto.getProgramType());
-				
-		 
-		offProgram.setPoster(null);
-		offProgram.setProgramInfos(null);
-		offProgram.setTeacherInfos(null);
+		offProgram.setPoster(off_programDto.getPoster());
+		offProgram.setProgramInfos(off_programDto.getProgramInfos());
+		offProgram.setTeacherInfos(off_programDto.getTeacherInfos());
 		return offProgram;
+	}
+	
+	@Override
+    public String toString() {
+        return "OffProgram{" +
+                "id=" + id +
+                ", teacher=" + (teacher != null ? teacher.getId() : "null") +
+                ", programName='" + programName + '\'' +
+                ", programDetailName='" + programDetailName + '\'' +
+                ", application_info='" + application_info + '\'' +
+                ", applicationStartDate=" + applicationStartDate +
+                ", applicationEndDate=" + applicationEndDate +
+                ", operatingStartDay=" + operatingStartDay +
+                ", operatingEndDay=" + operatingEndDay +
+                ", participationFee='" + participationFee + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", maxParticipants=" + maxParticipants +
+                ", currentParticipants=" + currentParticipants +
+                ", applicationState='" + applicationState + '\'' +
+                ", approvalState='" + approvalState + '\'' +
+                ", dayOfWeek=" + dayOfWeek +
+                ", views=" + views +
+                ", likesCount=" + likesCount +
+                ", category='" + category + '\'' +
+                ", placeName='" + placeName + '\'' +
+                ", programType='" + programType + '\'' +
+                ", poster=" + (poster != null ? poster.getId() : "null") +
+                ", programInfos=" + programInfos +
+                ", teacherInfos=" + teacherInfos +
+                '}';
 	}
 }

@@ -1,5 +1,6 @@
 package com.gcf.spring.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,55 +23,62 @@ import com.gcf.spring.repository.TeacherInfoRepository;
 @Service
 public class OnProgramService {
 
-    @Autowired
-    private OnProgramRepository onProgramRepository;
-    
-    @Autowired
-    private ProgramInfoRepository programInfoRepository;
-    
-    @Autowired
-    private TeacherInfoRepository teacherInfoRepository;
-    
-    @Autowired
-    private OnVideoRepository onVideoRepository;
-    
-    @Autowired
-    private AttachmentRepository attachmentRepository;
-    
-    @Autowired
-    private AttachmentService attachmentService;
+	@Autowired
+	private OnProgramRepository onProgramRepository;
 
-    public OnProgram createOnProgram(OnProgramDto onProgramDto, Teacher teacher) {
-        OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
-        onProgram.setTeacher(teacher); // Teacher 설정
-        Optional<Attachment> optionalAttachment = attachmentRepository.findById(onProgramDto.getPosterId());
+	@Autowired
+	private ProgramInfoRepository programInfoRepository;
+
+	@Autowired
+	private TeacherInfoRepository teacherInfoRepository;
+
+	@Autowired
+	private OnVideoRepository onVideoRepository;
+
+	@Autowired
+	private AttachmentRepository attachmentRepository;
+
+	@Autowired
+	private AttachmentService attachmentService;
+
+	public OnProgram createOnProgram(OnProgramDto onProgramDto, Teacher teacher) {
+		OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
+		onProgram.setTeacher(teacher); // Teacher 설정
+		System.out.println(" -posterID: " + onProgramDto.getPosterId());
+		Optional<Attachment> optionalAttachment = attachmentRepository.findById(onProgramDto.getPosterId());
 		if (optionalAttachment.isPresent()) {
 			Attachment attachment = optionalAttachment.get();
 			onProgram.setPoster(attachment);
+			System.out.println(" -pp Original Name: " + attachment.getOriginal_name());
+			System.out.println(" - File Name: " + attachment.getFile_name());
+			System.out.println(" - File Path: " + attachment.getFile_path());
+			System.out.println(" - Parent: " + attachment.getParent());
+			System.out.println(" - ID: " + attachment.getId()); // 예시로 ID 출력
 		}
-        return onProgramRepository.save(onProgram);
-    }
 
-    public List<OnProgram> getAllOnPrograms() {
-        return onProgramRepository.findAll();
-    }
+		return onProgramRepository.save(onProgram);
+	}
 
-    public OnProgram getOnProgramById(Integer id) {
-        return onProgramRepository.findById(id).orElse(null);
-    }
+	public List<OnProgram> getAllOnPrograms() {
+		return onProgramRepository.findAll();
+	}
+
+	public OnProgram getOnProgramById(Integer id) {
+		return onProgramRepository.findById(id).orElse(null);
+	}
 
 	public List<ProgramInfo> insertProgramInfo(List<ProgramInfo> programInfos) {
 		return programInfoRepository.saveAll(programInfos);
 	}
-	
+
 	public List<TeacherInfo> insertTeacherInfo(List<TeacherInfo> teacherInfos) {
 		return teacherInfoRepository.saveAll(teacherInfos);
 	}
-	
+
 	public Attachment insertPoster(Attachment poster) {
 		return attachmentRepository.save(poster);
 	}
-	
+
 	public List<OnVideo> insertOnVideo(List<OnVideo> onVideos) {
 		return onVideoRepository.saveAll(onVideos);
 	}

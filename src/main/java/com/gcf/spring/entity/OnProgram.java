@@ -74,9 +74,9 @@ public class OnProgram {
 
 	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 	        OnProgram onProgram = new OnProgram();
-//	        onProgram.setTeacher(on_programDto.getTeacherId());
+	        onProgram.setTeacher(on_programDto.getTeacher());
 	        onProgram.setProgramName(on_programDto.getProgramName());
-	        onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
+	        onProgram.setOperatingStartDay(LocalDate.now());
 	        onProgram.setViews(on_programDto.getViews());
 	        onProgram.setLikesCount(on_programDto.getLikesCount());
 	        onProgram.setCategory(on_programDto.getCategory()); // 필드명 변경
@@ -92,7 +92,7 @@ public class OnProgram {
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();
-//		dto.setTeacher(onProgram.getTeacher());
+		dto.setTeacher(onProgram.getTeacher());
 		dto.setProgramName(onProgram.getProgramName());
 		dto.setOperatingStartDay(onProgram.getOperatingStartDay());
 		dto.setViews(onProgram.getViews());
@@ -107,4 +107,24 @@ public class OnProgram {
 		dto.setVideos(onProgram.getVideos());
 		return dto;
 	}
+	
+	@Override
+    public String toString() {
+        return "OnProgram{" +
+                "id=" + id +
+                ", teacher=" + (teacher != null ? teacher.getId() : "null") +
+                ", programName='" + programName + '\'' +
+                ", operatingStartDay=" + operatingStartDay +
+                ", views=" + views +
+                ", likesCount=" + likesCount +
+                ", category='" + category + '\'' +
+                ", programType='" + programType + '\'' +
+                ", poster=" + (poster != null ? poster.getId() : "null") +
+                ", approvalState='" + approvalState + '\'' +
+                ", programInfos=" + programInfos +
+                ", teacherInfos=" + teacherInfos +
+                ", comments=" + comments +
+                ", videos=" + videos +
+                '}';
+    }
 }
