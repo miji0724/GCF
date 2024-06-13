@@ -90,4 +90,10 @@ public class OffProgramController {
         List<OffProgram> programs = offProgramService.getAllOffPrograms();
         return ResponseEntity.ok(programs);
     }
+    
+    @GetMapping("/by-approval-state")
+    public ResponseEntity<List<OffProgram>> getOffProgramsByApprovalState(@RequestParam String approvalState) {
+        List<OffProgram> programs = offProgramService.getOffProgramsByApprovalState(approvalState);
+        return ResponseEntity.ok(programs);
+    }
 }

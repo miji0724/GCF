@@ -47,5 +47,30 @@ public class OffProgramService {
     public List<TeacherInfo> insertTeacherInfo(List<TeacherInfo> teacherInfos) {
     	return teacherInfoRepository.saveAll(teacherInfos);
     }
+
+	public List<OffProgram> getOffProgramsByApprovalState(String approvalState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+ 
+	public List<OffProgram> getOffProgramsByUserAndApprovalState(String userId, String approvalState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<OffProgram> getOffProgramsByUser(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<OffProgram> findByUserIdAndApprovalState(String userId, String approvalState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<OffProgram> findByUserId(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
  

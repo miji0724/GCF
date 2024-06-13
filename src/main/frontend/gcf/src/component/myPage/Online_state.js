@@ -38,7 +38,6 @@ function Online_state() {
               <th>번호</th>
               <th>카테고리</th>
               <th>교육명</th>
-              <th>진도율</th>
               <th>교육시작일</th>
             </tr>
           </thead>
@@ -48,7 +47,6 @@ function Online_state() {
                 <td>{program.id}</td>
                 <td>{program.category}</td>
                 <td>{program.programName}</td>
-                <td>{program.progress}</td>
                 <td>{program.operatingStartDay}</td>
               </tr>
             ))}

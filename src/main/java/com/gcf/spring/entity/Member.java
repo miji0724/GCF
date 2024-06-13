@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 
@@ -17,7 +18,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -93,6 +93,17 @@ public class Member {
 	@OneToMany
     @JoinColumn(name = "online_bookmark")
     private List<OnBookMark> onProgramBookMark;
+	
+	@OneToMany
+    @JsonIgnore
+    @JoinColumn(name="on_apply_id")
+    private List<OnProgram> applyOnProgram;
+    
+    @OneToMany
+    @JsonIgnore
+    @JoinColumn(name="off_apply_id")
+    private List<OffProgram> applyOffProgram;
+
 	
 	public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
 		Member member = new Member();

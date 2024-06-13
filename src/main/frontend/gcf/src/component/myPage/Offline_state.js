@@ -9,7 +9,7 @@ function Offline_state() {
   useEffect(() => {
     let url = '/api/offProgram';
     if (selectedState !== '전체') {
-      url = `/api/offPrograms/by-approval-state?approvalState=${selectedState}`;
+      url = `/api/offProgram/by-approval-state?approvalState=${selectedState}`;
     }
 
     axios.get(url)
