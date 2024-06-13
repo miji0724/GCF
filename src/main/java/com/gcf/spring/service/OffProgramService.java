@@ -36,6 +36,8 @@ public class OffProgramService {
     private AttachmentService attachmentService;
 
     public OffProgram createOffProgram(OffProgramDto offProgramDto, Teacher teacher) {
+    	
+    	
         OffProgram offProgram = OffProgram.createOffProgram(offProgramDto);
         System.out.println("teacher : "+teacher);
         
@@ -46,6 +48,7 @@ public class OffProgramService {
 			Attachment attachment = optionalAttachment.get();
 			offProgram.setPoster(attachment);
 		}
+       
         System.out.println("offProgramDto : "+offProgramDto);
         
         return offProgramRepository.save(offProgram);

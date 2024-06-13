@@ -27,11 +27,11 @@ public class TeacherInfo {
 
 	@Column(name = "description")
 	private String description;
-	
+
 	@ManyToOne
     @JoinColumn(name = "teacher_id") // 지울 예정 ***
     private Teacher teacher;
-
+	
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "attachment_id", referencedColumnName = "id")
 	private Attachment attachment; // 첨부파일

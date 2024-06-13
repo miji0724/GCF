@@ -10,6 +10,8 @@ import com.gcf.spring.dto.OffProgramDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -78,6 +80,7 @@ public class OffProgram {
 	private String approvalState; // 승인대기, 승인, 미승인
 
 	@Column(name = "day_of_week", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private Day_of_week dayOfWeek; // 프로그램 요일
 
 	@Column(name = "views", nullable = false)

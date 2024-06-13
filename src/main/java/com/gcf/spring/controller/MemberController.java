@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gcf.spring.constant.Role;
+import com.gcf.spring.constant.TeacherState;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository; // MemberRepository 임포트 추가
@@ -184,6 +185,24 @@ public class MemberController {
             return ResponseEntity.ok("회원 탈퇴가 성공적으로 처리되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 탈퇴 중 오류가 발생했습니다.");
+        }
+    }
+    
+    @GetMapping("/member/getUserRole")
+    public ResponseEntity<Role> sendUserRole(HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+
+        if (userId != null) {
+            Role role = memberService.getUserRole(userId);
+            if (role != null) {
+                return ResponseEntity.ok(role);
+            } else {
+                // 처리할 수 없는 상황에 따른 예외 처리
+                return ResponseEntity.notFound().build(); // 예시로 404 에러 반환
+            }
+        } else {
+            // 세션에 userId가 없는 경우에 대한 예외 처리
+            return ResponseEntity.badRequest().build(); // 예시로 400 에러 반환
         }
     }
 } 
