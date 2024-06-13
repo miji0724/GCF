@@ -4,17 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.Day_of_week;
 import com.gcf.spring.dto.OffProgramDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -78,6 +80,7 @@ public class OffProgram {
 	@Column(nullable = false)
 	private String approvalState; // 승인대기, 승인, 미승인
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "day_of_week", nullable = false)
 	private Day_of_week dayOfWeek; // 프로그램 요일
 
@@ -99,13 +102,11 @@ public class OffProgram {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "poster_id")
 	private Attachment poster; // 프로그램 포스터 정보
-
+	
     @OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<ProgramInfo> programInfos;
 
     @OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<TeacherInfo> teacherInfos;
 
     public static OffProgram createOffProgram(OffProgramDto off_programDto) {
@@ -128,7 +129,7 @@ public class OffProgram {
 		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
 		offProgram.setViews(off_programDto.getViews());
 		offProgram.setLikesCount(off_programDto.getLikesCount());
-		offProgram.setCategory(off_programDto.getOfflineCategory());
+		offProgram.setCategory(off_programDto.getCategory());
 		offProgram.setPlaceName(off_programDto.getPlaceName());
 		offProgram.setProgramType(off_programDto.getProgramType());
 				
@@ -160,7 +161,7 @@ public class OffProgram {
 	    dto.setDayOfWeek(offProgram.getDayOfWeek());
 	    dto.setViews(offProgram.getViews());
 	    dto.setLikesCount(offProgram.getLikesCount());
-	    dto.setOfflineCategory(offProgram.getCategory());
+	    dto.setCategory(offProgram.getCategory());
 	    dto.setPlaceName(offProgram.getPlaceName());
 	    dto.setProgramType(offProgram.getProgramType());
 	    dto.setPoster(offProgram.getPoster());

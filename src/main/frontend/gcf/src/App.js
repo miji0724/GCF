@@ -40,25 +40,22 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState("");
-    const [name, setName] = useState("");
 
     useEffect(() => {
         const storedUser = sessionStorage.getItem("member");
         if (storedUser) {
-            const { userId, name, loginTime } = JSON.parse(storedUser);
+            const { userId, loginTime } = JSON.parse(storedUser);
             const currentTime = new Date().getTime();
             const sessionTime = 1800000; // 30분 후 자동 로그아웃
             if (currentTime - loginTime < sessionTime) {
                 setIsLoggedIn(true);
                 setUserId(userId);
-                setName(name);
             } else {
                 handleLogout();
             }
         } else {
             setIsLoggedIn(false);
             setUserId("");
-            setName("");
         }
     }, []);
 
@@ -66,7 +63,6 @@ function App() {
         sessionStorage.removeItem("member");
         setIsLoggedIn(false);
         setUserId("");
-        setName("");
         window.location.href = "/";
     };
 
@@ -75,7 +71,6 @@ function App() {
         sessionStorage.setItem("member", JSON.stringify({ ...loginForm, loginTime }));
         setIsLoggedIn(true);
         setUserId(loginForm.userId);
-        setName(loginForm.name);
         window.location.href = "/";
     };
 
@@ -85,7 +80,7 @@ function App() {
         
         return (
             <>
-                {!isManagePath && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} userId={userId} name={name} />}
+                {!isManagePath && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} userId={userId} />}
                 <main>{children}</main>
                 {!isManagePath && <Footer />}
             </>

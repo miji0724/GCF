@@ -5,7 +5,6 @@ import BookMark from './BookMark';
 import Comment from './Comment';
 import TeacherForm from './TeacherForm';
 import ClassForm from './ClassForm';
-import Certification from './Certification';
 import MyPageSignUpForm from './MyPageSignUpForm';
 import './LeftMenuBar_teacher.css';
 
@@ -41,7 +40,6 @@ function LeftMenuBar_teacher() {
             <li><button onClick={() => handleLinkClick('comment')}>작성댓글</button></li>
             <li><button onClick={() => handleAuthRedirect('teacher_register')}>강사 등록 신청</button></li>
             <li><button onClick={() => handleLinkClick('class_register')}>강의 등록 신청</button></li>
-            <li><button onClick={() => handleAuthRedirect('certification')}>증명서 발급</button></li>
             <li><button onClick={() => handleLinkClick('info_update')}>정보수정</button></li>
           </ul>
         </div>
@@ -53,7 +51,6 @@ function LeftMenuBar_teacher() {
         {activeComponent === 'comment' && <Comment />}
         {activeComponent === 'teacher_register' && <TeacherForm />}
         {activeComponent === 'class_register' && <ClassForm />}
-        {activeComponent === 'certification' && <Certification />}
         {activeComponent === 'info_update' && <MyPageSignUpForm />}
       </div>
     </div>

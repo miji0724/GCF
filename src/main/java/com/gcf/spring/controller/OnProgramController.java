@@ -37,37 +37,55 @@ public class OnProgramController {
     @Autowired
     private TeacherService teacherService;
 
-    @PostMapping
-    public ResponseEntity<OnProgram> createOnProgram(@RequestBody OnProgramDto onProgramDto) {
-        Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
-        OnProgram createdOnProgram = onProgramService.createOnProgram(onProgramDto, teacher);
-        return ResponseEntity.ok(createdOnProgram);
-    }
-    
-    @PostMapping("/info")
-    public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
-                                                  @RequestParam("descriptions") List<String> descriptions,
-                                                  @RequestParam("id") Integer id) {
-        int i = 0;
-        List<ProgramInfo> programInfos = new ArrayList<>();
-        OnProgram onProgram = onProgramService.getOnProgramById(id);
-        for (String description : descriptions) {
-            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
-            ProgramInfo programInfo = new ProgramInfo();
-            programInfo.setAttachment(attachment);
-            programInfo.setDescription(description);
-            programInfo.setOnProgram(onProgram);
-            programInfos.add(programInfo);
-            i++;
-        }
-        onProgramService.insertProgramInfo(programInfos);
+	@PostMapping
+	public ResponseEntity<OnProgram> createOnProgram(@RequestBody OnProgramDto onProgramDto) {
 
-       // dto.getDescription().forEach(e -> System.out.println(e));
-       // dto.getFiles().forEach(e -> System.out.println(e.getOriginalFilename()));
-       // ProgramInfo programInfo = onProgramService.insertProgramInfo(info);
-        return ResponseEntity.ok(null);
-    }
+		Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
+		OnProgram createdOnProgram = onProgramService.createOnProgram(onProgramDto, teacher);
+
+		return ResponseEntity.ok(createdOnProgram);
+	}
     
+	@PostMapping("/poster")
+	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
+
+		System.out.println("Poster Information:");
+		System.out.println("Name: " + poster.getOriginalFilename());
+		System.out.println("Content Type: " + poster.getContentType());
+		System.out.println("Size: " + poster.getSize() + " bytes");
+
+		if (poster.isEmpty()) {
+			// 포스터가 비어 있는 경우 처리
+			return ResponseEntity.badRequest().build();
+		}
+		Attachment attachment = attachmentService.uploadOnProgramFile(poster);
+		Attachment saveAtt = onProgramService.insertPoster(attachment);
+		System.out.println("a:" + saveAtt);
+		return ResponseEntity.ok(saveAtt);
+	}
+
+	@PostMapping("/onprograminfo")
+	public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
+			@RequestParam("descriptions") List<String> descriptions, @RequestParam("id") Integer id) {
+		int i = 0;
+		List<ProgramInfo> programInfos = new ArrayList<>();
+		OnProgram onProgram = onProgramService.getOnProgramById(id);
+		System.out.println("Program , onProgram : " + onProgram);
+		for (String description : descriptions) {
+			Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
+			ProgramInfo programInfo = new ProgramInfo();
+			programInfo.setAttachment(attachment);
+			programInfo.setDescription(description);
+			programInfo.setOnProgram(onProgram);
+			programInfos.add(programInfo);
+			i++;
+		}
+		onProgramService.insertProgramInfo(programInfos);
+		onProgram.setProgramInfos(programInfos);
+
+		return ResponseEntity.ok(null);
+	}
+	
     @PostMapping("/onteacherinfo")
     public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
             									   @RequestParam("descriptions") List<String> descriptions,

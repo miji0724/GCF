@@ -37,11 +37,28 @@ public class OffProgramController {
     private TeacherService teacherService;
 
     @PostMapping
-    public ResponseEntity<OffProgram> createOffProgram(@RequestBody OffProgramDto offProgramDto) {
-        Teacher teacher = teacherService.findById(offProgramDto.getTeacher().getId());
-        OffProgram newOffProgram = offProgramService.createOffProgram(offProgramDto, teacher);
-        return ResponseEntity.ok(newOffProgram);
-    }
+	public ResponseEntity<OffProgram> createOffProgram(@RequestBody OffProgramDto offProgramDto) {
+
+		Teacher teacher = teacherService.findById(offProgramDto.getTeacherId());
+		OffProgram createdOffProgram = offProgramService.createOffProgram(offProgramDto, teacher);
+
+		System.out.println("createdOffProgram : " + createdOffProgram);
+		
+		return ResponseEntity.ok(createdOffProgram);
+	}
+    
+	@PostMapping("/poster")
+	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
+
+		if (poster.isEmpty()) {
+			// 포스터가 비어 있는 경우 처리
+			return ResponseEntity.badRequest().build();
+		}
+		Attachment attachment = attachmentService.uploadOffProgramFile(poster);
+		Attachment saveAtt = offProgramService.insertPoster(attachment);
+		System.out.println("a:" + saveAtt);
+		return ResponseEntity.ok(saveAtt);
+	}
     
     @PostMapping("/offproginfo")
     public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,

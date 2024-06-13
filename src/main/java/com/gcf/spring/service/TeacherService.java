@@ -53,6 +53,7 @@ public class TeacherService {
             teacher.setCareerEndYear(teacherDto.getCareerEndYear());
             teacher.setLicenseName(teacherDto.getLicenseName());
             teacher.setTeachAbleCategory(teacherDto.getTeachAbleCategory());
+            teacher.setTeacherState(teacherDto.getTeacherState()); // 추가된 부분
 
             // 회원 정보를 데이터베이스에 저장
             teacherRepository.save(teacher);
@@ -68,6 +69,7 @@ public class TeacherService {
                 .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
 
         TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setId(teacher.getId());
         teacherDto.setAffiliatedOrganization(teacher.getAffiliatedOrganization());
         teacherDto.setTeacherCategory(teacher.getTeacher_category());
         teacherDto.setSnsAddress(teacher.getSnsAddress());
@@ -76,16 +78,17 @@ public class TeacherService {
         teacherDto.setCareerEndYear(teacher.getCareerEndYear());
         teacherDto.setLicenseName(teacher.getLicenseName());
         teacherDto.setTeachAbleCategory(teacher.getTeachAbleCategory());
+        teacherDto.setTeacherState(teacher.getTeacherState()); // 추가된 부분
 
         return teacherDto;
     }
     
     // 강사 정보 업데이트
     public void updateTeacherInfo(String id, TeacherDto teacherDto) {
-    	Teacher teacher = teacherRepository.findById(id)
-    			.orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
-    	
-    	teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("강사 정보를 찾을 수 없습니다."));
+        
+        teacher.setAffiliatedOrganization(teacherDto.getAffiliatedOrganization());
         teacher.setTeacher_category(teacherDto.getTeacherCategory());
         teacher.setSnsAddress(teacherDto.getSnsAddress());
         teacher.setCareer(teacherDto.getCareer());
@@ -93,6 +96,7 @@ public class TeacherService {
         teacher.setCareerEndYear(teacherDto.getCareerEndYear());
         teacher.setLicenseName(teacherDto.getLicenseName());
         teacher.setTeachAbleCategory(teacherDto.getTeachAbleCategory());
+        teacher.setTeacherState(teacherDto.getTeacherState()); // 추가된 부분
 
         teacherRepository.save(teacher);
     }

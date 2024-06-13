@@ -2,6 +2,7 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
@@ -30,7 +31,7 @@ public class Teacher {
     @Id
     @Column(name = "id", nullable = false)
     private String id;
-
+    
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")

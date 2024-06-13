@@ -429,3 +429,11 @@
     border-radius: 5px;
     box-sizing: border-box;
 }
+
+.menu-item.approved {
+    background-color: #0056b3;
+}
+
+.menu-item.pending {
+    color: aqua;
+}

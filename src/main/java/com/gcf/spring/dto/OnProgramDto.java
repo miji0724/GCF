@@ -32,6 +32,7 @@ public class OnProgramDto {
 	private String category; // 프로그램 카테고리
 	private String programType; // 프로그램 타입 (온라인/오프라인 구분)
 	private Attachment poster; // 포스터 정보
+	private Integer posterId;
 	private String approvalState; //승인, 미승인, 승인대기
 	private List<ProgramInfo> programInfos; // 교육 소개 파일
 	private List<TeacherInfo> teacherInfos; // 강사 소개 파일
