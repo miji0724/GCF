@@ -9,10 +9,10 @@ function Online_state() {
   useEffect(() => {
     let url = '/api/onProgram';
     if (selectedState !== '전체') {
-      url = `/api/onPrograms/by-status?status=${selectedState}`;
+      url = `/api/onProgram/by-approval-state?approvalState=${selectedState}`;
     }
 
-    axios.get(url)
+    axios.get(url, { withCredentials: true })
       .then(response => {
         setPrograms(response.data);
       })

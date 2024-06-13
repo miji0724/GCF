@@ -35,4 +35,5 @@ public class OnProgramDto {
    private List<TeacherInfo> teacherInfos; // 강사 소개 파일
    private List<Comment> comments; // 댓글 리스트
    private List<OnVideo> videos; // 비디오 리스트
+
 }

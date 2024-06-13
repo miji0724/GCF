@@ -72,5 +72,10 @@ public class OffProgramService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public List<OffProgram> getOffProgramsByUserId(Integer userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
  

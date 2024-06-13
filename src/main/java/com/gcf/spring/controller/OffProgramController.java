@@ -91,9 +91,9 @@ public class OffProgramController {
         return ResponseEntity.ok(programs);
     }
     
-    @GetMapping("/by-approval-state")
-    public ResponseEntity<List<OffProgram>> getOffProgramsByApprovalState(@RequestParam String approvalState) {
-        List<OffProgram> programs = offProgramService.getOffProgramsByApprovalState(approvalState);
+    @GetMapping("/by-user")
+    public ResponseEntity<List<OffProgram>> getOffProgramsByUserId(@RequestParam Integer userId) {
+        List<OffProgram> programs = offProgramService.getOffProgramsByUserId(userId);
         return ResponseEntity.ok(programs);
     }
-}
+} 
