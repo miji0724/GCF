@@ -1,0 +1,219 @@
+.teachAppDetail_container
+{
+    display: flex;
+    height:100%;
+}
+
+.teachAppDetail_container ul{
+    list-style-type: none;
+}
+
+.teachAppDetail
+{
+    flex: 0.85;
+    background-color: #ffffff;
+    text-align: center;
+    font-family: "Noto Sans KR", sans-serif;  
+}
+
+.teachAppDetail > p{
+    margin-top:30px;
+    font-size: 30px;
+    font-weight:500;
+}
+
+.teachAppDetail_area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.teachAppDetail input,
+.teachAppDetail select
+{
+    border-style: none;
+    background-color: #ededed;
+    height: 30px;
+    text-align: center;
+}
+
+.teachAppDetail_area li{
+    line-height: 45px;
+}
+
+.teachAppDetail_left{
+    text-align: right;
+}
+
+.teachAppDetail_right,
+#teachAppDetail_lecField{
+    text-align: left;
+}
+
+.teachAppDetail_radio_area{
+    margin-left: 10px;
+}
+
+#teachAppDetail_birth_detail{
+    width:185px;
+}
+
+#teachAppDetail_emailId{
+    width:120px;
+}
+
+#teachAppDetail_emailAddr{
+    width:180px;
+}
+
+#teachAppDetail_addr,
+#teachAppDetail_addrD{
+    width:500px;
+}
+
+.teachApp_detail_category_area{
+    display:flex;
+    flex-direction: row;
+    width:500px;
+    flex-wrap: wrap;
+}
+
+.teachApp_detail_category_label{
+    display:flex;
+    align-items: center;
+    flex: 1 1 10%;
+}
+
+#teachAppDetail_lecField{
+    width:173px;
+    text-align: center;
+}
+
+.teachAppDetail_checkboxArea{
+    display:flex;
+}
+
+.teachAppDetail_checkboxDetailArea{
+    display:flex;
+    align-items: center;
+}
+
+.mainCareer_detail{
+    width:200px;
+    margin-right: 20px;
+}
+
+.mainCareer_flexArea input[type='number'] {
+    width:100px;
+}
+
+.mainCareer_buttonAlign button,
+.License_buttonAlign button,
+.teachAble_buttonAlign button{
+    width:30px;
+    height:30px;
+    margin-left: 10px;
+    border:none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teachAppDetail .mainCareer_area,
+.teachAppDetail .License_area,
+.teachAppDetail .teachAble_area{
+    max-height: 130px;
+    min-height: 130px;  /* 최대 높이 설정 */
+    width:500px;
+    overflow-y: auto;
+    margin: 10px 0;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.teachAppDetail .mainCareer_buttonAlign,
+.teachAppDetail .License_buttonAlign,
+.teachAppDetail .teachAble_buttonAlign {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.teachAppDetail .mainCareer_flexArea,
+.teachAppDetail .License_flexArea,
+.teachAppDetail .teachAble_flexArea{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height:30px;
+}
+
+#teachAppDetail_License1_attachment,
+#teachAppDetail_License2_attachment,
+#teachAppDetail_License3_attachment{
+    width:180px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.License_flexArea input[type='text']{
+    width:400px;
+}
+
+.teachAble_flexArea input[type='text']{
+    width:400px;
+}
+
+.teachAppDetail_button_area button{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    border : none;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+}
+
+#teachAppDetail_confirm{
+    background-color: #AECCF2;
+}
+
+#teachAppDetail_delete{
+    background-color: #FF8585;
+}
+
+.License_attachment_button{
+    height:30px;
+    line-height: 30px;
+    border: none;
+    margin-right: 10px;
+}
+
+.teachAppDetail_approval{
+    margin-right: 20px;
+    margin-bottom: 30px;
+    background-color: #AECCF2;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+    border:none;
+}
+
+.teachAppDetail_notApproval{
+    margin-left: 20px;
+    margin-bottom: 30px;
+    background-color: #FF8585;
+    border-radius: 10px;
+    width:100px;
+    height: 50px;
+    font-size: 25px;
+    font-weight:600;
+    border:none;
+}

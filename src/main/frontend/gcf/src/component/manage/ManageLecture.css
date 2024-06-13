@@ -10,7 +10,7 @@
 
 .lecture
 {
-    flex:0.8;
+    flex: 0.85;
     background-color: #ffffff;
     text-align: center;
     font-family: "Noto Sans KR", sans-serif;  
@@ -19,7 +19,7 @@
 .lecture > p{
     margin-top:30px;
     font-size: 30px;
-    font-weight:800;
+    font-weight:500;
 }
 
 .lecture_search{
@@ -33,8 +33,19 @@
     width:130px;
     height:40px;
     text-align: center;
-    margin-right: 10px;
+    margin-right: 5px;
     border: none;
+    border-radius: 5px;
+    background-color: #AECCF2;
+    cursor: pointer;
+}
+
+.lecture_search_button{
+    width:50px;
+    height:40px;
+    text-align: center;
+    border:none;
+    border-radius: 5px;
     background-color: #AECCF2;
 }
 

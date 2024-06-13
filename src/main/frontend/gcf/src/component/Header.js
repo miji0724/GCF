@@ -4,7 +4,7 @@ import search from '../img/search.png';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Header = ({ isLoggedIn, onLogout }) =>  {
+const Header = ({ isLoggedIn, onLogout, userId, name }) =>  {
   const [isActive, setIsActive] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
@@ -14,6 +14,8 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
   const gotoOnlineListCategory = (category) => {
     navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
   };
+  
+  const isManager = userId === "manager12";
 
   return (
     <header>
@@ -25,7 +27,13 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
           {isLoggedIn ? (
             <>
               <a onClick={onLogout}>로그아웃</a> |
-              <a href="/MyAuthentication">마이페이지</a>
+              <a href="/MyAuthenticationForm">마이페이지</a>
+              {isManager && (
+                <>
+                  <span>|</span>
+                  <a href="/manage">관리자페이지</a>
+                </>
+              )}
             </>
           ) : (
             <>

@@ -48,6 +48,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()  // 회원 관련 모든 URL 허용
+                        .requestMatchers(new AntPathRequestMatcher("/teacher/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**/**/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()

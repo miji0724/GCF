@@ -23,14 +23,11 @@ public class BannerService {
 
 	private final BannerOneRepository bannerOneRepository;
 	private final BannerTwoRepository bannerTwoRepository;
-	private final AttachmentRepository attachmentRepository;
 	private final AttachmentService attachmentService;
 
-	public BannerService(BannerOneRepository bannerOneRepository, BannerTwoRepository bannerTwoRepository,
-			AttachmentRepository attachmentRepository, AttachmentService attachmentService) {
+	public BannerService(BannerOneRepository bannerOneRepository, BannerTwoRepository bannerTwoRepository, AttachmentService attachmentService) {
 		this.bannerOneRepository = bannerOneRepository;
 		this.bannerTwoRepository = bannerTwoRepository;
-		this.attachmentRepository = attachmentRepository;
 		this.attachmentService = attachmentService;
 	}
 
@@ -52,7 +49,7 @@ public class BannerService {
 					bannerOne.setUrl(bannerInput.getLink());
 
 					if (attachment != null) {
-						attachment.setBannerOne(bannerOne);
+//						attachment.setBannerOne(bannerOne);
 						bannerOne.setAttachment(attachment);
 					}
 
@@ -62,7 +59,7 @@ public class BannerService {
 					bannerTwo.setUrl(bannerInput.getLink());
 
 					if (attachment != null) {
-						attachment.setBannerTwo(bannerTwo);
+//						attachment.setBannerTwo(bannerTwo);
 						bannerTwo.setAttachment(attachment);
 					}
 
@@ -70,7 +67,7 @@ public class BannerService {
 				}
 			}
 		}
-		attachmentService.deleteUnlinkedFiles();
+		//attachmentService.deleteUnlinkedFiles();
 		return "배너 데이터가 성공적으로 업데이트되었습니다.";
 	}
 	

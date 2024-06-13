@@ -15,11 +15,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "notice")
@@ -27,6 +29,7 @@ import lombok.Setter;
 @DynamicUpdate 
 @Getter
 @Setter
+@ToString
 public class Notice {
 
 	public Notice() {
@@ -37,7 +40,7 @@ public class Notice {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long id;
+    private Integer id;
 
     //작성자 고정(관리자)
     @Column(nullable = false)
@@ -53,7 +56,7 @@ public class Notice {
 
     //공지사항 작성일
     @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
     //공지사항 조회수
@@ -62,6 +65,7 @@ public class Notice {
 
     //공지사항 첨부파일
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "notice_img_id")
     private List<Attachment> attachments;
     
     // 생성 시간 자동 설정

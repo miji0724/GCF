@@ -90,6 +90,16 @@ label {
 
 #email1 {
     width: 30%;
+    height: 30px;
+}
+
+#email2 {
+    height: 30px;
+}
+
+.email {
+    display: flex;
+    flex-direction: row;
 }
 
 .zonecode {

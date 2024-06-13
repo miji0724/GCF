@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.gcf.spring.entity.Notice;
 
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     @Query("SELECT n FROM Notice n ORDER BY n.createdAt DESC")
     Page<Notice> findAllByOrderByCreatedAtDesc(Pageable pageable);
     

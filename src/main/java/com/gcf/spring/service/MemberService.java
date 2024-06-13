@@ -1,9 +1,11 @@
 package com.gcf.spring.service;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -31,6 +33,7 @@ public class MemberService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder; 
 	private final JavaMailSender mailSender;
+	private final ModelMapper modelMapper;
     
     private boolean isValidId(String id) {
         String regex = "^[a-zA-Z0-9]{5,20}$";
@@ -41,6 +44,10 @@ public class MemberService implements UserDetailsService {
     public boolean existsById(String id) {
         System.out.println("아이디 존재 확인");
         return memberRepository.existsById(id);
+    }
+    
+    public void signUp(Member member) {
+        memberRepository.save(member);
     }
     
     public ResponseEntity<String> checkId(String id) {
@@ -170,6 +177,63 @@ public class MemberService implements UserDetailsService {
         }
     }
     
+    public void updateMember(String userId, MemberDto memberDto) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            member.setName(memberDto.getName());
+            if (memberDto.getPassword() != null && !memberDto.getPassword().isEmpty()) {
+                member.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+            }
+            member.setBirth(memberDto.getBirth());
+            member.setPhone_number(memberDto.getPhone_number());
+            member.setTel_number(memberDto.getTelNumber());
+            member.setEmail(memberDto.getEmail());
+            member.setAddress(memberDto.getAddress());
+            member.setDetail_address(memberDto.getDetail_address());
+            member.setEmail_agreement(memberDto.getEmail_agreement());
+            member.setMessage_agreement(memberDto.getMessage_agreement());
+            member.setMail_agreement(memberDto.getMail_agreement());
+            member.setInterests(memberDto.getInterests());
+            member.setMarried(memberDto.getMarried());
+            member.setHasChildren(memberDto.getHasChildren());
+            memberRepository.save(member);
+        } else {
+            throw new RuntimeException("Member not found with id: " + userId);
+        }
+    }
+
+    public void deleteMember(String userId) {
+        memberRepository.deleteById(userId);
+    }
+    
+    public List<Member> getAllMembers(){
+    	return memberRepository.findAll();
+    }
+    
+    
+    public Member memberUpdateInManage(MemberDto memberDto, PasswordEncoder passwordEncoder) {
+        // 1. MemberDto 객체로부터 수정된 회원 정보를 추출합니다.
+        String memberId = memberDto.getId(); // 혹은 다른 방식으로 회원을 식별하는 정보를 사용할 수 있습니다.
+        
+        // 회원을 찾지 못한 경우에 대한 처리
+        Member existingMember = memberRepository.findById(memberId).orElse(null);
+        
+        // 회원을 찾지 못했을 때의 처리
+        if (existingMember == null) {
+            // 처리할 작업을 수행합니다. 예를 들어 예외를 던지거나 다른 방식으로 사용자에게 알릴 수 있습니다.
+            System.out.println("회원을 찾을 수 없습니다.");
+            return null; // 또는 다른 적절한 처리를 수행할 수 있습니다.
+        }
+        
+        // MemberDto를 Member 엔티티로 매핑
+        Member updatedMember = modelMapper.map(memberDto, Member.class);
+        
+       
+        // 업데이트된 회원 정보를 저장하고 반환합니다.
+        return memberRepository.save(updatedMember);
+    }
+    
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findById(id);
@@ -183,4 +247,6 @@ public class MemberService implements UserDetailsService {
                    .roles(member.getRole().toString())
                    .build();
     }
+    
+    
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ManageLecOnDetail.css';
 
-function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent }) {
+function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent, onAttachFile }) {
     const [text, setText] = useState('');
 
     const handleTextChange = (e) => {
@@ -9,23 +9,22 @@ function EducationItem({ id, name, onAddSubItem, onDeleteSubItem, isParent }) {
     };
 
     return (
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "500px", height: "40px", marginTop: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "100%", height: "40px", marginTop: "10px" }}>
             {isParent && (
                 <>
-                    {/* 상위 항목 */}
-                    <p>{name}</p>
-                    <p style={{ marginRight: "10px" }}></p>
+                    <p style={{ margin: "0 10px 0 0" }}>{name}</p>
                     <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "370px" }} />
-                    <button type="button" onClick={onAddSubItem} style={{ marginRight: "10px", width: "30px", height: "30px", backgroundColor: "#EDEDED" }}>+</button>{/* 하위 추가 */}
-                    <button type="button" onClick={onDeleteSubItem} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>{/* 하위 제거 */}
+                    <button type="button" onClick={onAddSubItem} style={{ marginRight: "10px", width: "30px", height: "30px", backgroundColor: "#EDEDED" }}>+</button>
+                    <button type="button" onClick={onDeleteSubItem} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
                 </>
             )}
             {!isParent && (
                 <>
-                    {/* 하위 항목 */}
-                    <p style={{ marginLeft: "5px", marginRight: "5px", width: "50px" }}>{name}</p>
-                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "300px" }} />
-                    <button type="button" onClick={onDeleteSubItem} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>{/* 하위 제거 */}
+                    <p style={{ margin: "0 5px 0 5px", width: "50px" }}>{name}</p>
+                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "230px" }} />
+                    <input type="file" onChange={onAttachFile} style={{ display: 'none' }} id={`file-input-${id}`} />
+                    <label htmlFor={`file-input-${id}`} style={{ marginRight: "10px", width: "70px", height: "30px", backgroundColor: "#EDEDED", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>파일 선택</label>
+                    <button type="button" onClick={onDeleteSubItem} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
                 </>
             )}
         </div>
@@ -39,30 +38,18 @@ function ManageLecOnDetail() {
     const [subCounters, setSubCounters] = useState({});
 
     useEffect(() => {
-        // 초기 상위 항목 추가
         handleAddItem();
     }, []);
 
     const handleAddItem = () => {
-        const newItemId = parentCounter;
+        const newItemId = items.length + 1;
         const newItem = {
             id: newItemId,
             name: `${newItemId}강`,
             subItems: [],
         };
         setItems([...items, newItem]);
-        setParentCounter(parentCounter + 1);
-    };
-
-    const handleAddCustomItem = (customName) => {
-        const newItemId = parentCounter;
-        const newItem = {
-            id: newItemId,
-            name: customName,
-            subItems: [],
-        };
-        setItems([...items, newItem]);
-        setParentCounter(parentCounter + 1);
+        setParentCounter(newItemId + 1);
     };
 
     const handleAddSubItem = (parentId) => {
@@ -90,7 +77,7 @@ function ManageLecOnDetail() {
     const handleDeleteSubItem = (parentId) => {
         const updatedItems = items.map(item => {
             if (item.id === parentId) {
-                const newSubItems = item.subItems.slice(0, -1); // Remove the last sub item
+                const newSubItems = item.subItems.slice(0, -1);
                 return {
                     ...item,
                     subItems: newSubItems,
@@ -115,6 +102,12 @@ function ManageLecOnDetail() {
     const handleDeleteParentItem = (parentId) => {
         const updatedItems = items.filter(item => item.id !== parentId);
         setItems(updatedItems);
+        setParentCounter(updatedItems.length + 1);
+    };
+
+    const handleAttachFile = (event) => {
+        const file = event.target.files[0];
+        console.log(`파일 첨부: ${file.name}`);
     };
 
     const handlePhoneNumberChange = (event) => {
@@ -158,38 +151,34 @@ function ManageLecOnDetail() {
                             <option value='education'>교육</option>
                             <option value='etc'>기타</option>
                         </select>
-                        <ul>
-                            <li>
-                                <div className='trainList'>
-                                    <div className='trainList_area'>
-                                        {items.map(item => (
-                                            <div key={item.id} className="education-item-wrapper">
-                                                <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>- 강의 삭제</button>
-                                                <button type="button" onClick={handleAddItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+ 강의 추가</button>
-                                                
-                                                <EducationItem
-                                                    id={item.id}
-                                                    name={item.name}
-                                                    onAddSubItem={() => handleAddSubItem(item.id)}
-                                                    onDeleteSubItem={() => handleDeleteSubItem(item.id)}
-                                                    isParent={true}
-                                                />
-                                                {item.subItems.map(subItem => (
-                                                    <EducationItem
-                                                        key={subItem.id}
-                                                        id={subItem.id}
-                                                        name={subItem.name}
-                                                        onDeleteSubItem={() => handleDeleteSubItem(item.id)}
-                                                        onAddSubItem={() => handleAddSubItem(item.id)}
-                                                        isParent={false}
-                                                    />
-                                                ))}
-                                            </div>
-                                        ))}
-                                    </div>
+                        <div>
+                            {items.map(item => (
+                                <div key={item.id} className="education-item-wrapper">
+                                    <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>-</button>
+                                    <button type="button" onClick={handleAddItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+</button>
+                                    
+                                    <EducationItem
+                                        id={item.id}
+                                        name={item.name}
+                                        onAddSubItem={() => handleAddSubItem(item.id)}
+                                        onDeleteSubItem={() => handleDeleteSubItem(item.id)}
+                                        onAttachFile={handleAttachFile}
+                                        isParent={true}
+                                    />
+                                    {item.subItems.map(subItem => (
+                                        <EducationItem
+                                            key={subItem.id}
+                                            id={subItem.id}
+                                            name={subItem.name}
+                                            onDeleteSubItem={() => handleDeleteSubItem(item.id)}
+                                            onAddSubItem={() => handleAddSubItem(item.id)}
+                                            onAttachFile={handleAttachFile}
+                                            isParent={false}
+                                        />
+                                    ))}
                                 </div>
-                            </li>
-                        </ul>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

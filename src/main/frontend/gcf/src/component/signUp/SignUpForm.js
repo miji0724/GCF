@@ -24,7 +24,7 @@ const SignUpForm = () => {
         confirm_password: '',
         birth: '',
         phone_number: '',
-        tel_number: '',
+        telNumber: '',
         address: '',
         detail_address: '',
         email1: '',
@@ -235,9 +235,9 @@ const SignUpForm = () => {
 	                                    <input type="text" name="phone_number" id="phone_number" maxLength="13" value={formData.phone_number} onChange={handlePhoneNumberChange} />
 	                                </li>
 	                                <li>
-	                                    <input type="text" name="tel_number" id="tel_number" maxLength="13" value={formData.tel_number} onChange={(e) => setFormData({ ...formData, tel_number: e.target.value })} />
+	                                    <input type="text" name="tel_number" id="tel_number" maxLength="13" value={formData.telNumber} onChange={(e) => setFormData({ ...formData, telNumber: e.target.value })} />
 	                                </li>
-	                                <li>
+	                                <li className='email'>
 	                                    <input id="email1" name="email1" value={formData.email1} onChange={(e) => {setFormData({ ...formData, email1: e.target.value }); handleEmailChange();}} />@&nbsp;
 	                                    <input id="email2" name="email2" value={formData.email2} onChange={(e) => {setFormData({ ...formData, email2: e.target.value }); handleEmailChange();}} />
 	                                </li>

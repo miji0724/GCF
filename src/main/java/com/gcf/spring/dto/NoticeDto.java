@@ -20,7 +20,7 @@ public class NoticeDto {
     }
 	
 	@NotNull
-	private Long id;
+	private int id;
 	
 	@NotBlank
     private String author = "관리자";

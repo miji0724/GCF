@@ -48,12 +48,18 @@ public class NoticeController {
     }
     
     @GetMapping("/notices/{id}")
-    public Optional<Notice> getNoticeById(@PathVariable("id") Long id) {
-        return noticeService.getNoticeById(id);
+    public ResponseEntity<?> getNoticeById(@PathVariable("id") Integer id) {
+        Optional<Notice> noticeOptional = noticeService.getNoticeById(id);
+        if(noticeOptional.isPresent()) {
+            Notice notice = noticeOptional.get();
+            return ResponseEntity.ok(notice);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     @PutMapping("/notices/{id}/views")
-    public ResponseEntity<Void> increaseNoticeViews(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> increaseNoticeViews(@PathVariable("id") Integer id) {
         noticeService.increaseNoticeViews(id);
         return ResponseEntity.ok().build();
     }

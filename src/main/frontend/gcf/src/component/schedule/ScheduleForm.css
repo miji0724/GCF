@@ -1,5 +1,6 @@
 .schedule_form {
     height: 1100px;
+    margin-bottom: 200px;
 }
 
 .schedule_body {
@@ -66,6 +67,29 @@
     width: 120px;
     height: 110px;
     display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.selectedDay {
+    border-radius: 10px;
+    border: 3px solid #394570;
+    height: 110px;
+    margin-bottom: 10px;
+    margin-top: -10px;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+.off_교육 {
+    background-color: #fbffc2;
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+
+.off_체험 {
+    background-color: #f9dfff;
+    border-radius: 10px;
 }
   
 .schedule_calendar {
@@ -73,12 +97,105 @@
 }
 
 .monthly_program {
-    width: 100%;
-    text-align: center;
+    width: 650px;
     height: 47px;
+    text-align: center;
 }
 
 .date_program {
     font-size: 25px;
     font-weight: 600;
+}
+
+.off_type_mark {
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.program_posters {
+    margin-top: 60px;
+    margin-left: 60px;
+    height: 770px;
+    width: 580px;
+    padding-top: 35px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 50px;
+    text-align: center;
+}
+
+.category_programs_체험 h3 {
+    margin-left: 60px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    width: 80%;
+    background-color: #f9dfff;
+}
+
+.category_programs_교육 h3 {
+    margin-left: 60px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    width: 80%;
+    background-color: #fbffc2;
+}
+
+.program_poster {
+    display: flex;
+    flex-direction: row;
+}
+
+.program_poster img {
+    width: 180px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: -10px 10px 20px  #6d6d6d;
+}
+
+.programs-slider {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    margin-left: 60px;
+    padding-left: 40px;
+    padding-bottom: 20px;
+    width: 85%;
+
+}
+
+.programs-slider::-webkit-scrollbar {
+    width: 10px;
+}
+
+.programs-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.programs-slider::-webkit-scrollbar-thumb {
+    background: #ffffff;
+    border: 2px solid rgb(164, 201, 255);
+    border-radius: 10px;
+}
+
+.programs-slider::-webkit-scrollbar-thumb:hover {
+    background: #afd2ff;
+}
+
+.offProgram_info_schedule {
+    margin-left: 20px;
+    margin-top: 40px;
+    margin-right: 100px;
+    font-size: 15px;
+    width: 200px;
+}
+
+.schedule_place {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
 }

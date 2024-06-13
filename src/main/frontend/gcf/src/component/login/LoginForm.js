@@ -18,7 +18,10 @@ const LoginForm = ({ onLogin }) => {
             .then(response => {
                 if (response.status === 200) {
                     alert("로그인되었습니다.")
-                    onLogin();
+                    onLogin({
+                        userId: loginForm.id, 
+                        name: loginForm.name
+                    });
                 }
             })
             .catch(error => {

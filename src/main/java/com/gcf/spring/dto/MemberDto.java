@@ -32,7 +32,7 @@ public class MemberDto {
 	
 	private String phone_number;
 	
-	private String tel_number;
+	private String telNumber;
 	
     private String address;
 	

@@ -1,17 +1,21 @@
 package com.gcf.spring.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.constant.Role;
 import com.gcf.spring.dto.MemberDto;
 import com.gcf.spring.entity.Member;
 import com.gcf.spring.repository.MemberRepository;
@@ -27,6 +31,9 @@ public class MemberController {
 		
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private MemberRepository memberRepository;
 	
 	// 회원가입 할 때 아이디 중복체크
     @GetMapping("/checkId")
@@ -96,8 +103,6 @@ public class MemberController {
         }
     }
     
-    private final MemberRepository memberRepository;
-    
     // 비밀번호 인증
     @PostMapping("/member/authentication")
     public ResponseEntity<String> verifyPassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
@@ -131,6 +136,96 @@ public class MemberController {
         }
         return ResponseEntity.ok("로그아웃 되었습니다.");
     }
+    
+    @GetMapping("/member/myinfo")
+    public ResponseEntity<MemberDto> getMyInfo(HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            MemberDto memberDto = new MemberDto();
+            // 필요한 필드만 설정하여 반환
+            memberDto.setId(member.getId());
+            memberDto.setName(member.getName());
+            memberDto.setEmail(member.getEmail());
+            memberDto.setBirth(member.getBirth());
+            memberDto.setPhone_number(member.getPhone_number());
+            memberDto.setTelNumber(member.getTel_number());
+            memberDto.setAddress(member.getAddress());
+            memberDto.setDetail_address(member.getDetail_address());
+            memberDto.setEmail_agreement(member.getEmail_agreement());
+            memberDto.setMessage_agreement(member.getMessage_agreement());
+            memberDto.setMail_agreement(member.getMail_agreement());
+            memberDto.setInterests(member.getInterests());
+            memberDto.setMarried(member.getMarried());
+            memberDto.setHasChildren(member.getHasChildren());
+            member.setRole(Role.USER);
+            return ResponseEntity.ok(memberDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    
+    @PostMapping("/member/update")
+    public ResponseEntity<String> updateMember(@RequestBody MemberDto memberDto, HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        try {
+            System.out.println("Updating member with ID: " + userId);
+            memberService.updateMember(userId, memberDto);
+            return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace(); // 상세한 에러 메시지 로그 출력
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 업데이트 중 오류가 발생했습니다.");
+        }
+    }
+
+
+    @PostMapping("/member/delete")
+    public ResponseEntity<String> deleteMember(HttpServletRequest httpRequest) {
+        String userId = (String) httpRequest.getSession().getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        try {
+            memberService.deleteMember(userId);
+            httpRequest.getSession().invalidate();
+            return ResponseEntity.ok("회원 탈퇴가 성공적으로 처리되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 탈퇴 중 오류가 발생했습니다.");
+        }
+    }
+    
+    
+    @GetMapping("/manage/getAllMembers")
+	public List<Member> getAllMembers(){
+		return memberService.getAllMembers();
+	}
+	
+	@PutMapping("/manage/modify/{id}")
+	public Member memberUpdateInManage(@RequestBody MemberDto memberDto) {
+		return memberService.memberUpdateInManage(memberDto, passwordEncoder);
+	}
+	
+	@GetMapping("/manage/searchMembers")
+    public List<Member> searchMembers(@RequestParam("searchType") String searchType, @RequestParam("searchTerm") String searchTerm) {
+        if (searchType.equals("member_name")) {
+            return memberRepository.findByNameContainingIgnoreCase(searchTerm);
+        } else if (searchType.equals("member_joinDate")) {
+            return memberRepository.findByCreatedAtContainingIgnoreCase(searchTerm);
+        }
+        return List.of(); // 빈 리스트 반환
+    }
+    
+    
 
     // 임시 회원 만들기
 //    @GetMapping("/create")

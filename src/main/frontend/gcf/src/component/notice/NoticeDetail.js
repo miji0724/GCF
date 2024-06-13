@@ -31,17 +31,25 @@ const NoticeDetail = () => {
                     if (response.data.content && isJsonString(response.data.content)) {
                         const contentState = convertFromRaw(JSON.parse(response.data.content));
                         setEditorState(EditorState.createWithContent(contentState));
+                    } else if (response.data.content) {
+                        // 만약 JSON 형식의 문자열이 아니라면 그냥 설정
+                        setEditorState(EditorState.createWithText(response.data.content));
                     } else {
-                        setEditorState(null);
+                        // content가 없는 경우에 대한 처리
+                        console.error('Content is undefined in the response data.');
                     }
+
+                    console.log(notice.attachments[0].file_path);
                 })
                 .catch(error => {
                     console.error('Failed to fetch notice details.', error);
                 });
         };
-
+    
         fetchNotice();
     }, [id]);
+    
+    
 
     if (!notice) {
         return null;
@@ -66,6 +74,9 @@ const NoticeDetail = () => {
                     ) : (
                         <div>{notice.content}</div>
                     )}
+                    {notice.attachments && notice.attachments.map((attachment, index) => (
+                        <img key={index} src={attachment.file_path} className="notice_img" />
+                    ))}
                 </div>
                 <div className="n_line_bt"></div>
                 <div className="return_list"><a href="/notice" className="return_list_btn">목록</a></div>

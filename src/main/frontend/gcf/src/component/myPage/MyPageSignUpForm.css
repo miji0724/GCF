@@ -100,14 +100,18 @@ label {
 }
 
 #email1 {
-    width: 30%;
+    width: 50%;
 }
 
 #zipCode {
-    width: 20%;
+    width: 100%;
 }
 
 #address, #detail_address {
+    width: 100%;
+}
+
+.mypageEmail{
     width: 100%;
 }
 

@@ -1,15 +1,10 @@
 .body {
-    height: 100%;
     text-align: center;
     font-size: 40px;
     list-style: none;
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 500;
-    padding: 0;
     cursor:default;
-}
-.body > .banner11 {
-    margin-top: 30px;
 }
 
 .body > .button_notice {
@@ -148,17 +143,41 @@
     transform: rotate(-15deg);
 }
 
+.on_category.art {
+    background-color: #fffab1;
+}
+
+.on_category.science {
+    background-color: #ffa7c2;
+}
+
+.on_category.music {
+    background-color: #d8fffd;
+}
+
+.on_category.design {
+    background-color: #dce1ff;
+}
+
+.on_category.study {
+    background-color: #ffc4a2;
+}
+
+.on_category.etc {
+    background-color: #aeffe4;
+}
 
 .popular_poster > li > a > .on_category {
     position: relative;
     font-size: 20px;
     text-align: center;
-    background-color: #daffd5;
     color: rgb(0, 0, 0);
     width: 220px;
     box-shadow: 0 0 10px #daffd5;
     transform: rotate(-15deg);
 }
+
+
 
 .popular_poster > li > a > .title1 {
     margin-top: 20px;
@@ -282,14 +301,11 @@
 
 .new > .new_center > img {
     height: 100%;
+    width: 339px;
     border-radius: 20px;
     margin-top: 160.6px;
     margin-bottom: 20px;
     box-shadow: 5px 10px 25px rgba(68, 68, 68, 0.7);
-}
-
-.new > .new_center > div:first-child {
-    font-size: 18px;
 }
 
 .new > .new_center > .title1 {
@@ -299,10 +315,11 @@
     text-overflow: ellipsis; 
     white-space: nowrap;
     font-style: italic;
+    font-size: 25px;
 }
 
-.new > .new_center > div:last-child {
-    font-size: 15px;
+.new > .new_center > .date {
+    font-size: 18px;
 }
 
 .online_category {
@@ -324,7 +341,6 @@
     flex-direction: row;
     align-content: center;
     margin-left: 17%;
-    padding: 0;
 }
 
 .icon > a {
@@ -343,5 +359,9 @@
 .icon > a > span {
     margin-top: 10px;
     font-size: 30px;
+}
+
+.banner01 {
+    margin-top: 40px;
 }
 

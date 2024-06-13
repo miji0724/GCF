@@ -37,12 +37,12 @@ public class NoticeService {
     }
 
     // 공지사항 아이디로 가져오기(상세페이지)
-    public Optional<Notice> getNoticeById(Long id) {
+    public Optional<Notice> getNoticeById(Integer id) {
         return noticeRepository.findById(id);
     }
 
     // 클릭 시 조회수 증가
-    public void increaseNoticeViews(Long id) {
+    public void increaseNoticeViews(Integer id) {
         Optional<Notice> optionalNotice = noticeRepository.findById(id);
         if (optionalNotice.isPresent()) {
             Notice notice = optionalNotice.get();

@@ -154,6 +154,12 @@ color: black;
   padding-bottom: 30px;
 }
 
+.persons {
+  border-bottom: 1px solid black;
+  padding-bottom: 30px;
+  margin-bottom: 10px;
+}
+
 .ClassFContainer {
 display: flex;
 flex-direction: column;

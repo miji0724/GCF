@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './ManageNotice.css';
 import SideMenu from './ManageSideMenu';
-import React, { useState } from 'react';
-import items from './TestItems/NoticeItems'; // items import
-
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
 
 function noticeWrite() {
@@ -10,102 +10,135 @@ function noticeWrite() {
 }
 
 function ManageNotice() {
-    // 게시글과 페이지 관련 상태
-    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [itemsPerPage] = useState(15); // 페이지 당 게시글 수
+    const [notices, setNotices] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(15);
+    const navigate = useNavigate();
 
-    // 현재 페이지의 게시글 범위 계산
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = notices.slice(indexOfFirstItem, indexOfLastItem);
 
-    // 페이지 번호 계산
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(items.length / itemsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(notices.length / itemsPerPage); i++) {
         pageNumbers.push(i);
     }
 
-    // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
     const isFirstGroup = currentPage <= 5;
-
-    // 현재 페이지 그룹이 마지막 페이지 그룹인지 확인
     const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
 
+    useEffect(() => {
+        axios.get('http://localhost:8090/manage/notices')
+            .then(response => {
+                const sortedNotices = response.data
+                    .sort((a, b) => b.id - a.id); // ID 값으로 내림차순 정렬
+                setNotices(sortedNotices);
+            })
+            .catch(error => {
+                console.error('Error fetching notices:', error);
+            });
+    }, []);
+
+    const handleDelete = (id) => {
+        if (window.confirm("정말로 삭제하시겠습니까?")) {
+            axios.delete(`http://localhost:8090/manage/notices/${id}`)
+                .then(response => {
+                    const updatedNotices = notices.filter(item => item.id !== id);
+                    setNotices(updatedNotices);
+                })
+                .catch(error => {
+                    console.error('Error deleting notice:', error);
+                });
+        }
+    };
+
+    const handleEdit = (id) => {
+        axios.get(`http://localhost:8090/manage/notices/${id}`)
+            .then(response => {
+                const getNotice = JSON.parse(response.data); // 받아온 데이터를 파싱하여 객체로 변환
+                console.log("getNotice:", getNotice); // 디버깅 용
+                navigate(`/manage/noticewrite/${id}`, { state: { getNotice } });
+            })
+            .catch(error => {
+                console.error('Error fetching notice detail:', error);
+                // 공지사항 정보를 가져오는데 실패한 경우에 대한 처리
+            });
+    };
+
     return (
-        <body>
-            <div className='manageNotice_container'>
-                <SideMenu />
-                <div className='manageNotice'>
-                    <p>공지사항 관리</p>
-                    <button className='manageNotice_button' onClick={noticeWrite}>글쓰기</button>
-                    <div className='manageNotice_area'>
-                        <table className='manageNotice_table'>
-                            <thead>
-                                <tr>
-                                    <th className='manageNotice_id'>번호</th>
-                                    <th className='manageNotice_title'>제목</th>
-                                    <th className='manageNotice_writer'>작성자</th>
-                                    <th className='manageNotice_date'>날짜</th>
-                                    <th className='manageNotice_views'>조회수</th>
-                                    <th className='manageNotice_modify'>수정</th>
-                                    <th className='manageNotice_delete'>삭제</th>
+        <div className='manageNotice_container'>
+            <SideMenu />
+            <div className='manageNotice'>
+                <p>공지사항 관리</p>
+                <button className='manageNotice_button' onClick={noticeWrite}>글쓰기</button>
+                <div className='manageNotice_area'>
+                    <table className='manageNotice_table'>
+                        <thead>
+                            <tr>
+                                <th className='manageNotice_id'>번호</th>
+                                <th className='manageNotice_title'>제목</th>
+                                <th className='manageNotice_writer'>작성자</th>
+                                <th className='manageNotice_date'>날짜</th>
+                                <th className='manageNotice_views'>조회수</th>
+                                <th className='manageNotice_modify'>수정</th>
+                                <th className='manageNotice_delete'>삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.id}</td>
+                                    <td>{item.title.length > 20 ? `${item.title.slice(0, 80)}...` : item.title}</td>
+                                    <td>{item.author}</td>
+                                    <td>{item.createdAt}</td>
+                                    <td>{item.views}</td>
+                                    <td><button onClick={() => handleEdit(item.id)} className='modify_button'>수정</button></td>
+                                    <td><button onClick={() => handleDelete(item.id)} className='delete_button'>삭제</button></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {items.slice(indexOfFirstItem, indexOfLastItem).map((item, index) => ( // items를 map으로 순회하여 각 항목을 JSX로 변환
-                                    <tr key={index}>
-                                        <td>{item.manageNotice_id}</td>
-                                        <td>{item.manageNotice_title}</td>
-                                        <td>{item.manageNotice_writer}</td>
-                                        <td>{item.manageNotice_date}</td>
-                                        <td>{item.manageNotice_views}</td>
-                                        <td><button onClick={noticeWrite} className='modify_button'>수정</button></td>
-                                        <td><button className='delete_button'>삭제</button></td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {/* 페이징 */}
-                        <ul className='pagination'>
-                            {!isFirstGroup && (
-                                <li className='page-item'>
-                                    <button onClick={() => goToFirstPage(setCurrentPage)} className='page-link'>
-                                        {'<<'}
-                                    </button>
-                                </li>
-                            )}
-                            {!isFirstGroup && (
-                                <li className='page-item'>
-                                    <button onClick={() => goToPrevGroup(currentPage, setCurrentPage)} className='page-link'>
-                                        {'<'}
-                                    </button>
-                                </li>
-                            )}
-                            {pageNumbers.filter(number => Math.ceil(number / 5) === Math.ceil(currentPage / 5)).map(number => (
-                                <li key={number} className='page-item'>
-                                    <button onClick={() => paginate(number, setCurrentPage)} className='page-link'>
-                                        {number}
-                                    </button>
-                                </li>
                             ))}
-                            {!isLastGroup && (
-                                <li className='page-item'>
-                                    <button onClick={() => goToNextGroup(currentPage, pageNumbers, setCurrentPage)} className='page-link'>
-                                        {'>'}
-                                    </button>
-                                </li>
-                            )}
-                            {!isLastGroup && (
-                                <li className='page-item'>
-                                    <button onClick={() => goToLastPage(items, itemsPerPage, setCurrentPage)} className='page-link'>
-                                        {'>>'}
-                                    </button>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
+                        </tbody>
+                    </table>
+                    {/* 페이징 */}
+                    <ul className='pagination'>
+                        {!isFirstGroup && (
+                            <li className='page-item'>
+                                <button onClick={() => goToFirstPage(setCurrentPage)} className='page-link'>
+                                    {'<<'}
+                                </button>
+                            </li>
+                        )}
+                        {!isFirstGroup && (
+                            <li className='page-item'>
+                                <button onClick={() => goToPrevGroup(currentPage, setCurrentPage)} className='page-link'>
+                                    {'<'}
+                                </button>
+                            </li>
+                        )}
+                        {pageNumbers.filter(number => Math.ceil(number / 5) === Math.ceil(currentPage / 5)).map(number => (
+                            <li key={number} className='page-item'>
+                                <button onClick={() => paginate(number, setCurrentPage)} className='page-link'>
+                                    {number}
+                                </button>
+                            </li>
+                        ))}
+                        {!isLastGroup && (
+                            <li className='page-item'>
+                                <button onClick={() => goToNextGroup(currentPage, pageNumbers, setCurrentPage)} className='page-link'>
+                                    {'>'}
+                                </button>
+                            </li>
+                        )}
+                        {!isLastGroup && (
+                            <li className='page-item'>
+                                <button onClick={() => goToLastPage(notices, itemsPerPage, setCurrentPage)} className='page-link'>
+                                    {'>>'}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 

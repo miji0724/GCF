@@ -1,60 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 import SideMenu from './ManageSideMenu';
 import './ManageMember.css';
-import items from './TestItems/MemberItems';
 import { paginate, goToFirstPage, goToPrevGroup, goToNextGroup, goToLastPage } from './Pagination';
 
-function memDetailGo() {
-    window.location.href = '/manage/memDetail';
-}
-
 function ManageMember() {
-    // 게시글과 페이지 관련 상태
-    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [itemsPerPage] = useState(15); // 페이지 당 게시글 수
-    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
-    const [searchType, setSearchType] = useState('member_name'); // 검색 기준 상태 추가
+    const [members, setMembers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(15);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchType, setSearchType] = useState('member_name');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-    // 검색 필터링
-    const filteredItems = items.filter(item => {
-        // 검색어가 비어있으면 모든 아이템을 보여줌
-        if (searchTerm === '') return true;
-        // 선택한 검색 기준에 따라 검색 수행
-        if (searchType === 'member_name') {
-            return item.member_name.toLowerCase().includes(searchTerm.toLowerCase());
-        } else if (searchType === 'member_joinDate') {
-            return item.member_joinDate.toLowerCase().includes(searchTerm.toLowerCase());
+    useEffect(() => {
+        fetchMembers();
+    }, []);
+
+    const fetchMembers = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/manage/getAllMembers');
+            setMembers(response.data);
+            setLoading(false);
+        } catch (error) {
+            setError(error);
+            setLoading(false);
         }
-        return false;
-    });
+    };
 
-    // 현재 페이지의 게시글 범위 계산
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/manage/searchMembers', {
+                params: {
+                    searchType,
+                    searchTerm
+                }
+            });
+            setMembers(response.data);
+            setCurrentPage(1);
+            setLoading(false);
+        } catch (error) {
+            setError(error);
+            setLoading(false);
+        }
+    };
+
+    const formatPhoneNumber = (phoneNumber) => {
+        const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+        if (match) {
+            return `${match[1]}-${match[2]}-${match[3]}`;
+        }
+        return phoneNumber;
+    };
+    const filteredItems = members;
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(filteredItems) ? filteredItems.slice(indexOfFirstItem, indexOfLastItem) : [];
 
-    // 페이지 번호 계산
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
         pageNumbers.push(i);
     }
 
-    // 검색어 업데이트 함수
     const handleSearchChange = event => {
         setSearchTerm(event.target.value);
-        setCurrentPage(1); // 검색어가 변경될 때 첫 페이지로 이동
     };
 
-    // 검색 기준 업데이트 함수
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
-        setCurrentPage(1); // 검색 기준이 변경될 때 첫 페이지로 이동
     };
 
-    // 현재 페이지 그룹이 첫 페이지 그룹인지 확인
-    const isFirstGroup = currentPage <= 5;
+    const handleKeyPress = event => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
 
-    // 현재 페이지 그룹이 마지막 페이지 그룹인지 확인
+    const handleMemberDetail = (member) => {
+        navigate('/manage/memDetail', { state: { member } });
+    };
+    
+    const isFirstGroup = currentPage <= 5;
     const isLastGroup = currentPage + 4 >= pageNumbers[pageNumbers.length - 1];
 
     return (
@@ -67,36 +99,46 @@ function ManageMember() {
                         <option value="member_name">이름</option>
                         <option value="member_joinDate">회원가입 날짜</option>
                     </select>
-                    <input type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={handleSearchChange} />
+                    <input 
+                        type="text" 
+                        placeholder="검색어를 입력하세요" 
+                        value={searchTerm} 
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyPress} 
+                    />
+                    <button className='member_search_button' onClick={handleSearch}>검색</button>
                 </div>
                 <div className='member_area'>
-                    <table className='member_table'>
-                        <thead>
-                            <tr>
-                                <th className='member_id'>번호</th>
-                                <th className='member_name'>이름</th>
-                                <th className='member_phoneNum'>휴대폰 번호</th>
-                                <th className='member_addr'>주소</th>
-                                <th className='member_joinDate'>회원가입 날짜</th>
-                                <th className='member_teachWhe'>강사</th>
-                                <th className='member_detail'>정보보기</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentItems.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.member_id}</td>
-                                    <td>{item.member_name}</td>
-                                    <td>{item.member_phoneNum}</td>
-                                    <td>{item.member_addr}</td>
-                                    <td>{item.member_joinDate}</td>
-                                    <td>{item.member_teachWhe ? 'O' : 'X'}</td>
-                                    <td><button onClick={memDetailGo}>정보</button></td>
+                    {loading ? (
+                        <p>로딩 중...</p>
+                    ) : error ? (
+                        <p>오류 발생: {error.message}</p>
+                    ) : (
+                        <table className='member_table'>
+                            <thead>
+                                <tr>
+                                    <th className='member_id'>아이디</th>
+                                    <th className='member_name'>이름</th>
+                                    <th className='member_phoneNum'>휴대폰 번호</th>
+                                    <th className='member_addr'>주소</th>
+                                    <th className='member_joinDate'>회원가입 날짜</th>
+                                    <th className='member_detail'>정보보기</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {/* 페이징 */}
+                            </thead>
+                            <tbody>
+                                {currentItems.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.id}</td>
+                                        <td>{item.name}</td>
+                                        <td>{formatPhoneNumber(item.phone_number)}</td>
+                                        <td>{item.address}</td>
+                                        <td>{item.createdAt}</td>
+                                        <td><button onClick={() => handleMemberDetail(item)}>정보</button></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                     <ul className='pagination'>
                         {!isFirstGroup && (
                             <li className='page-item'>

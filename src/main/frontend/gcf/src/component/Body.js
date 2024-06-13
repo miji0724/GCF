@@ -2,20 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Carousel from './carousel/Carousel';
-import Carousel2 from './carousel/Carousel2';
-import banner1 from '../img/banner/배너1.jpg';
-import banner2 from '../img/banner/배너2.png';
-import banner3 from '../img/banner/배너3.png';
-import banner4 from '../img/banner/배너4.jpg';
-import banner5 from '../img/banner/배너5.jpg';
-import off_poster1 from '../img/off_poster/off_poster1.jpg';
-import off_poster2 from '../img/off_poster/off_poster2.jpg';
-import off_poster3 from '../img/off_poster/off_poster3.jpg';
-import off_poster4 from '../img/off_poster/off_poster4.jpg';
-import printing_3D from '../img/on_poster/3dPrinting.jpg';
-import illust from '../img/on_poster/Illust.jpg';
-import contentsDesign from '../img/on_poster/ContentsDesign.jpg';
-import contentsPlanning from '../img/on_poster/ContentsPlanning.jpg';
 import art from '../img/off_home_icon/art_icon.png';
 import science from '../img/off_home_icon/science_icon.png';
 import music from '../img/off_home_icon/music_icon.png';
@@ -25,74 +11,102 @@ import etc from '../img/off_home_icon/etc_icon.png';
 import './Body.css';
 
 const Body = ({ isLoggedIn }) => {
-    const images = [
-        banner1,
-        banner2,
-        banner3
-    ];
-
-    const images2 = [
-        banner4,
-        banner5,
-    ];
-
-    const [selectedProgram, setSelectedProgram] = useState(1);
+    const [selectedOfflineProgram, setSelectedOfflineProgram] = useState(null);
+    const [selectedOnlineProgram, setSelectedOnlineProgram] = useState(null);
     const [notices, setNotices] = useState([]);
-
-    const handleClick = (program) => {
-        setSelectedProgram(program);
-    };
+    const [banners1, setBanners1] = useState([]);
+    const [banners2, setBanners2] = useState([]);
+    const [offProgramsView, setOffProgramsView] = useState([]);
+    const [offProgramsNew, setOffProgramsNew] = useState([]);
+    const [onProgramsView, setOnProgramsView] = useState([]);
+    const [onProgramsNew, setOnProgramsNew] = useState([]);
+    const [dataLoaded, setDataLoaded] = useState(false);
 
     const navigate = useNavigate();
   
     const gotoOnlineListCategory = (category) => {
-      navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
+        navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
     };
 
+    const categoryClassMap = {
+        '미술': 'art',
+        '과학': 'science',
+        '음악': 'music',
+        '디자인': 'design',
+        '교육': 'study',
+        '기타': 'etc'
+    };
+
+    
     useEffect(() => {
-        axios.get('/home/notices')
-            .then(response => {
-                const sortedNotices = response.data.slice(0, 4); // 이미 정렬된 데이터 사용
+        const fetchData = async () => {
+            try {
+                const noticesResponse = await axios.get('/home/notices');
+                const sortedNotices = noticesResponse.data.slice(0, 4);
                 setNotices(sortedNotices);
-            })
-            .catch(error => {
-                console.error('Failed to fetch notices', error);
-            });
+
+                const banners1Response = await axios.get('/banner/banner1');
+                const banners1Data = banners1Response.data.map(banner => ({
+                    filePath: banner.filePath,
+                    url: banner.url
+                }));
+                setBanners1(banners1Data);
+
+                const banners2Response = await axios.get('/banner/banner2');
+                const banners2Data = banners2Response.data.map(banner => ({
+                    filePath: banner.filePath,
+                    url: banner.url
+                }));
+                setBanners2(banners2Data);
+
+                const offProgramsViewResponse = await axios.get('/offProgram/views/top4');
+                setOffProgramsView(Array.isArray(offProgramsViewResponse.data) ? offProgramsViewResponse.data : []);
+
+                const offProgramsNewResponse = await axios.get('/offProgram/new/top4');
+                setOffProgramsNew(Array.isArray(offProgramsNewResponse.data) ? offProgramsNewResponse.data : []);
+
+                const onProgramsViewResponse = await axios.get('/onProgram/views/top4');
+                setOnProgramsView(Array.isArray(onProgramsViewResponse.data) ? onProgramsViewResponse.data : []);
+
+                const onProgramsNewResponse = await axios.get('/onProgram/new/top4');
+                setOnProgramsNew(Array.isArray(onProgramsNewResponse.data) ? onProgramsNewResponse.data : []);
+
+                setDataLoaded(true);
+            } catch (error) {
+                console.error('Failed to fetch data', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const component = urlParams.get('component');
-        if (component) {
-            handleClick(component);
+        if (dataLoaded && offProgramsNew.length > 0) {
+            setSelectedOfflineProgram(offProgramsNew[0]);
         }
-    }, []);
+    }, [dataLoaded, offProgramsNew]);
 
     const handleAuthRedirect = (componentName) => {
-        window.location.href = `/MyAuthentication?component=${componentName}`;
+        window.location.href = `/MyAuthenticationForm?component=${componentName}`;
     };
 
-    const renderProgramContent = (program) => {
-        switch (program) {
-            case 1:
-                return { img: off_poster1, title: '2024 모담골 노는 학당[한옥 마을 교육 프로그램]' };
-            case 2:
-                return { img: off_poster2, title: '2024 문화예술 프로그램' };
-            case 3:
-                return { img: off_poster3, title: '2024 가족이 있는 플리마켓' };
-            case 4:
-                return { img: off_poster4, title: '향기롭던 보구곶의 봄[봄 전시 연계 프로그램]' };
-            default:
-                return {};
+    const handleClickNotice = async (id) => {
+        try {
+            await axios.put(`/notices/${id}/views`);
+            navigate(`/notice/${id}`);
+        } catch (error) {
+            console.error('Failed to increase notice views', error);
         }
     };
 
-    const selectedProgramContent = renderProgramContent(selectedProgram);
+    if (!dataLoaded) {
+        return null; // 데이터가 로드되지 않았을 때 아무것도 렌더링하지 않음
+    }
 
     return (
         <div className="body">
             <div className="banner01">
-                <Carousel className='banner' images={images} />
+                {banners1.length > 0 && <Carousel images={banners1} />}
             </div>
 
             <ul className="button_notice">
@@ -115,7 +129,7 @@ const Body = ({ isLoggedIn }) => {
                         <span><a href="/notice">더보기 →</a></span>
                     </div>
                     {notices.map(notice => (
-                    <li key={notice.id} id='notice_content' onClick={() => window.location.href=`/notice/${notice.id}`}>
+                    <li key={notice.id} id='notice_content' onClick={() => handleClickNotice(notice.id)}>
                         {notice.title}
                     </li>
                     ))}
@@ -125,13 +139,20 @@ const Body = ({ isLoggedIn }) => {
             <div className="popular">
                 <div id="home_title1">인기있는 오프라인 교육/체험</div>
                 <ul className="popular_poster">
-                    {[off_poster1, off_poster2, off_poster3, off_poster4].map((poster, index) => (
+                    {offProgramsView.map((programView, index) => (
                         <li key={index}>
-                            <a href='#'>
-                                <img src={poster} alt={`Poster ${index + 1}`} />
-                                <div className="off_category">교육</div>
-                                <div className="title1">2024 프로그램 제목</div>
-                                <div className="date">2024.05.02~2024.05.14</div>
+                            <a href={`/offlineList/detail/${programView.programName}`}>
+                                <img src={programView.poster.file_path} alt={`Poster ${index + 1}`} />
+                                <div
+                                    className="off_category"
+                                    style={{
+                                        backgroundColor: programView.category === '교육' ? '#faf0ff' : '#daffd5'
+                                    }}
+                                >
+                                    {programView.category}
+                                </div>
+                                <div className="title1">{programView.programName}</div>
+                                <div className="date">{new Date(programView.operatingStartDay).toLocaleDateString()} ~ {new Date(programView.operatingEndDay).toLocaleDateString()}</div>
                             </a>
                         </li>
                     ))}
@@ -141,13 +162,14 @@ const Body = ({ isLoggedIn }) => {
             <div className="popular">
                 <div id="home_title1">인기있는 온라인 교육/체험</div>
                 <ul className="popular_poster">
-                    {[printing_3D, illust, contentsDesign, contentsPlanning].map((poster, index) => (
+                    {onProgramsView.map((program, index) => (
                         <li key={index}>
-                            <a href='#'>
-                                <img src={poster} alt={`Poster ${index + 1}`} />
-                                <div className="on_category">교육</div>
-                                <div className="title1">2024 프로그램 제목</div>
-                                <div className="date">2024.05.02~2024.05.14</div>
+                            <a href={`/onlineList/detail/${program.programName}`}>
+                                <img src={program.poster.file_path} alt={`Poster ${index + 1}`} />
+                                <div className={`on_category ${categoryClassMap[program.category]}`}>
+                                    {program.category}
+                                </div>
+                                <div className="title1">{program.programName}</div>
                             </a>
                         </li>
                     ))}
@@ -155,28 +177,44 @@ const Body = ({ isLoggedIn }) => {
             </div>
 
             <div className="banner02">
-                <Carousel2 className='banner' images={images2} />
+                {banners2.length > 0 && <Carousel images={banners2} />}
             </div>
 
             <div className="new">
                 <div className="home_title2">
                     <div>새로운 오프라인 교육/체험</div>
-                    {['모담골 노는 학당', '2024 문화예술 프로그램', '2024 가족이 있는 플리마켓', '향기롭던 보구곶의 봄'].map((title, index) => (
-                        <div key={index} className="title2" onClick={() => handleClick(index + 1)}>{title}</div>
+                    {offProgramsNew.map((OffprogramNew, index) => (
+                        <div key={index} className="title2" onClick={() => {
+                            setSelectedOfflineProgram(OffprogramNew);
+                            setSelectedOnlineProgram(null); // Add this line to nullify the selected online program
+                        }}>{OffprogramNew.programName}</div>
                     ))}
                     <div><a href="#">더보기 →</a></div>
                 </div>
-                <a href="#" className="new_center">
-                    {selectedProgramContent.img && <img src={selectedProgramContent.img} alt="Selected Program" />}
-                    <div className="title1">{selectedProgramContent.title}</div>
-                    <div className="date">2024.05.02~2024.05.14</div>
-                </a>
+
+                {selectedOfflineProgram && (
+                    <a className="new_center" href={`/offlineList/detail/${selectedOfflineProgram.programName}`}>
+                        {selectedOfflineProgram.poster && <img src={selectedOfflineProgram.poster.file_path} alt="Selected Program" />}
+                        <div className="title1">{selectedOfflineProgram.programName}</div>
+                        <div className="date">{new Date(selectedOfflineProgram.operatingStartDay).toLocaleDateString()} ~ {new Date(selectedOfflineProgram.operatingEndDay).toLocaleDateString()}</div>
+                    </a>
+                )}
+
+                {selectedOnlineProgram && (
+                    <a className="new_center" href={`/onlineList/detail/${selectedOnlineProgram.programName}`}>
+                        {selectedOnlineProgram.poster && <img src={selectedOnlineProgram.poster.file_path} alt="Selected Program" />}
+                        <div className="title1">{selectedOnlineProgram.programName}</div>
+                    </a>
+                )}
+
                 <div className="home_title3">
-                    <div>새로운 온라인 교육/체험</div>
-                    {['프로그램 제목', '프로그램 제목', '프로그램 제목', '프로그램 제목'].map((title, index) => (
-                        <div key={index} className="title2" onClick={() => handleClick(index + 1)}>{title}</div>
-                    ))}
-                    <div><a href="#">더보기 →</a></div>
+                        <div>새로운 온라인 교육/체험</div>
+                        {onProgramsNew.map((OnprogramNew, index) => (
+                            <div key={index} className="title2" onClick={() => {
+                                setSelectedOnlineProgram(OnprogramNew);
+                                setSelectedOfflineProgram(null); // Add this line to nullify the selected offline program
+                            }}>{OnprogramNew.programName}</div>
+                        ))}
                 </div>
             </div>
 

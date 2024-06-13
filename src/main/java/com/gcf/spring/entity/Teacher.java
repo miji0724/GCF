@@ -2,8 +2,6 @@ package com.gcf.spring.entity;
 
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.gcf.spring.constant.TeacherState;
 
 import jakarta.persistence.Column;
@@ -20,13 +18,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "teacher")
 @Getter
 @Setter
-@NoArgsConstructor // 자동 생성자 생성
-
+@NoArgsConstructor 
+@ToString
 public class Teacher {
     @Id
     @Column(name = "id", nullable = false)
@@ -36,7 +35,7 @@ public class Teacher {
     @OneToOne
     @JoinColumn(name = "id")
     private Member member;
-
+    
     @NotEmpty(message = "강의 분야는 최소한 하나 이상 선택해야 합니다.")
     private List<String> teacher_category;
 
@@ -56,8 +55,8 @@ public class Teacher {
 	@Column(name = "license_name")
 	private String licenseName;
 	
-    @Column(name = "teach_able_category")
-    private String teachAbleCategory;
+	@Column(name = "teach_able_category")
+	private String teachAbleCategory;
 	
 	@Enumerated(EnumType.STRING)
     @Column(name = "TeacherState", nullable = false)
