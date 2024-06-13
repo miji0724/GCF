@@ -135,7 +135,7 @@ const MyPageSignUpForm = () => {
             }
         } catch (error) {
             console.error('Error deleting user:', error);
-            alert('강사 신청 취소 후 다시 탈퇴해주시길 바랍니다.');
+            alert('회원 탈퇴 중 오류가 발생했습니다.');
         }
     };
 
@@ -204,8 +204,8 @@ const MyPageSignUpForm = () => {
                                     
                                     <li>
                                         <input 
-                                            htmlFor='birthdate'
-                                            type='localDate' 
+                                            htmlFor='birthDate'
+                                            type='localdate' 
                                             id='birthDate' 
                                             name='birthDate' 
                                             value={birthDate} 

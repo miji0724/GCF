@@ -26,7 +26,6 @@
   padding-right: 50px;
 }
 
-
 .CenterMenu {
   margin: 0;
   padding: 0;
@@ -60,7 +59,32 @@
   padding: 0;
 }
 
+/* 새로운 스타일 추가 */
+.TableContainer {
+  width: 100%;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
 
+.ProgramTable {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+.ProgramTable th, .ProgramTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
 
+.ProgramTable th {
+  background-color: #f2f2f2;
+  color: black;
+}
 
+.ProgramItem:hover {
+  background-color: #f1f1f1;
+}

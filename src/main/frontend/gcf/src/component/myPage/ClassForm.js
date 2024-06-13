@@ -1,16 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import './ClassForm.css';
 import 'react-calendar/dist/Calendar.css';
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import 'react-time-picker/dist/TimePicker.css';
-import ManageLecOnDetail from "./ManageLecOnDetail";
 import axios from 'axios'; // axios import
 
+function VideoItem({ id, name, onAddSubItem, onDeleteSubItem, onAttachFile, onVideoInfoChange, isParent }) {
+    const [text, setText] = useState('');
+
+    const handleTextChange = (e) => {
+        setText(e.target.value);
+        onVideoInfoChange(id, e.target.value);
+    };
+
+    return (
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", width: "100%", height: "40px", marginTop: "10px" }}>
+            {isParent && (
+                <>
+                    <p style={{ margin: "0 10px 0 0" }}>{name}</p>
+                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "370px" }} />
+                    <button type="button" onClick={onAddSubItem} style={{ marginRight: "10px", width: "30px", height: "30px", backgroundColor: "#EDEDED" }}>+</button>
+                    <button type="button" onClick={() => onDeleteSubItem(id)} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
+                </>
+            )}
+            {!isParent && (
+                <>
+                    <p style={{ margin: "0 5px 0 5px", width: "50px" }}>{name}</p>
+                    <input type="text" value={text} onChange={handleTextChange} style={{ marginRight: "10px", width: "230px" }} />
+                    <input type="file" onChange={(e) => onAttachFile(e, id)} style={{ display: 'none' }} id={`file-input-${id}`} />
+                    <label htmlFor={`file-input-${id}`} style={{ marginRight: "10px", width: "70px", height: "30px", backgroundColor: "#EDEDED", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>파일 선택</label>
+                    <button type="button" onClick={() => onDeleteSubItem(id)} style={{ width: "30px", height: "30px", backgroundColor: "#FF8585" }}>-</button>
+                </>
+            )}
+        </div>
+    );
+}
+
 function ClassForm() {
-    
-    const [bannerFiles, setBannerFiles] = useState([]);
+    const [bannerFields, setBannerFields] = useState([{ subject: '', file: null }]);
+    const [bannerFiles, setBannerFiles] = useState([null]); // Add this line
     const [selectedItem, setSelectedItem] = useState("");
     const [onlineEducation, setOnlineEducation] = useState(false);
     const [offlineEducation, setOfflineEducation] = useState(false);
@@ -33,10 +62,15 @@ function ClassForm() {
 
     const [certificationFields, setCertificationFields] = useState([{ certification: '' }]);
     const [certificationFiles, setCertificationFiles] = useState([]);
-    
+
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
-    
+
+    const [videoInfos, setVideoInfos] = useState({});
+    const [videoFiles, setVideoFiles] = useState({});
+    const [videoItems, setVideoItems] = useState([]);
+    const [parentCounter, setParentCounter] = useState(1);
+    const [subCounters, setSubCounters] = useState({});
 
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
@@ -94,6 +128,10 @@ function ClassForm() {
             fetchOnPrograms();
         }
     }, [offlineEducation, onlineEducation]);
+
+    useEffect(() => {
+        handleAddVideoItem();
+    }, []);
 
     const fillOfflineProgramFields = (program) => {
         setCName(program.programName);
@@ -194,6 +232,85 @@ function ClassForm() {
         setBannerFiles(newBannerFiles);
     };
 
+    const handleAddVideoItem = () => {
+        const newItemId = videoItems.length + 1;
+        const newItem = {
+            id: newItemId,
+            name: `${newItemId}강`,
+            subItems: [],
+        };
+        setVideoItems([...videoItems, newItem]);
+        setParentCounter(newItemId + 1);
+    };
+
+    const handleAddSubItem = (parentId) => {
+        const newSubItemId = (subCounters[parentId] || 0) + 1;
+        const newSubItem = {
+            id: `${parentId}-${newSubItemId}`,
+            name: `${parentId}-${newSubItemId}`,
+        };
+        const updatedItems = videoItems.map(item => {
+            if (item.id === parentId) {
+                return {
+                    ...item,
+                    subItems: [...item.subItems, newSubItem],
+                };
+            }
+            return item;
+        });
+        setVideoItems(updatedItems);
+        setSubCounters({
+            ...subCounters,
+            [parentId]: newSubItemId,
+        });
+    };
+
+    const handleDeleteSubItem = (id) => {
+        const updatedItems = videoItems.map(item => {
+            if (item.id === id) {
+                const newSubItems = item.subItems.slice(0, -1);
+                return {
+                    ...item,
+                    subItems: newSubItems,
+                };
+            }
+            return item;
+        });
+        setVideoItems(updatedItems);
+        const maxId = Math.max(...updatedItems.find(item => item.id === id).subItems.map(subItem => parseInt(subItem.id.split('-')[1])));
+        setSubCounters({
+            ...subCounters,
+            [id]: maxId - 1,
+        });
+        if (subCounters[id] < 1) {
+            setSubCounters({
+                ...subCounters,
+                [id]: 0,
+            });
+        }
+    };
+
+    const handleDeleteParentItem = (parentId) => {
+        const updatedItems = videoItems.filter(item => item.id !== parentId);
+        setVideoItems(updatedItems);
+        setParentCounter(updatedItems.length + 1);
+    };
+
+    const handleAttachFile = (event, id) => {
+        const file = event.target.files[0];
+        setVideoFiles(prevFiles => ({
+            ...prevFiles,
+            [id]: file
+        }));
+    };
+
+    const handleVideoInfoChangeItem = (id, value) => {
+        setVideoInfos(prevInfos => ({
+            ...prevInfos,
+            [id]: value
+        }));
+    };
+
     const handleDropdownChange = (event) => {
         setSelectedItem(event.target.value);
     };
@@ -258,7 +375,6 @@ function ClassForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // const formData = new FormData();
         let formData = {};
 
         if (onlineEducation) {
@@ -281,40 +397,7 @@ function ClassForm() {
                 'comments': [],
                 'videos': [],
             }
-            // formData.append('teacherId', teacherId);
-            // formData.append('programName', CName);
-            // formData.append('operatingStartDay', offlineLocationStartDate);
-            // formData.append('views', 0);
-            // formData.append('likesCount', 0);
-            // formData.append('category', "온라인");
-            // formData.append('programType', "온라인");
-            // formData.append('poster', null);
-            // formData.append('approvalState', "승인대기");
-            // formData.append('programInfos', []);
-            // formData.append('teacherInfos', []);
-            // formData.append('comments', []);
-            // formData.append('videos', []);
 
-            // // Add certification files
-            // certificationFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`certificationFiles[${index}]`, file);
-            //     }
-            // });
-
-            // // Add teaching subject files
-            // teachingSubjectFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`teachingSubjectFiles[${index}]`, file);
-            //     }
-            // });
-
-            // Add banner files
-            // bannerFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`bannerFiles[${index}]`, file);
-            //     }
-            // });
             let id = 0;
             try {
                 const response = await axios.post('/api/onProgram', formData);
@@ -322,17 +405,16 @@ function ClassForm() {
                 id = response.data.id;
             } catch (error) {
                 console.error(error);
-                
             }
 
             const programInfo = new FormData();
             programInfo.append("id", id);
             Array.from(certificationFields).forEach((data, index) => {
                 programInfo.append('descriptions', data);
-              });
+            });
             Array.from(certificationFiles).forEach((file, index) => {
                 programInfo.append('files', file);
-              });
+            });
 
             try {
                 const response = await axios.post('/api/onProgram/info', programInfo, {
@@ -341,13 +423,51 @@ function ClassForm() {
                     },
                 });
                 console.log(response.data + " @@@@@@@@@@@@@@");
-                
+            } catch (error) {
+                console.error(error);
+            }
+
+            const teacherInfoData = new FormData();
+            teacherInfoData.append("id", id);
+            Array.from(teachingSubjectFields).forEach((data, index) => {
+                teacherInfoData.append('descriptions', data.subject);
+            });
+            Array.from(teachingSubjectFiles).forEach((file, index) => {
+                teacherInfoData.append('files', file);
+            });
+
+            try {
+                const response = await axios.post('/api/onProgram/onteacherinfo', teacherInfoData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log(response.data + " #######");
+            } catch (error) {
+                console.error(error);
+            }
+
+            const videoInfoData = new FormData();
+            videoInfoData.append("id", id);
+            Object.entries(videoInfos).forEach(([key, value]) => {
+                videoInfoData.append('videoinfodetails', value);
+            });
+            Object.entries(videoFiles).forEach(([key, file]) => {
+                videoInfoData.append('files', file);
+            });
+
+            try {
+                const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log(response.data + " $$$$$$$$");
                 alert("온라인 프로그램이 성공적으로 등록되었습니다.");
             } catch (error) {
                 console.error(error);
                 alert("온라인 프로그램 등록 중 오류가 발생했습니다.");
             }
-
 
         } else if (offlineEducation) {
             formData.append('teacherId', teacherId);
@@ -374,21 +494,6 @@ function ClassForm() {
             formData.append('poster', null);
             formData.append('teacherInfos', []);
 
-            // // Add certification files
-            // certificationFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`certificationFiles[${index}]`, file);
-            //     }
-            // });
-
-            // // Add teaching subject files
-            // teachingSubjectFiles.forEach((file, index) => {
-            //     if (file) {
-            //         formData.append(`teachingSubjectFiles[${index}]`, file);
-            //     }
-            // });
-
-            // Add banner files
             bannerFiles.forEach((file, index) => {
                 if (file) {
                     formData.append(`bannerFiles[${index}]`, file);
@@ -482,8 +587,8 @@ function ClassForm() {
                                             <div key={index} className="teachingSubjectField">
                                                 <input
                                                     type='text'
-                                                    value={applicationInfo} // 수정된 부분
-                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                    value={field.subject} // 수정된 부분
+                                                    onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
@@ -500,7 +605,7 @@ function ClassForm() {
 
                                     <div className='BannerInfoGroup'>
                                         <label htmlFor='BannerSubjects'>교육 배너 포스터*:</label>
-                                        {bannerFiles.map((file, index) => (
+                                        {bannerFields.map((field, index) => (
                                             <div key={index} className="BannerSubjectField">
                                                 <input
                                                     type="file"
@@ -690,8 +795,8 @@ function ClassForm() {
                                             <div key={index} className="teachingSubjectField">
                                                 <input
                                                     type='text'
-                                                    value={applicationInfo} // 수정된 부분
-                                                    onChange={handleApplicationInfoChange} // 수정된 부분
+                                                    value={field.subject} // 수정된 부분
+                                                    onChange={(event) => handleTeachingSubjectChange(event, index)} // 수정된 부분
                                                 />
                                                 <input
                                                     type="file"
@@ -723,8 +828,38 @@ function ClassForm() {
 
                                     <div className="OnlineLec">
                                         <h4>온라인 강의</h4>
-                                        <div><ManageLecOnDetail /></div>
+                                        <div>
+                                            {videoItems.map(item => (
+                                                <div key={item.id} className="education-item-wrapper">
+                                                    <button type="button" onClick={() => handleDeleteParentItem(item.id)} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>-</button>
+                                                    <button type="button" onClick={handleAddVideoItem} style={{ marginTop: "10px", marginRight: "10px", float: "right" }}>+</button>
+
+                                                    <VideoItem
+                                                        id={item.id}
+                                                        name={item.name}
+                                                        onAddSubItem={() => handleAddSubItem(item.id)}
+                                                        onDeleteSubItem={handleDeleteParentItem}
+                                                        onAttachFile={handleAttachFile}
+                                                        onVideoInfoChange={handleVideoInfoChangeItem}
+                                                        isParent={true}
+                                                    />
+                                                    {item.subItems.map(subItem => (
+                                                        <VideoItem
+                                                            key={subItem.id}
+                                                            id={subItem.id}
+                                                            name={subItem.name}
+                                                            onDeleteSubItem={handleDeleteSubItem}
+                                                            onAddSubItem={() => handleAddSubItem(item.id)}
+                                                            onAttachFile={handleAttachFile}
+                                                            onVideoInfoChange={handleVideoInfoChangeItem}
+                                                            isParent={false}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
+
                                 </>
                             )}
 
