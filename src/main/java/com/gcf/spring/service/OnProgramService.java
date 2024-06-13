@@ -1,6 +1,7 @@
 package com.gcf.spring.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +36,18 @@ public class OnProgramService {
     
     @Autowired
     private AttachmentRepository attachmentRepository;
+    
+    @Autowired
+    private AttachmentService attachmentService;
 
     public OnProgram createOnProgram(OnProgramDto onProgramDto, Teacher teacher) {
         OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
         onProgram.setTeacher(teacher); // Teacher 설정
+        Optional<Attachment> optionalAttachment = attachmentRepository.findById(onProgramDto.getPosterId());
+		if (optionalAttachment.isPresent()) {
+			Attachment attachment = optionalAttachment.get();
+			onProgram.setPoster(attachment);
+		}
         return onProgramRepository.save(onProgram);
     }
 
@@ -58,9 +67,9 @@ public class OnProgramService {
 		return teacherInfoRepository.saveAll(teacherInfos);
 	}
 	
-//	public Attachment insertPoster(Attachment poster) {
-//		return attachmentRepository.save(poster);
-//	}
+	public Attachment insertPoster(Attachment poster) {
+		return attachmentRepository.save(poster);
+	}
 	
 	public List<OnVideo> insertOnVideo(List<OnVideo> onVideos) {
 		return onVideoRepository.saveAll(onVideos);

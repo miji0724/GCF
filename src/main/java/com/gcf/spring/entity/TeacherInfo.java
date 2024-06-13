@@ -29,7 +29,7 @@ public class TeacherInfo {
 	private String description;
 	
 	@ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id") // 지울 예정 ***
     private Teacher teacher;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

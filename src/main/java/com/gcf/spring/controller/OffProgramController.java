@@ -37,54 +37,66 @@ public class OffProgramController {
     private TeacherService teacherService;
 
     @PostMapping
-    public ResponseEntity<OffProgram> createOffProgram(@RequestBody OffProgramDto offProgramDto) {
-        Teacher teacher = teacherService.findById(offProgramDto.getTeacher().getId());
-        OffProgram newOffProgram = offProgramService.createOffProgram(offProgramDto, teacher);
-        return ResponseEntity.ok(newOffProgram);
-    }
-    
-    @PostMapping("/offproginfo")
-    public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
-            									  @RequestParam("descriptions") List<String> descriptions,
-            									  @RequestParam("id") Integer id) {
-    	int i = 0;
-        List<ProgramInfo> programInfos = new ArrayList<>();
-        OffProgram offProgram = offProgramService.getOffProgramById(id);
-        for (String description : descriptions) {
-            Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
-            ProgramInfo programInfo = new ProgramInfo();
-            programInfo.setAttachment(attachment);
-            programInfo.setDescription(description);
-            programInfo.setOffProgram(offProgram);
-            programInfos.add(programInfo);
-            i++;
-        }
-        offProgramService.insertProgramInfo(programInfos);
+	public ResponseEntity<OffProgram> createOffProgram(@RequestBody OffProgramDto offProgramDto) {
 
-        return ResponseEntity.ok(null);	
-    }
-    
-    @PostMapping("/offteacherinfo")
-    public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
-            									  @RequestParam("descriptions") List<String> descriptions,
-            									  @RequestParam("id") Integer id) {
-    	int i = 0;
-        List<TeacherInfo> teacherInfos = new ArrayList<>();
-        OffProgram offProgram = offProgramService.getOffProgramById(id);
-        for (String description : descriptions) {
-            Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
-            TeacherInfo teacherInfo = new TeacherInfo();
-            teacherInfo.setAttachment(attachment);
-            teacherInfo.setDescription(description);
-            teacherInfo.setOffProgram(offProgram);
-            teacherInfos.add(teacherInfo);
-            i++;
-        }
-        offProgramService.insertTeacherInfo(teacherInfos);
+		Teacher teacher = teacherService.findById(offProgramDto.getTeacherId());
+		OffProgram createdOffProgram = offProgramService.createOffProgram(offProgramDto, teacher);
 
-        return ResponseEntity.ok(null);	
-    }
+		return ResponseEntity.ok(createdOffProgram);
+	}
 
+	@PostMapping("/poster")
+	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
+
+		if (poster.isEmpty()) {
+			// 포스터가 비어 있는 경우 처리
+			return ResponseEntity.badRequest().build();
+		}
+		Attachment attachment = attachmentService.uploadOffProgramFile(poster);
+		Attachment saveAtt = offProgramService.insertPoster(attachment);
+		System.out.println("a:" + saveAtt);
+		return ResponseEntity.ok(saveAtt);
+	}
+
+	@PostMapping("/offprograminfo")
+	public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
+			@RequestParam("descriptions") List<String> descriptions, @RequestParam("id") Integer id) {
+		int i = 0;
+		List<ProgramInfo> programInfos = new ArrayList<>();
+		OffProgram offProgram = offProgramService.getOffProgramById(id);
+		for (String description : descriptions) {
+			Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
+			ProgramInfo programInfo = new ProgramInfo();
+			programInfo.setAttachment(attachment);
+			programInfo.setDescription(description);
+			programInfo.setOffProgram(offProgram);
+			programInfos.add(programInfo);
+			i++;
+		}
+		offProgramService.insertProgramInfo(programInfos);
+
+		return ResponseEntity.ok(null);
+	}
+
+	@PostMapping("/offteacherinfo")
+	public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
+			@RequestParam("descriptions") List<String> descriptions, @RequestParam("id") Integer id) {
+		int i = 0;
+		List<TeacherInfo> teacherInfos = new ArrayList<>();
+		OffProgram offProgram = offProgramService.getOffProgramById(id);
+		for (String description : descriptions) {
+			Attachment attachment = attachmentService.uploadOffProgramFile(files.get(i));
+			TeacherInfo teacherInfo = new TeacherInfo();
+			teacherInfo.setAttachment(attachment);
+			teacherInfo.setDescription(description);
+			teacherInfo.setOffProgram(offProgram);
+			teacherInfos.add(teacherInfo);
+			i++;
+		}
+		offProgramService.insertTeacherInfo(teacherInfos);
+
+		return ResponseEntity.ok(null);
+	}
     @GetMapping
     public ResponseEntity<List<OffProgram>> getAllOffPrograms() {
         List<OffProgram> programs = offProgramService.getAllOffPrograms();

@@ -3,12 +3,12 @@ package com.gcf.spring.service;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.gcf.spring.entity.Attachment;
-import com.gcf.spring.entity.OffProgram;
-import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.repository.AttachmentRepository;
 import com.google.api.gax.paging.Page;
 import com.google.cloud.WriteChannel;

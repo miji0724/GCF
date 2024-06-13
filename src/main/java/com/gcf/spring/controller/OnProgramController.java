@@ -2,6 +2,7 @@ package com.gcf.spring.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.entity.TeacherInfo;
+import com.gcf.spring.repository.AttachmentRepository;
 import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OnProgramService;
 import com.gcf.spring.service.TeacherService;
@@ -37,20 +39,29 @@ public class OnProgramController {
 	@Autowired
 	private TeacherService teacherService;
 
+	@Autowired
+	private AttachmentRepository attachmentRepository;
+
 	@PostMapping
 	public ResponseEntity<OnProgram> createOnProgram(@RequestBody OnProgramDto onProgramDto) {
+
 		Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
 		OnProgram createdOnProgram = onProgramService.createOnProgram(onProgramDto, teacher);
-		Attachment poster = onProgramDto.getPoster();
-		createdOnProgram.setPoster(poster);
+
 		return ResponseEntity.ok(createdOnProgram);
 	}
-	
+
 	@PostMapping("/poster")
-	public ResponseEntity<OnProgram> createPoster(@RequestParam("poster") MultipartFile poster) {
-		System.out.println("poster : " + poster);
-		attachmentService.uploadOnProgramFile(poster);
-		return ResponseEntity.ok(null);
+	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
+
+		if (poster.isEmpty()) {
+			// 포스터가 비어 있는 경우 처리
+			return ResponseEntity.badRequest().build();
+		}
+		Attachment attachment = attachmentService.uploadOnProgramFile(poster);
+		Attachment saveAtt = onProgramService.insertPoster(attachment);
+		System.out.println("a:" + saveAtt);
+		return ResponseEntity.ok(saveAtt);
 	}
 
 	@PostMapping("/onprograminfo")
@@ -70,9 +81,6 @@ public class OnProgramController {
 		}
 		onProgramService.insertProgramInfo(programInfos);
 
-		// dto.getDescription().forEach(e -> System.out.println(e));
-		// dto.getFiles().forEach(e -> System.out.println(e.getOriginalFilename()));
-		// ProgramInfo programInfo = onProgramService.insertProgramInfo(info);
 		return ResponseEntity.ok(null);
 	}
 

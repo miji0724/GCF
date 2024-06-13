@@ -59,8 +59,7 @@ public class OnProgram {
 
 	@Column(nullable = false)
 	private String approvalState; // 승인, 미승인, 승인대기
-
-
+	
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<ProgramInfo> programInfos;
 
