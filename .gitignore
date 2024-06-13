@@ -1,4 +1,4 @@
-HELP.md
+오후 4:45 2024-05-17HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -47,3 +47,6 @@ src/main/frontend/dist/
 # Miscellaneous
 .DS_Store
 .env
+
+# Ignore Google Cloud service account credentials
+src/main/resources/project-gcf-424105-d1392a5ef44a.json
