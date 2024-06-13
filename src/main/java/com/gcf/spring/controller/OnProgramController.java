@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.OnProgram;
+import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
+import com.gcf.spring.entity.TeacherInfo;
 import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OnProgramService;
 import com.gcf.spring.service.TeacherService;
@@ -65,7 +67,54 @@ public class OnProgramController {
        // ProgramInfo programInfo = onProgramService.insertProgramInfo(info);
         return ResponseEntity.ok(null);
     }
+    
+    @PostMapping("/onteacherinfo")
+    public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
+            									   @RequestParam("descriptions") List<String> descriptions,
+            									   @RequestParam("id") Integer id) {
+    	int i = 0;
+        List<TeacherInfo> teacherInfos = new ArrayList<>();
+        OnProgram onProgram = onProgramService.getOnProgramById(id);
+        for (String description : descriptions) {
+            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
+            TeacherInfo teacherInfo = new TeacherInfo();
+            teacherInfo.setAttachment(attachment);
+            teacherInfo.setDescription(description);
+            teacherInfo.setOnProgram(onProgram);
+            teacherInfos.add(teacherInfo);
+            i++;
+        }
+        onProgramService.insertTeacherInfo(teacherInfos);
 
+        return ResponseEntity.ok(null);	
+    }
+    
+    @PostMapping("/onvideo")
+    public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
+                                               @RequestParam("videoinfodetails") List<String> videoinfodetails,
+                                               @RequestParam("videoInfoIndex") List<String> videoInfoIndex,
+                                               @RequestParam("id") Integer id) {
+        List<OnVideo> onVideos = new ArrayList<>();
+        OnProgram onProgram = onProgramService.getOnProgramById(id);
+
+        for (int i = 0; i < videoinfodetails.size(); i++) {
+            String videoinfodetail = videoinfodetails.get(i);
+            String index = videoInfoIndex.get(i); // 인덱스 값 받기
+
+            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
+            OnVideo onVideo = new OnVideo();
+            onVideo.setAttachment(attachment);
+            onVideo.setVideoInfoDetail(videoinfodetail);
+            onVideo.setVideoInfoIndex(index.toString()); // 인덱스를 String으로 변환하여 설정
+            onVideo.setOnProgram(onProgram);
+            onVideos.add(onVideo);
+        }
+
+        onProgramService.insertOnVideo(onVideos);
+
+        return ResponseEntity.ok(null);	
+    }
+    
     @GetMapping
     public ResponseEntity<List<OnProgram>> getAllOnPrograms() {
         List<OnProgram> programs = onProgramService.getAllOnPrograms();

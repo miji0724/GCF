@@ -108,34 +108,35 @@ public class OffProgram {
     @JsonIgnore
     private List<TeacherInfo> teacherInfos;
 
-	public static OffProgram createOffProgram(OffProgramDto off_programDto) {
-	    OffProgram offProgram = new OffProgram();
-	    offProgram.setId(off_programDto.getId());
-	    offProgram.setProgramName(off_programDto.getProgramName());
-	    offProgram.setTeacher(off_programDto.getTeacher());
-	    offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
-	    offProgram.setApplication_info(off_programDto.getApplication_info());
-	    offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
-	    offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
-	    offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
-	    offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
-	    offProgram.setParticipationFee(off_programDto.getParticipationFee());
-	    offProgram.setStartTime(off_programDto.getStartTime());
-	    offProgram.setEndTime(off_programDto.getEndTime());
-	    offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
-	    offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
-	    offProgram.setApplicationState(off_programDto.getApplicationState());
-	    offProgram.setApprovalState(off_programDto.getApprovalState());
-	    offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
-	    offProgram.setViews(off_programDto.getViews());
-	    offProgram.setLikesCount(off_programDto.getLikesCount());
-	    offProgram.setCategory(off_programDto.getOfflineCategory());
-	    offProgram.setPlaceName(off_programDto.getPlaceName());
-	    offProgram.setProgramType(off_programDto.getProgramType());
-	    offProgram.setPoster(off_programDto.getPoster());
-	    offProgram.setProgramInfos(off_programDto.getProgramInfos());
-	    offProgram.setTeacherInfos(off_programDto.getTeacherInfos());
-	    return offProgram;
+    public static OffProgram createOffProgram(OffProgramDto off_programDto) {
+		OffProgram offProgram = new OffProgram();
+		offProgram.setProgramName(off_programDto.getProgramName());
+		offProgram.setTeacher(off_programDto.getTeacher());
+		offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
+		offProgram.setApplication_info(off_programDto.getApplication_info());
+		offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
+		offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
+		offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
+		offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
+		offProgram.setParticipationFee(off_programDto.getParticipationFee());
+		offProgram.setStartTime(off_programDto.getStartTime());
+		offProgram.setEndTime(off_programDto.getEndTime());
+		offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
+		offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
+		offProgram.setApplicationState(off_programDto.getApplicationState());
+		offProgram.setApprovalState(off_programDto.getApprovalState());
+		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
+		offProgram.setViews(off_programDto.getViews());
+		offProgram.setLikesCount(off_programDto.getLikesCount());
+		offProgram.setCategory(off_programDto.getOfflineCategory());
+		offProgram.setPlaceName(off_programDto.getPlaceName());
+		offProgram.setProgramType(off_programDto.getProgramType());
+				
+		 
+		offProgram.setPoster(null);
+		offProgram.setProgramInfos(null);
+		offProgram.setTeacherInfos(null);
+		return offProgram;
 	}
 	
 	public static OffProgramDto convertToOffProgramDto(OffProgram offProgram) {

@@ -70,8 +70,8 @@ public class OnProgram {
     private List<TeacherInfo> teacherInfos; 
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
-	private List<Comment> comments; // 댓글 리스트
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
@@ -79,7 +79,7 @@ public class OnProgram {
 
 	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 	        OnProgram onProgram = new OnProgram();
-	        onProgram.setTeacher(on_programDto.getTeacher());
+//	        onProgram.setTeacher(on_programDto.getTeacher());
 	        onProgram.setProgramName(on_programDto.getProgramName());
 	        onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
 	        onProgram.setViews(on_programDto.getViews());
@@ -97,7 +97,7 @@ public class OnProgram {
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();
-		dto.setTeacher(onProgram.getTeacher());
+//		dto.setTeacher(onProgram.getTeacher());
 		dto.setProgramName(onProgram.getProgramName());
 		dto.setOperatingStartDay(onProgram.getOperatingStartDay());
 		dto.setViews(onProgram.getViews());

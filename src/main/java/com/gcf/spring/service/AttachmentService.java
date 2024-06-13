@@ -194,66 +194,66 @@ public class AttachmentService {
         }
     }
 
-    public Attachment uploadOffProgramFile(MultipartFile file, OffProgram offProgram) {
-        try {
-            String originalFileName = file.getOriginalFilename();
-            String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
+	 public Attachment uploadOffProgramFile(MultipartFile file) {
+		 try {
+			 String originalFileName = file.getOriginalFilename();
+	         String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 파일 확장자 추출
 
-            // UUID를 사용하여 고유한 파일 이름 생성
-            String uniqueID = UUID.randomUUID().toString();
+	         // UUID를 사용하여 고유한 파일 이름 생성
+	         String uniqueID = UUID.randomUUID().toString();
 
-            String uniqueFileName = uniqueID + "_" + originalFileName;
+	         String uniqueFileName = uniqueID + "_" + originalFileName;
 
-            String Folder = "offProgram/";
-            String fileInFolder = Folder + uniqueFileName;
+	         String Folder = "offProgram/";
+	         String fileInFolder = Folder + uniqueFileName;
 
-            System.out.println(fileInFolder);
+	         System.out.println(fileInFolder);
 
-            byte[] fileBytes = file.getBytes();
-            // GCS에 파일을 업로드합니다.
-            BlobId blobId = BlobId.of(BUCKET_NAME, fileInFolder);
-            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(extension).build();
+	         byte[] fileBytes = file.getBytes();
+	         // GCS에 파일을 업로드합니다.
+	         BlobId blobId = BlobId.of(BUCKET_NAME, fileInFolder);
+	         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(extension).build();
 
-            try (WriteChannel writer = storage.writer(blobInfo)) {
-                writer.write(ByteBuffer.wrap(fileBytes));
-            } catch (Exception ex) {
-                // 예외 처리 코드
-                ex.printStackTrace();
-                return null; // 업로드 실패 시 null 반환
-            }
+	         try (WriteChannel writer = storage.writer(blobInfo)) {
+	             writer.write(ByteBuffer.wrap(fileBytes));
+	         } catch (Exception ex) {
+	             // 예외 처리 코드
+	             ex.printStackTrace();
+	             return null; // 업로드 실패 시 null 반환
+	         }
 
-            // GCS에 업로드된 파일의 URL을 가져옵니다.
-            Blob blob = storage.get(blobId);
-            String fileUrl = null; // 파일의 URL을 저장할 변수 선언
-            if (blob != null) {
-                fileUrl = blob.getMediaLink(); // 파일의 URL 가져오기
-            }
+	         // GCS에 업로드된 파일의 URL을 가져옵니다.
+	         Blob blob = storage.get(blobId);
+	         String fileUrl = null; // 파일의 URL을 저장할 변수 선언
+	         if (blob != null) {
+	             fileUrl = blob.getMediaLink(); // 파일의 URL 가져오기
+	         }
 
-            // 첨부 파일 정보를 offProgram 객체에 추가
-            Attachment attachment = new Attachment();
-            attachment.setOriginal_name(originalFileName);
-            attachment.setFile_name(fileInFolder);
-            attachment.setFile_path(fileUrl);
-            attachment.setParent("offProgram");
+	         // 첨부 파일 정보를 offProgram 객체에 추가
+	         Attachment attachment = new Attachment();
+	         attachment.setOriginal_name(originalFileName);
+	         attachment.setFile_name(fileInFolder);
+	         attachment.setFile_path(fileUrl);
+	         attachment.setParent("offProgram");
 
-            // 데이터베이스에 첨부 파일 정보 저장
-            attachmentRepository.save(attachment);
+	         // 데이터베이스에 첨부 파일 정보 저장
+	         attachmentRepository.save(attachment);
 
-            return attachment;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	         return attachment;
+	     } catch (IOException e) {
+	         e.printStackTrace();
+	         return null;
+	     }
+	 }
 
-	public byte[] downloadFile(String fileName) {
+	 public byte[] downloadFile(String fileName) {
 		// GCS에서 파일을 다운로드합니다.
 		BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
 		Blob blob = storage.get(blobId);
 		return blob != null ? blob.getContent() : null;
-	}
+	 }
 
-	public void deleteUnlinkedFiles() {
+	 public void deleteUnlinkedFiles() {
 		// GCS에서 Bucket을 가져옵니다.
 		Bucket bucket = storage.get(BUCKET_NAME);
 
