@@ -1,0 +1,18 @@
+.CommentTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+  }
+  
+  .CommentTable th, .CommentTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .CommentTable th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  

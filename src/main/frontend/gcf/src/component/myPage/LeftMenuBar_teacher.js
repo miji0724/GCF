@@ -6,10 +6,37 @@ import Comment from './Comment';
 import TeacherForm from './TeacherForm';
 import ClassForm from './ClassForm';
 import MyPageSignUpForm from './MyPageSignUpForm';
+import axios from 'axios';
 import './LeftMenuBar_teacher.css';
 
 function LeftMenuBar_teacher() {
   const [activeComponent, setActiveComponent] = useState('offline_state');
+  const [userState, setUserState] = useState('');
+  const [teacherState, setTeacherState] = useState('');
+
+  const getTeacherState = async () => {
+    try {
+      const response = await axios.get('/teacher/getTeacherApprovalState', {
+        withCredentials: true,
+        method: 'GET'
+      });
+      setTeacherState(response.data);
+    } catch (error) {
+      console.error("사용자 데이터를 불러오는 중 오류가 발생했습니다.", error);
+    }
+  };
+
+  const getUserState = async () => {
+    try {
+      const response = await axios.get('/member/getUserRole', {
+        withCredentials: true,
+        method: 'GET' 
+      });
+      setUserState(response.data);
+    } catch (error) {
+      console.error("사용자 데이터를 불러오는 중 오류가 발생했습니다.", error);
+    }
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -17,14 +44,29 @@ function LeftMenuBar_teacher() {
     if (component) {
       setActiveComponent(component);
     }
+    getUserState();
   }, []);
+
+  useEffect(() => {
+    if (userState === 'TEACHER') {
+      getTeacherState(); 
+    }
+  }, [userState]); 
+
 
   const handleLinkClick = (componentName) => {
     window.location.href = `/MyPage?component=${componentName}`;
   };
 
   const handleAuthRedirect = (componentName) => {
-    window.location.href = `/MyPage?component=${componentName}`;
+    if (teacherState === '승인') {
+      window.location.href = `/MyPage?component=${componentName}`;
+    } else {
+      if(userState ==='USER'){
+        alert('강사가 아닌 회원은 접근할 수 없습니다.');
+      }
+      alert('강사 승인이 되지 않아 접근할 수 없습니다.');
+    }
   };
 
   return (
@@ -38,8 +80,8 @@ function LeftMenuBar_teacher() {
             <li><button onClick={() => handleLinkClick('online_state')}>온라인교육 수강현황</button></li>
             <li><button onClick={() => handleLinkClick('bookmark')}>관심 교육/체험</button></li>
             <li><button onClick={() => handleLinkClick('comment')}>작성댓글</button></li>
-            <li><button onClick={() => handleAuthRedirect('teacher_register')}>강사 등록 신청</button></li>
-            <li><button onClick={() => handleLinkClick('class_register')}>강의 등록 신청</button></li>
+            <li><button onClick={() => handleLinkClick('teacher_register')}>강사 등록 신청</button></li>
+            <li><button onClick={() => handleAuthRedirect('class_register')}>강의 등록 신청</button></li>
             <li><button onClick={() => handleLinkClick('info_update')}>정보수정</button></li>
           </ul>
         </div>

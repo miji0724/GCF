@@ -29,16 +29,14 @@ function Comment() {
         </div>
         <div className="TableContainer">
           <table className="CommentTable">
-            <thead>
-            </thead>
             <tbody>
               {comments.map((comment, index) => (
-                <tr key={comment.id} className="CommentItem">
-                  <td>{comment.id}</td>
-                  <td>{comment.date}</td>
-                  <td>{comment.content}</td>
-                  <td>{comment.hasReply ? '예' : '아니오'}</td>
-                </tr>
+                <tr key={comment.id}>
+                <td>{index + 1}</td>
+                <td>{new Date(comment.createdDate).toLocaleDateString()}</td>
+                <td>{comment.content}</td>
+                <td>{comment.isReply ? "Yes" : "No"}</td>
+              </tr>
               ))}
             </tbody>
           </table>
