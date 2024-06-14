@@ -11,9 +11,10 @@ function Online_state() {
     if (selectedState !== '전체') {
       url = `/api/onProgram/by-approval-state?approvalState=${selectedState}`;
     }
-
+  
     axios.get(url)
       .then(response => {
+        console.log('Response data:', response.data); // 응답 데이터 확인
         setPrograms(response.data);
       })
       .catch(error => {

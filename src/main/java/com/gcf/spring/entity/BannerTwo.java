@@ -23,9 +23,9 @@ public class BannerTwo {
     private Integer id;
 
     @Column
-    private String url;
+    private String url; 
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "attachment_id", referencedColumnName = "id")
     private Attachment attachment;
-}
+} 

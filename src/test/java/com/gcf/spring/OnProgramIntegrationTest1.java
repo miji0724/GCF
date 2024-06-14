@@ -46,13 +46,13 @@ public class OnProgramIntegrationTest1 {
             // Given
             // Member 엔티티 생성 및 저장
             Member member = new Member();
-            member.setId("qweqwe8");
+            member.setId("qweqwe9");
             member.setName("J456ohn Doe");
             member.setPassword(passwordEncoder.encode("password")); // 암호화된 비밀번호 설정	
             member.setBirth(LocalDate.of(1980, 1, 1));
-            member.setPhone_number("010-1234-5278");
+            member.setPhone_number("010-1234-1278");
             member.setTel_number("02-123-4547");
-            member.setEmail("john.d4o5e@example.com");
+            member.setEmail("jo545hn.d4o5e@example.com");
             member.setAddress("123 Street, City");
             member.setDetail_address("Apt 101");
             member.setEmail_agreement(true);
@@ -60,7 +60,7 @@ public class OnProgramIntegrationTest1 {
             member.setMail_agreement(true);
             member.setMarried(false);
             member.setHasChildren(false);
-            member.setRole(Role.ADMIN);
+            member.setRole(Role.USER);
             member.setCreatedAt(LocalDateTime.now());
             member = memberRepository.save(member);
 
@@ -76,7 +76,7 @@ public class OnProgramIntegrationTest1 {
             // 첫 번째 OnProgramDto 설정
             OnProgramDto onProgramDto1 = new OnProgramDto();
             onProgramDto1.setProgramName("온라인 요가 클래스");
-            onProgramDto1.setMember(member); // Member 설정
+            onProgramDto1.setMembers(Arrays.asList(member)); // Member 리스트 설정
             onProgramDto1.setTeacher(teacher);
             onProgramDto1.setOperatingStartDay(LocalDate.of(2024, 7, 1));
             onProgramDto1.setViews(0);
@@ -88,7 +88,7 @@ public class OnProgramIntegrationTest1 {
             // 두 번째 OnProgramDto 설정
             OnProgramDto onProgramDto2 = new OnProgramDto();
             onProgramDto2.setProgramName("온라인 피트니스 클래스");
-            onProgramDto2.setMember(member); // Member 설정
+            onProgramDto2.setMembers(Arrays.asList(member)); // Member 리스트 설정
             onProgramDto2.setTeacher(teacher);
             onProgramDto2.setOperatingStartDay(LocalDate.of(2024, 8, 1));
             onProgramDto2.setViews(0);

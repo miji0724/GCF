@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OnProgramDto {
-    private Member member;
+    private List<Member> members; // Members 리스트로 변경
     private Teacher teacher;
     private String programName;
     private LocalDate operatingStartDay;

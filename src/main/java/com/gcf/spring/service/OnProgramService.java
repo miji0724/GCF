@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gcf.spring.dto.OnProgramDto;
-import com.gcf.spring.entity.OffProgram;
 import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
@@ -58,13 +57,7 @@ public class OnProgramService {
 		return onVideoRepository.saveAll(onVideos);
 	}
 
-	public List<OffProgram> getOffProgramsByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public List<OnProgram> getOnProgramsByUserId(String userId) {
-        return onProgramRepository.findByMemberId(userId);
+        return onProgramRepository.findByMembersId(userId);
     }
-	
 }

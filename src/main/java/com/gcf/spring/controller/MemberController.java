@@ -48,7 +48,7 @@ public class MemberController {
         } catch (Exception e) {
             return new ResponseEntity<>("이미 존재하는 회원입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }  
 
     // 로그인
     @PostMapping("/member/login")

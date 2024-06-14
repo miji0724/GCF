@@ -40,7 +40,7 @@ public class Comment {
     @JsonBackReference
     private OnProgram post;
 
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date", nullable = false) 
     private LocalDate createdDate = LocalDate.now();
 
     @Column(name = "modified_date")
