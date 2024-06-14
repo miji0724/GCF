@@ -146,19 +146,19 @@ function ManageTeachAppDetail() {
 
     // 미승인
     const sendNotApprovalRequest = () => {
-        axios.put(`/manage/teacherNotApproval`, teacher.id, {
+        axios.delete(`/manage/teacherNotApproval/${teacher.id}`, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
-                alert('회원 강사 신청을 미승인하였습니다.');
-                navigate(-1);
-            })
-            .catch(error => {
-                console.error('There was a problem with your axios operation:', error);
-                // 오류 처리 로직을 추가할 수 있습니다.
-            });
+        .then(response => {
+            alert('회원 강사 신청을 미승인하였습니다.');
+            navigate(-1);
+        })
+        .catch(error => {
+            console.error('There was a problem with your axios operation:', error);
+            // 오류 처리 로직을 추가할 수 있습니다.
+        });
     };
 
     return (

@@ -45,7 +45,6 @@ function ManageTeachDetail() {
         '만화': 'comic',
         '기타': 'etc'
     };
-
     useEffect(() => {
         if (teacher) {
             const {
@@ -127,13 +126,14 @@ function ManageTeachDetail() {
         }
     };
 
+
     const handleTeachDetailChange = (event) => {
         const { value, checked } = event.target;
         setTeacherInfo((prev) => {
             if (checked) {
-                return { ...prev, teachDetail_lec: [...prev.teachDetail_lec, value] };
+                return { ...prev, teachAppDetail_lec: [...prev.teachAppDetail_lec, value] };
             } else {
-                return { ...prev, teachDetail_lec: prev.teachDetail_lec.filter((item) => item !== value) };
+                return { ...prev, teachAppDetail_lec: prev.teachAppDetail_lec.filter((item) => item !== value) };
             }
         });
     };
@@ -353,9 +353,9 @@ function ManageTeachDetail() {
                                         <label key={index} className="teach_detail_category_label">
                                             <input
                                                 type="checkbox"
-                                                name='teachDetail_lec'
+                                                name='teacherCategory'
                                                 value={category}
-                                                checked={teacherInfo.teachDetail_lec.includes(categoryMapping[category])}
+                                                checked={teacherInfo.teacherCategory.includes(categoryMapping[category])}
                                                 onChange={handleTeachDetailChange}
                                                 disabled
                                             />

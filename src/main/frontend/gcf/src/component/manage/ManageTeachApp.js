@@ -101,6 +101,7 @@ function ManageTeachApp() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = Array.isArray(filteredItems) ? filteredItems.slice(indexOfFirstItem, indexOfLastItem) : [];
 
+   
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(filteredItems.length / itemsPerPage); i++) {
         pageNumbers.push(i);
