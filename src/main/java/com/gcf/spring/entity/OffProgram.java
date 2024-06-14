@@ -34,6 +34,10 @@ public class OffProgram {
 	@Column(name = "id", nullable = false)
 	private Integer id; // 프로그램 번호
 
+	@OneToMany
+	@JoinColumn(name = "off_apply", referencedColumnName = "id", nullable = true)
+	private List<Member> member;
+	
 	@ManyToOne
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
 	private Teacher teacher; // 강사 ID
@@ -112,6 +116,7 @@ public class OffProgram {
     public static OffProgram createOffProgram(OffProgramDto off_programDto) {
 		OffProgram offProgram = new OffProgram();
 		offProgram.setProgramName(off_programDto.getProgramName());
+		offProgram.setMember(off_programDto.getMember()); // Member 설정
 		offProgram.setTeacher(off_programDto.getTeacher());
 		offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
 		offProgram.setApplication_info(off_programDto.getApplication_info());

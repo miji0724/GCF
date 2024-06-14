@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.entity.TeacherInfo;
 import com.gcf.spring.repository.AttachmentRepository;
+import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.repository.OnProgramRepository;
 import com.gcf.spring.repository.OnVideoRepository;
 import com.gcf.spring.repository.ProgramInfoRepository;
@@ -36,6 +38,9 @@ public class OnProgramService {
     
     @Autowired
 	private AttachmentRepository attachmentRepository;
+    
+    @Autowired
+    private MemberRepository memberRepository;
 
     public OnProgram createOnProgram(OnProgramDto onProgramDto, Teacher teacher) {
 		OnProgram onProgram = OnProgram.createOnProgram(onProgramDto);
@@ -77,5 +82,9 @@ public class OnProgramService {
 	
 	public List<OnVideo> insertOnVideo(List<OnVideo> onVideos) {
 		return onVideoRepository.saveAll(onVideos);
+	}
+	
+	public List<OnProgram> getOnProgramsByUserId(String userId) {
+		return onProgramRepository.findByMemberId(userId);
 	}
 }

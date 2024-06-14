@@ -2,6 +2,7 @@ package com.gcf.spring.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,37 +16,42 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.entity.TeacherInfo;
+import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OnProgramService;
 import com.gcf.spring.service.TeacherService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/onProgram")
 public class OnProgramController {
 
-    @Autowired
-    private OnProgramService onProgramService;
+	@Autowired
+	private OnProgramService onProgramService;
 
-    @Autowired
-    private AttachmentService attachmentService;
+	@Autowired
+	private AttachmentService attachmentService;
 
-    @Autowired
-    private TeacherService teacherService;
+	@Autowired
+	private TeacherService teacherService;
 
 	@PostMapping
 	public ResponseEntity<OnProgram> createOnProgram(@RequestBody OnProgramDto onProgramDto) {
 
+		System.out.println("아이디:"+onProgramDto);
 		Teacher teacher = teacherService.findById(onProgramDto.getTeacherId());
 		OnProgram createdOnProgram = onProgramService.createOnProgram(onProgramDto, teacher);
 
 		return ResponseEntity.ok(createdOnProgram);
 	}
-    
+
 	@PostMapping("/poster")
 	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
 
@@ -85,29 +91,28 @@ public class OnProgramController {
 
 		return ResponseEntity.ok(null);
 	}
-	
-    @PostMapping("/onteacherinfo")
-    public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
-            									   @RequestParam("descriptions") List<String> descriptions,
-            									   @RequestParam("id") Integer id) {
-    	int i = 0;
-        List<TeacherInfo> teacherInfos = new ArrayList<>();
-        OnProgram onProgram = onProgramService.getOnProgramById(id);
-        for (String description : descriptions) {
-            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
-            TeacherInfo teacherInfo = new TeacherInfo();
-            teacherInfo.setAttachment(attachment);
-            teacherInfo.setDescription(description);
-            teacherInfo.setOnProgram(onProgram);
-            teacherInfos.add(teacherInfo);
-            i++;
-        }
-        onProgramService.insertTeacherInfo(teacherInfos);
 
-        return ResponseEntity.ok(null);	
-    }
-    
-    @PostMapping("/onvideo")
+	@PostMapping("/onteacherinfo")
+	public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
+			@RequestParam("descriptions") List<String> descriptions, @RequestParam("id") Integer id) {
+		int i = 0;
+		List<TeacherInfo> teacherInfos = new ArrayList<>();
+		OnProgram onProgram = onProgramService.getOnProgramById(id);
+		for (String description : descriptions) {
+			Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
+			TeacherInfo teacherInfo = new TeacherInfo();
+			teacherInfo.setAttachment(attachment);
+			teacherInfo.setDescription(description);
+			teacherInfo.setOnProgram(onProgram);
+			teacherInfos.add(teacherInfo);
+			i++;
+		}
+		onProgramService.insertTeacherInfo(teacherInfos);
+
+		return ResponseEntity.ok(null);
+	}
+
+	@PostMapping("/onvideo")
 	public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
 			@RequestParam("videoinfodetails") List<String> videoinfodetails,
 			@RequestParam("videoinfoindex") List<String> videoinfoindexes, @RequestParam("id") Integer id) {
@@ -142,10 +147,14 @@ public class OnProgramController {
 
 		return ResponseEntity.ok(null);
 	}
-    
-    @GetMapping
-    public ResponseEntity<List<OnProgram>> getAllOnPrograms() {
-        List<OnProgram> programs = onProgramService.getAllOnPrograms();
-        return ResponseEntity.ok(programs);
-    }
- }
+
+	@GetMapping("/myonprogram")
+	public ResponseEntity<List<OnProgram>> getOnProgramsByUserId(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		if (userId == null) {
+			throw new RuntimeException("User not authenticated");
+		}
+		List<OnProgram> programs = onProgramService.getOnProgramsByUserId(userId);
+		return ResponseEntity.ok(programs);
+	}
+}

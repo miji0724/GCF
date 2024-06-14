@@ -11,3 +11,10 @@
   margin-right: 700px;
   margin-top: 42px;
 }
+
+.OnlineState{
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  cursor: default;
+}

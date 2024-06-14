@@ -1,20 +1,18 @@
 package com.gcf.spring.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gcf.spring.dto.OnProgramDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -31,6 +29,10 @@ public class OnProgram {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id; // 프로그램 번호
+
+	@OneToMany
+	@JoinColumn(name = "on_apply", referencedColumnName = "id", nullable = true)
+	private List<Member> member;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
@@ -61,36 +63,37 @@ public class OnProgram {
 	@Column(nullable = false)
 	private String approvalState; // 승인, 미승인, 승인대기
 
-    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
-    private List<ProgramInfo> programInfos;
+	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
+	private List<ProgramInfo> programInfos;
 
-    @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
-    private List<TeacherInfo> teacherInfos; 
+	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
+	private List<TeacherInfo> teacherInfos;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	private List<Comment> comments;
 
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<OnVideo> videos; // 비디오 리스트
 
-	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
-	        OnProgram onProgram = new OnProgram();
-	        onProgram.setId(on_programDto.getId());
-	        onProgram.setTeacher(on_programDto.getTeacher());
-	        onProgram.setProgramName(on_programDto.getProgramName());
-	        onProgram.setOperatingStartDay(LocalDate.now());
-	        onProgram.setViews(on_programDto.getViews());
-	        onProgram.setLikesCount(on_programDto.getLikesCount());
-	        onProgram.setCategory(on_programDto.getCategory()); // 필드명 변경
-	        onProgram.setProgramType(on_programDto.getProgramType());
-	        onProgram.setProgramInfos(on_programDto.getProgramInfos());
-	        onProgram.setTeacherInfos(on_programDto.getTeacherInfos());
-	        onProgram.setComments(on_programDto.getComments());
-	        onProgram.setVideos(on_programDto.getVideos());
-	        onProgram.setPoster(on_programDto.getPoster());
-	        onProgram.setApprovalState(on_programDto.getApprovalState());
-	        return onProgram;
-	    }
+	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
+		OnProgram onProgram = new OnProgram();
+		onProgram.setMember(on_programDto.getMember());
+		onProgram.setId(on_programDto.getId());
+		onProgram.setTeacher(on_programDto.getTeacher());
+		onProgram.setProgramName(on_programDto.getProgramName());
+		onProgram.setOperatingStartDay(LocalDate.now());
+		onProgram.setViews(on_programDto.getViews());
+		onProgram.setLikesCount(on_programDto.getLikesCount());
+		onProgram.setCategory(on_programDto.getCategory()); // 필드명 변경
+		onProgram.setProgramType(on_programDto.getProgramType());
+		onProgram.setProgramInfos(on_programDto.getProgramInfos());
+		onProgram.setTeacherInfos(on_programDto.getTeacherInfos());
+		onProgram.setComments(on_programDto.getComments());
+		onProgram.setVideos(on_programDto.getVideos());
+		onProgram.setPoster(on_programDto.getPoster());
+		onProgram.setApprovalState(on_programDto.getApprovalState());
+		return onProgram;
+	}
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();
@@ -108,6 +111,7 @@ public class OnProgram {
 		dto.setComments(onProgram.getComments());
 		dto.setApprovalState(onProgram.getApprovalState());
 		dto.setVideos(onProgram.getVideos());
+		dto.setMember(onProgram.getMember());
 		return dto;
 	}
 }

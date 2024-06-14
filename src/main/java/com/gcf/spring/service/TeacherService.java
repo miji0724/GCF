@@ -110,6 +110,7 @@ public class TeacherService {
     }
     
     public Teacher findById(String id) {
+    	System.out.println("티처:"+teacherRepository.findById(id));
         return teacherRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid teacher Id: " + id));
     }
     

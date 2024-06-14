@@ -95,10 +95,6 @@ public class Member {
     @JoinColumn(name = "online_bookmark")
     private List<OnBookMark> onProgramBookMark;
 	
-    @OneToMany
-    @JoinColumn(name = "off_apply")
-    private List<OffProgram> offApply;
-	
 	public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
 		Member member = new Member();
 		member.setId(memberDto.getId());

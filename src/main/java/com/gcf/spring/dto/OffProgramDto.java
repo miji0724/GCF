@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.gcf.spring.constant.Day_of_week;
 import com.gcf.spring.entity.Attachment;
+import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.entity.TeacherInfo;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OffProgramDto {
 	private Integer id;
+	private List<Member> member;
 	private String teacherId;
 	private Teacher teacher; // 강사 ID
 	private String programName; // 프로그램명

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gcf.spring.entity.Attachment;
 import com.gcf.spring.entity.Comment;
+import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnProgramDto {
 	private Integer id;
+	private List<Member> member;
 	private String teacherId;
 	private Teacher teacher;
 	private String programName; // 프로그램 이름
@@ -33,9 +35,10 @@ public class OnProgramDto {
 	private String programType; // 프로그램 타입 (온라인/오프라인 구분)
 	private Attachment poster; // 포스터 정보
 	private Integer posterId;
-	private String approvalState; //승인, 미승인, 승인대기
+	private String approvalState; // 승인, 미승인, 승인대기
 	private List<ProgramInfo> programInfos; // 교육 소개 파일
 	private List<TeacherInfo> teacherInfos; // 강사 소개 파일
 	private List<Comment> comments; // 댓글 리스트
 	private List<OnVideo> videos; // 비디오 리스트
+	private String userId; // 새로 추가된 필드
 }

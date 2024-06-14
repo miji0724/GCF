@@ -403,6 +403,7 @@ function ClassForm() {
 
                 formData = {
                     'teacher': {},
+                    'member':{},
                     'teacherId': teacherId,
                     'programName': CName,
                     'operatingStartDay': '',
@@ -425,7 +426,7 @@ function ClassForm() {
                         console.log(`${key}: ${value}`);
                     }
 
-                    console.log(teacherId);
+                    console.log(formData.teacherId);
                     console.log(posterId);
 
                     const response = await axios.post('/api/onProgram', formData, {
@@ -1003,18 +1004,6 @@ function ClassForm() {
                                         <input type="checkbox" className="checkbox" name="agreement" id="agreement2" />
                                         <label htmlFor="agreement2"></label>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="classForm_buttonArea">
-                                <div className='validation'>
-                                    <button type='button'>확인</button>
-                                </div>
-                                <div className='modify'>
-                                    <button type='button'>수정</button>
-                                </div>
-                                <div className='delete'>
-                                    <button type='button'>삭제</button>
                                 </div>
                             </div>
                             {showAlert && <p style={{ color: 'red' }}>모든 필드를 입력해주세요.</p>}

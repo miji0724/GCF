@@ -27,6 +27,20 @@ function ManageTeachAppDetail() {
     const [careerInputs, setCareerInputs] = useState([]);
     const [LicenseInputs, setLicenseInputs] = useState([]);
     const [teachAbleInputs, setTeachAbleInputs] = useState([]);
+    const categoryMapping = {
+        '문학': 'literature',
+        '미술': 'art',
+        '음악': 'music',
+        '무용': 'dance',
+        '영상': 'video',
+        '연극': 'theater',
+        '영화': 'movie',
+        '국악': 'koreanMusic',
+        '건축': 'architecture',
+        '출판': 'publication',
+        '만화': 'comic',
+        '기타': 'etc'
+    };
 
     useEffect(() => {
         if (teacher) {
@@ -54,12 +68,21 @@ function ManageTeachAppDetail() {
                 teachAppDetail_lec: teacherCategory,
             });
 
-            setCareerInputs(career.split(',').map((value, index) => ({
-                id: index,
-                value,
-                startYear: careerStartYear.split(',')[index] || '',
-                endYear: careerEndYear.split(',')[index] || '',
-            })));
+            setCareerInputs(career.split(',').map((value, index) => {
+                const startDateParts = careerStartYear.split(',')[index].split('-');
+                const endDateParts = careerEndYear.split(',')[index].split('-');
+                return {
+                    id: index,
+                    value,
+                    startYear: startDateParts[0] || '',
+                    startMonth: startDateParts[1] || '',
+                    startDay: startDateParts[2] || '',
+                    endYear: endDateParts[0] || '',
+                    endMonth: endDateParts[1] || '',
+                    endDay: endDateParts[2] || '',
+                };
+            }));
+            
 
             setLicenseInputs(licenseName.split(',').map((value, index) => ({
                 id: index,
@@ -188,13 +211,13 @@ function ManageTeachAppDetail() {
                             <li><input type='text' id='teachAppDetail_sns' value={teacherInfo.snsAddress || ''} onChange={(e) => handleInputChange(e, 'sns_address')} disabled /></li>
                             <li>
                                 <div className='teachApp_detail_category_area'>
-                                    {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
+                                    {Object.keys(categoryMapping).map((category, index) => (
                                         <label key={index} className="teachApp_detail_category_label">
                                             <input
                                                 type="checkbox"
                                                 name='teachAppDetail_lec'
                                                 value={category}
-                                                checked={teacherInfo.teachAppDetail_lec.includes(category)}
+                                                checked={teacherInfo.teachAppDetail_lec.includes(categoryMapping[category])}
                                                 onChange={handleTeachAppDetailChange}
                                                 disabled
                                             />
@@ -216,25 +239,26 @@ function ManageTeachAppDetail() {
                                                 disabled
                                             />
                                             <input
-                                                type='number'
+                                                type='text'
                                                 className='mainCareer_startDate'
                                                 id={`teachAppDetail_mainCareer${input.id}_startDate`}
-                                                value={input.startYear || ''}
+                                                value={`${input.startYear}-${String(input.startMonth).padStart(2, '0')}-${String(input.startDay).padStart(2, '0')}`}
                                                 onChange={(e) => handleInputChange(e, 'careerStartYearArray', input.id)}
                                                 disabled
                                             />
                                             ~
                                             <input
-                                                type='number'
+                                                type='text'
                                                 className='mainCareer_endDate'
                                                 id={`teachAppDetail_mainCareer${input.id}_endDate`}
-                                                value={input.endYear || ''}
+                                                value={`${input.endYear}-${String(input.endMonth).padStart(2, '0')}-${String(input.endDay).padStart(2, '0')}`}
                                                 onChange={(e) => handleInputChange(e, 'careerEndYearArray', input.id)}
                                                 disabled
                                             />
                                         </div>
                                     ))}
                                 </div>
+
                             </li>
                             <li>
                                 <div className='License_area'>

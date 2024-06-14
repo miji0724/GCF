@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Offline_state from './Offline_state';
-import Online_state from './Online_state';
 import BookMark from './BookMark';
 import Comment from './Comment';
 import TeacherForm from './TeacherForm';
@@ -75,9 +74,8 @@ function LeftMenuBar_teacher() {
         <div className="MyPageTitle" id="MyPage_title">마이페이지</div>
         <div className="MyPageSubtitle" id="MyPage_title">
           <ul className="MenuList">
-            <div className='hinfo'><li>회원정보</li></div>
+            <div className='hinfo'><p id='member_info_sidebar_title'>회원정보</p></div>
             <li><button onClick={() => handleLinkClick('offline_state')}>교육/체험 신청현황</button></li>
-            <li><button onClick={() => handleLinkClick('online_state')}>온라인교육 수강현황</button></li>
             <li><button onClick={() => handleLinkClick('bookmark')}>관심 교육/체험</button></li>
             <li><button onClick={() => handleLinkClick('comment')}>작성댓글</button></li>
             <li><button onClick={() => handleLinkClick('teacher_register')}>강사 등록 신청</button></li>
@@ -88,7 +86,6 @@ function LeftMenuBar_teacher() {
       </div>
       <div className="MyPage_right">
         {activeComponent === 'offline_state' && <Offline_state />}
-        {activeComponent === 'online_state' && <Online_state />}
         {activeComponent === 'bookmark' && <BookMark />}
         {activeComponent === 'comment' && <Comment />}
         {activeComponent === 'teacher_register' && <TeacherForm />}

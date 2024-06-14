@@ -68,5 +68,9 @@ public class OffProgramService {
     public Attachment insertPoster(Attachment poster) {
 		return attachmentRepository.save(poster);
 	}
+    
+    public List<OffProgram> getOffProgramsByUserId(String userId) {
+        return offProgramRepository.findByMemberId(userId);
+    }
 }
  

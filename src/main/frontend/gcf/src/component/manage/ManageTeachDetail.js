@@ -31,6 +31,20 @@ function ManageTeachDetail() {
     const [careerInputs, setCareerInputs] = useState([]);
     const [licenseInputs, setLicenseInputs] = useState([]);
     const [teachAbleInputs, setTeachAbleInputs] = useState([]);
+    const categoryMapping = {
+        '문학': 'literature',
+        '미술': 'art',
+        '음악': 'music',
+        '무용': 'dance',
+        '영상': 'video',
+        '연극': 'theater',
+        '영화': 'movie',
+        '국악': 'koreanMusic',
+        '건축': 'architecture',
+        '출판': 'publication',
+        '만화': 'comic',
+        '기타': 'etc'
+    };
 
     useEffect(() => {
         if (teacher) {
@@ -117,9 +131,9 @@ function ManageTeachDetail() {
         const { value, checked } = event.target;
         setTeacherInfo((prev) => {
             if (checked) {
-                return { ...prev, teacherCategory: [...prev.teacherCategory, value] };
+                return { ...prev, teachDetail_lec: [...prev.teachDetail_lec, value] };
             } else {
-                return { ...prev, teacherCategory: prev.teacherCategory.filter((item) => item !== value) };
+                return { ...prev, teachDetail_lec: prev.teachDetail_lec.filter((item) => item !== value) };
             }
         });
     };
@@ -335,15 +349,15 @@ function ManageTeachDetail() {
                             </li>
                             <li>
                                 <div className='teach_detail_category_area'>
-                                    {['문학', '미술', '음악', '무용', '영상', '연극', '영화', '국악', '건축', '출판', '만화', '기타'].map((category, index) => (
+                                    {Object.keys(categoryMapping).map((category, index) => (
                                         <label key={index} className="teach_detail_category_label">
                                             <input
                                                 type="checkbox"
-                                                name='teacherCategory'
+                                                name='teachDetail_lec'
                                                 value={category}
-                                                checked={teacherInfo.teacherCategory.includes(category)}
+                                                checked={teacherInfo.teachDetail_lec.includes(categoryMapping[category])}
                                                 onChange={handleTeachDetailChange}
-                                                disabled={!isEditing}
+                                                disabled
                                             />
                                             {category}
                                         </label>
