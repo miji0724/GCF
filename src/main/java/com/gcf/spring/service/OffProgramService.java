@@ -40,6 +40,10 @@ public class OffProgramService {
         return offProgramRepository.findById(id).orElse(null);
     }
     
+    public List<OffProgram> getOffProgramsByUserId(String userId) {
+        return offProgramRepository.findByMemberId(userId);
+    }
+    
     public List<ProgramInfo> insertProgramInfo(List<ProgramInfo> programInfos) {
 		return programInfoRepository.saveAll(programInfos);
 	}
@@ -72,10 +76,6 @@ public class OffProgramService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public List<OffProgram> getOffProgramsByUserId(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 }
  

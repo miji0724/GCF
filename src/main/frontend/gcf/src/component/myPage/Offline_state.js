@@ -7,7 +7,7 @@ function Offline_state() {
   const [selectedState, setSelectedState] = useState('전체');
 
   useEffect(() => {
-    let url = '/api/offProgram';
+    let url = '/api/offProgram/myoffprogram';
     if (selectedState !== '전체') {
       url = `/api/offProgram/by-approval-state?approvalState=${selectedState}`;
     }

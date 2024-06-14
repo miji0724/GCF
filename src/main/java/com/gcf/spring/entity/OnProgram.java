@@ -27,6 +27,10 @@ public class OnProgram {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 프로그램 번호
+    
+    @ManyToOne
+    @JoinColumn(name = "member", referencedColumnName = "id")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")

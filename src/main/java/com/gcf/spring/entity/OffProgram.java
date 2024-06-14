@@ -30,6 +30,10 @@ public class OffProgram {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id; // 프로그램 번호
+	
+	@ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
@@ -105,31 +109,30 @@ public class OffProgram {
 	@OneToMany(mappedBy = "offProgram", cascade = CascadeType.ALL)
 	private List<TeacherInfo> teacherInfos; // 강사 소개
 
-	public static OffProgram createOffProgram(OffProgramDto off_programDto) {
+	public static OffProgram createOffProgram(OffProgramDto offProgramDto) {
 		OffProgram offProgram = new OffProgram();
-		offProgram.setProgramName(off_programDto.getProgramName());
-		offProgram.setTeacher(off_programDto.getTeacher());
-		offProgram.setProgramDetailName(off_programDto.getProgramDetailName());
-		offProgram.setApplication_info(off_programDto.getApplication_info());
-		offProgram.setOperatingStartDay(off_programDto.getOperatingStartDay());
-		offProgram.setOperatingEndDay(off_programDto.getOperatingEndDay());
-		offProgram.setApplicationStartDate(off_programDto.getApplicationStartDate());
-		offProgram.setApplicationEndDate(off_programDto.getApplicationEndDate());
-		offProgram.setParticipationFee(off_programDto.getParticipationFee());
-		offProgram.setStartTime(off_programDto.getStartTime());
-		offProgram.setEndTime(off_programDto.getEndTime());
-		offProgram.setMaxParticipants(off_programDto.getMaxParticipants());
-		offProgram.setCurrentParticipants(off_programDto.getCurrentParticipants());
-		offProgram.setApplicationState(off_programDto.getApplicationState());
-		offProgram.setApprovalState(off_programDto.getApprovalState());
-		offProgram.setDayOfWeek(off_programDto.getDayOfWeek());
-		offProgram.setViews(off_programDto.getViews());
-		offProgram.setLikesCount(off_programDto.getLikesCount());
-		offProgram.setCategory(off_programDto.getOfflineCategory());
-		offProgram.setPlaceName(off_programDto.getPlaceName());
-		offProgram.setProgramType(off_programDto.getProgramType());
-				
-		 
+		offProgram.setProgramName(offProgramDto.getProgramName());
+		offProgram.setMember(offProgramDto.getMember()); // Member 설정
+		offProgram.setTeacher(offProgramDto.getTeacher());
+		offProgram.setProgramDetailName(offProgramDto.getProgramDetailName());
+		offProgram.setApplication_info(offProgramDto.getApplication_info());
+		offProgram.setOperatingStartDay(offProgramDto.getOperatingStartDay());
+		offProgram.setOperatingEndDay(offProgramDto.getOperatingEndDay());
+		offProgram.setApplicationStartDate(offProgramDto.getApplicationStartDate());
+		offProgram.setApplicationEndDate(offProgramDto.getApplicationEndDate());
+		offProgram.setParticipationFee(offProgramDto.getParticipationFee());
+		offProgram.setStartTime(offProgramDto.getStartTime());
+		offProgram.setEndTime(offProgramDto.getEndTime());
+		offProgram.setMaxParticipants(offProgramDto.getMaxParticipants());
+		offProgram.setCurrentParticipants(offProgramDto.getCurrentParticipants());
+		offProgram.setApplicationState(offProgramDto.getApplicationState());
+		offProgram.setApprovalState(offProgramDto.getApprovalState());
+		offProgram.setDayOfWeek(offProgramDto.getDayOfWeek());
+		offProgram.setViews(offProgramDto.getViews());
+		offProgram.setLikesCount(offProgramDto.getLikesCount());
+		offProgram.setCategory(offProgramDto.getOfflineCategory());
+		offProgram.setPlaceName(offProgramDto.getPlaceName());
+		offProgram.setProgramType(offProgramDto.getProgramType());
 		offProgram.setPoster(null);
 		offProgram.setProgramInfos(null);
 		offProgram.setTeacherInfos(null);

@@ -23,6 +23,8 @@ import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OffProgramService;
 import com.gcf.spring.service.TeacherService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/offProgram")
 public class OffProgramController {
@@ -91,8 +93,12 @@ public class OffProgramController {
         return ResponseEntity.ok(programs);
     }
     
-    @GetMapping("/by-user")
-    public ResponseEntity<List<OffProgram>> getOffProgramsByUserId(@RequestParam Integer userId) {
+    @GetMapping("/myoffprogram")
+    public ResponseEntity<List<OffProgram>> getOffProgramsByUserId(HttpServletRequest request) {
+        String userId = (String) request.getSession().getAttribute("userId");
+        if (userId == null) {
+            throw new RuntimeException("User not authenticated");
+        }
         List<OffProgram> programs = offProgramService.getOffProgramsByUserId(userId);
         return ResponseEntity.ok(programs);
     }

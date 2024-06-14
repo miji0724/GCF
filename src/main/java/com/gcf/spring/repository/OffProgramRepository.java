@@ -8,4 +8,5 @@ import com.gcf.spring.entity.OffProgram;
 
 public interface OffProgramRepository extends JpaRepository<OffProgram, Integer> {
     List<OffProgram> findAllByApprovalState(String approvalState);
+    List<OffProgram> findByMemberId(String userId);
 }
