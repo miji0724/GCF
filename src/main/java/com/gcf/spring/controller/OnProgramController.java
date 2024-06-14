@@ -108,32 +108,40 @@ public class OnProgramController {
     }
     
     @PostMapping("/onvideo")
-    public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
-                                               @RequestParam("videoinfodetails") List<String> videoinfodetails,
-                                               @RequestParam("videoinfoindex") List<String> videoInfoIndex,
-                                               @RequestParam("id") Integer id) {
-        List<OnVideo> onVideos = new ArrayList<>();
-        OnProgram onProgram = onProgramService.getOnProgramById(id);
+	public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
+			@RequestParam("videoinfodetails") List<String> videoinfodetails,
+			@RequestParam("videoinfoindex") List<String> videoinfoindexes, @RequestParam("id") Integer id) {
+		// files 리스트의 요소를 출력
+		for (MultipartFile file : files) {
+			System.out.println(file);
+		}
 
-        System.out.println("Test");
-        
-        for (int i = 0; i < videoinfodetails.size(); i++) {
-            String videoinfodetail = videoinfodetails.get(i);
-            String index = videoInfoIndex.get(i); // 인덱스 값 받기
+		List<OnVideo> onVideos = new ArrayList<>();
+		OnProgram onProgram = onProgramService.getOnProgramById(id);
 
-            Attachment attachment = attachmentService.uploadOnProgramFile(files.get(i));
-            OnVideo onVideo = new OnVideo();
-            onVideo.setAttachment(attachment);
-            onVideo.setVideoInfoDetail(videoinfodetail);
-            onVideo.setVideoInfoIndex(index.toString()); // 인덱스를 String으로 변환하여 설정
-            onVideo.setOnProgram(onProgram);
-            onVideos.add(onVideo);
-        }
+		for (int i = 0; i < videoinfoindexes.size(); i++) {
+			Attachment attachment = null; // 파일 업로드 전에 변수를 null로 초기화
 
-        onProgramService.insertOnVideo(onVideos);
+			// 파일이 첨부되었는지 확인하고 처리
+			if (files != null && !files.isEmpty() && i < files.size() && !files.get(i).isEmpty()) {
+				attachment = attachmentService.uploadOnProgramFile(files.get(i));
+			}
 
-        return ResponseEntity.ok(null);	
-    }
+			OnVideo onVideo = new OnVideo();
+			String videoinfodetail = videoinfodetails.get(i);
+			onVideo.setAttachment(attachment); // null일 경우 그대로 null로 설정
+			onVideo.setVideoInfoIndex(videoinfoindexes.get(i)); // 인덱스에 맞게 videoinfoindex 가져오기
+			onVideo.setVideoInfoDetail(videoinfodetail);
+			onVideo.setOnProgram(onProgram);
+			onVideos.add(onVideo);
+		}
+		onProgramService.insertOnVideo(onVideos);
+		onProgram.setVideos(onVideos);
+
+		System.out.println(onProgram.toString());
+
+		return ResponseEntity.ok(null);
+	}
     
     @GetMapping
     public ResponseEntity<List<OnProgram>> getAllOnPrograms() {

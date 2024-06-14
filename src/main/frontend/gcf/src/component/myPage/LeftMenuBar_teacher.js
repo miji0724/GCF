@@ -48,7 +48,7 @@ function LeftMenuBar_teacher() {
   }, []);
 
   useEffect(() => {
-    if (userState === 'TEACHER') {
+    if (userState === 'TEACHER', 'ADMIN') {
       getTeacherState(); 
     }
   }, [userState]); 

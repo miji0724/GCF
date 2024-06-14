@@ -47,6 +47,7 @@ function ClassForm() {
         }
     ]);
 
+
     const [offPrograms, setOffPrograms] = useState([]);
     const [onPrograms, setOnPrograms] = useState([]);
 
@@ -357,13 +358,12 @@ function ClassForm() {
 
             const videoInfoData = new FormData();
 
-
             videoInfoFields.forEach((data, index) => {
                 videoInfoData.append('videoinfodetails', data.videoInfoDetail);
                 videoInfoData.append('videoinfoindex', data.lectureNumber);
 
                 // 만약 파일이 없다면 빈 Blob 추가
-                videoInfoData.append('files', data.videoFile || new Blob());
+                videoInfoData.append('files',new Blob());
 
                 // 각 하위 항목에 대해 FormData에 추가
                 data.subFields.forEach(subField => {
@@ -465,7 +465,13 @@ function ClassForm() {
                     console.error(error);
                 }
 
+                // FormData 객체의 내용 출력
+                for (let pair of videoInfoData.entries()) {
+                    console.log(`${pair[0]}: ${pair[1]}`);
+                }
+
                 try {
+
                     const response = await axios.post('/api/onProgram/onvideo', videoInfoData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
@@ -921,14 +927,14 @@ function ClassForm() {
                                     </div>
 
                                     <div className="OnlineLec">
-                                    <select id='lecOnDetail_lecField' >
-                                        <option value='미술'>미술</option>
-                                        <option value='과학'>과학</option>
-                                        <option value='음악'>음악</option>
-                                        <option value='디자인'>디자인</option>
-                                        <option value='교육'>교육</option>
-                                        <option value='기타'>기타</option>
-                                    </select>
+                                        <select id='lecOnDetail_lecField' >
+                                            <option value='미술'>미술</option>
+                                            <option value='과학'>과학</option>
+                                            <option value='음악'>음악</option>
+                                            <option value='디자인'>디자인</option>
+                                            <option value='교육'>교육</option>
+                                            <option value='기타'>기타</option>
+                                        </select>
                                         <h4>온라인 강의</h4>
                                         <div>
                                             {videoInfoFields.map((field, index) => (
@@ -1001,15 +1007,15 @@ function ClassForm() {
                             </div>
 
                             <div className="classForm_buttonArea">
-                            <div className='validation'>
-                                <button type='button'>확인</button>
-                            </div>
-                            <div className='modify'>
-                                <button type='button'>수정</button>
-                            </div>
-                            <div className='delete'>
-                                <button type='button'>삭제</button>
-                            </div>
+                                <div className='validation'>
+                                    <button type='button'>확인</button>
+                                </div>
+                                <div className='modify'>
+                                    <button type='button'>수정</button>
+                                </div>
+                                <div className='delete'>
+                                    <button type='button'>삭제</button>
+                                </div>
                             </div>
                             {showAlert && <p style={{ color: 'red' }}>모든 필드를 입력해주세요.</p>}
                             <div className='formGroup'>
