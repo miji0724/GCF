@@ -8,4 +8,5 @@ import com.gcf.spring.entity.OnProgram;
 
 public interface OnProgramRepository extends JpaRepository<OnProgram, Integer>{
 	List<OnProgram> findAllByApprovalState(String approvalState);
+	List<OnProgram> findByMemberId(String userId);
 }

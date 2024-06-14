@@ -7,12 +7,12 @@ function Online_state() {
   const [selectedState, setSelectedState] = useState('전체');
 
   useEffect(() => {
-    let url = '/api/onProgram';
+    let url = '/api/onProgram/myonprogram';
     if (selectedState !== '전체') {
       url = `/api/onProgram/by-approval-state?approvalState=${selectedState}`;
     }
 
-    axios.get(url, { withCredentials: true })
+    axios.get(url)
       .then(response => {
         setPrograms(response.data);
       })
@@ -21,14 +21,19 @@ function Online_state() {
       });
   }, [selectedState]);
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className='CenterContainer'>
       <div className='State_title'>온라인교육 수강현황</div>
       <div className='CenterMenuContainer'>
         <ul className='CenterMenu'>
-          <li onClick={() => setSelectedState('전체')}>전체</li>
-          <li onClick={() => setSelectedState('수강중')}>수강중</li>
-          <li onClick={() => setSelectedState('수강완료')}>수강완료</li>
+          <li className={selectedState === '전체' ? 'active' : ''} onClick={() => setSelectedState('전체')}>전체</li>
+          <li className={selectedState === '수강중' ? 'active' : ''} onClick={() => setSelectedState('수강중')}>수강중</li>
+          <li className={selectedState === '수강완료' ? 'active' : ''} onClick={() => setSelectedState('수강완료')}>수강완료</li>
         </ul>
       </div>
       <div className="TableContainer">
@@ -44,10 +49,10 @@ function Online_state() {
           <tbody>
             {programs.map((program, index) => (
               <tr key={program.id} className="ProgramItem">
-                <td>{program.id}</td>
+                <td>{index + 1}</td>
                 <td>{program.category}</td>
                 <td>{program.programName}</td>
-                <td>{program.operatingStartDay}</td>
+                <td>{formatDate(program.operatingStartDay)}</td>
               </tr>
             ))}
           </tbody>

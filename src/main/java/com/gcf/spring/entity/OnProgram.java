@@ -73,9 +73,14 @@ public class OnProgram {
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<OnVideo> videos; // 비디오 리스트
 
+    // 새로 추가된 필드
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
     public static OnProgram createOnProgram(OnProgramDto on_programDto) {
         OnProgram onProgram = new OnProgram();
-//      onProgram.setTeacher(on_programDto.getTeacherId());
+        onProgram.setMember(on_programDto.getMember());
+        onProgram.setTeacher(on_programDto.getTeacher());
         onProgram.setProgramName(on_programDto.getProgramName());
         onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
         onProgram.setViews(on_programDto.getViews());
@@ -88,12 +93,14 @@ public class OnProgram {
         onProgram.setVideos(on_programDto.getVideos());
         onProgram.setPoster(on_programDto.getPoster());
         onProgram.setApprovalState(on_programDto.getApprovalState());
+        onProgram.setUserId(on_programDto.getUserId()); // 새로 추가된 필드 설정
         return onProgram;
     }
 
     public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
         OnProgramDto dto = new OnProgramDto();
-//      dto.setTeacher(onProgram.getTeacher());
+        dto.setMember(onProgram.getMember());
+        dto.setTeacher(onProgram.getTeacher());
         dto.setProgramName(onProgram.getProgramName());
         dto.setOperatingStartDay(onProgram.getOperatingStartDay());
         dto.setViews(onProgram.getViews());
@@ -106,6 +113,7 @@ public class OnProgram {
         dto.setComments(onProgram.getComments());
         dto.setApprovalState(onProgram.getApprovalState());
         dto.setVideos(onProgram.getVideos());
+        dto.setUserId(onProgram.getUserId()); // 새로 추가된 필드 설정
         return dto;
     }
 }

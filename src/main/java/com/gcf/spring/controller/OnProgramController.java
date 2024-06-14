@@ -24,6 +24,8 @@ import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OnProgramService;
 import com.gcf.spring.service.TeacherService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/onProgram")
 public class OnProgramController {
@@ -115,9 +117,13 @@ public class OnProgramController {
         return ResponseEntity.ok(null);	
     }
     
-    @GetMapping
-    public ResponseEntity<List<OnProgram>> getAllOnPrograms() {
-        List<OnProgram> programs = onProgramService.getAllOnPrograms();
+    @GetMapping("/myonprogram")
+    public ResponseEntity<List<OnProgram>> getOnProgramsByUserId(HttpServletRequest request) {
+        String userId = (String) request.getSession().getAttribute("userId");
+        if (userId == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        List<OnProgram> programs = onProgramService.getOnProgramsByUserId(userId);
         return ResponseEntity.ok(programs);
     }
  }
