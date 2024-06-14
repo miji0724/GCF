@@ -34,8 +34,8 @@ export const Offline_posters = ({ children }) => {
             isBookmarked: false,
             views: 300,
             category: "교육",
-            day_of_week: "매주 금",
-            recruitment: "2024-04-29 ~ 2024-05-31 ",
+            day_of_week: "매주 금", //실행 요일
+            recruitment: "2024-04-29 ~ 2024-05-31 ", 
             inquiry: "031-999-3992",
             fee: "무료",
             participants: "60",
