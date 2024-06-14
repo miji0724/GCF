@@ -21,8 +21,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Setter; 
+ 
 @Entity
 @Table(name = "off_program")
 @Getter
@@ -33,13 +33,9 @@ public class OffProgram {
     @Column(name = "id", nullable = false)
     private Integer id; // 프로그램 번호
 
-    @ManyToMany
-    @JoinTable(
-        name = "off_program_member",
-        joinColumns = @JoinColumn(name = "off_program_id"),
-        inverseJoinColumns = @JoinColumn(name = "member_id")
-    )
-    private List<Member> members; 
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
@@ -118,7 +114,7 @@ public class OffProgram {
     public static OffProgram createOffProgram(OffProgramDto offProgramDto) {
         OffProgram offProgram = new OffProgram();
         offProgram.setProgramName(offProgramDto.getProgramName());
-        offProgram.setMembers(offProgramDto.getMembers()); // Member 설정
+        offProgram.setMember(offProgramDto.getMember()); // Member 설정
         offProgram.setTeacher(offProgramDto.getTeacher());
         offProgram.setProgramDetailName(offProgramDto.getProgramDetailName());
         offProgram.setApplicationInfo(offProgramDto.getApplicationInfo());
@@ -143,10 +139,6 @@ public class OffProgram {
         offProgram.setProgramInfos(null);
         offProgram.setTeacherInfos(null);
         return offProgram;
+   
     }
-
-	public Object getApplication_info() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

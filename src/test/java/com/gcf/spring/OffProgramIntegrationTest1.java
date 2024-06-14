@@ -47,47 +47,28 @@ public class OffProgramIntegrationTest1 {
         try {
             // Given
             // Member 엔티티 생성 및 저장
-            Member member1 = new Member();
-            member1.setId("qweqwe");
-            member1.setName("John1212Doe");
-            member1.setPassword(passwordEncoder.encode("123123")); // 암호화된 비밀번호 설정
-            member1.setBirth(LocalDate.of(1980, 1, 1));
-            member1.setPhone_number("010-1234-5670");
-            member1.setTel_number("02-123-4561");
-            member1.setEmail("jon12223212@example.com");
-            member1.setAddress("123Street, City");
-            member1.setDetail_address("Apt 1001");
-            member1.setEmail_agreement(true);
-            member1.setMessage_agreement(true);
-            member1.setMail_agreement(true);
-            member1.setMarried(false);
-            member1.setHasChildren(false);
-            member1.setRole(Role.ADMIN);
-            member1.setCreatedAt(LocalDateTime.now());
-            member1 = memberRepository.save(member1);
-
-            Member member2 = new Member();
-            member2.setId("qweqwe1");
-            member2.setName("John1212Doe");
-            member2.setPassword(passwordEncoder.encode("123123")); // 암호화된 비밀번호 설정
-            member2.setBirth(LocalDate.of(1980, 1, 1));
-            member2.setPhone_number("010-1234-5670");
-            member2.setTel_number("02-123-4561");
-            member2.setEmail("jon1222sssdf3212@example.com");
-            member2.setAddress("123Street, City");
-            member2.setDetail_address("Apt 1001");
-            member2.setEmail_agreement(true);
-            member2.setMessage_agreement(true);
-            member2.setMail_agreement(true);
-            member2.setMarried(false);
-            member2.setHasChildren(false);
-            member2.setRole(Role.ADMIN);
-            member2.setCreatedAt(LocalDateTime.now());
-            member2 = memberRepository.save(member2);
+            Member member = new Member();
+            member.setId("qweqwe");
+            member.setName("John1212Doe");
+            member.setPassword(passwordEncoder.encode("123123")); // 암호화된 비밀번호 설정
+            member.setBirth(LocalDate.of(1980, 1, 1));
+            member.setPhone_number("010-1234-5670");
+            member.setTel_number("02-123-4561");
+            member.setEmail("jon12223212@example.com");
+            member.setAddress("123Street, City");
+            member.setDetail_address("Apt 1001");
+            member.setEmail_agreement(true);
+            member.setMessage_agreement(true);
+            member.setMail_agreement(true);
+            member.setMarried(false);
+            member.setHasChildren(false);
+            member.setRole(Role.ADMIN);
+            member.setCreatedAt(LocalDateTime.now());
+            member = memberRepository.save(member);
 
             // Teacher 엔티티 생성 및 저장
             Teacher teacher = new Teacher();
-            teacher.setMember(member1);
+            teacher.setMember(member);
             teacher.setTeacher_category(Arrays.asList("Yoga", "Fitness"));
             teacher.setCareer("10 years experience in Yoga");
             teacher.setCareerStartYear("2010");
@@ -97,10 +78,10 @@ public class OffProgramIntegrationTest1 {
             // 첫 번째 OffProgramDto 설정
             OffProgramDto offProgramDto1 = new OffProgramDto();
             offProgramDto1.setProgramName("Yoga Class 1");
-            offProgramDto1.setMembers(Arrays.asList(member1, member2)); // Members 설정
+            offProgramDto1.setMember(member); // Member 설정
             offProgramDto1.setTeacher(teacher);
             offProgramDto1.setProgramDetailName("초급 요가 클래스 1");
-            offProgramDto1.setApplicationInfo("지금 신청하세요!");
+            offProgramDto1.setApplicationInfo("asd");
             offProgramDto1.setOperatingStartDay(LocalDate.of(2024, 7, 1));
             offProgramDto1.setOperatingEndDay(LocalDate.of(2024, 7, 30));
             offProgramDto1.setApplicationStartDate(LocalDate.of(2024, 6, 1));
@@ -122,7 +103,7 @@ public class OffProgramIntegrationTest1 {
             // 두 번째 OffProgramDto 설정
             OffProgramDto offProgramDto2 = new OffProgramDto();
             offProgramDto2.setProgramName("Yoga Class 2");
-            offProgramDto2.setMembers(Arrays.asList(member1, member2)); // Members 설정
+            offProgramDto2.setMember(member); // Member 설정
             offProgramDto2.setTeacher(teacher);
             offProgramDto2.setProgramDetailName("초급 요가 클래스 2");
             offProgramDto2.setApplicationInfo("지금 신청하세요!");
@@ -157,7 +138,7 @@ public class OffProgramIntegrationTest1 {
             assertEquals("Yoga Class 1", found1.getProgramName());
             assertNotNull(found1.getTeacher());
             assertEquals("초급 요가 클래스 1", found1.getProgramDetailName());
-            assertEquals("지금 신청하세요!", found1.getApplicationInfo());
+            assertEquals("asd", found1.getApplicationInfo());
             assertEquals(LocalDate.of(2024, 7, 1), found1.getOperatingStartDay());
             assertEquals(LocalDate.of(2024, 7, 30), found1.getOperatingEndDay());
             assertEquals(LocalDate.of(2024, 6, 1), found1.getApplicationStartDate());

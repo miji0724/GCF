@@ -14,16 +14,18 @@ function Offline_state() {
 
     axios.get(url)
       .then(response => {
-        const data = response.data;
-        if (Array.isArray(data)) {
-          setPrograms(data);
+        console.log(response.data);
+        
+        // Check if response data is an array
+        if (Array.isArray(response.data)) {
+          setPrograms(response.data);
         } else {
-          setPrograms([]);
+          console.error("Unexpected response format: ", response.data);
+          setPrograms([]); // Reset programs to an empty array in case of unexpected response
         }
       })
       .catch(error => {
         console.error("There was an error fetching the programs!", error);
-        setPrograms([]);
       });
   }, [selectedState]);
 
@@ -53,7 +55,7 @@ function Offline_state() {
             <tbody>
               {programs.map((program, index) => (
                 <tr key={program.id} className="ProgramItem">
-                  <td>{index + 1}</td> {/* 순서 번호를 추가합니다 */}
+                  <td>{program.id}</td>
                   <td>{program.category}</td>
                   <td>{program.programName} / {program.programDetailName}</td>
                   <td>{program.operatingStartDay} ~ {program.operatingEndDay}</td>

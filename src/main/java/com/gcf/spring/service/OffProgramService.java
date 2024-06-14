@@ -40,47 +40,19 @@ public class OffProgramService {
         return offProgramRepository.findById(id).orElse(null);
     }
     
-//    public List<OffProgram> getOffProgramsByUserId(String userId) {
-//        return offProgramRepository.findByMemberId(userId);
-//    }
+    public List<OffProgram> getOffProgramsByUserId(String userId) {
+        return offProgramRepository.findByMemberId(userId);
+    }
     
     public List<ProgramInfo> insertProgramInfo(List<ProgramInfo> programInfos) {
-		return programInfoRepository.saveAll(programInfos);
-	}
+      return programInfoRepository.saveAll(programInfos);
+   }
     
     public List<TeacherInfo> insertTeacherInfo(List<TeacherInfo> teacherInfos) {
-    	return teacherInfoRepository.saveAll(teacherInfos);
+       return teacherInfoRepository.saveAll(teacherInfos);
     }
 
-	public List<OffProgram> getOffProgramsByApprovalState(String approvalState) {
-		// TODO Auto-generated method stub
-		return null;
-	}
- 
-	public List<OffProgram> getOffProgramsByUserAndApprovalState(String userId, String approvalState) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<OffProgram> getOffProgramsByUser(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<OffProgram> findByUserIdAndApprovalState(String userId, String approvalState) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<OffProgram> findByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<OffProgram> getOffProgramsByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+   
 
 }
  

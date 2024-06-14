@@ -47,9 +47,9 @@ public class OffProgramController {
     
     @PostMapping("/offproginfo")
     public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
-            									  @RequestParam("descriptions") List<String> descriptions,
-            									  @RequestParam("id") Integer id) {
-    	int i = 0;
+                                         @RequestParam("descriptions") List<String> descriptions,
+                                         @RequestParam("id") Integer id) {
+       int i = 0;
         List<ProgramInfo> programInfos = new ArrayList<>();
         OffProgram offProgram = offProgramService.getOffProgramById(id);
         for (String description : descriptions) {
@@ -63,14 +63,14 @@ public class OffProgramController {
         }
         offProgramService.insertProgramInfo(programInfos);
 
-        return ResponseEntity.ok(null);	
+        return ResponseEntity.ok(null);   
     }
     
     @PostMapping("/offteacherinfo")
     public ResponseEntity<TeacherInfo> createTInfo(@RequestParam("files") List<MultipartFile> files,
-            									  @RequestParam("descriptions") List<String> descriptions,
-            									  @RequestParam("id") Integer id) {
-    	int i = 0;
+                                         @RequestParam("descriptions") List<String> descriptions,
+                                         @RequestParam("id") Integer id) {
+       int i = 0;
         List<TeacherInfo> teacherInfos = new ArrayList<>();
         OffProgram offProgram = offProgramService.getOffProgramById(id);
         for (String description : descriptions) {
@@ -84,7 +84,7 @@ public class OffProgramController {
         }
         offProgramService.insertTeacherInfo(teacherInfos);
 
-        return ResponseEntity.ok(null);	
+        return ResponseEntity.ok(null);   
     }
 
     @GetMapping
@@ -100,6 +100,7 @@ public class OffProgramController {
             throw new RuntimeException("User not authenticated");
         }
         List<OffProgram> programs = offProgramService.getOffProgramsByUserId(userId);
+        System.out.println(userId);
         return ResponseEntity.ok(programs);
-    }
+    } 
 } 
