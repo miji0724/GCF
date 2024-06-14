@@ -521,7 +521,8 @@ function ClassForm() {
                 !programFee ||
                 !selectedLocation ||
                 !programInfo ||
-                !teacherInfo
+                !teacherInfo ||
+                !selectedDay
             ) {
                 setShowAlert(true);
                 return;
