@@ -72,5 +72,6 @@ public class OffProgramService {
     public List<OffProgram> getOffProgramsByUserId(String userId) {
         return offProgramRepository.findByMemberId(userId);
     }
+    
 }
  

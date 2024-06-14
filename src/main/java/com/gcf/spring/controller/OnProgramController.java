@@ -52,6 +52,7 @@ public class OnProgramController {
 		return ResponseEntity.ok(createdOnProgram);
 	}
 
+	
 	@PostMapping("/poster")
 	public ResponseEntity<Attachment> createPoster(@RequestParam("poster") MultipartFile poster) {
 
@@ -146,15 +147,5 @@ public class OnProgramController {
 		System.out.println(onProgram.toString());
 
 		return ResponseEntity.ok(null);
-	}
-
-	@GetMapping("/myonprogram")
-	public ResponseEntity<List<OnProgram>> getOnProgramsByUserId(HttpServletRequest request) {
-		String userId = (String) request.getSession().getAttribute("userId");
-		if (userId == null) {
-			throw new RuntimeException("User not authenticated");
-		}
-		List<OnProgram> programs = onProgramService.getOnProgramsByUserId(userId);
-		return ResponseEntity.ok(programs);
 	}
 }

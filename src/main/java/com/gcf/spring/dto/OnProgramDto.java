@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnProgramDto {
 	private Integer id;
-	private List<Member> member;
+//	private List<Member> member;
 	private String teacherId;
 	private Teacher teacher;
 	private String programName; // 프로그램 이름
@@ -39,6 +39,5 @@ public class OnProgramDto {
 	private List<ProgramInfo> programInfos; // 교육 소개 파일
 	private List<TeacherInfo> teacherInfos; // 강사 소개 파일
 	private List<Comment> comments; // 댓글 리스트
-	private List<OnVideo> videos; // 비디오 리스트
-	private String userId; // 새로 추가된 필드
+	private List<OnVideo> videos; // 비디오 리스트 
 }

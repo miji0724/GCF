@@ -83,8 +83,4 @@ public class OnProgramService {
 	public List<OnVideo> insertOnVideo(List<OnVideo> onVideos) {
 		return onVideoRepository.saveAll(onVideos);
 	}
-	
-	public List<OnProgram> getOnProgramsByUserId(String userId) {
-		return onProgramRepository.findByMemberId(userId);
-	}
 }

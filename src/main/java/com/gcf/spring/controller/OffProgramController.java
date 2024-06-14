@@ -111,6 +111,7 @@ public class OffProgramController {
             throw new RuntimeException("User not authenticated");
         }
         List<OffProgram> programs = offProgramService.getOffProgramsByUserId(userId);
+        System.out.println(userId);
         return ResponseEntity.ok(programs);
-    }
+    } 
 }

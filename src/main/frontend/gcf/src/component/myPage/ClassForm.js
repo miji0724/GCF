@@ -37,6 +37,8 @@ function ClassForm() {
     const [teachingSubjectFields, setTeachingSubjectFields] = useState([{ subject: '' }]);
     const [teachingSubjectFiles, setTeachingSubjectFiles] = useState([]);
 
+    const [category, setCategory] = useState("");
+
     const [videoInfoFields, setVideoInfoFields] = useState([
         {
             lectureNumber: '1',
@@ -48,8 +50,8 @@ function ClassForm() {
     ]);
 
 
-    const [offPrograms, setOffPrograms] = useState([]);
-    const [onPrograms, setOnPrograms] = useState([]);
+    // const [offPrograms, setOffPrograms] = useState([]);
+    // const [onPrograms, setOnPrograms] = useState([]);
 
     const [showAlert, setShowAlert] = useState(false);
 
@@ -57,33 +59,33 @@ function ClassForm() {
         return data ? data.split(',').map(item => ({ [fieldName]: item })) : [{ [fieldName]: '' }];
     };
 
-    // 오프라인 프로그램 데이터를 불러오는 함수
-    const fetchOffPrograms = async () => {
-        try {
-            const response = await axios.get('/api/offProgram');
-            setOffPrograms(response.data);
-            if (response.data.length > 0 && offlineEducation) {
-                const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
-                fillOfflineProgramFields(program);
-            }
-        } catch (error) {
-            console.error("오프라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
-        }
-    };
+    // // 오프라인 프로그램 데이터를 불러오는 함수
+    // const fetchOffPrograms = async () => {
+    //     try {
+    //         const response = await axios.get('/api/offProgram');
+    //         setOffPrograms(response.data);
+    //         if (response.data.length > 0 && offlineEducation) {
+    //             const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
+    //             fillOfflineProgramFields(program);
+    //         }
+    //     } catch (error) {
+    //         console.error("오프라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
+    //     }
+    // };
 
-    // 온라인 프로그램 데이터를 불러오는 함수
-    const fetchOnPrograms = async () => {
-        try {
-            const response = await axios.get('/api/onProgram');
-            setOnPrograms(response.data);
-            if (response.data.length > 0 && onlineEducation) {
-                const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
-                fillOnlineProgramFields(program);
-            }
-        } catch (error) {
-            console.error("온라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
-        }
-    };
+    // // 온라인 프로그램 데이터를 불러오는 함수
+    // const fetchOnPrograms = async () => {
+    //     try {
+    //         const response = await axios.get('/api/onProgram');
+    //         setOnPrograms(response.data);
+    //         if (response.data.length > 0 && onlineEducation) {
+    //             const program = response.data[0]; // 첫 번째 프로그램 데이터로 채움
+    //             fillOnlineProgramFields(program);
+    //         }
+    //     } catch (error) {
+    //         console.error("온라인 프로그램 데이터를 불러오는 중 오류가 발생했습니다.", error);
+    //     }
+    // };
 
     const fetchUserData = async () => {
         try {
@@ -98,14 +100,14 @@ function ClassForm() {
         fetchUserData();
     }, []);
 
-    useEffect(() => {
-        if (offlineEducation) {
-            fetchOffPrograms();
-        }
-        if (onlineEducation) {
-            fetchOnPrograms();
-        }
-    }, [offlineEducation, onlineEducation]);
+    // useEffect(() => {
+    //     if (offlineEducation) {
+    //         fetchOffPrograms();
+    //     }
+    //     if (onlineEducation) {
+    //         fetchOnPrograms();
+    //     }
+    // }, [offlineEducation, onlineEducation]);
 
     const fillOfflineProgramFields = (program) => {
         setCName(program.programName);
@@ -179,6 +181,10 @@ function ClassForm() {
         const newCertificationFiles = [...certificationFiles];
         newCertificationFiles[index] = files[0];
         setCertificationFiles(newCertificationFiles);
+    };
+
+    const handleCategoryChange = (event) => {
+        setCategory(event.target.value);
     };
 
     const handleTeachingSubjectFileChange = (event, index) => {
@@ -363,7 +369,7 @@ function ClassForm() {
                 videoInfoData.append('videoinfoindex', data.lectureNumber);
 
                 // 만약 파일이 없다면 빈 Blob 추가
-                videoInfoData.append('files',new Blob());
+                videoInfoData.append('files', new Blob());
 
                 // 각 하위 항목에 대해 FormData에 추가
                 data.subFields.forEach(subField => {
@@ -380,7 +386,8 @@ function ClassForm() {
             if (!CName ||
                 !bannerFile ||
                 !programInfo ||
-                !teacherInfo) {
+                !teacherInfo ||
+            !category) {
 
                 setShowAlert(true);
                 return;
@@ -403,13 +410,12 @@ function ClassForm() {
 
                 formData = {
                     'teacher': {},
-                    'member':{},
                     'teacherId': teacherId,
                     'programName': CName,
                     'operatingStartDay': '',
                     'views': 0,
                     'likesCount': 0,
-                    'category': "온라인",
+                    'category': category,
                     'programType': "온라인",
                     'poster': bannerFile,
                     'posterId': posterId,
@@ -928,7 +934,8 @@ function ClassForm() {
                                     </div>
 
                                     <div className="OnlineLec">
-                                        <select id='lecOnDetail_lecField' >
+                                        <select id='lecOnDetail_lecField' value={category} onChange={handleCategoryChange}>
+                                        <option value=''>선택</option>
                                             <option value='미술'>미술</option>
                                             <option value='과학'>과학</option>
                                             <option value='음악'>음악</option>

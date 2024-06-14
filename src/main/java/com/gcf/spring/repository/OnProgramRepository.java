@@ -18,7 +18,7 @@ public interface OnProgramRepository extends JpaRepository<OnProgram, Integer>{
 	// 최신순으로 4개 가져오기
 	List<OnProgram> findTop4ByApprovalStateOrderByOperatingStartDayDesc(String approvalState);
 	
-	List<OnProgram> findByMemberId(String userId);
+//	List<OnProgram> findByMemberId(String userId);
 	 
 	@Query("SELECT op FROM OnProgram op JOIN op.teacher t JOIN t.member m WHERE m.name LIKE %:searchTerm% AND op.approvalState = :approvalState")
 	List<OnProgram> findByTeacherMemberNameContainingAndApprovalState(@Param("searchTerm") String searchTerm, @Param("approvalState") String approvalState);

@@ -30,9 +30,9 @@ public class OnProgram {
 	@Column(name = "id", nullable = false)
 	private Integer id; // 프로그램 번호
 
-	@OneToMany
-	@JoinColumn(name = "on_apply", referencedColumnName = "id", nullable = true)
-	private List<Member> member;
+//	@OneToMany
+//	@JoinColumn(name = "on_apply", referencedColumnName = "id", nullable = true)
+//	private List<Member> member;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id", referencedColumnName = "id")
@@ -77,7 +77,7 @@ public class OnProgram {
 
 	public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 		OnProgram onProgram = new OnProgram();
-		onProgram.setMember(on_programDto.getMember());
+//		onProgram.setMember(on_programDto.getMember());
 		onProgram.setId(on_programDto.getId());
 		onProgram.setTeacher(on_programDto.getTeacher());
 		onProgram.setProgramName(on_programDto.getProgramName());
@@ -111,7 +111,7 @@ public class OnProgram {
 		dto.setComments(onProgram.getComments());
 		dto.setApprovalState(onProgram.getApprovalState());
 		dto.setVideos(onProgram.getVideos());
-		dto.setMember(onProgram.getMember());
+//		dto.setMember(onProgram.getMember());
 		return dto;
 	}
 }
