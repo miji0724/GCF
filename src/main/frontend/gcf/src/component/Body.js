@@ -117,11 +117,7 @@ const Body = ({ isLoggedIn }) => {
                     ) : (
                         <a className="teacher_button" onClick={() => alert('로그인이 필요합니다.')}>강사 등록<div>⇀</div></a>
                     )}
-                    {isLoggedIn ? (
-                        <a className="issue_button" onClick={() => handleAuthRedirect('certification')}>증명서 발급<div>⇀</div></a>
-                    ) : (
-                        <a className="issue_button" onClick={() => alert('로그인이 필요합니다.')}>증명서 발급<div>⇀</div></a>
-                    )}
+                    <a className="plan_button" href="/map/김포아트홀">찾아오시는 길<div>⇀</div></a>
                 </li>
                 <li className="notice_space">
                     <div>

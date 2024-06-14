@@ -4,6 +4,8 @@
     align-items: center;
     width: 100%;
     padding: 70px 0 100px;
+    background-color: #e8f8ff;
+    min-height: 600px;
 }
 
 .online-poster-list {

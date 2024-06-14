@@ -29,7 +29,7 @@ function LeftMenuBar_teacher() {
     try {
       const response = await axios.get('/member/getUserRole', {
         withCredentials: true,
-        method: 'GET' 
+        method: 'GET'
       });
       setUserState(response.data);
     } catch (error) {
@@ -48,9 +48,9 @@ function LeftMenuBar_teacher() {
 
   useEffect(() => {
     if (userState === 'TEACHER', 'ADMIN') {
-      getTeacherState(); 
+      getTeacherState();
     }
-  }, [userState]); 
+  }, [userState]);
 
 
   const handleLinkClick = (componentName) => {
@@ -61,10 +61,11 @@ function LeftMenuBar_teacher() {
     if (teacherState === '승인') {
       window.location.href = `/MyPage?component=${componentName}`;
     } else {
-      if(userState ==='USER'){
+      if (userState === 'USER') {
         alert('강사가 아닌 회원은 접근할 수 없습니다.');
+      } else {
+        alert('강사 승인이 되지 않아 접근할 수 없습니다.');
       }
-      alert('강사 승인이 되지 않아 접근할 수 없습니다.');
     }
   };
 

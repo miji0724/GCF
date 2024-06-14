@@ -29,13 +29,15 @@ import ManageLecOffDetailPage from './pages/manage/ManageLecOffDetailPage';
 import ManageLecOnAppDetailPage from './pages/manage/ManageLecOnAppDetailPage';
 import ManageLecOffAppDetailPage from './pages/manage/ManageLecOffAppDetailPage';
 import Offline_Post_list_Page from './pages/Program/Offline_Post_list_Page';
-import { Offline_posters } from './component/Posters/Offline_posters';
-import { Online_posters } from './component/Posters/Online_posters';
 import OfflineDetails from './pages/Program/Offline_detail_Page';
-import PSU from './pages/Program/Pro_Sign_Up_Page';
+import Pro_Sign_Up_Page from './pages/Program/Pro_Sign_Up_Page';
 import Online_Post_list_Page from './pages/Program/Online_Post_list_Page';
 import Online_detail_Page from './pages/Program/Online_detail_Page';
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+
+// import { Offline_posters } from './component/Posters/Offline_posters';
+// import { Online_posters } from './component/Posters/Online_posters';
+// import PSU from './pages/Program/Pro_Sign_Up_Page';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -102,7 +104,15 @@ function App() {
                         <Route path="/schedule" element={<Schedule />} />
                         <Route path="/MyPage" element={<MyPage />} />
                         <Route path="/MyAuthenticationForm" element={<MyPageAuthenticationForm />} />
-                        <Route path="/OfflineList/*" element={
+
+                        <Route path="/OfflineList" element={<Offline_Post_list_Page />} />
+                        <Route path="/OfflineList/details/:id" element={<OfflineDetails />} />
+                        <Route path="/OfflineList/details/:id/signup" element={<Pro_Sign_Up_Page isLoggedIn={isLoggedIn} userId={userId}/>} />
+                        <Route path="/OnlineList/" element={<Online_Post_list_Page />} />
+                        <Route path="/OnlineList/:category" element={<Online_Post_list_Page />} />
+                        <Route path="/OnlineList/details/:id" element={<Online_detail_Page />} />
+
+                        {/* <Route path="/OfflineList/*" element={
                             <Offline_posters>
                                 <Routes>
                                     <Route path="" element={<Offline_Post_list_Page />} />
@@ -119,7 +129,9 @@ function App() {
                                     <Route path="details/:id" element={<Online_detail_Page />} />
                                 </Routes>
                             </Online_posters>
-                        } />
+                        } /> */}
+
+
                         <Route path="/manage" element={<ManageHomePage />} />
                         <Route path="/manage/banner" element={<ManageBannerPage />} />
                         <Route path="/manage/notice" element={<ManageNoticePage />} />

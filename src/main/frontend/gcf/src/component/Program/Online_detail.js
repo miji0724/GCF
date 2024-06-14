@@ -1,29 +1,155 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { usePosters } from '../Posters/Online_posters'; // Context API를 사용하여 posters 데이터를 가져옴
-import userProfile from '../../img/user_noimg_profile.jpg';
+import axios from 'axios';
 import './Online_detail.css';
 
-
-function Online_Deatil() {
+function Online_Detail() {
+    const [posters, setPosters] = useState([]); // 프로그램 상태 업데이트 
     const navigate = useNavigate();
     const { id } = useParams();
-    const { On_posters, setPosters } = usePosters();
-    const poster = On_posters.find(p => p.id === parseInt(id));
-    const Online_list_section = useRef(null);
-    const Online_info_Ref = useRef(null);
-    const Online_teacher_info_Ref = useRef(null);
-    const Online_comment_Ref = useRef(null);
+    const [poster, setPoster] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editedCommentText, setEditedCommentText] = useState('');
+    const [replyVisible, setReplyVisible] = useState({});
+    const [replyText, setReplyText] = useState({});
+    const Online_list_section_Ref = useRef(null); // 강의 목록
+    const Online_pro_info_Ref = useRef(null); // 프로그램 소개 다이렉트
+    const Online_teacher_info_Ref = useRef(null); // 강사 소개 다이렉트
+    const Comment_list_Ref = useRef(null); // 댓글 리스트
 
-    const [currentLesson, setCurrentLesson] = useState(null);
-    const [comments, setComments] = useState([]); // 댓글 목록 관리
-    const [newComment, setNewComment] = useState(''); // 새로운 댓글 내용
-    const [replyVisible, setReplyVisible] = useState({}); // 답글 입력창 가시성 관리
-    const [replyText, setReplyText] = useState({}); // 각 댓글의 답글 내용
+
+    useEffect(() => {
+        const fetchPoster = async () => {
+            try {
+                const response = await axios.get(`/api/offprogram/${id}`);
+                setPoster(response.data);
+                await axios.patch(`/api/offprogram/${id}/increment-views`);
+            } catch (error) {
+                console.error('포스터 정보를 불러오지 못했습니다.', error);
+            }
+        };
+        fetchPoster();
+
+        const fetchComments = async () => {
+            try {
+                const response = await axios.get(`/api/comments`);
+                setComments(response.data);
+            } catch (error) {
+                console.error('댓글을 불러오지 못했습니다.', error);
+            }
+        };
+        fetchComments();
+    }, [id]);
 
     if (!poster) {
         return <div>포스터 정보를 찾을 수 없습니다.</div>;
     }
+
+    const handleCommentChange = (e) => {
+        setNewComment(e.target.value);
+    };
+
+    const handleCommentSubmit = async () => {
+        try {
+            const response = await axios.post(`/api/comments`, { postId: id, text: newComment });
+            setComments([...comments, response.data]);
+            setNewComment('');
+        } catch (error) {
+            console.error('댓글을 작성하지 못했습니다.', error);
+        }
+    };
+
+    const handleEditComment = (commentId, text) => {
+        setEditingCommentId(commentId);
+        setEditedCommentText(text);
+    };
+
+    const handleSaveEdit = async (commentId) => {
+        try {
+            await axios.patch(`/api/comments/${commentId}`, { text: editedCommentText });
+            const updatedComments = comments.map(comment =>
+                comment.id === commentId ? { ...comment, text: editedCommentText } : comment
+            );
+            setComments(updatedComments);
+            setEditingCommentId(null);
+        } catch (error) {
+            console.error('댓글을 수정하지 못했습니다.', error);
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await axios.delete(`/api/comments/${commentId}`);
+            setComments(comments.filter(comment => comment.id !== commentId));
+        } catch (error) {
+            console.error('댓글을 삭제하지 못했습니다.', error);
+        }
+    };
+
+    const toggleReply = (commentId) => {
+        setReplyVisible(prev => ({ ...prev, [commentId]: !prev[commentId] }));
+    };
+
+    const handleReplyChange = (e, commentId) => {
+        setReplyText({ ...replyText, [commentId]: e.target.value });
+    };
+
+    const handleReplySubmit = async (commentId) => {
+        try {
+            const response = await axios.post(`/api/comments/${commentId}/replies`, { text: replyText[commentId] });
+            const updatedComments = comments.map(comment =>
+                comment.id === commentId ? { ...comment, replies: [...comment.replies, response.data] } : comment
+            );
+            setComments(updatedComments);
+            setReplyText({ ...replyText, [commentId]: '' });
+        } catch (error) {
+            console.error('답글을 작성하지 못했습니다.', error);
+        }
+    };
+
+    const openVideoInNewWindow = (videoId) => {
+        window.open(`/video/${videoId}`, '_blank');
+    };
+
+    const formatTime = (hours, minutes) => {
+        return new Intl.DateTimeFormat('ko-KR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        }).format(new Date(0, 0, 0, hours, minutes));
+
+
+    };
+
+    // 강의 목록 섹션으로 스크롤
+    const scrollToProList = () => {
+        if (Online_list_section_Ref.current) {
+            Online_list_section_Ref.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // 강의소개 섹션으로 스크롤
+    const scrollToProgramInfo = () => {
+        if (Online_pro_info_Ref.current) {
+            Online_pro_info_Ref.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // 강사소개 섹션으로 스크롤
+    const scrollToTeacherInfo = () => {
+        if (Online_teacher_info_Ref.current) {
+            Online_teacher_info_Ref.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // 댓글 섹션으로 스크롤
+    const scrollToCommentList = () => {
+        if (Comment_list_Ref.current) {
+            Comment_list_Ref.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     // 카테고리별 색상 구분 함수
     function Online_Category_Class(category) {
@@ -46,163 +172,26 @@ function Online_Deatil() {
     }
 
     // 포스터 ID를 받아 좋아요 수를 증가시키는 함수
-    const handleLike = (posterId) => {
-        const updatedPosters = On_posters.map(poster =>
-            poster.id === posterId ? { ...poster, likes: poster.likes + 1 } : poster
-        );
-        setPosters(updatedPosters);
+    const handleLike = async (posterId, event) => {
+        event.stopPropagation();
+        try {
+            await axios.patch(`/api/onProgram/${posterId}/increment-likes`);
+            const updatedPosters = posters.map(poster =>
+                poster.id === posterId ? { ...poster, likesCount: poster.likesCount + 1 } : poster
+            );
+            setPosters(updatedPosters);
+        } catch (error) {
+            console.error('좋아요 업데이트 실패:', error);
+        }
     };
 
     // 북마크 토글 함수
-    const toggleBookmark = (id) => {
-        const updatedPosters = On_posters.map(poster =>
+    const toggleBookmark = (id, event) => {
+        event.stopPropagation();
+        const updatedPosters = posters.map(poster =>
             poster.id === id ? { ...poster, isBookmarked: !poster.isBookmarked } : poster
         );
         setPosters(updatedPosters);
-    };
-
-    // 교육목록 섹션으로 스크롤
-    const SCROLL_TO_ONLINE_LIST = () => {
-        if (Online_list_section) {
-            Online_list_section.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    // 교육소개 섹션으로 스크롤
-    const SCROLL_TO_ONLINE_Info = () => {
-        if (Online_info_Ref.current) {
-            Online_info_Ref.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    // 강사소개 섹션으로 스크롤
-    const SCROLL_TO_TEACHER_INFO = () => {
-        if (Online_teacher_info_Ref.current) {
-            Online_teacher_info_Ref.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    // 댓글 섹션으로 스크롤
-    const SCROLL_TO_COMMENT = () => {
-        if (Online_comment_Ref.current) {
-            Online_comment_Ref.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    const handleProgressUpdate = (lessonId, currentTime, duration) => {
-        const progress = (currentTime / duration) * 100;
-        const updatedPoster = { ...poster, [lessonId]: progress };
-        const updatedPosters = On_posters.map(p =>
-            p.id === poster.id ? updatedPoster : p
-        );
-        setPosters(updatedPosters);
-    };
-
-    const openVideoInNewWindow = (lessonId) => {
-        const videoWindow = window.open('', '_blank', 'width=800,height=600');
-        videoWindow.document.write(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>동영상 재생</title>
-            </head>
-            <body>
-                <video id="lessonVideo" controls width="100%">
-                    <source src="${poster.moviesrc}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <script>
-                    const video = document.getElementById('lessonVideo');
-                    video.currentTime = 0;
-                    video.play();
-                    video.ontimeupdate = function() {
-                        window.opener.postMessage({ lessonId: '${lessonId}', currentTime: video.currentTime, duration: video.duration }, '*');
-                    };
-                </script>
-            </body>
-            </html>
-        `);
-        videoWindow.document.close();
-    };
-    // 수강 신청 시 동영상창 열리게 
-
-    window.addEventListener('message', (event) => {
-        if (event.origin === window.location.origin) {
-            const { lessonId, currentTime, duration } = event.data;
-            handleProgressUpdate(lessonId, currentTime, duration);
-        }
-    }); // 송수신처리 
-
-    // 댓글 작성 로직
-    const handleCommentChange = (event) => {
-        setNewComment(event.target.value);
-    };
-
-    const handleCommentSubmit = () => {
-        const formatDate = (date) => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}.${month}.${day}`;
-        };
-
-        const newCommentObj = {
-            id: comments.length + 1,
-            text: newComment,
-            author: '닉네임', // 백엔드 시 구현
-            date: formatDate(new Date()),
-            replies: []
-        };
-        setComments([...comments, newCommentObj]);
-        setNewComment('');
-    };
-
-    // 답글 입력창 토글
-    const toggleReply = (commentId) => {
-        setReplyVisible((prev) => ({
-            ...prev,
-            [commentId]: !prev[commentId]
-        }));
-    };
-
-    // 답글 내용 변경
-    const handleReplyChange = (event, commentId) => {
-        setReplyText({
-            ...replyText,
-            [commentId]: event.target.value
-        });
-    };
-
-    // 답글 작성
-    const handleReplySubmit = (commentId) => {
-        const reply = {
-            id: comments.find(comment => comment.id === commentId).replies.length + 1,
-            text: replyText[commentId] || '',
-            author: '닉네임', // 백엔드 시 구현
-            date: new Date().toLocaleDateString()
-        };
-
-        setComments(comments.map(comment => {
-            if (comment.id === commentId) {
-                return {
-                    ...comment,
-                    replies: [...comment.replies, reply]
-                };
-            }
-            return comment;
-        }));
-
-        setReplyText({
-            ...replyText,
-            [commentId]: ''
-        });
-
-        setReplyVisible({
-            ...replyVisible,
-            [commentId]: false
-        });
     };
 
     return (
@@ -213,18 +202,18 @@ function Online_Deatil() {
                     {poster.category}
                 </div>
 
-                <h2 className="Online-detail-title">{poster.title}</h2>
+                <h2 className="Online-detail-title">{poster.programName}</h2>
 
                 <div className="Online-details-container">
                     <div className="on_poster_box">
-                        <img src={poster.imageUrl} alt={poster.title} />
+                        <img src={poster.poster.file_path} alt={poster.programName} />
                     </div>
 
                     <div className="Online-actions-container">
                         <div className="poster-actions">
                             <div className="On_left">
                                 <div className="On_heart-icon" onClick={() => handleLike(poster.id)}>♥</div>
-                                <span className="On_like-count"> 좋아요: {poster.likes}</span>
+                                <span className="On_like-count"> 좋아요: {poster.likesCount}</span>
                             </div>
                             <div className="On_center">
                                 <span className={`On_bookmark-icon ${poster.isBookmarked ? 'active' : ''}`} onClick={() => toggleBookmark(poster.id)}>
@@ -239,14 +228,14 @@ function Online_Deatil() {
                 </div>
 
                 <div className='Online_info_buttons'>
-                    <button className='Online_pro_list_Button' onClick={SCROLL_TO_ONLINE_LIST}>교육 목록</button>
-                    <button className="Online_pro_info_Button" onClick={SCROLL_TO_ONLINE_Info}>교육소개</button>
-                    <button className="On_teacher_info_Button" onClick={SCROLL_TO_TEACHER_INFO}>강사소개</button>
-                    <button className="Online_Comment_Button" onClick={SCROLL_TO_COMMENT}>댓글</button>
+                    <button className='Online_pro_list_Button' onClick={scrollToProList}>교육 목록</button>
+                    <button className="Online_pro_info_Button" onClick={scrollToProgramInfo}>교육소개</button>
+                    <button className="On_teacher_info_Button" onClick={scrollToTeacherInfo}>강사소개</button>
+                    <button className="Online_Comment_Button" onClick={scrollToCommentList}>댓글</button>
                 </div>
             </div>
 
-            <div className="Online_Pro_list_Table" ref={Online_list_section}>
+            <div className="Online_Pro_list_Table" ref={Online_list_section_Ref}>
                 <div className='Online_list_Title'>
                     <strong>프로그램 목록</strong>
                 </div>
@@ -263,24 +252,20 @@ function Online_Deatil() {
                             <th>회차</th>
                             <th>과정명</th>
                             <th>시간</th>
-                            <th>진도</th>
                             <th>수강</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className="Lesson_1">1강</td>
-                            <td colSpan="4" className="Lesson_1_title">파워포인트 설정 방법</td>
-                        </tr>
-                        <tr>
-                            <td>1-1</td>
-                            <td className="Lesson_sub_title">콘텐츠 제작을 위한 파워포인트 설정</td>
-                            <td>00:21:08</td>
-                            <td>{(poster['1-1'] || 0).toFixed(2)}%</td>
-                            <td>
-                                <button onClick={() => openVideoInNewWindow('1-1')} className="On_Sign_Button"><span>수강하기</span></button>
-                            </td>
-                        </tr>
+                        {poster.videos.map((video, index) => (
+                            <tr key={video.id}>
+                                <td>{index + 1}</td>
+                                <td>{video.videoInfoDetail}</td>
+                                <td>{formatTime(video.durationHours, video.durationMinutes)}</td>
+                                <td>
+                                    <button onClick={() => openVideoInNewWindow(video.id)} className="On_Sign_Button"><span>수강하기</span></button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -289,11 +274,11 @@ function Online_Deatil() {
                 <strong>프로그램 소개</strong>
             </div>
 
-            <div className="Online_Pro_Info" ref={Online_info_Ref}>
+            <div className="Online_Pro_Info" ref={Online_pro_info_Ref}>
                 <strong><span>[온라인 강의]</span></strong>
                 <p>&nbsp;</p>
                 <p>
-                    <strong>[온라인 강의 이름]</strong>
+                    <strong>{poster.programName}</strong>
                 </p>
                 <p>&nbsp;</p>
                 <p>
@@ -311,11 +296,8 @@ function Online_Deatil() {
                 <p>&nbsp;</p>
                 <p>- &lt;반려동물 소품 만들기&gt; : 김포국제조각공원 내 '김포평화문화관'에서 진행예정입니다.</p>
                 <p>- &lt;원데이클래스: 컬러비즈 냉장고 자석 만들기&gt; : 통진두레단오제 참여 시민 누구나 무료로 참여가능합니다.</p>
-
                 <p>&nbsp;</p>
-                <p>
-                    <img src={poster.etc} alt={poster.title} className="on_detail_poster_image" />
-                </p>
+                <p>사진</p>
             </div>
 
             <div className='Online_Teacher_Info_Title'>
@@ -324,79 +306,81 @@ function Online_Deatil() {
 
             <div className='Online_Teacher_Info' ref={Online_teacher_info_Ref}>
                 <p>
-                    <img src={poster.teacher} className="on_detail_teacher_image" />
+                    <img src={poster.teacher} className="on_detail_teacher_image" alt="Teacher" />
                 </p>
 
-                <p>&nbsp;</p>
-                <strong>강사명:</strong>
-                <br></br>
-                오승근
-                <p>&nbsp;</p>
-                <strong>강의분야: </strong>
-                <br></br>
-                영상
-                <p>&nbsp;</p>
-                <strong>주요이력</strong>
-                <br></br>
-                ◆ 2023 ~ 현재  수원여대 방송콘텐츠과 겸임교수
-                <br></br>
-                ◆ 2003 ~ 2012  OZ film s.r.o. (체코 프라하)
-                <br></br>
-                ◆ 2012 ~ 현재  오즈필름
-                <p>&nbsp;</p>
-                <strong>강의가능분야: </strong>
-                영상촬영
-                조명
-                <p>&nbsp;</p>
-                <strong>SNS 주소: </strong>
-                http://www.oz-film.com
-            </div>
-
-            <div className='Online_Comment' ref={Online_comment_Ref}>
-                <div className='Online_Comment_Title'>
-                    <strong>댓글 게시판</strong>
-                </div>
-                <div className='Online_Comment_box'>
-                    <textarea className="Online_input_comment" placeholder="댓글을 작성해주세요. 욕설, 상업적인 내용, 특정인이나 특정사안을 비방하는 내용 등은 예고 없이 삭제될 수 있습니다." value={newComment}
-                        onChange={handleCommentChange}></textarea>
-
-                    <div className='Write_Online_Comment'>
-                        <button className='Write_Online_Comment_Button' onClick={handleCommentSubmit}><span>작성하기</span></button>
+                {poster.teacherInfos.map(info => (
+                    <div key={info.id}>
+                        <p>{info.description}</p>
+                        {info.attachment && (
+                            <p>
+                                <img src={info.attachment.file_path} alt="Teacher Attachment" className="off_detail_poster_image" />
+                            </p>
+                        )}
                     </div>
+                ))}
+            </div>
+            <div className='Online_Comment_Title' ref={Comment_list_Ref}>
+                <strong>댓글 게시판</strong>
+            </div>
+            <div className='Online_Comment_box'>
+                <textarea
+                    className="Online_input_comment"
+                    placeholder="댓글을 작성해주세요. 욕설, 상업적인 내용, 특정인이나 특정사안을 비방하는 내용 등은 예고 없이 삭제될 수 있습니다."
+                    value={newComment}
+                    onChange={handleCommentChange}
+                ></textarea>
+                <div className='Write_Online_Comment'>
+                    <button className='Write_Online_Comment_Button' onClick={handleCommentSubmit}><span>작성하기</span></button>
                 </div>
-
-                <div className='Online_Comment_List'>
-                    {comments.map((comment) => (
-                        <div key={comment.id} className="Online_Comment_User_Info">
-
-                            <div className="Online_Comment_User_Profile">
-                                <img src={userProfile} alt="UserProfile" />
-
-                            </div>
-                            <div className='Online_Comment_User_Name_Date'>
-                                <p className='Online_Comment_User_Name'><strong>{comment.author}</strong></p>
-                                <p className='Online_Comment_Write_Date'>{comment.date}</p>
-
-                            </div>
-
-                            <div className='Online_Comment_Context'>
+            </div>
+            <div className='Online_Comment_List'>
+                {comments.map((comment) => (
+                    <div key={comment.id} className="Online_Comment_User_Info">
+                        <div className='Online_Comment_User_Name_Date'>
+                            <p className='Online_Comment_User_Name'><strong>{comment.author}</strong></p>
+                            <p className='Online_Comment_Write_Date'>{comment.date}</p>
+                        </div>
+                        <div className='Online_Comment_Context'>
+                            {editingCommentId === comment.id ? (
+                                <textarea
+                                    value={editedCommentText}
+                                    onChange={(e) => setEditedCommentText(e.target.value)}
+                                />
+                            ) : (
                                 <p>{comment.text}</p>
-                            </div>
-
+                            )}
+                            {editingCommentId === comment.id ? (
+                                <>
+                                    <button onClick={() => handleSaveEdit(comment.id)}>저장</button>
+                                    <button onClick={() => setEditingCommentId(null)}>취소</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button onClick={() => handleEditComment(comment.id, comment.text)}>수정</button>
+                                    <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                                </>
+                            )}
                             <div className='Reply_area'>
                                 <button className='Reply_Write' onClick={() => toggleReply(comment.id)}>
                                     <span>답글</span>
                                 </button>
+                                {replyVisible[comment.id] && (
+                                    <div>
+                                        <textarea
+                                            value={replyText[comment.id] || ''}
+                                            onChange={(e) => handleReplyChange(e, comment.id)}
+                                        />
+                                        <button onClick={() => handleReplySubmit(comment.id)}>확인</button>
+                                    </div>
+                                )}
                             </div>
-
-
                         </div>
-                    ))}
-
-                </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
 }
 
-export default Online_Deatil;
+export default Online_Detail;

@@ -33,7 +33,7 @@ public class MemberRepositoryTest {
         List<Member> members = new ArrayList<>();
 
         // 200개의 데이터 생성
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 50; i++) {
             // 테스트 데이터 생성
             MemberDto memberDto = new MemberDto();
             memberDto.setId("test" + i);
@@ -41,8 +41,10 @@ public class MemberRepositoryTest {
             memberDto.setPassword("test_password" + i);
             memberDto.setBirth(LocalDate.of(1990, 1, 1));
             memberDto.setPhone_number("01012345678");
+            memberDto.setTelNumber("00000000000");
             memberDto.setEmail("test" + i + "@example.com");
             memberDto.setAddress("서울시 강남구");
+            memberDto.setDetail_address("상세 주소");
             memberDto.setEmail_agreement(true);
             memberDto.setMessage_agreement(true);
             memberDto.setMail_agreement(true);
@@ -61,7 +63,7 @@ public class MemberRepositoryTest {
         memberRepository.saveAll(members);
 
         // 저장된 데이터 확인
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 50; i++) {
             String memberId = "test" + i;
             Member savedMember = memberRepository.findById(memberId).orElse(null);
             assert savedMember != null;

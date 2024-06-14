@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePosters } from '../Posters/Online_posters'; // Context API를 사용하여 posters 데이터를 가져옴
+import axios from 'axios';
 import './Online_Post_List.css';
 
 function Online_Post_List() {
-    const { On_posters, setPosters } = usePosters();
-    const { category } = useParams(); // URL에서 카테고리 파라미터를 가져옴
-    const postersPerPage = 4; // 한 페이지당 포스터 수
-    const [activePage, setActivePage] = useState(1); // 현재 페이지 번호
-    const navigate = useNavigate();
+    const [posters, setPosters] = useState([]); // 프로그램 상태 업데이트 
+    const [totalPages, setTotalPages] = useState(0); // 총 페이지 수 상태 추가
 
-    // 선택된 카테고리로 포스터 필터링
-    const filteredPosters = category ? On_posters.filter(poster => poster.category === category) : On_posters;
+    const { category } = useParams(); // 카테고리 값 가져옴 online/{category}
 
-    // 총 페이지 수 계산
-    const totalPages = Math.ceil(filteredPosters.length / postersPerPage);
+    const postersPerPage = 4; // 페이지 당 포스터 수 
+    const [activePage, setActivePage] = useState(1);
+    const navigate = useNavigate(); 
+
+    useEffect(() => {
+        const fetchPosters = async () => {
+            try {
+                const response = await axios.get(`/api/onProgram/filter`, {
+                    params: {
+                        category: category,
+                        page: activePage - 1,
+                        size: postersPerPage
+                    }
+                });
+                setPosters(response.data.content);
+                setTotalPages(response.data.totalPages); // 총 페이지 수 설정
+            } catch (error) {
+                console.error('포스터 데이터를 가져오는데 실패했습니다:', error);
+            }
+        };
+
+        fetchPosters();
+    }, [category, activePage]);
 
     // 포스터 클릭시 상세 페이지 이동
     const goToDetails = (id) => {
@@ -24,29 +41,37 @@ function Online_Post_List() {
     // 북마크 토글 함수
     const toggleBookmark = (id, event) => {
         event.stopPropagation();
-        const updatedPosters = On_posters.map(poster =>
+        const updatedPosters = posters.map(poster =>
             poster.id === id ? { ...poster, isBookmarked: !poster.isBookmarked } : poster
         );
         setPosters(updatedPosters);
     };
 
-    // 현재 페이지에 따라 포스터 데이터를 슬라이싱
-    const currentPosters = filteredPosters.slice(
-        (activePage - 1) * postersPerPage,
-        activePage * postersPerPage
-    );
+    // YYYY.MM.DD 프로그램 업로드 날짜
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}.${month}.${day}`;
+    };
 
     const changePage = (pageNumber) => {
         setActivePage(pageNumber);
     };
 
     // 포스터 ID를 받아 좋아요 수를 증가시키는 함수
-    const handleLike = (posterId, event) => {
+    const handleLike = async (posterId, event) => {
         event.stopPropagation();
-        const updatedPosters = On_posters.map(poster =>
-            poster.id === posterId ? { ...poster, likes: poster.likes + 1 } : poster
-        );
-        setPosters(updatedPosters);
+        try {
+            await axios.patch(`/api/onProgram/${posterId}/increment-likes`);
+            const updatedPosters = posters.map(poster =>
+                poster.id === posterId ? { ...poster, likesCount: poster.likesCount + 1 } : poster
+            );
+            setPosters(updatedPosters);
+        } catch (error) {
+            console.error('좋아요 업데이트 실패:', error);
+        }
     };
 
     // 카테고리별 색상 구분 함수
@@ -65,34 +90,27 @@ function Online_Post_List() {
             case '기타':
                 return 'online-category-Others';
             default:
-                return 'online-category-Undefined';  
+                return 'online-category-Undefined';
         }
     }
-
-    useEffect(() => {
-        setActivePage(1); // 카테고리가 변경될 때 페이지를 첫 페이지로 설정
-        console.log('Selected category:', category);
-        console.log('Filtered posters:', filteredPosters);
-        console.log('URL Params category:', category);
-    }, [category]);
 
     return (
         <div className="online-body-container">
             <div className="online-poster-list">
-                {currentPosters.map(poster => (
+                {posters.map(poster => (
                     <div key={poster.id} className="online-poster-card" onClick={() => goToDetails(poster.id)}>
                         <div className="online-poster-image-container">
-                            <img src={poster.imageUrl} alt={poster.title} className="online-poster-image" />
+                            <img src={poster.poster.file_path} alt={poster.programName} className="online-poster-image" />
                         </div>
                         <div className="online-poster-details">
                             <div className={`online-poster-category ${Online_Category_Class(poster.category)}`}>
                                 {poster.category}
                             </div>
-                            <h3 className="online-poster-title">{poster.title}</h3>
-                            <p className="online-poster-dates">{poster.dates}</p>
+                            <h3 className="online-poster-title">{poster.programName}</h3>
+                            <p className="online-poster-dates">{formatDate(poster.operatingStartDay)}</p>
                             <div className="online-poster-actions">
                                 <div className="online-heart-icon" onClick={(event) => handleLike(poster.id, event)}>♥</div>
-                                <span className="online-like-count">{poster.likes}</span>
+                                <span className="online-like-count">{poster.likesCount}</span>
                                 <span className={`online-bookmark-icon ${poster.isBookmarked ? 'active' : ''}`}
                                     onClick={(event) => toggleBookmark(poster.id, event)}>
                                     {poster.isBookmarked ? '★' : '☆'}

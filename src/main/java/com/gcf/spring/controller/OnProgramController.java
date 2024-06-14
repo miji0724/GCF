@@ -2,11 +2,14 @@ package com.gcf.spring.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,18 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gcf.spring.dto.OnProgramDto;
 import com.gcf.spring.entity.Attachment;
-import com.gcf.spring.entity.Member;
 import com.gcf.spring.entity.OnProgram;
 import com.gcf.spring.entity.OnVideo;
 import com.gcf.spring.entity.ProgramInfo;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.entity.TeacherInfo;
-import com.gcf.spring.repository.MemberRepository;
 import com.gcf.spring.service.AttachmentService;
 import com.gcf.spring.service.OnProgramService;
 import com.gcf.spring.service.TeacherService;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/onProgram")
@@ -148,4 +147,43 @@ public class OnProgramController {
 
 		return ResponseEntity.ok(null);
 	}
+	
+	 // 조회수 갱신
+    @PatchMapping("/{id}/increment-views")
+    public ResponseEntity<Void> incrementViews(@PathVariable("id") Integer id) {
+        boolean updated = onProgramService.updateProgramStats(id, true, false);
+        if (updated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    // 좋아요 갱신
+    @PatchMapping("/{id}/increment-likes")
+    public ResponseEntity<Void> incrementLikes(@PathVariable("id") Integer id) {
+        boolean updated = onProgramService.updateProgramStats(id, false, true);
+        if (updated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    // ID로 강의 조회 (DTO 반환)
+    @GetMapping("/{id}")
+    public ResponseEntity<OnProgramDto> getOnProgramById(@PathVariable("id") Integer id) {
+        OnProgramDto onProgramDto = onProgramService.getProgramById(id).orElse(null);
+        return ResponseEntity.ok(onProgramDto);
+    }
+
+    // 카테고리 필터링 및 페이지네이션
+    @GetMapping("/filter")
+    public ResponseEntity<Page<OnProgramDto>> getFilteredPrograms(
+            @RequestParam("category") String category,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+        Page<OnProgramDto> onProgramDtos = onProgramService.getFilteredPrograms(category, page, size);
+        return ResponseEntity.ok(onProgramDtos);
+    }
 }

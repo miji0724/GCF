@@ -1,24 +1,26 @@
 /* 부제목 섹션의 스타일  (프로그램 신청) */
 .Off_sub_title {
-    border: 1px solid rgb(204, 204, 204); /* 연한 회색 테두리 */
+    border: 2px solid #ccc; /* 연한 회색 테두리, 두께를 약간 더 두껍게 */
     width: 80%; /* 부모 컨테이너의 80% 너비 */
-    margin-left: 10%; /* 부제목을 가운데 정렬하기 위한 왼쪽 마진 설정 */
+    margin: 20px auto 50px; /* 상단과 하단 마진 조정, 가운데 정렬 */
     text-align: center; /* 텍스트를 가운데 정렬 */
-    box-shadow: 0 15px 15px 0 rgba(0, 0, 0, 0.02); /* 부드러운 그림자 추가 */
-    margin-top: 20px; /* 부제목 위쪽에 마진 간격 추가 */
-    margin-bottom: 50px; /* 부제목 아래쪽에 마진 간격 추가 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 더 부드러운 그림자 추가 */
+    padding: 10px 0; /* 상하 패딩 추가 */
+    background: #f7f9fc; /* 배경색 추가 */
+    border-radius: 10px; /* 둥근 모서리 */
+}
+
+.Off_sub_title strong {
+    font-size: 24px; /* 글자 크기 */
+    font-weight: bold; /* 굵게 */
+    color: #2c3e50; /* 진한 회색 */
+    letter-spacing: 1.5px; /* 글자 간격 추가 */
 }
 
 /* 일반적인 내부 컨테이너 스타일 */
 .inner {
     margin-left: 135px; /* 왼쪽에 간격 추가 */
     margin-right: 135px; /* 오른쪽에 간격 추가 */
-}
-
-/* 부제목 텍스트 스타일 */
-.sub_title strong {
-    font-size: 48px; /* 큰 글자 크기 */
-    font-weight: 600; /* 두꺼운 글씨 */
 }
 
 /* 포스터 세부 정보 컨테이너 */
@@ -94,28 +96,6 @@
     display: flex; /* Flexbox 레이아웃 */
 }
 
-/* 포스터 관련 작업 컨테이너 */
-.actions-container {
-    display: flex; /* Flexbox 레이아웃 */
-    justify-content: space-between; /* 아이템들 사이에 공간 분배 */
-    align-items: center; /* 아이템들을 수직으로 중앙 정렬 */
-    padding: 10px; /* 내부 패딩 추가 */
-    width: 100%; /* 부모 컨테이너의 전체 너비 */
-}
-
-/* 좋아요 및 북마크 등의 포스터 작업 스타일 */
-.poster-actions {
-    display: flex; /* Flexbox 레이아웃 */
-    position: relative; /* 정상 위치를 기준으로 상대적으로 배치 */
-    justify-content: space-around; /* 아이템들 주위에 공간 분배 */
-    align-items: center; /* 아이템들을 수직으로 중앙 정렬 */
-    gap: 20px; /* 아이템들 사이에 간격 */
-    padding: 10px; /* 내부 패딩 추가 */
-    padding-top: 40px; /* 위쪽에 추가 패딩 */
-    margin-right: 40px; /* 오른쪽에 간격 추가 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    font-size: larger; /* 큰 글자 크기 */
-}
 
 
 /* 오프라인 정보 버튼 스타일 */
@@ -151,6 +131,13 @@
     border-radius: 50px; /* 둥근 모서리 */
     min-width: 150px; /* 최소 너비 */
     min-height: 65px; /* 최소 높이 */
+}
+
+/* 버튼 비활성화 스타일 */
+.SignButton:disabled {
+    background-color: #555555; /* 비활성화 시 진한 회색 배경색 */
+    cursor: not-allowed; /* 비활성화 시 커서 변경 */
+    opacity: 0.7; /* 투명도 조정 */
 }
 
 /* 추가 정보 버튼 스타일 */
@@ -204,35 +191,55 @@
     max-width: 800px; /* 최대 너비 */
     margin: 20px auto; /* 상하단 간격 추가 및 가운데 정렬 */
     padding: 20px; /* 내부 패딩 추가 */
-    background-color: #f9f9f9; /* 연한 회색 배경 색상 */
-    border: 1px solid #ddd; /* 연한 회색 테두리 */
-    border-radius: 8px; /* 둥근 모서리 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
-    font-family: 'Arial', sans-serif; /* 폰트 패밀리 */
-    line-height: 1.6; /* 줄 간격 */
-    color: #333; /* 진한 회색 글자 색상 */
+    background-color: #ffffff; /* 흰색 배경 색상 */
+    border: 1px solid #e0e0e0; /* 연한 회색 테두리 */
+    border-radius: 12px; /* 더 둥근 모서리 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* 부드러운 그림자 */
+    font-family: 'Helvetica Neue', 'Arial', sans-serif; /* 더 현대적인 폰트 패밀리 */
+    line-height: 1.8; /* 줄 간격 */
+    color: #444; /* 중간 진한 회색 글자 색상 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
 }
+
+.off_pro_info_board:hover, .off_tea_info_board:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* 호버 시 더 강한 그림자 */
+    transform: translateY(-5px); /* 호버 시 살짝 위로 이동 */
+}
+
+.off_pro_info_board > p:first-of-type,
+.off_tea_info_board > p:first-of-type {
+    font-size: 24px; /* 폰트 크기 */
+    font-weight: bold; /* 굵게 */
+    color: #2c3e50; /* 진한 회색 */
+    margin-bottom: 20px; /* 아래쪽 간격 추가 */
+    text-align: center; /* 가운데 정렬 */
+}
+
 
 /* 강사 정보 게시판 내 문단 스타일 */
 .off_tea_info_board p {
-    margin: 10px 0; /* 상하단 간격 추가 */
-    font-weight: bold; /* 두꺼운 글씨 */
+    margin: 15px 0; /* 상하단 간격 추가 */
+    font-weight: 500; /* 중간 두께 글씨 */
+    color: #555; /* 약간 진한 회색 */
 }
 
 /* 강사 정보 게시판 내 강조 텍스트 스타일 */
 .off_tea_info_board strong {
     color: #2c3e50; /* 더 진한 회색 */
-    font-size: 18px; /* 글자 크기 */
+    font-size: 20px; /* 더 큰 글자 크기 */
     display: block; /* 블록 디스플레이 */
+    margin-top: 10px; /* 상단 여백 추가 */
 }
 
-/* 세부 포스터 이미지 스타일 */
+/* 이미지 스타일 */
 .off_detail_poster_image {
     max-width: 100%; /* 컨테이너의 전체 너비 */
     height: auto; /* 비율을 유지하며 높이 자동 설정 */
     display: block; /* 블록 디스플레이 */
+    margin: 20px 0; /* 상하단 간격 추가 */
+    border-radius: 8px; /* 둥근 모서리 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
-
 
 .Off_left {
     display: flex;
@@ -259,13 +266,13 @@
     margin: 0 5px;
 }
 
-.Off_heart-icon{
+.Off_heart-icon {
     cursor: pointer;
     font-size: 24px;
     color: red;
 }
 
-.Off_bookmark-icon{
+.Off_bookmark-icon {
     cursor: pointer;
     font-size: 24px;
     font-weight: bold;
@@ -285,4 +292,28 @@
     display: inline-flex; /* 인라인 Flexbox 레이아웃 */
     align-items: center; /* 아이템들을 수직으로 중앙 정렬 */
     font-weight: bold; /* 두꺼운 글씨 */
+}
+
+/* 포스터 관련 작업 컨테이너 */
+.actions-container {
+    display: flex; /* Flexbox 레이아웃 */
+    justify-content: space-between; /* 아이템들 사이에 공간 분배 */
+    align-items: center; /* 아이템들을 수직으로 중앙 정렬 */
+    padding: 10px; /* 내부 패딩 추가 */
+    width: 100%; /* 부모 컨테이너의 전체 너비 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    margin-bottom: 20px; /* 아래쪽 여백 추가 */
+}
+
+/* 좋아요 및 북마크 등의 포스터 작업 스타일 */
+.poster-actions {
+    display: flex; /* Flexbox 레이아웃 */
+    justify-content: space-around; /* 아이템들 주위에 공간 분배 */
+    align-items: center; /* 아이템들을 수직으로 중앙 정렬 */
+    gap: 20px; /* 아이템들 사이에 간격 */
+    padding: 20px; /* 내부 패딩 추가 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    font-size: larger; /* 큰 글자 크기 */
+    flex-grow: 1; /* 남은 공간을 채우도록 확장 */
+    border-radius: 8px; /* 모서리 둥글게 */
 }
