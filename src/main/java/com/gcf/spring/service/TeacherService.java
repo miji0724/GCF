@@ -251,5 +251,12 @@ public class TeacherService {
  		teacherRepository.deleteById(id);
  	}
     
-    
+ 	public TeacherState getTeacherStatus(String teacherId) {
+        Teacher teacher = teacherRepository.findTeacherById(teacherId);
+        if (teacher != null) {
+            return teacher.getTeacherState(); // Teacher 엔티티에서 teacherstatus 가져오기
+        }
+        // 예외 처리나 기본값 반환 등 필요한 로직 추가
+        return null; // 예시로 null 반환 (실제 상황에 따라 적절히 처리)
+    }
 }

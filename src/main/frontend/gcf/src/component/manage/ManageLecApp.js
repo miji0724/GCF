@@ -42,6 +42,8 @@ function ManageLecApp() {
             });
     };
 
+    
+
     const handleSearch = async () => {
         setLoading(true);
         try {

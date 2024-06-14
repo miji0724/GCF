@@ -97,7 +97,7 @@ public class Member {
 	
     @OneToMany
     @JoinColumn(name = "off_apply")
-    private List<Member> offApply;
+    private List<OffProgram> offApply;
 	
 	public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
 		Member member = new Member();

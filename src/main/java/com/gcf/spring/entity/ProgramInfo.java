@@ -1,5 +1,7 @@
 package com.gcf.spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +25,11 @@ public class ProgramInfo {
     
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "on_program_id", referencedColumnName = "id")
+    @JsonIgnore
     private OnProgram onProgram; // 연관된 오프라인 프로그램
     
     @ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "off_program_id", referencedColumnName = "id")
+    @JsonIgnore
 	private OffProgram offProgram; // 연관된 오프라인 프로그램
 }

@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gcf.spring.constant.TeacherState;
 import com.gcf.spring.dto.MemTeachDto;
 import com.gcf.spring.dto.TeacherDto;
 import com.gcf.spring.entity.Teacher;
 import com.gcf.spring.service.TeacherService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -126,4 +128,22 @@ public class TeacherController {
          return teacherService.saveTeacher(memTeachDto);
      }
 
+     @GetMapping("/teacher/getTeacherApprovalState")
+     public ResponseEntity<TeacherState> sendTeacherStatus(HttpServletRequest httpRequest) {
+         String teacherId = (String) httpRequest.getSession().getAttribute("userId");
+
+         if (teacherId != null) {
+             TeacherState status = teacherService.getTeacherStatus(teacherId);
+             if (status != null) {
+                 return ResponseEntity.ok(status);
+             } else {
+                 // 처리할 수 없는 상황에 따른 예외 처리
+                 return ResponseEntity.notFound().build(); // 예시로 404 에러 반환
+             }
+         } else {
+             // 세션에 userId가 없는 경우에 대한 예외 처리
+             return ResponseEntity.badRequest().build(); // 예시로 400 에러 반환
+         }
+     }
+     
 }

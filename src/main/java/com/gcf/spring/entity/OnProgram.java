@@ -61,27 +61,24 @@ public class OnProgram {
 	@Column(nullable = false)
 	private String approvalState; // 승인, 미승인, 승인대기
 
-	@JsonIgnore
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<ProgramInfo> programInfos;
 
-	@JsonIgnore
     @OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
     private List<TeacherInfo> teacherInfos; 
 
-	@JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "onProgram", cascade = CascadeType.ALL)
 	private List<OnVideo> videos; // 비디오 리스트
 
 	 public static OnProgram createOnProgram(OnProgramDto on_programDto) {
 	        OnProgram onProgram = new OnProgram();
-//	        onProgram.setTeacher(on_programDto.getTeacher());
+	        onProgram.setId(on_programDto.getId());
+	        onProgram.setTeacher(on_programDto.getTeacher());
 	        onProgram.setProgramName(on_programDto.getProgramName());
-	        onProgram.setOperatingStartDay(on_programDto.getOperatingStartDay());
+	        onProgram.setOperatingStartDay(LocalDate.now());
 	        onProgram.setViews(on_programDto.getViews());
 	        onProgram.setLikesCount(on_programDto.getLikesCount());
 	        onProgram.setCategory(on_programDto.getCategory()); // 필드명 변경
@@ -97,7 +94,8 @@ public class OnProgram {
 
 	public static OnProgramDto convertToOnProgramDto(OnProgram onProgram) {
 		OnProgramDto dto = new OnProgramDto();
-//		dto.setTeacher(onProgram.getTeacher());
+		dto.setId(onProgram.getId());
+		dto.setTeacher(onProgram.getTeacher());
 		dto.setProgramName(onProgram.getProgramName());
 		dto.setOperatingStartDay(onProgram.getOperatingStartDay());
 		dto.setViews(onProgram.getViews());

@@ -248,5 +248,9 @@ public class MemberService implements UserDetailsService {
                    .build();
     }
     
+    public Role getUserRole(String userId) {
+		Member member = memberRepository.findById(userId).orElse(null);
+		return member.getRole();
+	}
     
 }

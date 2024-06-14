@@ -110,11 +110,13 @@ public class OnProgramController {
     @PostMapping("/onvideo")
     public ResponseEntity<OnVideo> createVInfo(@RequestParam("files") List<MultipartFile> files,
                                                @RequestParam("videoinfodetails") List<String> videoinfodetails,
-                                               @RequestParam("videoInfoIndex") List<String> videoInfoIndex,
+                                               @RequestParam("videoinfoindex") List<String> videoInfoIndex,
                                                @RequestParam("id") Integer id) {
         List<OnVideo> onVideos = new ArrayList<>();
         OnProgram onProgram = onProgramService.getOnProgramById(id);
 
+        System.out.println("Test");
+        
         for (int i = 0; i < videoinfodetails.size(); i++) {
             String videoinfodetail = videoinfodetails.get(i);
             String index = videoInfoIndex.get(i); // 인덱스 값 받기

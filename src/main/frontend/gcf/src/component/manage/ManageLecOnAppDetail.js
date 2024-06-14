@@ -140,6 +140,7 @@ function ManageLecOnAppDetail() {
 
     // 승인
     const sendApprovalRequest = () => {
+        console.log(onLecInfo.id);
         axios.put(`/manage/onProgramApproval`, onLecInfo.id, {
             headers: {
                 'Content-Type': 'application/json'

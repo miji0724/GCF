@@ -54,16 +54,18 @@ function BookMark() {
             <thead>
               <tr>
                 <th>번호</th>
-                <th>회원</th>
-                <th>프로그램</th>
+                <th>교육명</th>
+                <th>카테고리</th>
+                <th>장소</th>
               </tr>
             </thead>
             <tbody>
               {filteredBookmarks.map((bookmark, index) => (
                 <tr key={bookmark.id}>
                   <td>{bookmark.id}</td>
-                  <td>{bookmark.member.id}</td>
-                  <td>{selectedCategory === 'Offline' ? bookmark.offProgram.id : bookmark.onProgram.id}</td>
+                  <td>{selectedCategory === 'Offline' ? bookmark.offProgram.programName : bookmark.onProgram.programName}</td>
+                  <td>{selectedCategory === 'Offline' ? bookmark.offProgram.category : bookmark.onProgram.category}</td>
+                  <td>{selectedCategory === 'Offline' ? bookmark.offProgram.placeName : bookmark.onProgram.placeName}</td>
                 </tr>
               ))}
             </tbody>

@@ -15,6 +15,7 @@ function Online_state() {
     axios.get(url)
       .then(response => {
         setPrograms(response.data);
+        console.log(response.data);
       })
       .catch(error => {
         console.error("There was an error fetching the programs!", error);

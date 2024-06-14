@@ -60,7 +60,7 @@ public class OffProgramController {
 		return ResponseEntity.ok(saveAtt);
 	}
     
-    @PostMapping("/offproginfo")
+    @PostMapping("/offprograminfo")
     public ResponseEntity<ProgramInfo> createInfo(@RequestParam("files") List<MultipartFile> files,
             									  @RequestParam("descriptions") List<String> descriptions,
             									  @RequestParam("id") Integer id) {

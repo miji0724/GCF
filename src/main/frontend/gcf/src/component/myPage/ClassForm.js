@@ -921,6 +921,14 @@ function ClassForm() {
                                     </div>
 
                                     <div className="OnlineLec">
+                                    <select id='lecOnDetail_lecField' >
+                                        <option value='미술'>미술</option>
+                                        <option value='과학'>과학</option>
+                                        <option value='음악'>음악</option>
+                                        <option value='디자인'>디자인</option>
+                                        <option value='교육'>교육</option>
+                                        <option value='기타'>기타</option>
+                                    </select>
                                         <h4>온라인 강의</h4>
                                         <div>
                                             {videoInfoFields.map((field, index) => (
