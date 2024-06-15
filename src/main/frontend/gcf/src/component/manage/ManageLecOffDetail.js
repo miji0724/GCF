@@ -331,16 +331,16 @@ function ManageLecOffDetail() {
                         <button id='lecOffDetail_delete' onClick={deleteOffProgram}>삭제</button>
                     </div>
                     <div className='introduceTeach_imgArea'>
-                        <img src={offLecInfo.poster.file_path} />
+                        <img src={offLecInfo.poster.file_path} className='manage_wactchAttachmentArea'/>
                     </div>
                     {offLecInfo.teacherInfos && offLecInfo.teacherInfos.map((teacherInfo, index) => (
                         <div key={index} className='introduceTeach_attArea'>
-                            <img src={teacherInfo.attachment.file_path} />
+                            <img src={teacherInfo.attachment.file_path} className='manage_wactchAttachmentArea'/>
                         </div>
                     ))}
                     {offLecInfo.programInfos && offLecInfo.programInfos.map((programInfo, index) => (
                         <div key={index} className='introduceTeach_attArea'>
-                            <img src={programInfo.attachment.file_path} />
+                            <img src={programInfo.attachment.file_path} className='manage_wactchAttachmentArea'/>
                         </div>
                     ))}
                 </div>

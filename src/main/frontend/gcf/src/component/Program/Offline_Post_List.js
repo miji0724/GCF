@@ -106,7 +106,7 @@ function OfflinePosterList() {
                 return '';
         }
     };
-
+    console.log(posters);
     return (
         <div className="OffBodyContainer">
             <div className="FilterBox">

@@ -182,7 +182,7 @@ const ScheduleForm = () => {
                         {/* 프로그램 포스터 슬라이드 */}
                         <div className="slider-wrapper" style={{ display: 'flex' }}>
                             {categorizedPrograms[category].map((program, index) => (
-                                <a key={index} className="program_poster" href={`/offlineList/detail/${program.programName}`} style={{ marginRight: '10px' }}>
+                                <a key={index} className="program_poster" href={`/offlineList/details/${program.id}`} style={{ marginRight: '10px' }}>
                                     <img src={program.poster.file_path} alt={program.title} />
                                     <div className="offProgram_info_schedule">
                                         <div className="schedule_place">[{program.programName.length > 33 ? program.programName.substring(0, 33) + '...' : program.programName}]</div>

@@ -231,7 +231,7 @@
 
 
 /* 강좌/강사 소개에 쓸 사진 스타일 */
-.on_detail_poster_image,.on_detail_teacher_image {
+.on_detail_poster_image,.on_detail_teacher_image, .on_detail_program_image {
     max-width: 100%; /* 컨테이너의 전체 너비 */
     height: auto; /* 비율을 유지하며 높이 자동 설정 */
     display: block; /* 블록 디스플레이 */

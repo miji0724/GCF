@@ -6,6 +6,14 @@ function Offline_state() {
   const [programs, setPrograms] = useState([]);
   const [selectedState, setSelectedState] = useState('전체');
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     let url = '/api/offProgram/myoffprogram';
     if (selectedState !== '전체') {
@@ -49,7 +57,7 @@ function Offline_state() {
                   <td>{program.id}</td>
                   <td>{program.category}</td>
                   <td>{program.programName} / {program.programDetailName}</td>
-                  <td>{program.operatingStartDay} ~ {program.operatingEndDay}</td>
+                  <td>{formatDate(program.operatingStartDay)} ~ {formatDate(program.operatingEndDay)}</td>
                 </tr>
               ))}
             </tbody>

@@ -178,3 +178,7 @@
     list-style-type: none;
     justify-content: center;
 }
+
+.manage_wactchAttachmentArea{
+    max-width:1000px;
+}

@@ -156,6 +156,7 @@ public class OffProgramController {
     //경로 변수로 ID를 사용 
     @GetMapping("/{id}")
     public ResponseEntity<OffProgramDto> getOffProgramById(@PathVariable("id") Integer id) {
+    	System.out.println(id);
         OffProgramDto offProgramDto = offProgramService.getProgramById(id).orElse(null);
         return ResponseEntity.ok(offProgramDto);
     }

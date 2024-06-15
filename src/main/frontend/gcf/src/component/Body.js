@@ -23,7 +23,7 @@ const Body = ({ isLoggedIn }) => {
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const navigate = useNavigate();
-  
+
     const gotoOnlineListCategory = (category) => {
         navigate(`/OnlineList/${category}`); // 카테고리별 필터 기능
     };
@@ -37,7 +37,7 @@ const Body = ({ isLoggedIn }) => {
         '기타': 'etc'
     };
 
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -125,9 +125,9 @@ const Body = ({ isLoggedIn }) => {
                         <span><a href="/notice">더보기 →</a></span>
                     </div>
                     {notices.map(notice => (
-                    <li key={notice.id} id='notice_content' onClick={() => handleClickNotice(notice.id)}>
-                        {notice.title}
-                    </li>
+                        <li key={notice.id} id='notice_content' onClick={() => handleClickNotice(notice.id)}>
+                            {notice.title}
+                        </li>
                     ))}
                 </li>
             </ul>
@@ -137,7 +137,7 @@ const Body = ({ isLoggedIn }) => {
                 <ul className="popular_poster">
                     {offProgramsView.map((programView, index) => (
                         <li key={index}>
-                            <a href={`/offlineList/detail/${programView.programName}`}>
+                            <a href={`/OfflineList/details/${programView.id}`}>
                                 <img src={programView.poster.file_path} alt={`Poster ${index + 1}`} />
                                 <div
                                     className="off_category"
@@ -160,7 +160,7 @@ const Body = ({ isLoggedIn }) => {
                 <ul className="popular_poster">
                     {onProgramsView.map((program, index) => (
                         <li key={index}>
-                            <a href={`/onlineList/detail/${program.programName}`}>
+                            <a href={`/OnlineList/details/${program.id}`}>
                                 <img src={program.poster.file_path} alt={`Poster ${index + 1}`} />
                                 <div className={`on_category ${categoryClassMap[program.category]}`}>
                                     {program.category}
@@ -185,11 +185,11 @@ const Body = ({ isLoggedIn }) => {
                             setSelectedOnlineProgram(null); // Add this line to nullify the selected online program
                         }}>{OffprogramNew.programName}</div>
                     ))}
-                    <div><a href="#">더보기 →</a></div>
+                    <div><a href="/OfflineList">더보기 →</a></div>
                 </div>
 
                 {selectedOfflineProgram && (
-                    <a className="new_center" href={`/offlineList/detail/${selectedOfflineProgram.programName}`}>
+                    <a className="new_center" href={`/OfflineList/details/${selectedOfflineProgram.id}`}>
                         {selectedOfflineProgram.poster && <img src={selectedOfflineProgram.poster.file_path} alt="Selected Program" />}
                         <div className="title1">{selectedOfflineProgram.programName}</div>
                         <div className="date">{new Date(selectedOfflineProgram.operatingStartDay).toLocaleDateString()} ~ {new Date(selectedOfflineProgram.operatingEndDay).toLocaleDateString()}</div>
@@ -197,27 +197,27 @@ const Body = ({ isLoggedIn }) => {
                 )}
 
                 {selectedOnlineProgram && (
-                    <a className="new_center" href={`/onlineList/detail/${selectedOnlineProgram.programName}`}>
+                    <a className="new_center" href={`/OnlineList/details/${selectedOnlineProgram.id}`}>
                         {selectedOnlineProgram.poster && <img src={selectedOnlineProgram.poster.file_path} alt="Selected Program" />}
                         <div className="title1">{selectedOnlineProgram.programName}</div>
                     </a>
                 )}
 
                 <div className="home_title3">
-                        <div>새로운 온라인 교육/체험</div>
-                        {onProgramsNew.map((OnprogramNew, index) => (
-                            <div key={index} className="title2" onClick={() => {
-                                setSelectedOnlineProgram(OnprogramNew);
-                                setSelectedOfflineProgram(null); // Add this line to nullify the selected offline program
-                            }}>{OnprogramNew.programName}</div>
-                        ))}
+                    <div>새로운 온라인 교육/체험</div>
+                    {onProgramsNew.map((OnprogramNew, index) => (
+                        <div key={index} className="title2" onClick={() => {
+                            setSelectedOnlineProgram(OnprogramNew);
+                            setSelectedOfflineProgram(null); // Add this line to nullify the selected offline program
+                        }}>{OnprogramNew.programName}</div>
+                    ))}
                 </div>
             </div>
 
             <div className="online_category">
                 <div className="home_title4">온라인 교육</div>
                 <div className="icon">
-                    {[{src: art, label: '미술'}, {src: science, label: '과학'}, {src: music, label: '음악'}, {src: design, label: '디자인'}, {src: study, label: '교육'}, {src: etc, label: '기타'}].map((icon, index) => (
+                    {[{ src: art, label: '미술' }, { src: science, label: '과학' }, { src: music, label: '음악' }, { src: design, label: '디자인' }, { src: study, label: '교육' }, { src: etc, label: '기타' }].map((icon, index) => (
                         <a key={index} onClick={() => gotoOnlineListCategory(icon.label)}>
                             <img src={icon.src} alt={icon.label} />
                             <span>{icon.label}</span>

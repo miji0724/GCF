@@ -59,16 +59,16 @@ function Pro_Sign_Up({ isLoggedIn, userId }) {
         }
     };
 
-        // 날짜 타입 
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = ('0' + (date.getMonth() + 1)).slice(-2);
-            const day = ('0' + date.getDate()).slice(-2);
-            return `${year}-${month}-${day}`;
-        };
+    // 날짜 타입 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    };
 
-            // 시간 타입
+    // 시간 타입
     const formatTime = (time) => {
         if (typeof time === 'string') return time; // 이미 문자열인 경우
         const [hours, minutes] = time; // time 객체에서 시간을 추출

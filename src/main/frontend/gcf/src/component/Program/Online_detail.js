@@ -18,14 +18,15 @@ function Online_Detail() {
     const Online_pro_info_Ref = useRef(null); // 프로그램 소개 다이렉트
     const Online_teacher_info_Ref = useRef(null); // 강사 소개 다이렉트
     const Comment_list_Ref = useRef(null); // 댓글 리스트
-
+    const [durations, setDurations] = useState({});
 
     useEffect(() => {
         const fetchPoster = async () => {
             try {
-                const response = await axios.get(`/api/offprogram/${id}`);
+                const response = await axios.get(`/api/onProgram/${id}`);
+                console.log(response.data);
                 setPoster(response.data);
-                await axios.patch(`/api/offprogram/${id}/increment-views`);
+                await axios.patch(`/api/onProgram/${id}/increment-views`);
             } catch (error) {
                 console.error('포스터 정보를 불러오지 못했습니다.', error);
             }
@@ -42,6 +43,23 @@ function Online_Detail() {
         };
         fetchComments();
     }, [id]);
+
+    useEffect(() => {
+        if (poster) {
+            poster.videos.forEach(video => {
+                if (video.attachment && video.attachment.file_path) {
+                    const videoElement = document.createElement('video');
+                    videoElement.src = video.attachment.file_path;
+                    videoElement.onloadedmetadata = () => {
+                        setDurations(prevDurations => ({
+                            ...prevDurations,
+                            [video.id]: videoElement.duration,
+                        }));
+                    };
+                }
+            });
+        }
+    }, [poster]);
 
     if (!poster) {
         return <div>포스터 정보를 찾을 수 없습니다.</div>;
@@ -109,10 +127,6 @@ function Online_Detail() {
         }
     };
 
-    const openVideoInNewWindow = (videoId) => {
-        window.open(`/video/${videoId}`, '_blank');
-    };
-
     const formatTime = (hours, minutes) => {
         return new Intl.DateTimeFormat('ko-KR', {
             hour: '2-digit',
@@ -121,6 +135,12 @@ function Online_Detail() {
         }).format(new Date(0, 0, 0, hours, minutes));
 
 
+    };
+
+    const formatDuration = (duration) => {
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.floor(duration % 60).toString().padStart(2, '0');
+        return `${minutes}:${seconds}`;
     };
 
     // 강의 목록 섹션으로 스크롤
@@ -194,6 +214,21 @@ function Online_Detail() {
         setPosters(updatedPosters);
     };
 
+    const openVideoInNewWindow = (videoUrl) => {
+        const popupWindow = window.open("", "_blank", "width=800,height=600");
+        popupWindow.document.write(`
+            <html>
+                <head><title>동영상 재생</title></head>
+                <body>
+                    <video width="100%" height="100%" controls autoplay>
+                        <source src="${videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </body>
+            </html>
+        `);
+    };
+
     return (
         <div className='Online_detail_inner'>
             <div className="Online-detail-board_view_head">
@@ -256,18 +291,33 @@ function Online_Detail() {
                         </tr>
                     </thead>
                     <tbody>
-                        {poster.videos.map((video, index) => (
-                            <tr key={video.id}>
-                                <td>{index + 1}</td>
-                                <td>{video.videoInfoDetail}</td>
-                                <td>{formatTime(video.durationHours, video.durationMinutes)}</td>
-                                <td>
-                                    <button onClick={() => openVideoInNewWindow(video.id)} className="On_Sign_Button"><span>수강하기</span></button>
-                                </td>
-                            </tr>
+                        {poster.videos.map((video) => (
+                            video.videoInfoIndex.match(/^\d+$/) ? (
+                                <tr key={video.id}>
+                                    <td>{`${video.videoInfoIndex}강`}</td>
+                                    <td colSpan="3">{video.videoInfoDetail}</td>
+                                </tr>
+                            ) : (
+                                <tr key={video.id}>
+                                    <td>{video.videoInfoIndex}</td>
+                                    <td>{video.videoInfoDetail}</td>
+                                    <td>
+                                        {durations[video.id] !== undefined && (
+                                            <p style={{ margin: "0" }}>{formatDuration(durations[video.id])}</p>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <button onClick={() => openVideoInNewWindow(video.attachment.file_path)} className="On_Sign_Button">
+                                            <span>수강하기</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
                         ))}
                     </tbody>
                 </table>
+
+
             </div>
 
             <div className='Online_Pro_Info_Title'>
@@ -275,29 +325,16 @@ function Online_Detail() {
             </div>
 
             <div className="Online_Pro_Info" ref={Online_pro_info_Ref}>
-                <strong><span>[온라인 강의]</span></strong>
-                <p>&nbsp;</p>
-                <p>
-                    <strong>{poster.programName}</strong>
-                </p>
-                <p>&nbsp;</p>
-                <p>
-                    <strong>&lt;수험생&gt; 상시 모집중!</strong>
-                </p>
-                <p>&nbsp;</p>
-                <p>
-                    <em><strong>모자람없이 온전한, 월곶만의 문화예술프로그램을 만나보세요!</strong></em>
-                </p>
-                <p>(전체 프로그램 내용 확인은 마지막 이미지 참고)</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>- &lt;반려동물 소품 만들기&gt; : 김포국제조각공원 내 '김포평화문화관'에서 진행예정입니다.</p>
-                <p>- &lt;원데이클래스: 컬러비즈 냉장고 자석 만들기&gt; : 통진두레단오제 참여 시민 누구나 무료로 참여가능합니다.</p>
-                <p>&nbsp;</p>
-                <p>사진</p>
+                {poster.programInfos.map(info => (
+                    <div key={info.id}>
+                        {info.attachment && (
+                            <p>
+                                <img src={info.attachment.file_path} alt="Program Attachment" className="on_detail_program_image" />
+                            </p>
+                        )}
+                        <p>{info.description}</p>
+                    </div>
+                ))}
             </div>
 
             <div className='Online_Teacher_Info_Title'>
@@ -305,18 +342,14 @@ function Online_Detail() {
             </div>
 
             <div className='Online_Teacher_Info' ref={Online_teacher_info_Ref}>
-                <p>
-                    <img src={poster.teacher} className="on_detail_teacher_image" alt="Teacher" />
-                </p>
-
                 {poster.teacherInfos.map(info => (
                     <div key={info.id}>
-                        <p>{info.description}</p>
                         {info.attachment && (
                             <p>
-                                <img src={info.attachment.file_path} alt="Teacher Attachment" className="off_detail_poster_image" />
+                                <img src={info.attachment.file_path} alt="Teacher Attachment" className="on_detail_teacher_image" />
                             </p>
                         )}
+                        <p>{info.description}</p>
                     </div>
                 ))}
             </div>
