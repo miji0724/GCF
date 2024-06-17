@@ -45,13 +45,13 @@ public class CommentTest {
     public void testCreateAndModifyComment() {
         // Create Member
         MemberDto memberDto = new MemberDto();
-        memberDto.setId("testuser");
+        memberDto.setId("qweqwe2");
         memberDto.setName("Test User");
         memberDto.setPassword("password");
         memberDto.setBirth(LocalDate.of(1990, 1, 1));
-        memberDto.setPhone_number("010-1234-5678");
-        memberDto.setTel_number("02-1234-5678");
-        memberDto.setEmail("testuser@example.com");
+        memberDto.setPhone_number("010-1234-548");
+        memberDto.setTel_number("02-1234-5458");
+        memberDto.setEmail("tes454ser@example.com");
         memberDto.setAddress("Test Address");
         memberDto.setDetail_address("Test Detail Address");
         memberDto.setEmail_agreement(true);

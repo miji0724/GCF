@@ -30,3 +30,4 @@ public class OffBookMark {
     @JoinColumn(name = "offProgram", referencedColumnName = "id")
     private OffProgram offProgram;
 } 
+

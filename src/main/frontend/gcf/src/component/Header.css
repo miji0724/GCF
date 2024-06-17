@@ -118,7 +118,7 @@ nav>ul>li:last-child {
   margin: none;
 }
 
-.search_bar {
+/* .search_bar {
   border: 2px solid rgb(161, 161, 161);
   border-radius: 20px;
   margin-left: 300px;
@@ -147,7 +147,7 @@ nav>ul>li:last-child {
   margin-bottom: 1px;
   color: #7193D2;
   opacity: 0.7;
-}
+} */
 
 .submit {
   background-color: rgb(0, 0, 0, 0);

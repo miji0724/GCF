@@ -68,7 +68,7 @@ public class OffBookMarkTest {
         OffProgramDto offProgramDto = new OffProgramDto();
         offProgramDto.setProgramName("Test Program");
         offProgramDto.setProgramDetailName("Test Program Detail");
-        offProgramDto.setApplication_info("Test Application Info");
+        offProgramDto.setApplicationInfo("Test Application Info");
         offProgramDto.setApplicationStartDate(LocalDate.of(2024, 7, 1));
         offProgramDto.setApplicationEndDate(LocalDate.of(2024, 7, 31));
         offProgramDto.setOperatingStartDay(LocalDate.of(2024, 8, 1));

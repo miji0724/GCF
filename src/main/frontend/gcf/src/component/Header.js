@@ -80,10 +80,10 @@ const Header = ({ isLoggedIn, onLogout }) =>  {
             </a>
           </li>
           <li>
-            <div className='search_bar'>
+            {/* <div className='search_bar'>
               <input />
               <button className="submit" type="submit"><img src={search} alt="Search" /></button>
-            </div>
+            </div> */}
           </li>
         </ul>
       </nav>

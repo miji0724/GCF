@@ -27,7 +27,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comm_num", nullable = false)
     private Integer id; 
-
+ 
     @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
