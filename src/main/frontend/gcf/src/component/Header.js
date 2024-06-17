@@ -57,7 +57,7 @@ const Header = ({ isLoggedIn, onLogout, userId}) =>  {
           </li>
           <li onMouseEnter={() => setIsActive2(true)}
               onMouseLeave={() => setIsActive2(false)}>
-            <Link to="/OnlineList">온라인 교육</Link>
+            <Link to="/OnlineList/음악">온라인 교육</Link>
             {isActive2 && (
               <ul className="dropdown">
                 <li><a onClick={() => gotoOnlineListCategory('음악')}>음악</a></li>
