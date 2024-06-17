@@ -258,10 +258,6 @@
     padding-bottom: 30px;
 }
 
-.home_title3 > div:last-child {
-    text-align: end;
-}
-
 .home_title3 > div:last-child > a {
     text-decoration: none;
     color: #7e7e7e;
