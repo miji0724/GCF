@@ -32,13 +32,13 @@ public class SecurityConfig {
                 	sessionManagement.maximumSessions(1)
                 		.expiredUrl("/member/login?expired=true")
         		)
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/member/login")  // 커스텀 로그인 페이지 설정
-//                        .defaultSuccessUrl("/")  // 로그인 성공 시 이동할 기본 URL
-//                        .usernameParameter("id")  // 로그인 시 사용할 아이디 파라미터명
-//                        .passwordParameter("password")  // 로그인 시 사용할 비밀번호 파라미터명
-//                        .failureUrl("/member/login/error")  // 로그인 실패 시 이동할 URL
-//                        .permitAll())
+                .formLogin(formLogin -> formLogin
+                        .loginPage("http://localhost:3000/member/login")  // 커스텀 로그인 페이지 설정
+                        .defaultSuccessUrl("/")  // 로그인 성공 시 이동할 기본 URL
+                        .usernameParameter("id")  // 로그인 시 사용할 아이디 파라미터명
+                        .passwordParameter("password")  // 로그인 시 사용할 비밀번호 파라미터명
+                        .failureUrl("/member/login/error")  // 로그인 실패 시 이동할 URL
+                        .permitAll())
                 
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
